@@ -1,0 +1,28 @@
+###########################
+# UaModeler Project File  #
+# Generated at 13.12.2019 #
+###########################
+
+PROJECTNAME = UMATI
+
+TEMPLATESET = ($TEMPLATES)/modeling/v1_0/t0/modeling.tt2set
+
+MODELS += ($MODELS)/Opc.Ua.NodeSet2.ua \
+    umati.ua \
+    iswexample.ua
+
+COLORS = ($MODELS)/Opc.Ua.NodeSet2.ua: #ff0000\
+    umati.ua: #0000ff\
+    iswexample.ua: #0000ff
+
+OUTPUTPATH = 
+
+GENERATE += umati.ua \
+    iswexample.ua
+
+NODEACCESSINFOROLES += Administrator \
+    SecurityAdmin \
+    ConfigurationAdmin \
+    Operator \
+    Observer
+

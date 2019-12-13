@@ -1,0 +1,61 @@
+<opc:TypeDictionary xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:tns="http://opcfoundation.org/UA/umati" DefaultByteOrder="LittleEndian" xmlns:opc="http://opcfoundation.org/BinarySchema/" xmlns:ua="http://opcfoundation.org/UA/" TargetNamespace="http://opcfoundation.org/UA/umati">
+    <opc:Import Namespace="http://opcfoundation.org/UA/"/>
+    <opc:EnumeratedType LengthInBits="32" Name="ChannelState">
+        <opc:EnumeratedValue Name="Active" Value="0"/>
+        <opc:EnumeratedValue Name="Interrupted" Value="1"/>
+        <opc:EnumeratedValue Name="Reset" Value="2"/>
+    </opc:EnumeratedType>
+    <opc:EnumeratedType LengthInBits="32" Name="ControlMode">
+        <opc:EnumeratedValue Name="Undefined" Value="0"/>
+        <opc:EnumeratedValue Name="Automatic" Value="1"/>
+        <opc:EnumeratedValue Name="AutoSingleStep" Value="2"/>
+        <opc:EnumeratedValue Name="MdaMdi" Value="3"/>
+        <opc:EnumeratedValue Name="JogManual" Value="4"/>
+        <opc:EnumeratedValue Name="JogIncrement" Value="5"/>
+        <opc:EnumeratedValue Name="Edit" Value="6"/>
+    </opc:EnumeratedType>
+    <opc:EnumeratedType LengthInBits="32" Name="LampColor">
+        <opc:EnumeratedValue Name="Green" Value="0"/>
+        <opc:EnumeratedValue Name="Red" Value="1"/>
+        <opc:EnumeratedValue Name="Yellow" Value="2"/>
+        <opc:EnumeratedValue Name="Blue" Value="3"/>
+        <opc:EnumeratedValue Name="White" Value="4"/>
+    </opc:EnumeratedType>
+    <opc:EnumeratedType LengthInBits="32" Name="LampStatus">
+        <opc:EnumeratedValue Name="Off" Value="0"/>
+        <opc:EnumeratedValue Name="On" Value="1"/>
+        <opc:EnumeratedValue Name="Blinking" Value="2"/>
+    </opc:EnumeratedType>
+    <opc:EnumeratedType LengthInBits="32" Name="NCProcessing">
+        <opc:EnumeratedValue Name="Undefined" Value="0"/>
+        <opc:EnumeratedValue Name="SingleStep" Value="1"/>
+        <opc:EnumeratedValue Name="BlockSequence" Value="2"/>
+    </opc:EnumeratedType>
+    <opc:EnumeratedType LengthInBits="32" Name="PartQuality">
+        <opc:EnumeratedValue Name="CapabilityUnavailable" Value="0"/>
+        <opc:EnumeratedValue Name="Good" Value="1"/>
+        <opc:EnumeratedValue Name="Bad" Value="2"/>
+        <opc:EnumeratedValue Name="NotYetMeasured" Value="3"/>
+    </opc:EnumeratedType>
+    <opc:EnumeratedType LengthInBits="32" Name="ProcessIrregularity">
+        <opc:EnumeratedValue Name="CapabilityUnavailable" Value="0"/>
+        <opc:EnumeratedValue Name="Detected" Value="1"/>
+        <opc:EnumeratedValue Name="NotDetected" Value="2"/>
+        <opc:EnumeratedValue Name="NotYetDetermined" Value="3"/>
+    </opc:EnumeratedType>
+    <opc:EnumeratedType LengthInBits="32" Name="SafetyMode">
+        <opc:EnumeratedValue Name="Other" Value="0"/>
+        <opc:EnumeratedValue Name="Automatic" Value="1"/>
+        <opc:EnumeratedValue Name="Setup" Value="2"/>
+        <opc:EnumeratedValue Name="Process_observation" Value="3"/>
+        <opc:EnumeratedValue Name="Process_observation_no_confirmation" Value="4"/>
+    </opc:EnumeratedType>
+    <opc:EnumeratedType LengthInBits="32" Name="WearIndication">
+        <opc:EnumeratedValue Name="Time" Value="0"/>
+        <opc:EnumeratedValue Name="NumberOfParts" Value="1"/>
+        <opc:EnumeratedValue Name="NumberOfUsages" Value="2"/>
+        <opc:EnumeratedValue Name="Distance" Value="3"/>
+        <opc:EnumeratedValue Name="Length" Value="4"/>
+        <opc:EnumeratedValue Name="Diameter" Value="5"/>
+    </opc:EnumeratedType>
+</opc:TypeDictionary>

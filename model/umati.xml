@@ -3,6 +3,11 @@
     <NamespaceUris>
         <Uri>http://opcfoundation.org/UA/umati</Uri>
     </NamespaceUris>
+    <Models>
+        <Model ModelUri="http://opcfoundation.org/UA/umati" PublicationDate="2020-01-15T14:12:43Z" Version="1.0.0">
+            <RequiredModel ModelUri="http://opcfoundation.org/UA/" PublicationDate="2019-09-09T00:00:00Z" Version="1.04.3"/>
+        </Model>
+    </Models>
     <Aliases>
         <Alias Alias="Boolean">i=1</Alias>
         <Alias Alias="UInt32">i=7</Alias>
@@ -41,7 +46,7 @@
     </Aliases>
     <Extensions>
         <Extension>
-            <ua:ModelInfo Tool="UaModeler" Hash="POqJBuATu2WGQinbcfTG6A==" Version="1.6.2"/>
+            <ua:ModelInfo Tool="UaModeler" Hash="EcgDgjjha3TSBmRNaLT4DQ==" Version="1.6.3"/>
         </Extension>
     </Extensions>
     <UADataType NodeId="ns=1;i=3004" BrowseName="1:ChannelState">
@@ -715,9 +720,9 @@
         <DisplayName>InterruptionConditionType</DisplayName>
         <References>
             <Reference ReferenceType="HasSubtype" IsForward="false">i=2782</Reference>
+            <Reference ReferenceType="GeneratesEvent" IsForward="false">ns=1;i=1030</Reference>
             <Reference ReferenceType="GeneratesEvent" IsForward="false">ns=1;i=5007</Reference>
             <Reference ReferenceType="GeneratesEvent" IsForward="false">ns=1;i=5008</Reference>
-            <Reference ReferenceType="GeneratesEvent" IsForward="false">ns=1;i=1030</Reference>
         </References>
     </UAObjectType>
     <UAObjectType NodeId="ns=1;i=1035" BrowseName="1:InterruptionExternalConditionType">
@@ -1557,25 +1562,25 @@
     <UAObject ParentNodeId="ns=1;i=1031" NodeId="ns=1;i=5023" BrowseName="1:ProductionPrograms">
         <DisplayName>ProductionPrograms</DisplayName>
         <References>
-            <Reference ReferenceType="HasOrderedComponent">ns=1;i=5071</Reference>
+            <Reference ReferenceType="HasComponent">ns=1;i=5006</Reference>
             <Reference ReferenceType="HasTypeDefinition">i=58</Reference>
             <Reference ReferenceType="HasModellingRule">i=78</Reference>
             <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=1031</Reference>
         </References>
     </UAObject>
-    <UAObject SymbolicName="Program" ParentNodeId="ns=1;i=5023" NodeId="ns=1;i=5071" BrowseName="1:&lt;Program>">
+    <UAObject SymbolicName="Program" ParentNodeId="ns=1;i=5023" NodeId="ns=1;i=5006" BrowseName="1:&lt;Program>">
         <DisplayName>&lt;Program></DisplayName>
         <References>
-            <Reference ReferenceType="HasOrderedComponent" IsForward="false">ns=1;i=5023</Reference>
-            <Reference ReferenceType="HasProperty">ns=1;i=6192</Reference>
+            <Reference ReferenceType="HasProperty">ns=1;i=6032</Reference>
             <Reference ReferenceType="HasModellingRule">i=11510</Reference>
             <Reference ReferenceType="HasTypeDefinition">ns=1;i=1072</Reference>
+            <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=5023</Reference>
         </References>
     </UAObject>
-    <UAVariable DataType="String" ParentNodeId="ns=1;i=5071" NodeId="ns=1;i=6192" BrowseName="1:Identifier" AccessLevel="3">
+    <UAVariable DataType="String" ParentNodeId="ns=1;i=5006" NodeId="ns=1;i=6032" BrowseName="1:Identifier" AccessLevel="3">
         <DisplayName>Identifier</DisplayName>
         <References>
-            <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=5071</Reference>
+            <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=5006</Reference>
             <Reference ReferenceType="HasModellingRule">i=78</Reference>
             <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
         </References>
@@ -2791,44 +2796,24 @@
         <DisplayName>ProductionPrograms</DisplayName>
         <References>
             <Reference ReferenceType="HasComponent">ns=1;i=5025</Reference>
-            <Reference ReferenceType="HasOrderedComponent">ns=1;i=5025</Reference>
             <Reference ReferenceType="HasTypeDefinition">i=58</Reference>
             <Reference ReferenceType="HasModellingRule">i=78</Reference>
             <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=5003</Reference>
-            <Reference ReferenceType="HasComponent">ns=1;i=5006</Reference>
         </References>
     </UAObject>
     <UAObject SymbolicName="Program" ParentNodeId="ns=1;i=5005" NodeId="ns=1;i=5025" BrowseName="1:&lt;Program>">
         <DisplayName>&lt;Program></DisplayName>
         <References>
             <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=5005</Reference>
-            <Reference ReferenceType="HasOrderedComponent" IsForward="false">ns=1;i=5005</Reference>
-            <Reference ReferenceType="HasProperty">ns=1;i=6104</Reference>
+            <Reference ReferenceType="HasProperty">ns=1;i=6075</Reference>
             <Reference ReferenceType="HasModellingRule">i=11510</Reference>
             <Reference ReferenceType="HasTypeDefinition">ns=1;i=1072</Reference>
         </References>
     </UAObject>
-    <UAVariable DataType="String" ParentNodeId="ns=1;i=5025" NodeId="ns=1;i=6104" BrowseName="1:Identifier" AccessLevel="3">
+    <UAVariable DataType="String" ParentNodeId="ns=1;i=5025" NodeId="ns=1;i=6075" BrowseName="1:Identifier" AccessLevel="3">
         <DisplayName>Identifier</DisplayName>
         <References>
             <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=5025</Reference>
-            <Reference ReferenceType="HasModellingRule">i=78</Reference>
-            <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
-        </References>
-    </UAVariable>
-    <UAObject ParentNodeId="ns=1;i=5005" NodeId="ns=1;i=5006" BrowseName="1:Program">
-        <DisplayName>Program</DisplayName>
-        <References>
-            <Reference ReferenceType="HasProperty">ns=1;i=6032</Reference>
-            <Reference ReferenceType="HasModellingRule">i=11510</Reference>
-            <Reference ReferenceType="HasTypeDefinition">ns=1;i=1072</Reference>
-            <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=5005</Reference>
-        </References>
-    </UAObject>
-    <UAVariable DataType="String" ParentNodeId="ns=1;i=5006" NodeId="ns=1;i=6032" BrowseName="1:Identifier" AccessLevel="3">
-        <DisplayName>Identifier</DisplayName>
-        <References>
-            <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=5006</Reference>
             <Reference ReferenceType="HasModellingRule">i=78</Reference>
             <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
         </References>
@@ -4372,6 +4357,81 @@
             <Reference ReferenceType="Organizes" IsForward="false">i=85</Reference>
         </References>
     </UAObject>
+    <UAObject SymbolicName="http___opcfoundation_org_UA_umati" NodeId="ns=1;i=5030" BrowseName="1:http://opcfoundation.org/UA/umati">
+        <DisplayName>http://opcfoundation.org/UA/umati</DisplayName>
+        <References>
+            <Reference ReferenceType="HasProperty">ns=1;i=6104</Reference>
+            <Reference ReferenceType="HasTypeDefinition">i=11616</Reference>
+            <Reference ReferenceType="HasComponent" IsForward="false">i=11715</Reference>
+            <Reference ReferenceType="HasProperty">ns=1;i=6105</Reference>
+            <Reference ReferenceType="HasProperty">ns=1;i=6119</Reference>
+            <Reference ReferenceType="HasProperty">ns=1;i=6120</Reference>
+            <Reference ReferenceType="HasProperty">ns=1;i=6121</Reference>
+            <Reference ReferenceType="HasProperty">ns=1;i=6122</Reference>
+            <Reference ReferenceType="HasProperty">ns=1;i=6124</Reference>
+        </References>
+    </UAObject>
+    <UAVariable DataType="Boolean" ParentNodeId="ns=1;i=5030" NodeId="ns=1;i=6104" BrowseName="IsNamespaceSubset">
+        <DisplayName>IsNamespaceSubset</DisplayName>
+        <References>
+            <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=5030</Reference>
+            <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+        </References>
+        <Value>
+            <uax:Boolean>false</uax:Boolean>
+        </Value>
+    </UAVariable>
+    <UAVariable DataType="DateTime" ParentNodeId="ns=1;i=5030" NodeId="ns=1;i=6105" BrowseName="NamespacePublicationDate">
+        <DisplayName>NamespacePublicationDate</DisplayName>
+        <References>
+            <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=5030</Reference>
+            <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+        </References>
+        <Value>
+            <uax:DateTime>2020-01-15T14:12:43Z</uax:DateTime>
+        </Value>
+    </UAVariable>
+    <UAVariable DataType="String" ParentNodeId="ns=1;i=5030" NodeId="ns=1;i=6119" BrowseName="NamespaceUri">
+        <DisplayName>NamespaceUri</DisplayName>
+        <References>
+            <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=5030</Reference>
+            <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+        </References>
+        <Value>
+            <uax:String>http://opcfoundation.org/UA/umati</uax:String>
+        </Value>
+    </UAVariable>
+    <UAVariable DataType="String" ParentNodeId="ns=1;i=5030" NodeId="ns=1;i=6120" BrowseName="NamespaceVersion">
+        <DisplayName>NamespaceVersion</DisplayName>
+        <References>
+            <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=5030</Reference>
+            <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+        </References>
+        <Value>
+            <uax:String>1.0.0</uax:String>
+        </Value>
+    </UAVariable>
+    <UAVariable DataType="IdType" ParentNodeId="ns=1;i=5030" ValueRank="1" NodeId="ns=1;i=6121" ArrayDimensions="0" BrowseName="StaticNodeIdTypes">
+        <DisplayName>StaticNodeIdTypes</DisplayName>
+        <References>
+            <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+            <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=5030</Reference>
+        </References>
+    </UAVariable>
+    <UAVariable DataType="NumericRange" ParentNodeId="ns=1;i=5030" ValueRank="1" NodeId="ns=1;i=6122" ArrayDimensions="0" BrowseName="StaticNumericNodeIdRange">
+        <DisplayName>StaticNumericNodeIdRange</DisplayName>
+        <References>
+            <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+            <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=5030</Reference>
+        </References>
+    </UAVariable>
+    <UAVariable DataType="String" ParentNodeId="ns=1;i=5030" NodeId="ns=1;i=6124" BrowseName="StaticStringNodeIdPattern">
+        <DisplayName>StaticStringNodeIdPattern</DisplayName>
+        <References>
+            <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+            <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=5030</Reference>
+        </References>
+    </UAVariable>
     <UAObject SymbolicName="OPCUANamespaceMetadata" NodeId="ns=1;i=5106" BrowseName="1:http://opcfoundation.org/UA/umati">
         <DisplayName>http://opcfoundation.org/UA/umati</DisplayName>
         <References>

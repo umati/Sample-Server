@@ -42,8 +42,8 @@ UA_NodeId setupAlertConditionType(UA_Server *pServer, AlertCondition_t ev)
     UA_Variant value;
     UA_Boolean *pBoolEnableState = UA_Boolean_new();
     *pBoolEnableState = ev.Enable;
-    UA_QualifiedName enabledStateField = UA_QUALIFIEDNAME(0,"EnabledState");
-    UA_QualifiedName enabledStateIdField = UA_QUALIFIEDNAME(0,"Id");
+    UA_QualifiedName enabledStateField = UA_QUALIFIEDNAME_ALLOC(0,"EnabledState");
+    UA_QualifiedName enabledStateIdField = UA_QUALIFIEDNAME_ALLOC(0,"Id");
     UA_Variant_setScalar(&value, pBoolEnableState, &UA_TYPES[UA_TYPES_BOOLEAN]);
     retval = UA_Server_setConditionVariableFieldProperty(
         pServer,

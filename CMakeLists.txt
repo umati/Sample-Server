@@ -47,9 +47,6 @@ add_executable(
 		NodesMaster.cpp
 		NodeValue.cpp
 		SetupEvents.cpp
-		RelativPathElement.cpp
-		BrowsePath.cpp
-		RelativPathBase.cpp
 		# Add dependend files to trigger the generation!
 		src_generated/namespace_umati_generated.c
 		src_generated/types_umati_generated.h

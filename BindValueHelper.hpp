@@ -9,18 +9,18 @@
 #include <open62541/types.h>
 #include <open62541/server.h>
 #include <open62541/types_generated.h>
-#include "RelativPathElement.hpp"
+#include <Open62541Cpp/UA_RelativPathElement.hpp>
 #include <list>
 #include "BindValue.hpp"
-#include "BrowsePath.hpp"
+#include <Open62541Cpp/UA_BrowsePath.hpp>
 #include <exception>
 
 template<typename T>
-void bindValueByPath(UA_Server *pServer, const BrowsePath &brPath, NodesMaster &nodesMaster, T &value) {
+void bindValueByPath(UA_Server *pServer, const open62541Cpp::UA_BrowsePath &brPath, NodesMaster &nodesMaster, T &value) {
   auto trResult =
       UA_Server_translateBrowsePathToNodeIds(
           pServer,
-          brPath.BPath
+          brPath.BrowsePath
       );
 
   if (trResult.statusCode != UA_STATUSCODE_GOOD) {

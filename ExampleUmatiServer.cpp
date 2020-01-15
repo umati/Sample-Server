@@ -10,15 +10,15 @@
 #include "NodesMaster.hpp"
 #include "BindValue.hpp"
 #include "SetupEvents.hpp"
-#include "RelativPathElement.hpp"
-#include "BrowsePath.hpp"
+#include <Open62541Cpp/UA_RelativPathElement.hpp>
+#include <Open62541Cpp/UA_BrowsePath.hpp>
 #include <thread>
 #include <chrono>
 #include <mutex>
 #include <atomic>
-#include <open62541Cpp/UA_String.hpp>
+#include <Open62541Cpp/UA_String.hpp>
 #include <list>
-#include "RelativPathBase.hpp"
+#include <Open62541Cpp/UA_RelativPathBase.hpp>
 #include "BindValueHelper.hpp"
 
 struct IdentificationMachine_t {
@@ -29,25 +29,26 @@ struct IdentificationMachine_t {
   std::string SerialNumber;
 
   void bind(UA_Server *pServer, UA_NodeId machine, NodesMaster &nodesMaster) {
-    RelativPathBase IdentificationMachine({RelativPathElement(2, "Identification"), RelativPathElement(2, "Machine")});
+    open62541Cpp::UA_RelativPathBase IdentificationMachine({open62541Cpp::UA_RelativPathElement(2, "Identification"), open62541Cpp::UA_RelativPathElement(2, "Machine")});
+
     bindValueByPath(pServer,
-                    BrowsePath(machine, IdentificationMachine(RelativPathElement(2, "BuildYear"))),
+                    open62541Cpp::UA_BrowsePath(machine, IdentificationMachine(open62541Cpp::UA_RelativPathElement(2, "BuildYear"))),
                     nodesMaster,
                     this->BuildYear);
     bindValueByPath(pServer,
-                    BrowsePath(machine, IdentificationMachine(RelativPathElement(2, "CatalogueName"))),
+                    open62541Cpp::UA_BrowsePath(machine, IdentificationMachine(open62541Cpp::UA_RelativPathElement(2, "CatalogueName"))),
                     nodesMaster,
                     this->CatalogueName);
     bindValueByPath(pServer,
-                    BrowsePath(machine, IdentificationMachine(RelativPathElement(2, "CustomName"))),
+                    open62541Cpp::UA_BrowsePath(machine, IdentificationMachine(open62541Cpp::UA_RelativPathElement(2, "CustomName"))),
                     nodesMaster,
                     this->CustomName);
     bindValueByPath(pServer,
-                    BrowsePath(machine, IdentificationMachine(RelativPathElement(2, "Manufacturer"))),
+                    open62541Cpp::UA_BrowsePath(machine, IdentificationMachine(open62541Cpp::UA_RelativPathElement(2, "Manufacturer"))),
                     nodesMaster,
                     this->Manufacturer);
     bindValueByPath(pServer,
-                    BrowsePath(machine, IdentificationMachine(RelativPathElement(2, "SerialNumber"))),
+                    open62541Cpp::UA_BrowsePath(machine, IdentificationMachine(open62541Cpp::UA_RelativPathElement(2, "SerialNumber"))),
                     nodesMaster,
                     this->SerialNumber);
   }
@@ -57,14 +58,14 @@ struct IdentificationSoftware_t {
   std::string ComponentVersion;
   std::string Identifier;
   void bind(UA_Server *pServer, UA_NodeId machine, NodesMaster &nodesMaster) {
-    RelativPathBase
-        IdentificationSoftware({RelativPathElement(2, "Identification"), RelativPathElement(2, "Software")});
+    open62541Cpp::UA_RelativPathBase
+        IdentificationSoftware({open62541Cpp::UA_RelativPathElement(2, "Identification"), open62541Cpp::UA_RelativPathElement(2, "Software")});
     bindValueByPath(pServer,
-                    BrowsePath(machine, IdentificationSoftware(RelativPathElement(2, "ComponentVersion"))),
+                    open62541Cpp::UA_BrowsePath(machine, IdentificationSoftware(open62541Cpp::UA_RelativPathElement(2, "ComponentVersion"))),
                     nodesMaster,
                     this->ComponentVersion);
     bindValueByPath(pServer,
-                    BrowsePath(machine, IdentificationSoftware(RelativPathElement(2, "Identifier"))),
+                    open62541Cpp::UA_BrowsePath(machine, IdentificationSoftware(open62541Cpp::UA_RelativPathElement(2, "Identifier"))),
                     nodesMaster,
                     this->Identifier);
   }

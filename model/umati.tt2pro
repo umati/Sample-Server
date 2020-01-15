@@ -1,6 +1,6 @@
 ###########################
 # UaModeler Project File  #
-# Generated at 13.12.2019 #
+# Generated at 14.01.2020 #
 ###########################
 
 PROJECTNAME = UMATI
@@ -19,6 +19,8 @@ OUTPUTPATH =
 
 GENERATE += umati.ua \
     iswexample.ua
+
+LOCKEDMODELS += umati.ua
 
 NODEACCESSINFOROLES += Administrator \
     SecurityAdmin \

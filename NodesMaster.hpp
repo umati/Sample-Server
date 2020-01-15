@@ -9,15 +9,17 @@
 #include "NodeValue.hpp"
 #include <open62541/server.h>
 #include <map>
+#include <Open62541Cpp/UA_NodeId.hpp>
 
 class NodesMaster {
  protected:
-  std::map<int, NodeValue> m_Nodes;
+  std::map<open62541Cpp::UA_NodeId, NodeValue> m_Nodes;
   UA_Server *m_pServer;
  public:
   NodesMaster(UA_Server *pServer);
 
   NodeValue &operator()(int nsIndex, int nsIntId);
+  NodeValue &operator()(const UA_NodeId &nodeId);
 
   static void callback(UA_Server *pServer, const UA_NodeId *sessionId,
                        void *sessionContext, const UA_NodeId *nodeid,

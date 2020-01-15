@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.0)
 project(ExampleUmatiServer)
 
-set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_STANDARD 17)
 
 find_package(open62541 REQUIRED)
 find_package(Open62541Cpp REQUIRED)
@@ -40,13 +40,16 @@ ua_generate_nodeset(
 		DEPENDS_NS "${open62541_NODESET_DIR}/Schema/Opc.Ua.NodeSet2.xml;${PROJECT_SOURCE_DIR}/model/umati.xml"
 )
 
-
 add_executable(
 		${PROJECT_NAME}
 		ExampleUmatiServer.cpp
 		BindValue.cpp
 		NodesMaster.cpp
 		NodeValue.cpp
+		SetupEvents.cpp
+		RelativPathElement.cpp
+		BrowsePath.cpp
+		RelativPathBase.cpp
 		# Add dependend files to trigger the generation!
 		src_generated/namespace_umati_generated.c
 		src_generated/types_umati_generated.h
@@ -59,4 +62,3 @@ set_target_properties(${PROJECT_NAME} PROPERTIES LINKER_LANGUAGE CXX)
 set_target_properties(${PROJECT_NAME} PROPERTIES DEBUG_POSTFIX "d")
 target_link_libraries(${PROJECT_NAME} PUBLIC open62541::open62541)
 target_link_libraries(${PROJECT_NAME} PUBLIC Open62541Cpp::Open62541Cpp)
-

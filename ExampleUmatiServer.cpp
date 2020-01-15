@@ -9,110 +9,93 @@
 #include "NodeValue.hpp"
 #include "NodesMaster.hpp"
 #include "BindValue.hpp"
+#include "SetupEvents.hpp"
+#include "RelativPathElement.hpp"
+#include "BrowsePath.hpp"
 #include <thread>
 #include <chrono>
 #include <mutex>
 #include <atomic>
 #include <open62541Cpp/UA_String.hpp>
+#include <list>
+#include "RelativPathBase.hpp"
+#include "BindValueHelper.hpp"
 
-struct MachineIdentification_t{
-  std::uint32_t  BuildYear;
+struct IdentificationMachine_t {
+  std::uint32_t BuildYear;
   std::string CatalogueName;
+  std::string CustomName;
+  std::string Manufacturer;
+  std::string SerialNumber;
+
+  void bind(UA_Server *pServer, UA_NodeId machine, NodesMaster &nodesMaster) {
+    RelativPathBase IdentificationMachine({RelativPathElement(2, "Identification"), RelativPathElement(2, "Machine")});
+    bindValueByPath(pServer,
+                    BrowsePath(machine, IdentificationMachine(RelativPathElement(2, "BuildYear"))),
+                    nodesMaster,
+                    this->BuildYear);
+    bindValueByPath(pServer,
+                    BrowsePath(machine, IdentificationMachine(RelativPathElement(2, "CatalogueName"))),
+                    nodesMaster,
+                    this->CatalogueName);
+    bindValueByPath(pServer,
+                    BrowsePath(machine, IdentificationMachine(RelativPathElement(2, "CustomName"))),
+                    nodesMaster,
+                    this->CustomName);
+    bindValueByPath(pServer,
+                    BrowsePath(machine, IdentificationMachine(RelativPathElement(2, "Manufacturer"))),
+                    nodesMaster,
+                    this->Manufacturer);
+    bindValueByPath(pServer,
+                    BrowsePath(machine, IdentificationMachine(RelativPathElement(2, "SerialNumber"))),
+                    nodesMaster,
+                    this->SerialNumber);
+  }
 };
 
-struct NotificationEvent_t {
+struct IdentificationSoftware_t {
+  std::string ComponentVersion;
   std::string Identifier;
-  std::string Message;
-  std::string SourceName;
-  std::uint16_t Severity;
+  void bind(UA_Server *pServer, UA_NodeId machine, NodesMaster &nodesMaster) {
+    RelativPathBase
+        IdentificationSoftware({RelativPathElement(2, "Identification"), RelativPathElement(2, "Software")});
+    bindValueByPath(pServer,
+                    BrowsePath(machine, IdentificationSoftware(RelativPathElement(2, "ComponentVersion"))),
+                    nodesMaster,
+                    this->ComponentVersion);
+    bindValueByPath(pServer,
+                    BrowsePath(machine, IdentificationSoftware(RelativPathElement(2, "Identifier"))),
+                    nodesMaster,
+                    this->Identifier);
+  }
 };
 
-UA_NodeId setupNotificationEvent(UA_Server *pServer, NotificationEvent_t ev){
-  UA_NodeId eventNodeId;
-  UA_StatusCode retval = UA_Server_createEvent(
-      pServer,
-      UA_NODEID_NUMERIC(2, UA_UMATIID_NOTIFICATIONEVENTTYPE),
-      &eventNodeId);
+bool first = true;
 
-  if(retval != UA_STATUSCODE_GOOD){
-    std::cerr << "Could not create event: " << retval << std::endl;
-    return UA_NODEID_NULL;
-  }
-
-  // Setting the Time is required or else the event will not show up in UAExpert!
-  UA_DateTime eventTime = UA_DateTime_now();
-  UA_Server_writeObjectProperty_scalar(
-      pServer,
-      eventNodeId,
-      UA_QUALIFIEDNAME(0, "Time"),
-      &eventTime,
-      &UA_TYPES[UA_TYPES_DATETIME]
-      );
-  {
-    open62541Cpp::UA_String strIdentifier(ev.Identifier);
-    UA_Variant *val = UA_Variant_new();
-    UA_Variant_clear(val);
-    UA_Variant_setScalarCopy(val, strIdentifier.String, &UA_TYPES[UA_TYPES_STRING]);
-    UA_Server_writeObjectProperty(
-        pServer,
-        eventNodeId,
-      UA_QUALIFIEDNAME(2, "Identifier"),
-      *val
-    );
-  }
-
-  {
-    open62541Cpp::UA_String strIdentifier(ev.SourceName);
-    UA_Variant *val = UA_Variant_new();
-    UA_Variant_clear(val);
-    UA_Variant_setScalarCopy(val, strIdentifier.String, &UA_TYPES[UA_TYPES_STRING]);
-    UA_Server_writeObjectProperty(
-        pServer,
-        eventNodeId,
-        UA_QUALIFIEDNAME(0, "SourceName"),
-        *val
-    );
-  }
-
-  {
-    open62541Cpp::UA_String strMessage(ev.Message);
-    UA_Variant *val = UA_Variant_new();
-    UA_LocalizedText ltxtMessage = UA_LOCALIZEDTEXT("en-en", "");
-    ltxtMessage.text = *strMessage.String;
-    UA_Variant_clear(val);
-    UA_Variant_setScalarCopy(val, &ltxtMessage, &UA_TYPES[UA_TYPES_LOCALIZEDTEXT]);
-    UA_Server_writeObjectProperty(
-        pServer,
-        eventNodeId,
-        UA_QUALIFIEDNAME(0, "Message"),
-        *val
-    );
-  }
-
-  {
-    UA_Variant *val = UA_Variant_new();
-    UA_Variant_clear(val);
-    UA_Variant_setScalarCopy(val, &ev.Severity, &UA_TYPES[UA_TYPES_UINT16]);
-    UA_Server_writeObjectProperty(
-        pServer,
-        eventNodeId,
-        UA_QUALIFIEDNAME(0, "Severity"),
-        *val
-    );
-  }
-
-  return eventNodeId;
-}
-
-void simulate(MachineIdentification_t *pInfo, std::atomic_bool &running, std::mutex &accessDataMutex, UA_Server *pServer){
+void simulate(IdentificationMachine_t *pInfo,
+              std::atomic_bool &running,
+              std::mutex &accessDataMutex,
+              UA_Server *pServer) {
   std::unique_lock<std::remove_reference<decltype(accessDataMutex)>::type> ul(accessDataMutex);
   ul.unlock();
-  while(running){
+  while (running) {
     ul.lock();
     ++(pInfo->BuildYear);
-    NotificationEvent_t ev {.Identifier = "MyId", .Message="MessageTxt", .SourceName="MySource", .Severity = 500};
+    NotificationEvent_t ev{.Identifier = "MyId", .Message="MessageTxt", .SourceName="MySource", .Severity = 500};
     auto evNodeId = setupNotificationEvent(pServer, ev);
     auto retval = UA_Server_triggerEvent(pServer, evNodeId, UA_NODEID_NUMERIC(0, UA_NS0ID_SERVER), NULL, UA_TRUE);
+    if (first) {
+      AlertCondition_t aev;
+      aev.Identifier = "CondId";
+      aev.Message = "CondMessage";
+      aev.SourceName = "SrcCond";
+      aev.Severity = 123;
+      aev.Retain = true;
+
+      auto condNodeId = setupAlertConditionType(pServer, aev);
+      UA_Server_triggerConditionEvent(pServer, condNodeId, UA_NODEID_NUMERIC(0, UA_NS0ID_SERVER), NULL);
+    }
+    first = false;
     ul.unlock();
     std::this_thread::yield();
     std::this_thread::sleep_for(std::chrono::seconds(1));
@@ -131,27 +114,33 @@ int main(int argc, char *argv[]) {
 
   std::mutex accessDataMutex;
   NodesMaster n(pServer);
-  MachineIdentification_t identificationMachine = {.BuildYear = 2019, .CatalogueName = "ISW Example"};
-  bindValue(
-      n(3, UA_ISWEXAMPLE_ID_MACHINETOOLS_ISWEXAMPLE_IDENTIFICATION_MACHINE_BUILDYEAR),
-      identificationMachine.BuildYear
-      );
-  bindValue(
-      n(3, UA_ISWEXAMPLE_ID_MACHINETOOLS_ISWEXAMPLE_IDENTIFICATION_MACHINE_CATALOGUENAME),
-      identificationMachine.CatalogueName
-      );
+  IdentificationMachine_t identificationMachine =
+      {
+          .BuildYear = 2020,
+          .CatalogueName = "ISW Example",
+          .CustomName="My Custom Server",
+          .Manufacturer="ISW Christian von Arnim",
+          .SerialNumber="3-1415926535-8979323846"
+      };
+
+  IdentificationSoftware_t identificationSoftware = {
+      .ComponentVersion = "master@2020-01-13",
+      .Identifier = "OPC UA Server Open62541"
+  };
+
+  identificationMachine.bind(pServer, UA_NODEID_NUMERIC(3, UA_ISWEXAMPLE_ID_MACHINETOOLS_ISWEXAMPLE), n);
+  identificationSoftware.bind(pServer, UA_NODEID_NUMERIC(3, UA_ISWEXAMPLE_ID_MACHINETOOLS_ISWEXAMPLE), n);
 
   n.SetCallbacks();
 
-  std::atomic_bool running {true};
+  std::atomic_bool running{true};
 
   //UA_Server_run(pServer, &running);
   UA_Server_run_startup(pServer);
   std::unique_lock<decltype(accessDataMutex)> ul(accessDataMutex);
   std::thread t(simulate, &identificationMachine, std::ref(running), std::ref(accessDataMutex), pServer);
   ul.unlock();
-  while(running)
-  {
+  while (running) {
     ul.lock();
     std::uint16_t timeout = UA_Server_run_iterate(pServer, false);
     ul.unlock();

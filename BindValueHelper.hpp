@@ -15,8 +15,20 @@
 #include <Open62541Cpp/UA_BrowsePath.hpp>
 #include <exception>
 
+// Internal implementation for different cases
+struct bindValueByPathInternal {
+ private:
+  template<class T>
+  friend void bindValueByPath(UA_Server *pServer,
+                       const open62541Cpp::UA_BrowsePath &brPath,
+                       NodesMaster &nodesMaster,
+                       T &value);
 template<typename T>
-void bindValueByPath(UA_Server *pServer, const open62541Cpp::UA_BrowsePath &brPath, NodesMaster &nodesMaster, T &value) {
+static void bindValueByPath(UA_Server *pServer,
+                     const open62541Cpp::UA_BrowsePath &brPath,
+                     NodesMaster &nodesMaster,
+                     T &value,
+                     std::false_type /*is_enum*/) {
   auto trResult =
       UA_Server_translateBrowsePathToNodeIds(
           pServer,
@@ -38,4 +50,23 @@ void bindValueByPath(UA_Server *pServer, const open62541Cpp::UA_BrowsePath &brPa
   }
 
   bindValue(nodesMaster(trResult.targets[0].targetId.nodeId), &value);
+}
+
+template<typename T>
+static void bindValueByPath(UA_Server *pServer,
+                     const open62541Cpp::UA_BrowsePath &brPath,
+                     NodesMaster &nodesMaster,
+                     T &value,
+                     std::true_type /*is_enum*/) {
+  bindValueByPath(pServer, brPath, nodesMaster, *reinterpret_cast<std::int32_t *>(&value), std::false_type{});
+}
+
+};
+
+template<class T>
+void bindValueByPath(UA_Server *pServer,
+                     const open62541Cpp::UA_BrowsePath &brPath,
+                     NodesMaster &nodesMaster,
+                     T &value) {
+  bindValueByPathInternal::bindValueByPath(pServer, brPath, nodesMaster, value, std::is_enum<T>{});
 }

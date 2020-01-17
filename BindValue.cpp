@@ -125,11 +125,12 @@ void bindValue(NodeValue &nodeValue, primitivTypes_t variable){
   auto pVariable = std::visit(primitivTypeVisitor_getPointer(), variable);
   nodeValue = [pVariable, pDataType] {
     UA_Variant value;
-    UA_Variant_setScalarCopy(&value, pVariable, &UA_TYPES[UA_TYPES_UINT32]);
+    UA_Variant_setScalarCopy(&value, pVariable, pDataType);
     return value;
   };
 }
 
+/*
 void bindValue(NodeValue &nodeValue, std::uint32_t &variable){
   auto pVariable = &variable;
   nodeValue = [pVariable] {
@@ -137,7 +138,7 @@ void bindValue(NodeValue &nodeValue, std::uint32_t &variable){
     UA_Variant_setScalarCopy(&value, pVariable, &UA_TYPES[UA_TYPES_UINT32]);
     return value;
   };
-}
+}*/
 
 void bindValue(NodeValue &nodeValue, std::string *variable){
   auto pVariable = variable;

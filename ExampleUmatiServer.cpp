@@ -71,9 +71,29 @@ struct IdentificationSoftware_t {
   }
 };
 
+struct OverrideItemType_t{
+  double Value;
+  UA_Range EURange;
+  UA_EUInformation EngineeringUnits;
+};
+
+struct ChannelMonitoringType_t{
+  UA_ChannelState ChannelState;
+  OverrideItemType_t FeedOverride;
+  void bind(UA_Server *pServer, UA_NodeId channel, NodesMaster &nodesMaster) {
+    open62541Cpp::UA_RelativPathBase ChannelBase;
+    bindValueByPath(pServer,
+                    open62541Cpp::UA_BrowsePath(channel, ChannelBase(open62541Cpp::UA_RelativPathElement(2, "ChannelState"))),
+                    nodesMaster,
+                    this->ChannelState);
+
+  }
+};
+
 bool first = true;
 
 void simulate(IdentificationMachine_t *pInfo,
+              ChannelMonitoringType_t *pChannel1,
               std::atomic_bool &running,
               std::mutex &accessDataMutex,
               UA_Server *pServer) {
@@ -82,6 +102,9 @@ void simulate(IdentificationMachine_t *pInfo,
   while (running) {
     ul.lock();
     ++(pInfo->BuildYear);
+    pChannel1->ChannelState = static_cast<UA_ChannelState>((((int) pChannel1->ChannelState) + 1) % (UA_ChannelState::UA_CHANNELSTATE_RESET + 1));
+
+
     NotificationEvent_t ev{.Identifier = "MyId", .Message="MessageTxt", .SourceName="MySource", .Severity = 500};
     auto evNodeId = setupNotificationEvent(pServer, ev);
     auto retval = UA_Server_triggerEvent(pServer, evNodeId, UA_NODEID_NUMERIC(0, UA_NS0ID_SERVER), NULL, UA_TRUE);
@@ -129,8 +152,13 @@ int main(int argc, char *argv[]) {
       .Identifier = "OPC UA Server Open62541"
   };
 
+  ChannelMonitoringType_t channel1 = {
+      .ChannelState = UA_ChannelState::UA_CHANNELSTATE_INTERRUPTED
+  };
+
   identificationMachine.bind(pServer, UA_NODEID_NUMERIC(3, UA_ISWEXAMPLE_ID_MACHINETOOLS_ISWEXAMPLE), n);
   identificationSoftware.bind(pServer, UA_NODEID_NUMERIC(3, UA_ISWEXAMPLE_ID_MACHINETOOLS_ISWEXAMPLE), n);
+  channel1.bind(pServer, UA_NODEID_NUMERIC(3, UA_ISWEXAMPLE_ID_MACHINETOOLS_ISWEXAMPLE_MONITORING_CHANNEL1), n);
 
   n.SetCallbacks();
 
@@ -139,7 +167,7 @@ int main(int argc, char *argv[]) {
   //UA_Server_run(pServer, &running);
   UA_Server_run_startup(pServer);
   std::unique_lock<decltype(accessDataMutex)> ul(accessDataMutex);
-  std::thread t(simulate, &identificationMachine, std::ref(running), std::ref(accessDataMutex), pServer);
+  std::thread t(simulate, &identificationMachine, &channel1, std::ref(running), std::ref(accessDataMutex), pServer);
   ul.unlock();
   while (running) {
     ul.lock();

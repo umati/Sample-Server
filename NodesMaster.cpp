@@ -12,11 +12,22 @@ NodesMaster::NodesMaster(UA_Server *pServer) : m_pServer(pServer) {
 }
 
 NodeValue& NodesMaster::operator()(int nsIndex, int nsIntId) {
-    return m_Nodes[open62541Cpp::UA_NodeId(nsIndex, nsIntId)];
+    return this->operator()(open62541Cpp::UA_NodeId(nsIndex, nsIntId));
 }
 
 NodeValue &NodesMaster::operator()(const UA_NodeId &nodeId) {
-  return m_Nodes[open62541Cpp::UA_NodeId(nodeId)];
+  return this->operator()(open62541Cpp::UA_NodeId(nodeId));
+}
+
+NodeValue &NodesMaster::operator()(const open62541Cpp::UA_NodeId &nodeId) {
+  auto it = m_Nodes.find(nodeId);
+  if(it == m_Nodes.end())
+  {
+    auto itNew = m_Nodes.insert(std::make_pair(nodeId, NodeValue(nodeId)));
+    return itNew.first->second;
+  }
+
+  return it->second;
 }
 
 void NodesMaster::callback(UA_Server *pServer,

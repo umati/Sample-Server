@@ -71,21 +71,32 @@ struct IdentificationSoftware_t {
   }
 };
 
+template<typename T>
 struct OverrideItemType_t{
-  double Value;
+  T Value;
   UA_Range EURange;
   UA_EUInformation EngineeringUnits;
 };
 
 struct ChannelMonitoringType_t{
   UA_ChannelState ChannelState;
-  OverrideItemType_t FeedOverride;
+  OverrideItemType_t<double> FeedOverride;
   void bind(UA_Server *pServer, UA_NodeId channel, NodesMaster &nodesMaster) {
     open62541Cpp::UA_RelativPathBase ChannelBase;
     bindValueByPath(pServer,
                     open62541Cpp::UA_BrowsePath(channel, ChannelBase(open62541Cpp::UA_RelativPathElement(2, "ChannelState"))),
                     nodesMaster,
                     this->ChannelState);
+
+    bindValueByPath(pServer,
+                    open62541Cpp::UA_BrowsePath(channel, ChannelBase(open62541Cpp::UA_RelativPathElement(2, "FeedOverride"))),
+                    nodesMaster,
+                    this->FeedOverride.Value);
+
+    bindValueByPath(pServer,
+                    open62541Cpp::UA_BrowsePath(channel, ChannelBase(open62541Cpp::UA_RelativPathElement(2, "FeedOverride"))),
+                    nodesMaster,
+                    this->FeedOverride.Value);
 
   }
 };
@@ -167,7 +178,7 @@ int main(int argc, char *argv[]) {
   //UA_Server_run(pServer, &running);
   UA_Server_run_startup(pServer);
   std::unique_lock<decltype(accessDataMutex)> ul(accessDataMutex);
-  std::thread t(simulate, &identificationMachine, &channel1, std::ref(running), std::ref(accessDataMutex), pServer);
+  //std::thread t(simulate, &identificationMachine, &channel1, std::ref(running), std::ref(accessDataMutex), pServer);
   ul.unlock();
   while (running) {
     ul.lock();

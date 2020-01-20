@@ -8,12 +8,14 @@
 
 #include <open62541/types.h>
 #include <functional>
+#include <Open62541Cpp/UA_NodeId.hpp>
 
 class NodeValue {
   typedef std::function<UA_Variant()> GetValue_t;
-  GetValue_t fCallback;
-
+  GetValue_t fCallback = nullptr;
+  open62541Cpp::UA_NodeId NodeId;
  public:
+  NodeValue(const open62541Cpp::UA_NodeId &nodeId);
   // Use variadict expression https://stackoverflow.com/questions/9242234/c11-variadic-stdfunction-parameter
   void operator=(GetValue_t F);
 

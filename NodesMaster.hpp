@@ -15,11 +15,13 @@ class NodesMaster {
  protected:
   std::map<open62541Cpp::UA_NodeId, NodeValue> m_Nodes;
   UA_Server *m_pServer;
+  NodesMaster(const NodesMaster& other);
  public:
   NodesMaster(UA_Server *pServer);
 
   NodeValue &operator()(int nsIndex, int nsIntId);
   NodeValue &operator()(const UA_NodeId &nodeId);
+  NodeValue &operator()(const open62541Cpp::UA_NodeId &nodeId);
 
   static void callback(UA_Server *pServer, const UA_NodeId *sessionId,
                        void *sessionContext, const UA_NodeId *nodeid,

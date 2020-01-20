@@ -14,3 +14,5 @@ void NodeValue::operator=(std::function<UA_Variant()> F) {
 UA_Variant NodeValue::Value() {
   return fCallback();
 }
+
+NodeValue::NodeValue(const open62541Cpp::UA_NodeId &nodeId) : NodeId(nodeId) {}

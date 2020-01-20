@@ -17,49 +17,66 @@
 
 // Internal implementation for different cases
 struct bindValueByPathInternal {
+
  private:
   template<class T>
   friend void bindValueByPath(UA_Server *pServer,
-                       const open62541Cpp::UA_BrowsePath &brPath,
-                       NodesMaster &nodesMaster,
-                       T &value);
-template<typename T>
-static void bindValueByPath(UA_Server *pServer,
-                     const open62541Cpp::UA_BrowsePath &brPath,
-                     NodesMaster &nodesMaster,
-                     T &value,
-                     std::false_type /*is_enum*/) {
-  auto trResult =
-      UA_Server_translateBrowsePathToNodeIds(
-          pServer,
-          brPath.BrowsePath
-      );
+                              const open62541Cpp::UA_BrowsePath &brPath,
+                              NodesMaster &nodesMaster,
+                              T &value);
+  template<typename T>
+  static void bindValueByPath(UA_Server *pServer,
+                              const open62541Cpp::UA_BrowsePath &brPath,
+                              NodesMaster &nodesMaster,
+                              T &value,
+                              std::false_type /*is_enum*/,
+                              std::false_type /*is_class*/
+  ) {
+    auto trResult =
+        UA_Server_translateBrowsePathToNodeIds(
+            pServer,
+            brPath.BrowsePath
+        );
 
-  if (trResult.statusCode != UA_STATUSCODE_GOOD) {
-    std::cout << "Resutl not good: " <<
-              UA_StatusCode_name(trResult
-                                     .statusCode) <<
-              std::endl;
-    throw std::invalid_argument("Path not found.");
+    if (trResult.statusCode != UA_STATUSCODE_GOOD) {
+      std::cout << "Resutl not good: " <<
+                UA_StatusCode_name(trResult
+                                       .statusCode) <<
+                std::endl;
+      throw std::invalid_argument("Path not found.");
+    }
+
+    if (trResult.targetsSize != 1) {
+      std::cout << "Unexpected number of results, expect 1, got: " << trResult.targetsSize <<
+                std::endl;
+      throw std::invalid_argument("Unexpected number of results.");
+    }
+
+    bindValue(nodesMaster(trResult.targets[0].targetId.nodeId), &value);
   }
 
-  if (trResult.targetsSize != 1) {
-    std::cout << "Unexpected number of results, expect 1, got: " << trResult.targetsSize <<
-              std::endl;
-    throw std::invalid_argument("Unexpected number of results.");
+  template<typename T>
+  static void bindValueByPath(UA_Server *pServer,
+                              const open62541Cpp::UA_BrowsePath &brPath,
+                              NodesMaster &nodesMaster,
+                              T &value,
+                              std::true_type /*is_enum*/,
+                              std::false_type /*is_class*/
+  ) {
+    bindValueByPath(pServer, brPath, nodesMaster, *reinterpret_cast<std::int32_t *>(&value), std::false_type{}, std::false_type{});
   }
 
-  bindValue(nodesMaster(trResult.targets[0].targetId.nodeId), &value);
-}
-
-template<typename T>
-static void bindValueByPath(UA_Server *pServer,
-                     const open62541Cpp::UA_BrowsePath &brPath,
-                     NodesMaster &nodesMaster,
-                     T &value,
-                     std::true_type /*is_enum*/) {
-  bindValueByPath(pServer, brPath, nodesMaster, *reinterpret_cast<std::int32_t *>(&value), std::false_type{});
-}
+  // capture structs
+  template<typename T>
+  static void bindValueByPath(UA_Server *pServer,
+                              const open62541Cpp::UA_BrowsePath &brPath,
+                              NodesMaster &nodesMaster,
+                              T &value,
+                              std::false_type /*is_enum*/,
+                              std::true_type /*is_class*/
+  ) {
+    //bindValueByPath(pServer, brPath, nodesMaster, reinterpret_cast<void *>(&value), std::false_type{}, std::false_type{});
+  }
 
 };
 
@@ -68,5 +85,5 @@ void bindValueByPath(UA_Server *pServer,
                      const open62541Cpp::UA_BrowsePath &brPath,
                      NodesMaster &nodesMaster,
                      T &value) {
-  bindValueByPathInternal::bindValueByPath(pServer, brPath, nodesMaster, value, std::is_enum<T>{});
+  bindValueByPathInternal::bindValueByPath(pServer, brPath, nodesMaster, value, std::is_enum<T>{}, std::is_class<T>{});
 }

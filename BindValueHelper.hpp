@@ -24,6 +24,8 @@ struct bindValueByPathInternal {
                               const open62541Cpp::UA_BrowsePath &brPath,
                               NodesMaster &nodesMaster,
                               T &value);
+
+  // Primitiv types including string
   template<typename T>
   static void bindValueByPath(UA_Server *pServer,
                               const open62541Cpp::UA_BrowsePath &brPath,
@@ -85,5 +87,5 @@ void bindValueByPath(UA_Server *pServer,
                      const open62541Cpp::UA_BrowsePath &brPath,
                      NodesMaster &nodesMaster,
                      T &value) {
-  bindValueByPathInternal::bindValueByPath(pServer, brPath, nodesMaster, value, std::is_enum<T>{}, std::is_class<T>{});
+  bindValueByPathInternal::bindValueByPath(pServer, brPath, nodesMaster, value, std::is_enum<T>{}, std::integral_constant<bool, std::is_class<T>::value && !std::is_same<T, std::string>::value>{} );
 }

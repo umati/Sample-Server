@@ -178,7 +178,7 @@ int main(int argc, char *argv[]) {
   //UA_Server_run(pServer, &running);
   UA_Server_run_startup(pServer);
   std::unique_lock<decltype(accessDataMutex)> ul(accessDataMutex);
-  //std::thread t(simulate, &identificationMachine, &channel1, std::ref(running), std::ref(accessDataMutex), pServer);
+  std::thread t(simulate, &identificationMachine, &channel1, std::ref(running), std::ref(accessDataMutex), pServer);
   ul.unlock();
   while (running) {
     ul.lock();

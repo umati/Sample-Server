@@ -149,3 +149,6 @@ void bindValue(NodeValue &nodeValue, std::string *variable){
     return value;
   };
 }
+void bindValue(NodeValue &nodeValue, void *pVariable) {
+  throw  std::runtime_error("Why here?");
+}

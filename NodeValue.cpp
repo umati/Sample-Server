@@ -16,3 +16,6 @@ UA_Variant NodeValue::Value() {
 }
 
 NodeValue::NodeValue(const open62541Cpp::UA_NodeId &nodeId) : NodeId(nodeId) {}
+
+NodeValue::NodeValue(NodeValue &&other): NodeId(std::move(other.NodeId)) {
+}

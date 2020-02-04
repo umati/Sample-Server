@@ -26,5 +26,6 @@ using primitivTypes_t = std::variant<
     >;
 
 void bindValue(NodeValue &nodeValue, primitivTypes_t pVariable);
+//void bindValue(NodeValue &nodeValue, void* pVariable);
 void bindValue(NodeValue &nodeValue, std::string *variable);
 

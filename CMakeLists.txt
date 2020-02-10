@@ -3,9 +3,14 @@ project(ExampleUmatiServer)
 
 set(CMAKE_CXX_STANDARD 17)
 
+list(APPEND CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake)
+
 find_package(open62541 REQUIRED)
 find_package(Open62541Cpp REQUIRED)
 find_package(GTest REQUIRED NO_CMAKE_SYSTEM_PACKAGE_REGISTRY)
+
+find_package(ReflCpp REQUIRED)
+
 
 if (NOT CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
 	# needed or cmake doesn't recognize dependencies of generated files
@@ -59,3 +64,4 @@ set_target_properties(${PROJECT_NAME} PROPERTIES LINKER_LANGUAGE CXX)
 set_target_properties(${PROJECT_NAME} PROPERTIES DEBUG_POSTFIX "d")
 target_link_libraries(${PROJECT_NAME} PUBLIC open62541::open62541)
 target_link_libraries(${PROJECT_NAME} PUBLIC Open62541Cpp::Open62541Cpp)
+target_link_libraries(${PROJECT_NAME} PUBLIC reflCpp::reflCpp)

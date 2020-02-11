@@ -130,16 +130,6 @@ void bindValue(NodeValue &nodeValue, primitivTypes_t variable){
   };
 }
 
-/*
-void bindValue(NodeValue &nodeValue, std::uint32_t &variable){
-  auto pVariable = &variable;
-  nodeValue = [pVariable] {
-    UA_Variant value;
-    UA_Variant_setScalarCopy(&value, pVariable, &UA_TYPES[UA_TYPES_UINT32]);
-    return value;
-  };
-}*/
-
 void bindValue(NodeValue &nodeValue, std::string *variable){
   auto pVariable = variable;
   nodeValue = [pVariable] {

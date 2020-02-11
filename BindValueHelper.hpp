@@ -25,6 +25,8 @@ struct bindValueByPathInternal {
                               NodesMaster &nodesMaster,
                               T &value);
 
+
+
   // Primitiv types including string
   template<typename T>
   static void bindValueByPath(UA_Server *pServer,
@@ -55,6 +57,7 @@ struct bindValueByPathInternal {
     }
 
     bindValue(nodesMaster(trResult.targets[0].targetId.nodeId), &value);
+    UA_BrowsePathResult_deleteMembers(&trResult);
   }
 
   template<typename T>

@@ -41,7 +41,9 @@ void NodesMaster::callback(UA_Server *pServer,
   auto it = pThis->m_Nodes.find(open62541Cpp::UA_NodeId(nodeid));
   if(it != pThis->m_Nodes.end())
   {
-    UA_Server_writeValue(pServer, *nodeid, it->second.Value());
+    auto val = it->second.Value();
+    UA_Server_writeValue(pServer, *nodeid, val);
+    UA_Variant_deleteMembers(&val);
   }
 }
 

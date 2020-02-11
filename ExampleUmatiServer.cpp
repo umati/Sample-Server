@@ -120,7 +120,9 @@ void simulate(IdentificationMachine_t *pInfo,
               UA_Server *pServer) {
   std::unique_lock<std::remove_reference<decltype(accessDataMutex)>::type> ul(accessDataMutex);
   ul.unlock();
+  int i = 0;
   while (running) {
+    ++i;
     ul.lock();
     ++(pInfo->BuildYear);
     pChannel1->ChannelState = static_cast<UA_ChannelState>((((int) pChannel1->ChannelState) + 1)
@@ -141,6 +143,8 @@ void simulate(IdentificationMachine_t *pInfo,
       UA_Server_triggerConditionEvent(pServer, condNodeId, UA_NODEID_NUMERIC(0, UA_NS0ID_SERVER), NULL);
     }
     first = false;
+    std::cout << i << std::endl;
+    running = i < 10;
     ul.unlock();
     std::this_thread::yield();
     std::this_thread::sleep_for(std::chrono::seconds(1));
@@ -198,6 +202,9 @@ int main(int argc, char *argv[]) {
     std::this_thread::sleep_for(std::chrono::milliseconds(timeout));
   }
 
+  std::cout << "Waiting for exiting simulate-thread." << std::endl;
+  t.join();
+  std::cout << "Shut down OPC UA Server" << std::endl;
   UA_Server_run_shutdown(pServer);
 
   return 0;

@@ -21,6 +21,8 @@
 #include <Open62541Cpp/UA_RelativPathBase.hpp>
 #include "BindValueHelper.hpp"
 
+#include <refl.hpp>
+
 struct IdentificationMachine_t {
   std::uint32_t BuildYear;
   std::string CatalogueName;
@@ -28,76 +30,84 @@ struct IdentificationMachine_t {
   std::string Manufacturer;
   std::string SerialNumber;
 
-  void bind(UA_Server *pServer, UA_NodeId machine, NodesMaster &nodesMaster) {
-    open62541Cpp::UA_RelativPathBase IdentificationMachine({open62541Cpp::UA_RelativPathElement(2, "Identification"), open62541Cpp::UA_RelativPathElement(2, "Machine")});
-
-    bindValueByPath(pServer,
-                    open62541Cpp::UA_BrowsePath(machine, IdentificationMachine(open62541Cpp::UA_RelativPathElement(2, "BuildYear"))),
-                    nodesMaster,
-                    this->BuildYear);
-    bindValueByPath(pServer,
-                    open62541Cpp::UA_BrowsePath(machine, IdentificationMachine(open62541Cpp::UA_RelativPathElement(2, "CatalogueName"))),
-                    nodesMaster,
-                    this->CatalogueName);
-    bindValueByPath(pServer,
-                    open62541Cpp::UA_BrowsePath(machine, IdentificationMachine(open62541Cpp::UA_RelativPathElement(2, "CustomName"))),
-                    nodesMaster,
-                    this->CustomName);
-    bindValueByPath(pServer,
-                    open62541Cpp::UA_BrowsePath(machine, IdentificationMachine(open62541Cpp::UA_RelativPathElement(2, "Manufacturer"))),
-                    nodesMaster,
-                    this->Manufacturer);
-    bindValueByPath(pServer,
-                    open62541Cpp::UA_BrowsePath(machine, IdentificationMachine(open62541Cpp::UA_RelativPathElement(2, "SerialNumber"))),
-                    nodesMaster,
-                    this->SerialNumber);
-  }
+  void bind(UA_Server *pServer, UA_NodeId machine, NodesMaster &nodesMaster);
 };
+
+REFL_TYPE(IdentificationMachine_t)
+  REFL_FIELD(BuildYear)
+  REFL_FIELD(CatalogueName)
+  REFL_FIELD(CustomName)
+  REFL_FIELD(Manufacturer)
+  REFL_FIELD(SerialNumber)
+REFL_END
+
+void IdentificationMachine_t::bind(UA_Server *pServer, UA_NodeId machine, NodesMaster &nodesMaster) {
+  open62541Cpp::UA_RelativPathBase Base
+      ({open62541Cpp::UA_RelativPathElement(2, "Identification"), open62541Cpp::UA_RelativPathElement(2, "Machine")});
+
+  for_each(refl::reflect(*this).members, [&](auto member) {
+    bindValueByPath(pServer,
+                    open62541Cpp::UA_BrowsePath(
+                        machine,
+                        Base(open62541Cpp::UA_RelativPathElement(2, std::string(member.name)))
+                    ),
+                    nodesMaster,
+                    member(*this));
+
+  });
+}
 
 struct IdentificationSoftware_t {
   std::string ComponentVersion;
   std::string Identifier;
-  void bind(UA_Server *pServer, UA_NodeId machine, NodesMaster &nodesMaster) {
-    open62541Cpp::UA_RelativPathBase
-        IdentificationSoftware({open62541Cpp::UA_RelativPathElement(2, "Identification"), open62541Cpp::UA_RelativPathElement(2, "Software")});
-    bindValueByPath(pServer,
-                    open62541Cpp::UA_BrowsePath(machine, IdentificationSoftware(open62541Cpp::UA_RelativPathElement(2, "ComponentVersion"))),
-                    nodesMaster,
-                    this->ComponentVersion);
-    bindValueByPath(pServer,
-                    open62541Cpp::UA_BrowsePath(machine, IdentificationSoftware(open62541Cpp::UA_RelativPathElement(2, "Identifier"))),
-                    nodesMaster,
-                    this->Identifier);
-  }
+  void bind(UA_Server *pServer, UA_NodeId machine, NodesMaster &nodesMaster);
 };
 
+REFL_TYPE(IdentificationSoftware_t)
+  REFL_FIELD(ComponentVersion)
+  REFL_FIELD(Identifier)
+REFL_END
+
+void IdentificationSoftware_t::bind(UA_Server *pServer, UA_NodeId machine, NodesMaster &nodesMaster) {
+  open62541Cpp::UA_RelativPathBase
+      Base
+      ({open62541Cpp::UA_RelativPathElement(2, "Identification"), open62541Cpp::UA_RelativPathElement(2, "Software")});
+
+  for_each(refl::reflect(*this).members, [&](auto member) {
+    bindValueByPath(pServer,
+                    open62541Cpp::UA_BrowsePath(
+                        machine,
+                        Base(open62541Cpp::UA_RelativPathElement(2, std::string(member.name)))
+                    ),
+                    nodesMaster,
+                    member(*this));
+
+  });
+}
+
 template<typename T>
-struct OverrideItemType_t{
+struct OverrideItemType_t {
   T Value;
   UA_Range EURange;
   UA_EUInformation EngineeringUnits;
 };
 
-struct ChannelMonitoringType_t{
+struct ChannelMonitoringType_t {
   UA_ChannelState ChannelState;
   OverrideItemType_t<double> FeedOverride;
   void bind(UA_Server *pServer, UA_NodeId channel, NodesMaster &nodesMaster) {
     open62541Cpp::UA_RelativPathBase ChannelBase;
     bindValueByPath(pServer,
-                    open62541Cpp::UA_BrowsePath(channel, ChannelBase(open62541Cpp::UA_RelativPathElement(2, "ChannelState"))),
+                    open62541Cpp::UA_BrowsePath(channel,
+                                                ChannelBase(open62541Cpp::UA_RelativPathElement(2, "ChannelState"))),
                     nodesMaster,
                     this->ChannelState);
 
     bindValueByPath(pServer,
-                    open62541Cpp::UA_BrowsePath(channel, ChannelBase(open62541Cpp::UA_RelativPathElement(2, "FeedOverride"))),
+                    open62541Cpp::UA_BrowsePath(channel,
+                                                ChannelBase(open62541Cpp::UA_RelativPathElement(2, "FeedOverride"))),
                     nodesMaster,
                     this->FeedOverride.Value);
-
-    bindValueByPath(pServer,
-                    open62541Cpp::UA_BrowsePath(channel, ChannelBase(open62541Cpp::UA_RelativPathElement(2, "FeedOverride"))),
-                    nodesMaster,
-                    this->FeedOverride.Value);
-
   }
 };
 
@@ -113,8 +123,8 @@ void simulate(IdentificationMachine_t *pInfo,
   while (running) {
     ul.lock();
     ++(pInfo->BuildYear);
-    pChannel1->ChannelState = static_cast<UA_ChannelState>((((int) pChannel1->ChannelState) + 1) % (UA_ChannelState::UA_CHANNELSTATE_RESET + 1));
-
+    pChannel1->ChannelState = static_cast<UA_ChannelState>((((int) pChannel1->ChannelState) + 1)
+        % (UA_ChannelState::UA_CHANNELSTATE_RESET + 1));
 
     NotificationEvent_t ev{.Identifier = "MyId", .Message="MessageTxt", .SourceName="MySource", .Severity = 500};
     auto evNodeId = setupNotificationEvent(pServer, ev);

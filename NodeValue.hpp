@@ -16,6 +16,7 @@ class NodeValue {
   open62541Cpp::UA_NodeId NodeId;
   NodeValue(const NodeValue&) = delete;
  public:
+  open62541Cpp::UA_NodeId GetNodeId() { return NodeId;}
   NodeValue(NodeValue&& other);
   NodeValue(const open62541Cpp::UA_NodeId &nodeId);
   // Use variadict expression https://stackoverflow.com/questions/9242234/c11-variadic-stdfunction-parameter

@@ -104,10 +104,21 @@ struct ChannelMonitoringType_t {
                     this->ChannelState);
 
     bindValueByPath(pServer,
-                    open62541Cpp::UA_BrowsePath(channel,
-                                                ChannelBase(open62541Cpp::UA_RelativPathElement(2, "FeedOverride"))),
+                    open62541Cpp::UA_BrowsePath(
+                        channel,
+                        ChannelBase(open62541Cpp::UA_RelativPathElement(2, "FeedOverride"))
+                    ),
                     nodesMaster,
                     this->FeedOverride.Value);
+
+    open62541Cpp::UA_RelativPathBase FeedOverride(ChannelBase(open62541Cpp::UA_RelativPathElement(2, "FeedOverride")));
+    bindValueByPath(pServer,
+                    open62541Cpp::UA_BrowsePath(
+                        channel,
+                        FeedOverride(open62541Cpp::UA_RelativPathElement(0, "EURange"))
+                    ),
+                    nodesMaster,
+                    this->FeedOverride.EURange);
   }
 };
 
@@ -143,8 +154,9 @@ void simulate(IdentificationMachine_t *pInfo,
       UA_Server_triggerConditionEvent(pServer, condNodeId, UA_NODEID_NUMERIC(0, UA_NS0ID_SERVER), NULL);
     }
     first = false;
-    std::cout << i << std::endl;
-    running = i < 10;
+
+    //std::cout << i << std::endl;
+    //running = i < 10;
     ul.unlock();
     std::this_thread::yield();
     std::this_thread::sleep_for(std::chrono::seconds(1));
@@ -178,7 +190,13 @@ int main(int argc, char *argv[]) {
   };
 
   ChannelMonitoringType_t channel1 = {
-      .ChannelState = UA_ChannelState::UA_CHANNELSTATE_INTERRUPTED
+      .ChannelState = UA_ChannelState::UA_CHANNELSTATE_INTERRUPTED,
+      .FeedOverride = {
+          .EURange = {
+              .low = 123.45,
+              .high = 234.56
+          }
+      }
   };
 
   identificationMachine.bind(pServer, UA_NODEID_NUMERIC(3, UA_ISWEXAMPLE_ID_MACHINETOOLS_ISWEXAMPLE), n);

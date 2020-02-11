@@ -49,6 +49,7 @@ add_executable(
 		${PROJECT_NAME}
 		ExampleUmatiServer.cpp
 		BindValue.cpp
+		BindStruct.cpp
 		NodesMaster.cpp
 		NodeValue.cpp
 		SetupEvents.cpp

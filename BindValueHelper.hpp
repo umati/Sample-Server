@@ -11,9 +11,11 @@
 #include <open62541/types_generated.h>
 #include <Open62541Cpp/UA_RelativPathElement.hpp>
 #include <list>
-#include "BindValue.hpp"
 #include <Open62541Cpp/UA_BrowsePath.hpp>
 #include <exception>
+
+#include "BindValue.hpp"
+#include "BindStruct.hpp"
 
 // Internal implementation for different cases
 struct bindValueByPathInternal {
@@ -26,16 +28,9 @@ struct bindValueByPathInternal {
                               T &value);
 
 
-
-  // Primitiv types including string
-  template<typename T>
-  static void bindValueByPath(UA_Server *pServer,
-                              const open62541Cpp::UA_BrowsePath &brPath,
-                              NodesMaster &nodesMaster,
-                              T &value,
-                              std::false_type /*is_enum*/,
-                              std::false_type /*is_class*/
-  ) {
+  static open62541Cpp::UA_NodeId resolveBrowsePath(UA_Server *pServer,
+                                            const open62541Cpp::UA_BrowsePath &brPath)
+  {
     auto trResult =
         UA_Server_translateBrowsePathToNodeIds(
             pServer,
@@ -55,9 +50,24 @@ struct bindValueByPathInternal {
                 std::endl;
       throw std::invalid_argument("Unexpected number of results.");
     }
-
-    bindValue(nodesMaster(trResult.targets[0].targetId.nodeId), &value);
+    open62541Cpp::UA_NodeId ret(trResult.targets[0].targetId.nodeId);
     UA_BrowsePathResult_deleteMembers(&trResult);
+    return ret;
+  }
+
+  // Primitive types including string
+  template<typename T>
+  static void bindValueByPath(UA_Server *pServer,
+                              const open62541Cpp::UA_BrowsePath &brPath,
+                              NodesMaster &nodesMaster,
+                              T &value,
+                              std::false_type /*is_enum*/,
+                              std::false_type /*is_class*/
+  ) {
+    bindValue(
+        nodesMaster(resolveBrowsePath(pServer, brPath)),
+        &value
+        );
   }
 
   template<typename T>
@@ -81,6 +91,31 @@ struct bindValueByPathInternal {
                               std::true_type /*is_class*/
   ) {
     //bindValueByPath(pServer, brPath, nodesMaster, reinterpret_cast<void *>(&value), std::false_type{}, std::false_type{});
+
+    auto nodeId = resolveBrowsePath(pServer, brPath);
+    UA_NodeId typeNodeId;
+    UA_NodeId_init(&typeNodeId);
+    auto statusCode = UA_Server_readDataType(pServer, *nodeId.NodeId, &typeNodeId);
+    if(statusCode != UA_STATUSCODE_GOOD)
+    {
+      std::cout << "UA_Server_readDataType: Resutl not good: " <<
+                UA_StatusCode_name(statusCode) <<
+                std::endl;
+      throw std::runtime_error("Type could be be fetched, no variable node?");
+    }
+
+    const UA_DataType* pDataType = UA_findDataType(&typeNodeId);
+    if(pDataType == nullptr)
+    {
+      std::cout << "NodeId to Datatype failed." << std::endl;
+      throw std::runtime_error("NodeId to Datatype failed.");
+    }
+
+    bindStruct(
+        nodesMaster(nodeId),
+        reinterpret_cast<void *>(&value),
+        pDataType
+    );
   }
 
 };

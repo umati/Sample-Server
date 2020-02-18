@@ -45,24 +45,38 @@ ua_generate_nodeset(
 		DEPENDS_NS "${open62541_NODESET_DIR}/Schema/Opc.Ua.NodeSet2.xml;${PROJECT_SOURCE_DIR}/model/umati.xml"
 )
 
-add_executable(
-		${PROJECT_NAME}
-		ExampleUmatiServer.cpp
-		BindValue.cpp
-		BindStruct.cpp
-		NodesMaster.cpp
-		NodeValue.cpp
-		SetupEvents.cpp
+add_library(umati_generated
 		# Add dependend files to trigger the generation!
 		src_generated/namespace_umati_generated.c
 		src_generated/types_umati_generated.h
 		src_generated/umati_nodeids.h
 		src_generated/namespace_iswexample_generated.c
-		src_generated/iswexample.h
+		src_generated/iswexample.h)
+target_link_libraries(umati_generated PUBLIC open62541::open62541)
+set_target_properties(umati_generated PROPERTIES DEBUG_POSTFIX "d")
+
+add_library(ExampleServerLib
+		BindValue.cpp
+		BindStruct.cpp
+		NodesMaster.cpp
+		NodeValue.cpp
+		SetupEvents.cpp
+)
+set_target_properties(ExampleServerLib PROPERTIES LINKER_LANGUAGE CXX)
+set_target_properties(ExampleServerLib PROPERTIES DEBUG_POSTFIX "d")
+target_link_libraries(ExampleServerLib PUBLIC open62541::open62541)
+target_link_libraries(ExampleServerLib PUBLIC Open62541Cpp::Open62541Cpp)
+target_link_libraries(ExampleServerLib PUBLIC reflCpp::reflCpp)
+
+add_executable(
+		${PROJECT_NAME}
+		ExampleUmatiServer.cpp
 )
 
 set_target_properties(${PROJECT_NAME} PROPERTIES LINKER_LANGUAGE CXX)
 set_target_properties(${PROJECT_NAME} PROPERTIES DEBUG_POSTFIX "d")
-target_link_libraries(${PROJECT_NAME} PUBLIC open62541::open62541)
-target_link_libraries(${PROJECT_NAME} PUBLIC Open62541Cpp::Open62541Cpp)
-target_link_libraries(${PROJECT_NAME} PUBLIC reflCpp::reflCpp)
+target_link_libraries(${PROJECT_NAME} PUBLIC ExampleServerLib)
+target_link_libraries(${PROJECT_NAME} PUBLIC umati_generated)
+
+add_subdirectory(tests)
+include(CTest)

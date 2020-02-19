@@ -20,8 +20,16 @@
 #include <list>
 #include <Open62541Cpp/UA_RelativPathBase.hpp>
 #include "BindValueHelper.hpp"
+#include "OpcUaTypes/LocalizedText.hpp"
 
 #include <refl.hpp>
+#include "OpcUaTypes/Attributes.hpp"
+
+namespace constants {
+  constexpr const char* Ns0Uri = "http://opcfoundation.org/UA/";
+  constexpr const char* NsUmatiUri = "http://opcfoundation.org/UA/umati";
+  constexpr const char* NsInstanceUri = "http://www.isw.uni-stuttgart.de.org/ISWExample/";
+}
 
 struct IdentificationMachine_t {
   std::uint32_t BuildYear;
@@ -122,6 +130,55 @@ struct ChannelMonitoringType_t {
   }
 };
 
+struct State_t {
+  open62541Cpp::LocalizedText_t CurrentState;
+  void bind(UA_Server *pServer, UA_NodeId job, NodesMaster &nodesMaster);
+};
+
+REFL_TYPE(State_t)
+  REFL_FIELD(CurrentState, open62541Cpp::attribute::UaBrowseName{ .NsURI = constants::Ns0Uri})
+REFL_END
+
+
+void State_t::bind(UA_Server *pServer, UA_NodeId job, NodesMaster &nodesMaster) {
+  open62541Cpp::UA_RelativPathBase
+      Base
+      ({open62541Cpp::UA_RelativPathElement(2, "State")});
+
+  for_each(refl::reflect(*this).members, [&](auto member) {
+    std::uint16_t nsIndex = 2;
+    std::string name(member.name);
+    if constexpr(refl::descriptor::has_attribute<open62541Cpp::attribute::UaBrowseName>(member))
+    {
+      const auto& attrBrowseName = refl::descriptor::get_attribute<open62541Cpp::attribute::UaBrowseName>(member);
+      if (attrBrowseName.NsURI != nullptr){
+        std::size_t nsIndexByUri = 0;
+        open62541Cpp::UA_String uastr(attrBrowseName.NsURI);
+        auto ret = UA_Server_getNamespaceByName(pServer, *uastr.String, &nsIndexByUri);
+        if(ret != UA_STATUSCODE_GOOD)
+        {
+          std::cout << "Could not resolve namespace URI: " << attrBrowseName.NsURI << std::endl;
+        }
+        else
+        {
+          nsIndex = nsIndexByUri;
+        }
+      }
+      if (attrBrowseName.Name != nullptr){
+        name = attrBrowseName.Name;
+      }
+    }
+    bindValueByPath(pServer,
+                    open62541Cpp::UA_BrowsePath(
+                        job,
+                        Base(open62541Cpp::UA_RelativPathElement(nsIndex, name))
+                    ),
+                    nodesMaster,
+                    member(*this));
+
+  });
+}
+
 bool first = true;
 
 void simulate(IdentificationMachine_t *pInfo,
@@ -199,9 +256,17 @@ int main(int argc, char *argv[]) {
       }
   };
 
+  State_t Job1_State = {
+    .CurrentState = {
+      .locale = "en-en",
+      .text = "Testing State"
+    }
+  };
+
   identificationMachine.bind(pServer, UA_NODEID_NUMERIC(3, UA_ISWEXAMPLE_ID_MACHINETOOLS_ISWEXAMPLE), n);
   identificationSoftware.bind(pServer, UA_NODEID_NUMERIC(3, UA_ISWEXAMPLE_ID_MACHINETOOLS_ISWEXAMPLE), n);
   channel1.bind(pServer, UA_NODEID_NUMERIC(3, UA_ISWEXAMPLE_ID_MACHINETOOLS_ISWEXAMPLE_MONITORING_CHANNEL1), n);
+  Job1_State.bind(pServer, UA_NODEID_NUMERIC(3, UA_ISWEXAMPLE_ID_MACHINETOOLS_ISWEXAMPLE_PRODUCTION_PRODUCTIONPLAN_JOB01), n);
 
   n.SetCallbacks();
 

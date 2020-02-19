@@ -52,15 +52,12 @@ static void setByRefl(const T &src, void *trg, const UA_DataType *typeDefinition
 
   std::size_t numMembersSet = 0;
   for_each(refl::reflect(src).members, [&](auto reflMember) {
-    std::cout << __LINE__ << __FUNCTION__ << " " << refl::reflect(src).name << " " << reflMember.name << std::endl;
-
     std::size_t uaMemberIndex = -1;
     std::size_t ptrIncrement = 0;
     for (std::size_t i = 0; i < pTypeDefinition->membersSize; ++i)
     {
       auto &uaMember = pTypeDefinition->members[i];
       ptrIncrement += uaMember.padding;
-      std::cout << reflMember.name << std::endl;
       if (uaMember.memberName == std::string(reflMember.name))
       {
         uaMemberIndex = i;
@@ -110,8 +107,8 @@ template <typename T>
 void bindStructRefl(NodeValue &nodeValue, T &variable, const UA_DataType *typeDefinition)
 {
   auto pVariable = &variable;
-  nodeValue = std::bind(&internal_bindStruct::convertToVariantRefl, pVariable, typeDefinition);
+  //nodeValue = std::bind(&internal_bindStruct::convertToVariantRefl, pVariable, typeDefinition);
   nodeValue = [pVariable, typeDefinition] {
-    return internal_bindStruct::convertToVariantRefl(*pVariable, typeDefinition);
+    return internal_bindStruct::convertToVariantRefl(pVariable, typeDefinition);
   };
 }

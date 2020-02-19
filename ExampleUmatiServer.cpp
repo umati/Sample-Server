@@ -21,6 +21,7 @@
 #include <Open62541Cpp/UA_RelativPathBase.hpp>
 #include "BindValueHelper.hpp"
 #include "OpcUaTypes/LocalizedText.hpp"
+#include "OpcUaTypes/EUInformation.hpp"
 
 #include <refl.hpp>
 #include "OpcUaTypes/Attributes.hpp"
@@ -134,7 +135,7 @@ struct OverrideItemType_t
 {
   T Value;
   UA_Range EURange;
-  UA_EUInformation EngineeringUnits;
+  open62541Cpp::EUInformation_t EngineeringUnits;
 };
 
 struct ChannelMonitoringType_t
@@ -164,6 +165,13 @@ struct ChannelMonitoringType_t
                         FeedOverride(open62541Cpp::UA_RelativPathElement(0, "EURange"))),
                     nodesMaster,
                     this->FeedOverride.EURange);
+
+    bindValueByPath(pServer,
+                    open62541Cpp::UA_BrowsePath(
+                        channel,
+                        FeedOverride(open62541Cpp::UA_RelativPathElement(0, "EngineeringUnits"))),
+                    nodesMaster,
+                    this->FeedOverride.EngineeringUnits);
   }
 };
 
@@ -255,7 +263,14 @@ int main(int argc, char *argv[])
       .FeedOverride = {
           .EURange = {
               .low = 123.45,
-              .high = 234.56}}};
+              .high = 234.56},
+          .EngineeringUnits{
+              .NamespaceUri = "eu://meter",
+              .UnitId = -1,
+              .DisplayName{.locale = "", .text = "Meter"},
+              .Description = {.locale = "en", .text = "100cm"},
+          },
+  }};
 
   State_t Job1_State = {
       .CurrentState = {

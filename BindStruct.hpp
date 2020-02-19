@@ -19,10 +19,14 @@ void bindStruct(NodeValue &nodeValue, void *pVariable, const UA_DataType *typeDe
 
 namespace internal_bindStruct
 {
+
+template <typename T>
+static void setByRefl(const T &src, void *trg, const UA_DataType *typeDefinition);
+
 template <typename T>
 inline void copyValue(const T &src, void *memberPtr, const UA_DataType *typeDefinition)
 {
-  if constexpr (refl::trait::is_reflectable_v<decltype(reflMember(src))>)
+  if constexpr (!std::is_fundamental<T>::value && refl::trait::is_reflectable<decltype(src)>::value)
   {
     setByRefl(src, memberPtr, typeDefinition);
   }

@@ -61,6 +61,8 @@ add_library(ExampleServerLib
 		NodesMaster.cpp
 		NodeValue.cpp
 		SetupEvents.cpp
+		OpcUaTypes/LocalizedText.cpp
+		OpcUaTypes/EUInformation.cpp
 )
 set_target_properties(ExampleServerLib PROPERTIES LINKER_LANGUAGE CXX)
 set_target_properties(ExampleServerLib PROPERTIES DEBUG_POSTFIX "d")

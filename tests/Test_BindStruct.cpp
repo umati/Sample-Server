@@ -6,6 +6,7 @@
 
 #include <gtest/gtest.h>
 #include "../OpcUaTypes/LocalizedText.hpp"
+#include "../OpcUaTypes/EUInformation.hpp"
 #include <Open62541Cpp/UA_String.hpp>
 #include "../BindStruct.hpp"
 
@@ -30,4 +31,19 @@ TEST(ExampleServerLib, BindStructure_Basic)
   EXPECT_EQ(static_cast<std::string>(variant_text), oriLocalText.text);
 
   UA_Variant_deleteMembers(&variant);
+}
+
+TEST(ExampleServerLib, BindStructure_Recursive)
+{
+  open62541Cpp::EUInformation_t oriEuInformation {
+    .NamespaceUri ="eu://meter",
+    .UnitId = -1,
+    .DisplayName { .locale="", .text="Meter"},
+    .Description = { .locale="en", .text="100cm"},
+  };
+  auto variant = internal_bindStruct::convertToVariantRefl(&oriEuInformation, &UA_TYPES[UA_TYPES_EUINFORMATION]);
+  UA_EUInformation * pEuInformation = reinterpret_cast<UA_EUInformation *>(variant.data);
+
+  auto newEuInformation = open62541Cpp::EUInformation_t::fromUa(*pEuInformation);
+  EXPECT_EQ(oriEuInformation, newEuInformation);
 }

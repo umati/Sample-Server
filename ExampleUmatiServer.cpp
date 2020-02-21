@@ -47,6 +47,9 @@ UA_Int16 nsFromUri(UA_Server *pServer, std::string uri)
   return nsIndex;
 }
 
+template <typename T>
+void bindMemberRefl(T &member, UA_Server *pServer, UA_NodeId nodeId, open62541Cpp::UA_RelativPathBase base, NodesMaster &nodesMaster);
+
 /**
  * @brief Binding the members by it's reflection description
  *
@@ -76,14 +79,32 @@ void bindMembersRefl(T &instance, UA_Server *pServer, UA_NodeId nodeId, open6254
         name = attrBrowseName.Name;
       }
     }
+
+    auto childRelativPathElements = base(open62541Cpp::UA_RelativPathElement(nsIndex, name));
+
+    bindMemberRefl(member(instance), pServer, nodeId, childRelativPathElements, nodesMaster);
+  });
+}
+
+template <typename T>
+void bindMemberRefl(T &member, UA_Server *pServer, UA_NodeId nodeId, open62541Cpp::UA_RelativPathBase base, NodesMaster &nodesMaster)
+{
+  if constexpr (
+      refl::descriptor::has_attribute<open62541Cpp::attribute::UaObjectType>(
+          refl::reflect(member)))
+  {
+    bindMembersRefl(member, pServer, nodeId, base, nodesMaster);
+  }
+  else
+  {
     bindValueByPath(
         pServer,
         open62541Cpp::UA_BrowsePath(
             nodeId,
-            base(open62541Cpp::UA_RelativPathElement(nsIndex, name))),
+            base()),
         nodesMaster,
-        member(instance));
-  });
+        member);
+  }
 }
 
 struct IdentificationMachine_t
@@ -97,7 +118,7 @@ struct IdentificationMachine_t
   void bind(UA_Server *pServer, UA_NodeId machine, NodesMaster &nodesMaster);
 };
 
-REFL_TYPE(IdentificationMachine_t)
+REFL_TYPE(IdentificationMachine_t, open62541Cpp::attribute::UaObjectType())
 REFL_FIELD(BuildYear)
 REFL_FIELD(CatalogueName)
 REFL_FIELD(CustomName)
@@ -118,7 +139,7 @@ struct IdentificationSoftware_t
   void bind(UA_Server *pServer, UA_NodeId machine, NodesMaster &nodesMaster);
 };
 
-REFL_TYPE(IdentificationSoftware_t)
+REFL_TYPE(IdentificationSoftware_t, open62541Cpp::attribute::UaObjectType())
 REFL_FIELD(ComponentVersion)
 REFL_FIELD(Identifier)
 REFL_END
@@ -130,6 +151,26 @@ void IdentificationSoftware_t::bind(UA_Server *pServer, UA_NodeId machine, Nodes
   bindMembersRefl(*this, pServer, machine, Base, nodesMaster);
 }
 
+struct Identification_t
+{
+  IdentificationMachine_t Machine;
+  IdentificationSoftware_t Software;
+
+  void bind(UA_Server *pServer, UA_NodeId machine, NodesMaster &nodesMaster);
+};
+
+REFL_TYPE(Identification_t)
+REFL_FIELD(Machine)
+REFL_FIELD(Software)
+REFL_END
+
+void Identification_t::bind(UA_Server *pServer, UA_NodeId machine, NodesMaster &nodesMaster)
+{
+  open62541Cpp::UA_RelativPathBase
+      Base({open62541Cpp::UA_RelativPathElement(2, "Identification")});
+  bindMembersRefl(*this, pServer, machine, Base, nodesMaster);
+}
+
 template <typename T>
 struct OverrideItemType_t
 {
@@ -137,6 +178,12 @@ struct OverrideItemType_t
   UA_Range EURange;
   open62541Cpp::EUInformation_t EngineeringUnits;
 };
+
+REFL_TEMPLATE((typename T), (OverrideItemType_t<T>), open62541Cpp::attribute::UaVariableType())
+REFL_FIELD(Value)
+REFL_FIELD(EURange)
+REFL_FIELD(EngineeringUnits)
+REFL_END
 
 struct ChannelMonitoringType_t
 {
@@ -194,7 +241,7 @@ void State_t::bind(UA_Server *pServer, UA_NodeId job, NodesMaster &nodesMaster)
 
 bool first = true;
 
-void simulate(IdentificationMachine_t *pInfo,
+void simulate(Identification_t *pInfo,
               ChannelMonitoringType_t *pChannel1,
               std::atomic_bool &running,
               std::mutex &accessDataMutex,
@@ -207,7 +254,7 @@ void simulate(IdentificationMachine_t *pInfo,
   {
     ++i;
     ul.lock();
-    ++(pInfo->BuildYear);
+    ++(pInfo->Machine.BuildYear);
     pChannel1->ChannelState = static_cast<UA_ChannelState>((((int)pChannel1->ChannelState) + 1) % (UA_ChannelState::UA_CHANNELSTATE_RESET + 1));
 
     NotificationEvent_t ev{.Identifier = "MyId", .Message = "MessageTxt", .SourceName = "MySource", .Severity = 500};
@@ -246,17 +293,15 @@ int main(int argc, char *argv[])
 
   std::mutex accessDataMutex;
   NodesMaster n(pServer);
-  IdentificationMachine_t identificationMachine =
-      {
+  Identification_t identification = {
+      .Machine = {
           .BuildYear = 2020,
           .CatalogueName = "ISW Example",
           .CustomName = "My Custom Server",
           .Manufacturer = "ISW Christian von Arnim",
-          .SerialNumber = "3-1415926535-8979323846"};
-
-  IdentificationSoftware_t identificationSoftware = {
-      .ComponentVersion = "master@2020-01-13",
-      .Identifier = "OPC UA Server Open62541"};
+          .SerialNumber = "3-1415926535-8979323846"},
+      .Software = {.ComponentVersion = "master@2020-01-13", .Identifier = "OPC UA Server Open62541"},
+  };
 
   ChannelMonitoringType_t channel1 = {
       .ChannelState = UA_ChannelState::UA_CHANNELSTATE_INTERRUPTED,
@@ -270,15 +315,14 @@ int main(int argc, char *argv[])
               .DisplayName{.locale = "", .text = "Meter"},
               .Description = {.locale = "en", .text = "100cm"},
           },
-  }};
+      }};
 
   State_t Job1_State = {
       .CurrentState = {
           .locale = "en-en",
           .text = "Testing State"}};
 
-  identificationMachine.bind(pServer, UA_NODEID_NUMERIC(3, UA_ISWEXAMPLE_ID_MACHINETOOLS_ISWEXAMPLE), n);
-  identificationSoftware.bind(pServer, UA_NODEID_NUMERIC(3, UA_ISWEXAMPLE_ID_MACHINETOOLS_ISWEXAMPLE), n);
+  identification.bind(pServer, UA_NODEID_NUMERIC(3, UA_ISWEXAMPLE_ID_MACHINETOOLS_ISWEXAMPLE), n);
   channel1.bind(pServer, UA_NODEID_NUMERIC(3, UA_ISWEXAMPLE_ID_MACHINETOOLS_ISWEXAMPLE_MONITORING_CHANNEL1), n);
   Job1_State.bind(pServer, UA_NODEID_NUMERIC(3, UA_ISWEXAMPLE_ID_MACHINETOOLS_ISWEXAMPLE_PRODUCTION_PRODUCTIONPLAN_JOB01), n);
 
@@ -288,7 +332,7 @@ int main(int argc, char *argv[])
 
   UA_Server_run_startup(pServer);
   std::unique_lock<decltype(accessDataMutex)> ul(accessDataMutex);
-  std::thread t(simulate, &identificationMachine, &channel1, std::ref(running), std::ref(accessDataMutex), pServer);
+  std::thread t(simulate, &identification, &channel1, std::ref(running), std::ref(accessDataMutex), pServer);
   ul.unlock();
   while (running)
   {

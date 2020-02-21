@@ -60,7 +60,6 @@ add_library(ExampleServerLib
 		BindStruct.cpp
 		NodesMaster.cpp
 		NodeValue.cpp
-		SetupEvents.cpp
 		OpcUaTypes/LocalizedText.cpp
 		OpcUaTypes/EUInformation.cpp
 )
@@ -72,6 +71,7 @@ target_link_libraries(ExampleServerLib PUBLIC reflCpp::reflCpp)
 
 add_executable(
 		${PROJECT_NAME}
+		SetupEvents.cpp
 		ExampleUmatiServer.cpp
 )
 

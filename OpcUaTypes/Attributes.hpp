@@ -15,4 +15,11 @@ namespace open62541Cpp::attribute
         const char* NsURI = nullptr;
         const char* Name = nullptr;
     };
+
+    struct UaVariableType : refl::attr::usage::type {
+    };
+
+    struct UaObjectType : refl::attr::usage::type {
+    };
+
 }

@@ -64,23 +64,28 @@ template <typename T>
 void bindMembersRefl(T &instance, UA_Server *pServer, UA_NodeId nodeId, open62541Cpp::UA_RelativPathBase base, NodesMaster &nodesMaster)
 {
   for_each(refl::reflect(instance).members, [&](auto member) {
-    std::uint16_t nsIndex = 2;
-    std::string name(member.name);
-    if constexpr (refl::descriptor::has_attribute<open62541Cpp::attribute::UaBrowseName>(member))
+    auto childRelativPathElements = base();
+
+    // Check if this is the value of a variable type, if so, bind it to the base without appending a browse name
+    if constexpr (!refl::descriptor::has_attribute<open62541Cpp::attribute::UaVariableTypeValue>(member))
     {
-      const auto &attrBrowseName = refl::descriptor::get_attribute<open62541Cpp::attribute::UaBrowseName>(member);
-      if (attrBrowseName.NsURI != nullptr)
+      std::uint16_t nsIndex = 2;
+      std::string name(member.name);
+      if constexpr (refl::descriptor::has_attribute<open62541Cpp::attribute::UaBrowseName>(member))
       {
-        nsIndex = nsFromUri(pServer, attrBrowseName.NsURI);
-      }
+        const auto &attrBrowseName = refl::descriptor::get_attribute<open62541Cpp::attribute::UaBrowseName>(member);
+        if (attrBrowseName.NsURI != nullptr)
+        {
+          nsIndex = nsFromUri(pServer, attrBrowseName.NsURI);
+        }
 
-      if (attrBrowseName.Name != nullptr)
-      {
-        name = attrBrowseName.Name;
+        if (attrBrowseName.Name != nullptr)
+        {
+          name = attrBrowseName.Name;
+        }
       }
+      childRelativPathElements.push_back(open62541Cpp::UA_RelativPathElement(nsIndex, name));
     }
-
-    auto childRelativPathElements = base(open62541Cpp::UA_RelativPathElement(nsIndex, name));
 
     bindMemberRefl(member(instance), pServer, nodeId, childRelativPathElements, nodesMaster);
   });
@@ -91,6 +96,8 @@ void bindMemberRefl(T &member, UA_Server *pServer, UA_NodeId nodeId, open62541Cp
 {
   if constexpr (
       refl::descriptor::has_attribute<open62541Cpp::attribute::UaObjectType>(
+          refl::reflect(member)) ||
+      refl::descriptor::has_attribute<open62541Cpp::attribute::UaVariableType>(
           refl::reflect(member)))
   {
     bindMembersRefl(member, pServer, nodeId, base, nodesMaster);
@@ -222,9 +229,20 @@ struct ChannelMonitoringType_t
   }
 };
 
+struct FiniteStateVariableType_t
+{
+  open62541Cpp::LocalizedText_t Value;
+  UA_UInt32 Number;
+};
+
+REFL_TYPE(FiniteStateVariableType_t, open62541Cpp::attribute::UaVariableType())
+REFL_FIELD(Value, open62541Cpp::attribute::UaVariableTypeValue())
+REFL_FIELD(Number, open62541Cpp::attribute::UaBrowseName{.NsURI = constants::Ns0Uri})
+REFL_END
+
 struct State_t
 {
-  open62541Cpp::LocalizedText_t CurrentState;
+  FiniteStateVariableType_t CurrentState;
   void bind(UA_Server *pServer, UA_NodeId job, NodesMaster &nodesMaster);
 };
 
@@ -319,8 +337,12 @@ int main(int argc, char *argv[])
 
   State_t Job1_State = {
       .CurrentState = {
-          .locale = "en-en",
-          .text = "Testing State"}};
+          .Value = {
+              .locale = "en-en",
+              .text = "Testing State"},
+          .Number = 1234
+
+      }};
 
   identification.bind(pServer, UA_NODEID_NUMERIC(3, UA_ISWEXAMPLE_ID_MACHINETOOLS_ISWEXAMPLE), n);
   channel1.bind(pServer, UA_NODEID_NUMERIC(3, UA_ISWEXAMPLE_ID_MACHINETOOLS_ISWEXAMPLE_MONITORING_CHANNEL1), n);

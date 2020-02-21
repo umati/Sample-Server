@@ -22,4 +22,8 @@ namespace open62541Cpp::attribute
     struct UaObjectType : refl::attr::usage::type {
     };
 
+    struct UaVariableTypeValue : refl::attr::usage::field {
+
+    };
+
 }

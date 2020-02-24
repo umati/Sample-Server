@@ -12,6 +12,7 @@
 #include <Open62541Cpp/UA_RelativPathElement.hpp>
 #include <list>
 #include <Open62541Cpp/UA_BrowsePath.hpp>
+#include "OpcUaTypes/DateTime.hpp"
 #include <exception>
 
 #include "BindValue.hpp"
@@ -62,10 +63,7 @@ private:
       UA_Server *pServer,
       const open62541Cpp::UA_BrowsePath &brPath,
       NodesMaster &nodesMaster,
-      T &value,
-      std::false_type /*is_enum*/,
-      std::false_type /*is_class*/
-  )
+      T &value)
   {
     bindValue(
         nodesMaster(resolveBrowsePath(pServer, brPath)),
@@ -73,29 +71,22 @@ private:
   }
 
   template <typename T>
-  static void bindValueByPath(UA_Server *pServer,
-                              const open62541Cpp::UA_BrowsePath &brPath,
-                              NodesMaster &nodesMaster,
-                              T &value,
-                              std::true_type /*is_enum*/,
-                              std::false_type /*is_class*/
-  )
+  static void bindEnumValueByPath(
+      UA_Server *pServer,
+      const open62541Cpp::UA_BrowsePath &brPath,
+      NodesMaster &nodesMaster,
+      T &value)
   {
-    bindValueByPath(pServer, brPath, nodesMaster, *reinterpret_cast<std::int32_t *>(&value), std::false_type{}, std::false_type{});
+    bindValueByPath(pServer, brPath, nodesMaster, *reinterpret_cast<std::int32_t *>(&value));
   }
 
   // capture structs
   template <typename T>
-  static void bindValueByPath(UA_Server *pServer,
-                              const open62541Cpp::UA_BrowsePath &brPath,
-                              NodesMaster &nodesMaster,
-                              T &value,
-                              std::false_type /*is_enum*/,
-                              std::true_type /*is_class*/
-  )
+  static void bindStructuredValueByPath(UA_Server *pServer,
+                                        const open62541Cpp::UA_BrowsePath &brPath,
+                                        NodesMaster &nodesMaster,
+                                        T &value)
   {
-    //bindValueByPath(pServer, brPath, nodesMaster, reinterpret_cast<void *>(&value), std::false_type{}, std::false_type{});
-
     auto nodeId = resolveBrowsePath(pServer, brPath);
     UA_NodeId typeNodeId;
     UA_NodeId_init(&typeNodeId);
@@ -132,5 +123,20 @@ void bindValueByPath(UA_Server *pServer,
                      NodesMaster &nodesMaster,
                      T &value)
 {
-  bindValueByPathInternal::bindValueByPath(pServer, brPath, nodesMaster, value, std::is_enum<T>{}, std::integral_constant < bool, std::is_class<T>::value && !std::is_same<T, std::string>::value > {});
+  if constexpr (std::is_enum<T>::value)
+  {
+    bindValueByPathInternal::bindEnumValueByPath(pServer, brPath, nodesMaster, value);
+  }
+  else if constexpr (
+      std::is_class<T>::value &&
+      !(
+          std::is_same<std::string, T>::value ||
+          std::is_same<open62541Cpp::DateTime_t, T>::value))
+  {
+    bindValueByPathInternal::bindStructuredValueByPath(pServer, brPath, nodesMaster, value);
+  }
+  else
+  {
+    bindValueByPathInternal::bindValueByPath(pServer, brPath, nodesMaster, value);
+  }
 }

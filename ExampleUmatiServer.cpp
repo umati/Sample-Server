@@ -22,6 +22,7 @@
 #include "BindValueHelper.hpp"
 #include "OpcUaTypes/LocalizedText.hpp"
 #include "OpcUaTypes/EUInformation.hpp"
+#include "OpcUaTypes/DateTime.hpp"
 
 #include <refl.hpp>
 #include "OpcUaTypes/Attributes.hpp"
@@ -67,7 +68,8 @@ void bindMembersRefl(T &instance, UA_Server *pServer, UA_NodeId nodeId, open6254
     auto childRelativPathElements = base();
 
     // Check if this is the value of a variable type, if so, bind it to the base without appending a browse name
-    if constexpr (!refl::descriptor::has_attribute<open62541Cpp::attribute::UaVariableTypeValue>(member))
+    if constexpr (
+        !refl::descriptor::has_attribute<open62541Cpp::attribute::UaVariableTypeValue>(member))
     {
       std::uint16_t nsIndex = 2;
       std::string name(member.name);
@@ -91,14 +93,27 @@ void bindMembersRefl(T &instance, UA_Server *pServer, UA_NodeId nodeId, open6254
   });
 }
 
+template <typename AttributeType, typename T>
+constexpr bool hasAttributeIfReflectable(const T &member) noexcept
+{
+  if constexpr (!refl::trait::is_reflectable<T>::value)
+  {
+    return false;
+  }
+  else
+  {
+    return refl::descriptor::has_attribute<AttributeType>(
+        refl::reflect(member));
+  }
+}
+
 template <typename T>
 void bindMemberRefl(T &member, UA_Server *pServer, UA_NodeId nodeId, open62541Cpp::UA_RelativPathBase base, NodesMaster &nodesMaster)
 {
+  constexpr bool isReflectable = refl::trait::is_reflectable<T>::value;
   if constexpr (
-      refl::descriptor::has_attribute<open62541Cpp::attribute::UaObjectType>(
-          refl::reflect(member)) ||
-      refl::descriptor::has_attribute<open62541Cpp::attribute::UaVariableType>(
-          refl::reflect(member)))
+      hasAttributeIfReflectable<open62541Cpp::attribute::UaObjectType>(member) ||
+      hasAttributeIfReflectable<open62541Cpp::attribute::UaObjectType>(member))
   {
     bindMembersRefl(member, pServer, nodeId, base, nodesMaster);
   }
@@ -257,6 +272,46 @@ void State_t::bind(UA_Server *pServer, UA_NodeId job, NodesMaster &nodesMaster)
   bindMembersRefl(*this, pServer, job, Base, nodesMaster);
 }
 
+struct BaseEventType_t
+{
+  open62541Cpp::DateTime_t Time = std::chrono::system_clock::now();
+  std::string SourceName;
+  std::uint16_t Severity;
+  open62541Cpp::LocalizedText_t Message;
+  void bind(UA_Server *pServer, UA_NodeId event, NodesMaster &nodesMaster);
+};
+
+REFL_TYPE(BaseEventType_t)
+REFL_FIELD(Time, open62541Cpp::attribute::UaBrowseName{.NsURI = constants::Ns0Uri})
+REFL_FIELD(SourceName, open62541Cpp::attribute::UaBrowseName{.NsURI = constants::Ns0Uri})
+REFL_FIELD(Severity, open62541Cpp::attribute::UaBrowseName{.NsURI = constants::Ns0Uri})
+REFL_FIELD(Message, open62541Cpp::attribute::UaBrowseName{.NsURI = constants::Ns0Uri})
+REFL_END
+
+void BaseEventType_t::bind(UA_Server *pServer, UA_NodeId event, NodesMaster &nodesMaster)
+{
+  bindMembersRefl(*this, pServer, event, {}, nodesMaster);
+}
+
+template <typename T>
+UA_NodeId newEvent(T &eventData, UA_Server *pServer, NodesMaster &nodesMaster)
+{
+  UA_NodeId eventNodeId;
+  UA_StatusCode retval = UA_Server_createEvent(
+      pServer,
+      UA_NODEID_NUMERIC(0, UA_NS0ID_BASEEVENTTYPE),
+      &eventNodeId);
+
+  if (retval != UA_STATUSCODE_GOOD)
+  {
+    std::cerr << "Could not create event: " << retval << std::endl;
+    return UA_NODEID_NULL;
+  }
+
+  bindMembersRefl(eventData, pServer, eventNodeId, {}, nodesMaster);
+  return eventNodeId;
+}
+
 bool first = true;
 
 void simulate(Identification_t *pInfo,
@@ -275,6 +330,20 @@ void simulate(Identification_t *pInfo,
     ++(pInfo->Machine.BuildYear);
     pChannel1->ChannelState = static_cast<UA_ChannelState>((((int)pChannel1->ChannelState) + 1) % (UA_ChannelState::UA_CHANNELSTATE_RESET + 1));
 
+    {
+      BaseEventType_t baseEvent{
+          .SourceName = "Reflection Event",
+          .Severity = 258,
+          .Message = {
+            .locale = "",
+            .text = "MyMessage"
+          },
+      };
+      NodesMaster nm(pServer);
+      auto evNodeId = newEvent(baseEvent, pServer, nm);
+      nm.SetCallbacks();
+      UA_Server_triggerEvent(pServer, evNodeId, UA_NODEID_NUMERIC(0, UA_NS0ID_SERVER), NULL, UA_TRUE);
+    }
     NotificationEvent_t ev{.Identifier = "MyId", .Message = "MessageTxt", .SourceName = "MySource", .Severity = 500};
     auto evNodeId = setupNotificationEvent(pServer, ev);
     auto retval = UA_Server_triggerEvent(pServer, evNodeId, UA_NODEID_NUMERIC(0, UA_NS0ID_SERVER), NULL, UA_TRUE);

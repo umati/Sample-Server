@@ -332,6 +332,7 @@ void simulate(Identification_t *pInfo,
 
     {
       BaseEventType_t baseEvent{
+          .Time = std::chrono::system_clock::now(),
           .SourceName = "Reflection Event",
           .Severity = 258,
           .Message = {
@@ -393,6 +394,7 @@ int main(int argc, char *argv[])
   ChannelMonitoringType_t channel1 = {
       .ChannelState = UA_ChannelState::UA_CHANNELSTATE_INTERRUPTED,
       .FeedOverride = {
+          .Value = 0,
           .EURange = {
               .low = 123.45,
               .high = 234.56},

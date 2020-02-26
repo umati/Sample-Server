@@ -8,6 +8,7 @@
 #pragma once
 
 #include <refl.hpp>
+#include "ConstNodeId.hpp"
 
 namespace open62541Cpp::attribute
 {
@@ -20,6 +21,8 @@ namespace open62541Cpp::attribute
     };
 
     struct UaObjectType : refl::attr::usage::type {
+        UaObjectType() = default;
+        open62541Cpp::constexp::NodeId NodeId;
     };
 
     struct UaVariableTypeValue : refl::attr::usage::field {

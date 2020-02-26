@@ -25,7 +25,10 @@
 #include "OpcUaTypes/DateTime.hpp"
 
 #include <refl.hpp>
+#include "OpcUaTypes/ConstNodeId.hpp"
 #include "OpcUaTypes/Attributes.hpp"
+#include "OpcUaEvent.hpp"
+#include "Util.hpp"
 
 namespace constants
 {
@@ -33,20 +36,6 @@ constexpr const char *Ns0Uri = "http://opcfoundation.org/UA/";
 constexpr const char *NsUmatiUri = "http://opcfoundation.org/UA/umati";
 constexpr const char *NsInstanceUri = "http://www.isw.uni-stuttgart.de.org/ISWExample/";
 } // namespace constants
-
-UA_Int16 nsFromUri(UA_Server *pServer, std::string uri)
-{
-  std::size_t nsIndex = 0;
-  open62541Cpp::UA_String uastr(uri);
-  auto ret = UA_Server_getNamespaceByName(pServer, *uastr.String, &nsIndex);
-  if (ret != UA_STATUSCODE_GOOD)
-  {
-    std::cout << "Could not resolve namespace URI: " << uri << std::endl;
-    throw std::runtime_error("NsUri resolution failed.");
-  }
-
-  return nsIndex;
-}
 
 template <typename T>
 void bindMemberRefl(T &member, UA_Server *pServer, UA_NodeId nodeId, open62541Cpp::UA_RelativPathBase base, NodesMaster &nodesMaster);
@@ -140,7 +129,7 @@ struct IdentificationMachine_t
   void bind(UA_Server *pServer, UA_NodeId machine, NodesMaster &nodesMaster);
 };
 
-REFL_TYPE(IdentificationMachine_t, open62541Cpp::attribute::UaObjectType())
+REFL_TYPE(IdentificationMachine_t, open62541Cpp::attribute::UaObjectType{})
 REFL_FIELD(BuildYear)
 REFL_FIELD(CatalogueName)
 REFL_FIELD(CustomName)
@@ -281,7 +270,9 @@ struct BaseEventType_t
   void bind(UA_Server *pServer, UA_NodeId event, NodesMaster &nodesMaster);
 };
 
-REFL_TYPE(BaseEventType_t)
+REFL_TYPE(BaseEventType_t, open62541Cpp::attribute::UaObjectType
+  {.NodeId = open62541Cpp::constexp::NodeId(constants::Ns0Uri, UA_NS0ID_BASEEVENTTYPE)}
+)
 REFL_FIELD(Time, open62541Cpp::attribute::UaBrowseName{.NsURI = constants::Ns0Uri})
 REFL_FIELD(SourceName, open62541Cpp::attribute::UaBrowseName{.NsURI = constants::Ns0Uri})
 REFL_FIELD(Severity, open62541Cpp::attribute::UaBrowseName{.NsURI = constants::Ns0Uri})
@@ -291,25 +282,6 @@ REFL_END
 void BaseEventType_t::bind(UA_Server *pServer, UA_NodeId event, NodesMaster &nodesMaster)
 {
   bindMembersRefl(*this, pServer, event, {}, nodesMaster);
-}
-
-template <typename T>
-UA_NodeId newEvent(T &eventData, UA_Server *pServer, NodesMaster &nodesMaster)
-{
-  UA_NodeId eventNodeId;
-  UA_StatusCode retval = UA_Server_createEvent(
-      pServer,
-      UA_NODEID_NUMERIC(0, UA_NS0ID_BASEEVENTTYPE),
-      &eventNodeId);
-
-  if (retval != UA_STATUSCODE_GOOD)
-  {
-    std::cerr << "Could not create event: " << retval << std::endl;
-    return UA_NODEID_NULL;
-  }
-
-  bindMembersRefl(eventData, pServer, eventNodeId, {}, nodesMaster);
-  return eventNodeId;
 }
 
 bool first = true;
@@ -340,10 +312,7 @@ void simulate(Identification_t *pInfo,
             .text = "MyMessage"
           },
       };
-      NodesMaster nm(pServer);
-      auto evNodeId = newEvent(baseEvent, pServer, nm);
-      nm.SetCallbacks();
-      UA_Server_triggerEvent(pServer, evNodeId, UA_NODEID_NUMERIC(0, UA_NS0ID_SERVER), NULL, UA_TRUE);
+      OpcUaEvent ev(baseEvent, pServer);
     }
     NotificationEvent_t ev{.Identifier = "MyId", .Message = "MessageTxt", .SourceName = "MySource", .Severity = 500};
     auto evNodeId = setupNotificationEvent(pServer, ev);

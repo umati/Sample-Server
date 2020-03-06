@@ -331,19 +331,11 @@ REFL_END
 struct State_t
 {
   FiniteStateVariableType_t CurrentState;
-  void bind(UA_Server *pServer, UA_NodeId job, NodesMaster &nodesMaster);
 };
 
-REFL_TYPE(State_t)
+REFL_TYPE(State_t, open62541Cpp::attribute::UaObjectType{.NodeId = open62541Cpp::constexp::NodeId(constants::NsUmatiUri, UA_UMATIID_PRODUCTIONJOBSTATEMACHINETYPE)})
 REFL_FIELD(CurrentState, open62541Cpp::attribute::UaBrowseName{.NsURI = constants::Ns0Uri})
 REFL_END
-
-void State_t::bind(UA_Server *pServer, UA_NodeId job, NodesMaster &nodesMaster)
-{
-  open62541Cpp::UA_RelativPathBase
-      Base({open62541Cpp::UA_RelativPathElement(2, "State")});
-  bindMembersRefl(*this, pServer, job, Base, nodesMaster);
-}
 
 struct BaseEventType_t
 {
@@ -369,10 +361,18 @@ void BaseEventType_t::bind(UA_Server *pServer, UA_NodeId event, NodesMaster &nod
 struct ProductionJob_t
 {
   std::string Identifier;
+  bool IsSerialProduction;
+  std::uint32_t RunsCompleted;
+  std::uint32_t RunsPlanned;
+  State_t State;
 };
 
 REFL_TYPE(ProductionJob_t, open62541Cpp::attribute::UaObjectType{.NodeId = open62541Cpp::constexp::NodeId(constants::NsUmatiUri, UA_UMATIID_PRODUCTIONJOBTYPE)})
 REFL_FIELD(Identifier)
+//REFL_FIELD(IsSerialProduction)
+REFL_FIELD(RunsCompleted)
+REFL_FIELD(RunsPlanned)
+REFL_FIELD(State)
 REFL_END
 
 struct ProdictionJobList_t
@@ -475,20 +475,10 @@ int main(int argc, char *argv[])
           },
       }};
 
-  State_t Job1_State = {
-      .CurrentState = {
-          .Value = {
-              .locale = "en-en",
-              .text = "Testing State"},
-          .Number = 1234
-
-      }};
-
   ProdictionJobList_t ProductionPlan;
 
   identification.bind(pServer, UA_NODEID_NUMERIC(3, UA_ISWEXAMPLE_ID_MACHINETOOLS_ISWEXAMPLE), n);
   channel1.bind(pServer, UA_NODEID_NUMERIC(3, UA_ISWEXAMPLE_ID_MACHINETOOLS_ISWEXAMPLE_MONITORING_CHANNEL1), n);
-  Job1_State.bind(pServer, UA_NODEID_NUMERIC(3, UA_ISWEXAMPLE_ID_MACHINETOOLS_ISWEXAMPLE_PRODUCTION_PRODUCTIONPLAN_JOB01), n);
 
   bindMembersRefl(ProductionPlan, pServer, UA_NODEID_NUMERIC(3, UA_ISWEXAMPLE_ID_MACHINETOOLS_ISWEXAMPLE_PRODUCTION_PRODUCTIONPLAN), {}, n);
 
@@ -500,6 +490,14 @@ int main(int argc, char *argv[])
       std::stringstream ss;
       ss << "ID_" << i++ << std::endl;
       job.Identifier = ss.str();
+      job.State = {
+      .CurrentState = {
+          .Value = {
+              .locale = "en-en",
+              .text = "Testing State"},
+          .Number = 1234
+
+      }};
     }
   }
 

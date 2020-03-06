@@ -22,7 +22,6 @@
 struct bindValueByPathInternal
 {
 
-private:
   template <class T>
   friend void bindValueByPath(
       UA_Server *pServer,
@@ -34,6 +33,12 @@ private:
       UA_Server *pServer,
       const open62541Cpp::UA_BrowsePath &brPath)
   {
+    // No Elements in browse path.
+    if(brPath.BrowsePath->relativePath.elementsSize == 0)
+    {
+      return open62541Cpp::UA_NodeId(brPath.BrowsePath->startingNode);
+    }
+
     auto trResult =
         UA_Server_translateBrowsePathToNodeIds(
             pServer,
@@ -57,6 +62,7 @@ private:
     return ret;
   }
 
+private:
   // Primitive types including string
   template <typename T>
   static void bindValueByPath(

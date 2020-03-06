@@ -40,6 +40,9 @@ constexpr const char *NsInstanceUri = "http://www.isw.uni-stuttgart.de.org/ISWEx
 template <typename T>
 void bindMemberRefl(T &member, UA_Server *pServer, UA_NodeId nodeId, open62541Cpp::UA_RelativPathBase base, NodesMaster &nodesMaster);
 
+template <typename T>
+void bindPlaceholder(std::list<T> &member, UA_Server *pServer, UA_NodeId nodeId, open62541Cpp::UA_RelativPathBase base, NodesMaster &nodesMaster, open62541Cpp::UA_NodeId refTypeNodeId);
+
 /**
  * @brief Binding the members by it's reflection description
  *
@@ -55,6 +58,27 @@ void bindMembersRefl(T &instance, UA_Server *pServer, UA_NodeId nodeId, open6254
 {
   for_each(refl::reflect(instance).members, [&](auto member) {
     auto childRelativPathElements = base();
+
+    if constexpr (
+        is_same_template<typename decltype(member)::value_type, std::list>::value)
+    {
+      std::cout << member.name << " is a placeholder." << std::endl;
+      std::cout << "Placeholders are not implemented." << std::endl;
+      ///\todo Read placeholder instances from Server.
+
+      if constexpr (
+          !refl::descriptor::has_attribute<open62541Cpp::attribute::UaReference>(member))
+      {
+        std::cout << "Placeholder " << member.name << " has no UaReference." << std::endl;
+        throw std::runtime_error("Required attribute UaReference not found.");
+      }
+      const auto &reference = refl::descriptor::get_attribute<open62541Cpp::attribute::UaReference>(member);
+      auto refTypeNodeId = reference.NodeId.UANodeId(pServer);
+
+      bindPlaceholder(member(instance), pServer, nodeId, base, nodesMaster, refTypeNodeId);
+
+      return;
+    }
 
     // Check if this is the value of a variable type, if so, bind it to the base without appending a browse name
     if constexpr (
@@ -102,7 +126,7 @@ void bindMemberRefl(T &member, UA_Server *pServer, UA_NodeId nodeId, open62541Cp
   constexpr bool isReflectable = refl::trait::is_reflectable<T>::value;
   if constexpr (
       hasAttributeIfReflectable<open62541Cpp::attribute::UaObjectType>(member) ||
-      hasAttributeIfReflectable<open62541Cpp::attribute::UaObjectType>(member))
+      hasAttributeIfReflectable<open62541Cpp::attribute::UaVariableType>(member))
   {
     bindMembersRefl(member, pServer, nodeId, base, nodesMaster);
   }
@@ -116,6 +140,66 @@ void bindMemberRefl(T &member, UA_Server *pServer, UA_NodeId nodeId, open62541Cp
         nodesMaster,
         member);
   }
+}
+
+template <typename T>
+void bindPlaceholder(std::list<T> &member, UA_Server *pServer, UA_NodeId baseNodeId, open62541Cpp::UA_RelativPathBase base, NodesMaster &nodesMaster, open62541Cpp::UA_NodeId refTypeNodeId)
+{
+  auto nodeId = bindValueByPathInternal::resolveBrowsePath(
+      pServer, open62541Cpp::UA_BrowsePath(
+                   baseNodeId,
+                   base()));
+  UA_BrowseDescription brDesc;
+  UA_BrowseDescription_init(&brDesc);
+  UA_NodeId_copy(nodeId.NodeId, &brDesc.nodeId);
+  UA_NodeId_copy(refTypeNodeId.NodeId, &brDesc.referenceTypeId);
+
+  open62541Cpp::UA_NodeId typeNodeId;
+
+  if constexpr (!refl::trait::is_reflectable<T>::value)
+  {
+    static_assert(always_false<T>::value, "T not reflectable");
+  }
+
+  if constexpr (refl::descriptor::has_attribute<open62541Cpp::attribute::UaObjectType>(refl::reflect<T>()))
+  {
+    auto objTypeAttr = refl::descriptor::get_attribute<open62541Cpp::attribute::UaObjectType>(refl::reflect<T>());
+    typeNodeId = objTypeAttr.NodeId.UANodeId(pServer);
+    brDesc.nodeClassMask = UA_NODECLASS_OBJECT;
+  }
+  else
+  {
+    // TODO handle variable types
+    static_assert(always_false<T>::value, "T has attribute UaObjectType or (UaVariableType -- not implemented).");
+  }
+
+  brDesc.browseDirection = UA_BrowseDirection::UA_BROWSEDIRECTION_FORWARD;
+  brDesc.includeSubtypes = UA_TRUE;
+  brDesc.resultMask = UA_BROWSERESULTMASK_ALL;
+
+  auto browseResult = UA_Server_browse(pServer, UA_UINT32_MAX, &brDesc);
+  if (browseResult.statusCode != UA_STATUSCODE_GOOD)
+  {
+    std::cout << "Resutl not good: " << UA_StatusCode_name(browseResult.statusCode) << std::endl;
+    std::cout << "Could not find placeholders." << std::endl;
+  }
+
+  for (std::size_t i = 0; i < browseResult.referencesSize; ++i)
+  {
+    open62541Cpp::UA_String txt(&browseResult.references[i].displayName.text);
+
+    std::cout << "Placeholder possible value: " << txt << std::endl;
+    if (UA_NodeId_equal(&browseResult.references[i].typeDefinition.nodeId, typeNodeId.NodeId))
+    {
+      std::cout << "Placeholder type match" << std::endl;
+      member.push_back(T());
+      T &instance = *(member.rbegin());
+      bindMembersRefl(instance, pServer, browseResult.references[i].nodeId.nodeId, {}, nodesMaster);
+    }
+  }
+
+  UA_BrowseResult_deleteMembers(&browseResult);
+  UA_BrowseDescription_deleteMembers(&brDesc);
 }
 
 struct IdentificationMachine_t
@@ -270,9 +354,7 @@ struct BaseEventType_t
   void bind(UA_Server *pServer, UA_NodeId event, NodesMaster &nodesMaster);
 };
 
-REFL_TYPE(BaseEventType_t, open62541Cpp::attribute::UaObjectType
-  {.NodeId = open62541Cpp::constexp::NodeId(constants::Ns0Uri, UA_NS0ID_BASEEVENTTYPE)}
-)
+REFL_TYPE(BaseEventType_t, open62541Cpp::attribute::UaObjectType{.NodeId = open62541Cpp::constexp::NodeId(constants::Ns0Uri, UA_NS0ID_BASEEVENTTYPE)})
 REFL_FIELD(Time, open62541Cpp::attribute::UaBrowseName{.NsURI = constants::Ns0Uri})
 REFL_FIELD(SourceName, open62541Cpp::attribute::UaBrowseName{.NsURI = constants::Ns0Uri})
 REFL_FIELD(Severity, open62541Cpp::attribute::UaBrowseName{.NsURI = constants::Ns0Uri})
@@ -283,6 +365,25 @@ void BaseEventType_t::bind(UA_Server *pServer, UA_NodeId event, NodesMaster &nod
 {
   bindMembersRefl(*this, pServer, event, {}, nodesMaster);
 }
+
+struct ProductionJob_t
+{
+  std::string Identifier;
+};
+
+REFL_TYPE(ProductionJob_t, open62541Cpp::attribute::UaObjectType{.NodeId = open62541Cpp::constexp::NodeId(constants::NsUmatiUri, UA_UMATIID_PRODUCTIONJOBTYPE)})
+REFL_FIELD(Identifier)
+REFL_END
+
+struct ProdictionJobList_t
+{
+  std::list<ProductionJob_t> Jobs;
+};
+
+REFL_TYPE(ProdictionJobList_t, open62541Cpp::attribute::UaObjectType{.NodeId = open62541Cpp::constexp::NodeId(constants::NsUmatiUri, UA_UMATIID_PRODUCTIONJOBLISTTYPE)})
+REFL_FIELD(Jobs, open62541Cpp::attribute::UaReference{
+                     {.NodeId = open62541Cpp::constexp::NodeId(constants::Ns0Uri, UA_NS0ID_HASCOMPONENT)}})
+REFL_END
 
 bool first = true;
 
@@ -308,9 +409,8 @@ void simulate(Identification_t *pInfo,
           .SourceName = "Reflection Event",
           .Severity = 258,
           .Message = {
-            .locale = "",
-            .text = "MyMessage"
-          },
+              .locale = "",
+              .text = "MyMessage"},
       };
       OpcUaEvent ev(baseEvent, pServer);
     }
@@ -384,9 +484,24 @@ int main(int argc, char *argv[])
 
       }};
 
+  ProdictionJobList_t ProductionPlan;
+
   identification.bind(pServer, UA_NODEID_NUMERIC(3, UA_ISWEXAMPLE_ID_MACHINETOOLS_ISWEXAMPLE), n);
   channel1.bind(pServer, UA_NODEID_NUMERIC(3, UA_ISWEXAMPLE_ID_MACHINETOOLS_ISWEXAMPLE_MONITORING_CHANNEL1), n);
   Job1_State.bind(pServer, UA_NODEID_NUMERIC(3, UA_ISWEXAMPLE_ID_MACHINETOOLS_ISWEXAMPLE_PRODUCTION_PRODUCTIONPLAN_JOB01), n);
+
+  bindMembersRefl(ProductionPlan, pServer, UA_NODEID_NUMERIC(3, UA_ISWEXAMPLE_ID_MACHINETOOLS_ISWEXAMPLE_PRODUCTION_PRODUCTIONPLAN), {}, n);
+
+  // Assign placeholders after binding!
+  {
+    int i = 1;
+    for (auto &job : ProductionPlan.Jobs)
+    {
+      std::stringstream ss;
+      ss << "ID_" << i++ << std::endl;
+      job.Identifier = ss.str();
+    }
+  }
 
   n.SetCallbacks();
 

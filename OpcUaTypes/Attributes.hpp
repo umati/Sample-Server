@@ -25,6 +25,12 @@ namespace open62541Cpp::attribute
         open62541Cpp::constexp::NodeId NodeId;
     };
 
+    /// \TOOD use constructor as NodeId is required
+    struct UaReference : refl::attr::usage::field {
+        UaReference() = default;
+        open62541Cpp::constexp::NodeId NodeId;
+    };
+
     struct UaVariableTypeValue : refl::attr::usage::field {
 
     };

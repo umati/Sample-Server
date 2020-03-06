@@ -369,7 +369,7 @@ struct ProductionJob_t
 
 REFL_TYPE(ProductionJob_t, open62541Cpp::attribute::UaObjectType{.NodeId = open62541Cpp::constexp::NodeId(constants::NsUmatiUri, UA_UMATIID_PRODUCTIONJOBTYPE)})
 REFL_FIELD(Identifier)
-//REFL_FIELD(IsSerialProduction)
+REFL_FIELD(IsSerialProduction)
 REFL_FIELD(RunsCompleted)
 REFL_FIELD(RunsPlanned)
 REFL_FIELD(State)
@@ -415,8 +415,10 @@ void simulate(Identification_t *pInfo,
       OpcUaEvent ev(baseEvent, pServer);
     }
     NotificationEvent_t ev{.Identifier = "MyId", .Message = "MessageTxt", .SourceName = "MySource", .Severity = 500};
+    /*
     auto evNodeId = setupNotificationEvent(pServer, ev);
     auto retval = UA_Server_triggerEvent(pServer, evNodeId, UA_NODEID_NUMERIC(0, UA_NS0ID_SERVER), NULL, UA_TRUE);
+    */
     if (first)
     {
       AlertCondition_t aev;
@@ -490,6 +492,9 @@ int main(int argc, char *argv[])
       std::stringstream ss;
       ss << "ID_" << i++ << std::endl;
       job.Identifier = ss.str();
+      job.IsSerialProduction = true;
+      job.RunsCompleted = 8;
+      job.RunsPlanned = 10;
       job.State = {
       .CurrentState = {
           .Value = {

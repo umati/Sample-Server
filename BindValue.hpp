@@ -29,4 +29,5 @@ using primitivTypes_t = std::variant<
 void bindValue(NodeValue &nodeValue, primitivTypes_t pVariable);
 void bindValue(NodeValue &nodeValue, std::string *variable);
 void bindValue(NodeValue &nodeValue, open62541Cpp::DateTime_t *variable);
+void bindValue(NodeValue &nodeValue, bool *variable);
 

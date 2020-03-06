@@ -48,3 +48,16 @@ void bindValue(NodeValue &nodeValue, open62541Cpp::DateTime_t *variable)
     return value;
   };
 }
+
+void bindValue(NodeValue &nodeValue, bool *variable)
+{
+  auto pVariable = variable;
+  nodeValue = [pVariable] {
+    UA_Boolean b;
+    // Ensure OPC UA encoding
+    b = *pVariable? UA_TRUE : UA_FALSE;
+    UA_Variant value;
+    UA_Variant_setScalarCopy(&value, &b, &UA_TYPES[UA_TYPES_BOOLEAN]);
+    return value;
+  };
+}

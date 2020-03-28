@@ -18,6 +18,8 @@ namespace open62541Cpp::attribute
     };
 
     struct UaVariableType : refl::attr::usage::type {
+        UaVariableType() = default;
+        open62541Cpp::constexp::NodeId NodeId;
     };
 
     struct UaObjectType : refl::attr::usage::type {

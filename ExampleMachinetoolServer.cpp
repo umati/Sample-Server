@@ -35,8 +35,10 @@
 namespace constants
 {
 constexpr const char *Ns0Uri = "http://opcfoundation.org/UA/";
-constexpr const char *NsUmatiUri = "http://opcfoundation.org/UA/umati";
-constexpr const char *NsInstanceUri = "http://www.isw.uni-stuttgart.de.org/ISWExample/";
+constexpr const char *NsDIUri = "http://opcfoundation.org/UA/DI/";
+constexpr const char *NsMachineryUri = "http://opcfoundation.org/UA/Machinery/";
+constexpr const char *NsMachineToolUri = "http://opcfoundation.org/UA/MachineTool/";
+constexpr const char *NsInstanceUri = "http://isw.example.com";
 } // namespace constants
 
 template <typename T>
@@ -82,7 +84,8 @@ void bindMembersRefl(T &instance, UA_Server *pServer, UA_NodeId nodeId, open6254
       return;
     }
 
-    // Check if this is the value of a variable type, if so, bind it to the base without appending a browse name
+    // Check if this is not the value of a variable type
+    // If this is the value of a variable type bind it to the base without appending a browse name (skip adding a browse name)
     if constexpr (
         !refl::descriptor::has_attribute<open62541Cpp::attribute::UaVariableTypeValue>(member))
     {
@@ -101,6 +104,33 @@ void bindMembersRefl(T &instance, UA_Server *pServer, UA_NodeId nodeId, open6254
           name = attrBrowseName.Name;
         }
       }
+      else if constexpr (refl::descriptor::has_attribute<open62541Cpp::attribute::UaObjectType>(refl::reflect<T>()))
+      {
+        // Take index from type as default BrowseName Index
+        auto objTypeAttr = refl::descriptor::get_attribute<open62541Cpp::attribute::UaObjectType>(refl::reflect<T>());
+        if(objTypeAttr.NodeId.NsUri != nullptr)
+        {
+            nsIndex = nsFromUri(pServer, objTypeAttr.NodeId.NsUri);
+        }
+        else
+        {
+          std::cout << "No NodeId at object type provided!" << std::endl;
+        }
+      }
+      else if constexpr (refl::descriptor::has_attribute<open62541Cpp::attribute::UaVariableType>(refl::reflect<T>()))
+      {
+        // Take index from type as default BrowseName Index
+        auto varTypeAttr = refl::descriptor::get_attribute<open62541Cpp::attribute::UaVariableType>(refl::reflect<T>());
+        if(varTypeAttr.NodeId.NsUri != nullptr)
+        {
+            nsIndex = nsFromUri(pServer, varTypeAttr.NodeId.NsUri);
+        }
+        else
+        {
+          std::cout << "No NodeId at variable type provided!" << std::endl;
+        }
+      }
+
       childRelativPathElements.push_back(open62541Cpp::UA_RelativPathElement(nsIndex, name));
     }
 
@@ -204,127 +234,73 @@ void bindPlaceholder(std::list<T> &member, UA_Server *pServer, UA_NodeId baseNod
   UA_BrowseDescription_deleteMembers(&brDesc);
 }
 
-struct IdentificationMachine_t
+struct MachineToolIdentification_t
 {
-  std::uint32_t BuildYear;
-  std::string CatalogueName;
-  std::string CustomName;
-  std::string Manufacturer;
+  std::uint16_t YearOfConstruction;
+  open62541Cpp::LocalizedText_t Model;
+  std::string SoftwareRevision;
+  open62541Cpp::LocalizedText_t Manufacturer;
   std::string SerialNumber;
-
-  void bind(UA_Server *pServer, UA_NodeId machine, NodesMaster &nodesMaster);
 };
 
-REFL_TYPE(IdentificationMachine_t, open62541Cpp::attribute::UaObjectType{})
-REFL_FIELD(BuildYear)
-REFL_FIELD(CatalogueName)
-REFL_FIELD(CustomName)
-REFL_FIELD(Manufacturer)
-REFL_FIELD(SerialNumber)
+REFL_TYPE(MachineToolIdentification_t, open62541Cpp::attribute::UaObjectType{.NodeId = open62541Cpp::constexp::NodeId(constants::NsMachineToolUri, UA_MACHINETOOLID_MACHINETOOLIDENTIFICATIONTYPE)})
+REFL_FIELD(YearOfConstruction, open62541Cpp::attribute::UaBrowseName{.NsURI = constants::NsMachineryUri})
+REFL_FIELD(Model, open62541Cpp::attribute::UaBrowseName{.NsURI = constants::NsDIUri})
+REFL_FIELD(SoftwareRevision, open62541Cpp::attribute::UaBrowseName{.NsURI = constants::NsDIUri})
+REFL_FIELD(Manufacturer, open62541Cpp::attribute::UaBrowseName{.NsURI = constants::NsDIUri})
+REFL_FIELD(SerialNumber, open62541Cpp::attribute::UaBrowseName{.NsURI = constants::NsDIUri})
 REFL_END
 
-void IdentificationMachine_t::bind(UA_Server *pServer, UA_NodeId machine, NodesMaster &nodesMaster)
-{
-  open62541Cpp::UA_RelativPathBase Base({open62541Cpp::UA_RelativPathElement(2, "Identification"), open62541Cpp::UA_RelativPathElement(2, "Machine")});
-  bindMembersRefl(*this, pServer, machine, Base, nodesMaster);
-}
 
-struct IdentificationSoftware_t
+struct SoftwareIdentification_t
 {
-  std::string ComponentVersion;
+  std::string SoftwareRevision;
   std::string Identifier;
   void bind(UA_Server *pServer, UA_NodeId machine, NodesMaster &nodesMaster);
 };
 
-REFL_TYPE(IdentificationSoftware_t, open62541Cpp::attribute::UaObjectType())
-REFL_FIELD(ComponentVersion)
+REFL_TYPE(SoftwareIdentification_t, open62541Cpp::attribute::UaObjectType())
+REFL_FIELD(SoftwareRevision)
 REFL_FIELD(Identifier)
 REFL_END
 
-void IdentificationSoftware_t::bind(UA_Server *pServer, UA_NodeId machine, NodesMaster &nodesMaster)
+void SoftwareIdentification_t::bind(UA_Server *pServer, UA_NodeId machine, NodesMaster &nodesMaster)
 {
   open62541Cpp::UA_RelativPathBase
-      Base({open62541Cpp::UA_RelativPathElement(2, "Identification"), open62541Cpp::UA_RelativPathElement(2, "Software")});
-  bindMembersRefl(*this, pServer, machine, Base, nodesMaster);
-}
-
-struct Identification_t
-{
-  IdentificationMachine_t Machine;
-  IdentificationSoftware_t Software;
-
-  void bind(UA_Server *pServer, UA_NodeId machine, NodesMaster &nodesMaster);
-};
-
-REFL_TYPE(Identification_t)
-REFL_FIELD(Machine)
-REFL_FIELD(Software)
-REFL_END
-
-void Identification_t::bind(UA_Server *pServer, UA_NodeId machine, NodesMaster &nodesMaster)
-{
-  open62541Cpp::UA_RelativPathBase
-      Base({open62541Cpp::UA_RelativPathElement(2, "Identification")});
+      Base({open62541Cpp::UA_RelativPathElement(2, "Identification"), open62541Cpp::UA_RelativPathElement(2, "SoftwareIdentification")});
   bindMembersRefl(*this, pServer, machine, Base, nodesMaster);
 }
 
 template <typename T>
-struct OverrideItemType_t
+struct AnalogUnitRangeType_t
 {
   T Value;
   UA_Range EURange;
   open62541Cpp::EUInformation_t EngineeringUnits;
 };
 
-REFL_TEMPLATE((typename T), (OverrideItemType_t<T>), open62541Cpp::attribute::UaVariableType())
-REFL_FIELD(Value)
+REFL_TEMPLATE((typename T), (AnalogUnitRangeType_t<T>), open62541Cpp::attribute::UaVariableType{.NodeId = open62541Cpp::constexp::NodeId(constants::Ns0Uri, UA_NS0ID_ANALOGUNITRANGETYPE)})
+REFL_FIELD(Value, open62541Cpp::attribute::UaVariableTypeValue())
 REFL_FIELD(EURange)
 REFL_FIELD(EngineeringUnits)
 REFL_END
 
-struct ChannelMonitoringType_t
+struct ChannelMonitoring_t
 {
   UA_ChannelState ChannelState;
-  OverrideItemType_t<double> FeedOverride;
-  void bind(UA_Server *pServer, UA_NodeId channel, NodesMaster &nodesMaster)
-  {
-    open62541Cpp::UA_RelativPathBase ChannelBase;
-    bindValueByPath(pServer,
-                    open62541Cpp::UA_BrowsePath(channel,
-                                                ChannelBase(open62541Cpp::UA_RelativPathElement(2, "ChannelState"))),
-                    nodesMaster,
-                    this->ChannelState);
-
-    bindValueByPath(pServer,
-                    open62541Cpp::UA_BrowsePath(
-                        channel,
-                        ChannelBase(open62541Cpp::UA_RelativPathElement(2, "FeedOverride"))),
-                    nodesMaster,
-                    this->FeedOverride.Value);
-
-    open62541Cpp::UA_RelativPathBase FeedOverride(ChannelBase(open62541Cpp::UA_RelativPathElement(2, "FeedOverride")));
-    bindValueByPath(pServer,
-                    open62541Cpp::UA_BrowsePath(
-                        channel,
-                        FeedOverride(open62541Cpp::UA_RelativPathElement(0, "EURange"))),
-                    nodesMaster,
-                    this->FeedOverride.EURange);
-
-    bindValueByPath(pServer,
-                    open62541Cpp::UA_BrowsePath(
-                        channel,
-                        FeedOverride(open62541Cpp::UA_RelativPathElement(0, "EngineeringUnits"))),
-                    nodesMaster,
-                    this->FeedOverride.EngineeringUnits);
-  }
+  AnalogUnitRangeType_t<double> FeedOverride;
 };
+
+REFL_TYPE(ChannelMonitoring_t, open62541Cpp::attribute::UaObjectType{.NodeId = open62541Cpp::constexp::NodeId(constants::NsMachineToolUri, UA_MACHINETOOLID_CHANNELMONITORINGTYPE)})
+REFL_FIELD(ChannelState)
+REFL_FIELD(FeedOverride)
+REFL_END
 
 struct FiniteStateVariableType_t
 {
   open62541Cpp::LocalizedText_t Value;
   UA_UInt32 Number;
 };
-
 REFL_TYPE(FiniteStateVariableType_t, open62541Cpp::attribute::UaVariableType())
 REFL_FIELD(Value, open62541Cpp::attribute::UaVariableTypeValue())
 REFL_FIELD(Number, open62541Cpp::attribute::UaBrowseName{.NsURI = constants::Ns0Uri})
@@ -335,7 +311,7 @@ struct State_t
   FiniteStateVariableType_t CurrentState;
 };
 
-REFL_TYPE(State_t, open62541Cpp::attribute::UaObjectType{.NodeId = open62541Cpp::constexp::NodeId(constants::NsUmatiUri, UA_MACHINETOOLID_PRODUCTIONJOBSTATEMACHINETYPE)})
+REFL_TYPE(State_t, open62541Cpp::attribute::UaObjectType{.NodeId = open62541Cpp::constexp::NodeId(constants::NsMachineToolUri, UA_MACHINETOOLID_PRODUCTIONJOBSTATEMACHINETYPE)})
 REFL_FIELD(CurrentState, open62541Cpp::attribute::UaBrowseName{.NsURI = constants::Ns0Uri})
 REFL_END
 
@@ -363,15 +339,13 @@ void BaseEventType_t::bind(UA_Server *pServer, UA_NodeId event, NodesMaster &nod
 struct ProductionJob_t
 {
   std::string Identifier;
-  bool IsSerialProduction;
   std::uint32_t RunsCompleted;
   std::uint32_t RunsPlanned;
   State_t State;
 };
 
-REFL_TYPE(ProductionJob_t, open62541Cpp::attribute::UaObjectType{.NodeId = open62541Cpp::constexp::NodeId(constants::NsUmatiUri, UA_MACHINETOOLID_PRODUCTIONJOBTYPE)})
+REFL_TYPE(ProductionJob_t, open62541Cpp::attribute::UaObjectType{.NodeId = open62541Cpp::constexp::NodeId(constants::NsMachineToolUri, UA_MACHINETOOLID_PRODUCTIONJOBTYPE)})
 REFL_FIELD(Identifier)
-REFL_FIELD(IsSerialProduction)
 REFL_FIELD(RunsCompleted)
 REFL_FIELD(RunsPlanned)
 REFL_FIELD(State)
@@ -382,15 +356,45 @@ struct ProdictionJobList_t
   std::list<ProductionJob_t> Jobs;
 };
 
-REFL_TYPE(ProdictionJobList_t, open62541Cpp::attribute::UaObjectType{.NodeId = open62541Cpp::constexp::NodeId(constants::NsUmatiUri, UA_MACHINETOOLID_PRODUCTIONJOBLISTTYPE)})
+REFL_TYPE(ProdictionJobList_t, open62541Cpp::attribute::UaObjectType{.NodeId = open62541Cpp::constexp::NodeId(constants::NsMachineToolUri, UA_MACHINETOOLID_PRODUCTIONJOBLISTTYPE)})
 REFL_FIELD(Jobs, open62541Cpp::attribute::UaReference{
                      {.NodeId = open62541Cpp::constexp::NodeId(constants::Ns0Uri, UA_NS0ID_HASCOMPONENT)}})
 REFL_END
 
+struct Monitoring_t{
+  std::list<ChannelMonitoring_t> Channels;
+};
+
+REFL_TYPE(Monitoring_t, open62541Cpp::attribute::UaObjectType{.NodeId = open62541Cpp::constexp::NodeId(constants::NsMachineToolUri, UA_MACHINETOOLID_MONITORINGTYPE)})
+REFL_FIELD(Channels, open62541Cpp::attribute::UaReference{
+                     {.NodeId = open62541Cpp::constexp::NodeId(constants::Ns0Uri, UA_NS0ID_HASCOMPONENT)}})
+REFL_END
+
+struct Production_t {
+  ProdictionJobList_t ProductionPlan;
+};
+
+REFL_TYPE(Production_t, open62541Cpp::attribute::UaObjectType{.NodeId = open62541Cpp::constexp::NodeId(constants::NsMachineToolUri, UA_MACHINETOOLID_PRODUCTIONTYPE)})
+REFL_FIELD(ProductionPlan)
+REFL_END
+
+
+struct MachineTool_t{
+  MachineToolIdentification_t Identification;
+  Monitoring_t Monitoring;
+  Production_t Production;
+};
+
+REFL_TYPE(MachineTool_t, open62541Cpp::attribute::UaObjectType{.NodeId = open62541Cpp::constexp::NodeId(constants::NsMachineToolUri, UA_MACHINETOOLID_MACHINETOOLTYPE)})
+REFL_FIELD(Identification, open62541Cpp::attribute::UaBrowseName{.NsURI = constants::NsDIUri})
+REFL_FIELD(Monitoring)
+REFL_FIELD(Production)
+REFL_END
+
+
 bool first = true;
 
-void simulate(Identification_t *pInfo,
-              ChannelMonitoringType_t *pChannel1,
+void simulate(MachineTool_t *pMachineTool,
               std::atomic_bool &running,
               std::mutex &accessDataMutex,
               UA_Server *pServer)
@@ -402,8 +406,8 @@ void simulate(Identification_t *pInfo,
   {
     ++i;
     ul.lock();
-    ++(pInfo->Machine.BuildYear);
-    pChannel1->ChannelState = static_cast<UA_ChannelState>((((int)pChannel1->ChannelState) + 1) % (UA_ChannelState::UA_CHANNELSTATE_RESET + 1));
+    ++(pMachineTool->Identification.YearOfConstruction);
+    //pChannel1->ChannelState = static_cast<UA_ChannelState>((((int)pChannel1->ChannelState) + 1) % (UA_ChannelState::UA_CHANNELSTATE_RESET + 1));
 
     {
       BaseEventType_t baseEvent{
@@ -456,17 +460,23 @@ int main(int argc, char *argv[])
 
   std::mutex accessDataMutex;
   NodesMaster n(pServer);
-  Identification_t identification = {
-      .Machine = {
-          .BuildYear = 2020,
-          .CatalogueName = "ISW Example",
-          .CustomName = "My Custom Server",
-          .Manufacturer = "ISW Christian von Arnim",
-          .SerialNumber = "3-1415926535-8979323846"},
-      .Software = {.ComponentVersion = "master@2020-01-13", .Identifier = "OPC UA Server Open62541"},
+  MachineTool_t machineTool = {
+    .Identification = {
+      .YearOfConstruction = 2020,
+      .Model = {
+        .locale ="",
+        .text ="ISW Example",
+      },
+      .SoftwareRevision = "master",
+      .Manufacturer = {
+        .locale ="",
+        .text ="ISW Christian von Arnim"
+        },
+      .SerialNumber = "3-1415926535-8979323846",
+    }
   };
 
-  ChannelMonitoringType_t channel1 = {
+  ChannelMonitoring_t channel1 = {
       .ChannelState = UA_ChannelState::UA_CHANNELSTATE_INTERRUPTED,
       .FeedOverride = {
           .Value = 0,
@@ -481,30 +491,43 @@ int main(int argc, char *argv[])
           },
       }};
 
-  ProdictionJobList_t ProductionPlan;
-  identification.bind(pServer, UA_NODEID_NUMERIC(3, UA_ISWEXAMPLE_ID_MACHINES_ISWEXAMPLEMACHINE), n);
-  channel1.bind(pServer, UA_NODEID_NUMERIC(3, UA_ISWEXAMPLE_ID_MACHINES_ISWEXAMPLEMACHINE_MONITORING_CHANNEL1), n);
-
-  bindMembersRefl(ProductionPlan, pServer, UA_NODEID_NUMERIC(3, UA_ISWEXAMPLE_ID_MACHINES_ISWEXAMPLEMACHINE_PRODUCTION_PRODUCTIONPLAN), {}, n);
+  bindMembersRefl(machineTool, pServer, UA_NODEID_NUMERIC(5, UA_ISWEXAMPLE_ID_MACHINES_ISWEXAMPLEMACHINE), {}, n);
 
   // Assign placeholders after binding!
   {
     int i = 1;
-    for (auto &job : ProductionPlan.Jobs)
+    for (auto &job : machineTool.Production.ProductionPlan.Jobs)
     {
       std::stringstream ss;
       ss << "ID_" << i++ << std::endl;
       job.Identifier = ss.str();
-      job.IsSerialProduction = true;
       job.RunsCompleted = 8;
       job.RunsPlanned = 10;
       job.State = {
-      .CurrentState = {
-          .Value = {
-              .locale = "en-en",
-              .text = "Testing State"},
-          .Number = 1234
+          .CurrentState = {
+              .Value = {
+                  .locale = "en-en",
+                  .text = "Testing State"},
+              .Number = 1234
 
+          }};
+    }
+
+    for(auto &channel : machineTool.Monitoring.Channels)
+    {
+      channel = {
+      .ChannelState = UA_ChannelState::UA_CHANNELSTATE_INTERRUPTED,
+      .FeedOverride = {
+          .Value = 6,
+          .EURange = {
+              .low = 123.45,
+              .high = 234.56},
+          .EngineeringUnits{
+              .NamespaceUri = "eu://meter",
+              .UnitId = -1,
+              .DisplayName{.locale = "", .text = "Meter"},
+              .Description = {.locale = "en", .text = "100cm"},
+          },
       }};
     }
   }
@@ -515,7 +538,7 @@ int main(int argc, char *argv[])
 
   UA_Server_run_startup(pServer);
   std::unique_lock<decltype(accessDataMutex)> ul(accessDataMutex);
-  std::thread t(simulate, &identification, &channel1, std::ref(running), std::ref(accessDataMutex), pServer);
+  std::thread t(simulate, &machineTool, std::ref(running), std::ref(accessDataMutex), pServer);
   ul.unlock();
   while (running)
   {

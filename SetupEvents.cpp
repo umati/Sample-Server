@@ -14,9 +14,9 @@
 #include "NodeValue.hpp"
 #include <functional>
 #include <cstdint>
-#include "src_generated/umati_nodeids.h"
+#include "src_generated/machinetool_nodeids.h"
 #include "src_generated/iswexample.h"
-#include "src_generated/namespace_umati_generated.h"
+#include "src_generated/namespace_machinetool_generated.h"
 #include "src_generated/namespace_iswexample_generated.h"
 #include <iostream>
 #include "SetupEvents.hpp"
@@ -28,7 +28,7 @@ UA_NodeId setupAlertConditionType(UA_Server *pServer, AlertCondition_t ev)
   UA_StatusCode retval = UA_Server_createCondition(
       pServer,
       UA_NODEID_NULL /*UA_NODEID_NUMERIC(0, UA_NS0ID_SYSTEMCONDITIONCLASSTYPE)*/,
-      UA_NODEID_NUMERIC(2, UA_UMATIID_ALERTCONDITIONTYPE),
+      UA_NODEID_NUMERIC(2, UA_MACHINETOOLID_ALERTCONDITIONTYPE),
       *open62541Cpp::UA_QualifiedName(0, "SystemConditionClassType").QualifiedName,
       UA_NODEID_NUMERIC(0, UA_NS0ID_SERVER),
       UA_NODEID_NULL, &eventNodeId);
@@ -137,7 +137,7 @@ UA_NodeId setupNotificationEvent(UA_Server *pServer, NotificationEvent_t ev){
   UA_NodeId eventNodeId;
   UA_StatusCode retval = UA_Server_createEvent(
       pServer,
-      UA_NODEID_NUMERIC(2, UA_UMATIID_NOTIFICATIONEVENTTYPE),
+      UA_NODEID_NUMERIC(2, UA_MACHINETOOLID_NOTIFICATIONEVENTTYPE),
       &eventNodeId);
 
   if(retval != UA_STATUSCODE_GOOD){

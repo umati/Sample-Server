@@ -1,9 +1,11 @@
 #include <iostream>
 #include <open62541/server_config_default.h>
 #include "src_generated/namespace_iswexample_generated.h"
-#include "src_generated/namespace_umati_generated.h"
+#include "src_generated/namespace_machinetool_generated.h"
+#include "src_generated/namespace_machinery_generated.h"
+#include "src_generated/namespace_di_generated.h"
 #include "src_generated/iswexample.h"
-#include "src_generated/umati_nodeids.h"
+#include "src_generated/machinetool_nodeids.h"
 #include <cstdint>
 #include <functional>
 #include "NodeValue.hpp"
@@ -333,7 +335,7 @@ struct State_t
   FiniteStateVariableType_t CurrentState;
 };
 
-REFL_TYPE(State_t, open62541Cpp::attribute::UaObjectType{.NodeId = open62541Cpp::constexp::NodeId(constants::NsUmatiUri, UA_UMATIID_PRODUCTIONJOBSTATEMACHINETYPE)})
+REFL_TYPE(State_t, open62541Cpp::attribute::UaObjectType{.NodeId = open62541Cpp::constexp::NodeId(constants::NsUmatiUri, UA_MACHINETOOLID_PRODUCTIONJOBSTATEMACHINETYPE)})
 REFL_FIELD(CurrentState, open62541Cpp::attribute::UaBrowseName{.NsURI = constants::Ns0Uri})
 REFL_END
 
@@ -367,7 +369,7 @@ struct ProductionJob_t
   State_t State;
 };
 
-REFL_TYPE(ProductionJob_t, open62541Cpp::attribute::UaObjectType{.NodeId = open62541Cpp::constexp::NodeId(constants::NsUmatiUri, UA_UMATIID_PRODUCTIONJOBTYPE)})
+REFL_TYPE(ProductionJob_t, open62541Cpp::attribute::UaObjectType{.NodeId = open62541Cpp::constexp::NodeId(constants::NsUmatiUri, UA_MACHINETOOLID_PRODUCTIONJOBTYPE)})
 REFL_FIELD(Identifier)
 REFL_FIELD(IsSerialProduction)
 REFL_FIELD(RunsCompleted)
@@ -380,7 +382,7 @@ struct ProdictionJobList_t
   std::list<ProductionJob_t> Jobs;
 };
 
-REFL_TYPE(ProdictionJobList_t, open62541Cpp::attribute::UaObjectType{.NodeId = open62541Cpp::constexp::NodeId(constants::NsUmatiUri, UA_UMATIID_PRODUCTIONJOBLISTTYPE)})
+REFL_TYPE(ProdictionJobList_t, open62541Cpp::attribute::UaObjectType{.NodeId = open62541Cpp::constexp::NodeId(constants::NsUmatiUri, UA_MACHINETOOLID_PRODUCTIONJOBLISTTYPE)})
 REFL_FIELD(Jobs, open62541Cpp::attribute::UaReference{
                      {.NodeId = open62541Cpp::constexp::NodeId(constants::Ns0Uri, UA_NS0ID_HASCOMPONENT)}})
 REFL_END
@@ -447,7 +449,9 @@ int main(int argc, char *argv[])
   UA_ServerConfig_setDefault(UA_Server_getConfig(pServer));
 
   std::cout << "ExampleUmatiServer" << std::endl;
-  namespace_umati_generated(pServer);
+  namespace_di_generated(pServer);
+  namespace_machinery_generated(pServer);
+  namespace_machinetool_generated(pServer);
   namespace_iswexample_generated(pServer);
 
   std::mutex accessDataMutex;
@@ -478,11 +482,10 @@ int main(int argc, char *argv[])
       }};
 
   ProdictionJobList_t ProductionPlan;
+  identification.bind(pServer, UA_NODEID_NUMERIC(3, UA_ISWEXAMPLE_ID_MACHINES_ISWEXAMPLEMACHINE), n);
+  channel1.bind(pServer, UA_NODEID_NUMERIC(3, UA_ISWEXAMPLE_ID_MACHINES_ISWEXAMPLEMACHINE_MONITORING_CHANNEL1), n);
 
-  identification.bind(pServer, UA_NODEID_NUMERIC(3, UA_ISWEXAMPLE_ID_MACHINETOOLS_ISWEXAMPLE), n);
-  channel1.bind(pServer, UA_NODEID_NUMERIC(3, UA_ISWEXAMPLE_ID_MACHINETOOLS_ISWEXAMPLE_MONITORING_CHANNEL1), n);
-
-  bindMembersRefl(ProductionPlan, pServer, UA_NODEID_NUMERIC(3, UA_ISWEXAMPLE_ID_MACHINETOOLS_ISWEXAMPLE_PRODUCTION_PRODUCTIONPLAN), {}, n);
+  bindMembersRefl(ProductionPlan, pServer, UA_NODEID_NUMERIC(3, UA_ISWEXAMPLE_ID_MACHINES_ISWEXAMPLEMACHINE_PRODUCTION_PRODUCTIONPLAN), {}, n);
 
   // Assign placeholders after binding!
   {

@@ -19,6 +19,7 @@
         <Alias Alias="Byte">i=3</Alias>
         <Alias Alias="UInt16">i=5</Alias>
         <Alias Alias="UInt32">i=7</Alias>
+        <Alias Alias="Double">i=11</Alias>
         <Alias Alias="String">i=12</Alias>
         <Alias Alias="DateTime">i=13</Alias>
         <Alias Alias="NodeId">i=17</Alias>
@@ -34,15 +35,22 @@
         <Alias Alias="IdType">i=256</Alias>
         <Alias Alias="NumericRange">i=291</Alias>
         <Alias Alias="UtcTime">i=294</Alias>
+        <Alias Alias="Range">i=884</Alias>
         <Alias Alias="EUInformation">i=887</Alias>
+        <Alias Alias="ChannelState">ns=3;i=3004</Alias>
         <Alias Alias="MachineOperationMode">ns=3;i=3005</Alias>
         <Alias Alias="ToolLocked">ns=3;i=3006</Alias>
+        <Alias Alias="SignalColor">ns=3;i=3007</Alias>
+        <Alias Alias="SignalModeLight">ns=3;i=3008</Alias>
+        <Alias Alias="ControlMode">ns=3;i=3009</Alias>
+        <Alias Alias="NCProcessing">ns=3;i=3010</Alias>
         <Alias Alias="WearIndication">ns=3;i=3011</Alias>
         <Alias Alias="ToolManagement">ns=3;i=3012</Alias>
+        <Alias Alias="StacklightOperationMode">ns=3;i=3014</Alias>
     </Aliases>
     <Extensions>
         <Extension>
-            <ua:ModelInfo Tool="UaModeler" Hash="f0IhMADXG21c3Um+pAyv8A==" Version="1.6.3"/>
+            <ua:ModelInfo Tool="UaModeler" Hash="SHSqSpNlompYv8R3gWJjBQ==" Version="1.6.3"/>
         </Extension>
     </Extensions>
     <UAObject NodeId="ns=1;i=5002" BrowseName="1:IswExampleMachine">
@@ -380,11 +388,106 @@
     <UAObject ParentNodeId="ns=1;i=5002" NodeId="ns=1;i=5005" BrowseName="3:Monitoring">
         <DisplayName>Monitoring</DisplayName>
         <References>
+            <Reference ReferenceType="Organizes">ns=1;i=5028</Reference>
             <Reference ReferenceType="HasComponent">ns=1;i=5006</Reference>
             <Reference ReferenceType="HasTypeDefinition">ns=3;i=1016</Reference>
             <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=5002</Reference>
+            <Reference ReferenceType="HasComponent">ns=1;i=5025</Reference>
         </References>
     </UAObject>
+    <UAObject NodeId="ns=1;i=5028" BrowseName="2:Channel1">
+        <DisplayName>Channel1</DisplayName>
+        <References>
+            <Reference ReferenceType="Organizes" IsForward="false">ns=1;i=5005</Reference>
+            <Reference ReferenceType="HasTypeDefinition">ns=3;i=1018</Reference>
+            <Reference ReferenceType="HasComponent">ns=1;i=6058</Reference>
+            <Reference ReferenceType="HasComponent">ns=1;i=6059</Reference>
+            <Reference ReferenceType="HasComponent">ns=1;i=6060</Reference>
+            <Reference ReferenceType="HasProperty">ns=1;i=6063</Reference>
+            <Reference ReferenceType="HasComponent">ns=1;i=6064</Reference>
+            <Reference ReferenceType="HasComponent">ns=1;i=6065</Reference>
+        </References>
+    </UAObject>
+    <UAVariable DataType="ChannelState" ParentNodeId="ns=1;i=5028" NodeId="ns=1;i=6058" BrowseName="3:ChannelState">
+        <DisplayName>ChannelState</DisplayName>
+        <References>
+            <Reference ReferenceType="HasTypeDefinition">i=63</Reference>
+            <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=5028</Reference>
+        </References>
+    </UAVariable>
+    <UAVariable DataType="ControlMode" ParentNodeId="ns=1;i=5028" NodeId="ns=1;i=6059" BrowseName="3:ControlMode">
+        <DisplayName>ControlMode</DisplayName>
+        <References>
+            <Reference ReferenceType="HasTypeDefinition">i=63</Reference>
+            <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=5028</Reference>
+        </References>
+    </UAVariable>
+    <UAVariable DataType="Double" ParentNodeId="ns=1;i=5028" NodeId="ns=1;i=6060" BrowseName="3:FeedOverride">
+        <DisplayName>FeedOverride</DisplayName>
+        <References>
+            <Reference ReferenceType="HasTypeDefinition">i=17570</Reference>
+            <Reference ReferenceType="HasProperty">ns=1;i=6061</Reference>
+            <Reference ReferenceType="HasProperty">ns=1;i=6062</Reference>
+            <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=5028</Reference>
+        </References>
+        <Value>
+            <uax:Double>0</uax:Double>
+        </Value>
+    </UAVariable>
+    <UAVariable DataType="EUInformation" ParentNodeId="ns=1;i=6060" NodeId="ns=1;i=6061" BrowseName="EngineeringUnits">
+        <DisplayName>EngineeringUnits</DisplayName>
+        <References>
+            <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=6060</Reference>
+            <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+        </References>
+    </UAVariable>
+    <UAVariable DataType="Range" ParentNodeId="ns=1;i=6060" NodeId="ns=1;i=6062" BrowseName="EURange">
+        <DisplayName>EURange</DisplayName>
+        <References>
+            <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=6060</Reference>
+            <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+        </References>
+    </UAVariable>
+    <UAVariable DataType="String" ParentNodeId="ns=1;i=5028" NodeId="ns=1;i=6063" BrowseName="3:Name">
+        <DisplayName>Name</DisplayName>
+        <References>
+            <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+            <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=5028</Reference>
+        </References>
+    </UAVariable>
+    <UAVariable DataType="NCProcessing" ParentNodeId="ns=1;i=5028" NodeId="ns=1;i=6064" BrowseName="3:NcProcessing">
+        <DisplayName>NcProcessing</DisplayName>
+        <References>
+            <Reference ReferenceType="HasTypeDefinition">i=63</Reference>
+            <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=5028</Reference>
+        </References>
+    </UAVariable>
+    <UAVariable DataType="Double" ParentNodeId="ns=1;i=5028" NodeId="ns=1;i=6065" BrowseName="3:RapidOverride">
+        <DisplayName>RapidOverride</DisplayName>
+        <References>
+            <Reference ReferenceType="HasTypeDefinition">i=17570</Reference>
+            <Reference ReferenceType="HasProperty">ns=1;i=6066</Reference>
+            <Reference ReferenceType="HasProperty">ns=1;i=6067</Reference>
+            <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=5028</Reference>
+        </References>
+        <Value>
+            <uax:Double>0</uax:Double>
+        </Value>
+    </UAVariable>
+    <UAVariable DataType="EUInformation" ParentNodeId="ns=1;i=6065" NodeId="ns=1;i=6066" BrowseName="EngineeringUnits">
+        <DisplayName>EngineeringUnits</DisplayName>
+        <References>
+            <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=6065</Reference>
+            <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+        </References>
+    </UAVariable>
+    <UAVariable DataType="Range" ParentNodeId="ns=1;i=6065" NodeId="ns=1;i=6067" BrowseName="EURange">
+        <DisplayName>EURange</DisplayName>
+        <References>
+            <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=6065</Reference>
+            <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+        </References>
+    </UAVariable>
     <UAObject ParentNodeId="ns=1;i=5005" NodeId="ns=1;i=5006" BrowseName="3:MachineTool">
         <DisplayName>MachineTool</DisplayName>
         <References>
@@ -398,6 +501,67 @@
         <References>
             <Reference ReferenceType="HasTypeDefinition">i=63</Reference>
             <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=5006</Reference>
+        </References>
+        <Value>
+            <uax:Int32>0</uax:Int32>
+        </Value>
+    </UAVariable>
+    <UAObject ParentNodeId="ns=1;i=5005" NodeId="ns=1;i=5025" BrowseName="3:Stacklight">
+        <DisplayName>Stacklight</DisplayName>
+        <References>
+            <Reference ReferenceType="HasOrderedComponent">ns=1;i=5026</Reference>
+            <Reference ReferenceType="HasProperty">ns=1;i=6053</Reference>
+            <Reference ReferenceType="HasTypeDefinition">ns=3;i=1040</Reference>
+            <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=5005</Reference>
+        </References>
+    </UAObject>
+    <UAObject ParentNodeId="ns=1;i=5025" NodeId="ns=1;i=5026" BrowseName="3:Lamp">
+        <DisplayName>Lamp</DisplayName>
+        <References>
+            <Reference ReferenceType="HasOrderedComponent" IsForward="false">ns=1;i=5025</Reference>
+            <Reference ReferenceType="HasTypeDefinition">ns=3;i=1041</Reference>
+            <Reference ReferenceType="HasProperty">ns=1;i=6054</Reference>
+            <Reference ReferenceType="HasProperty">ns=1;i=6055</Reference>
+            <Reference ReferenceType="HasProperty">ns=1;i=6056</Reference>
+            <Reference ReferenceType="HasProperty">ns=1;i=6057</Reference>
+        </References>
+    </UAObject>
+    <UAVariable DataType="UInt16" ParentNodeId="ns=1;i=5026" NodeId="ns=1;i=6054" BrowseName="3:PositionFromBase" AccessLevel="3">
+        <DisplayName>PositionFromBase</DisplayName>
+        <References>
+            <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=5026</Reference>
+            <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+        </References>
+        <Value>
+            <uax:UInt16>0</uax:UInt16>
+        </Value>
+    </UAVariable>
+    <UAVariable DataType="SignalColor" ParentNodeId="ns=1;i=5026" NodeId="ns=1;i=6055" BrowseName="3:SignalColor" AccessLevel="3">
+        <DisplayName>SignalColor</DisplayName>
+        <References>
+            <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+            <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=5026</Reference>
+        </References>
+    </UAVariable>
+    <UAVariable DataType="Boolean" ParentNodeId="ns=1;i=5026" NodeId="ns=1;i=6056" BrowseName="3:SignalOn" AccessLevel="3">
+        <DisplayName>SignalOn</DisplayName>
+        <References>
+            <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+            <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=5026</Reference>
+        </References>
+    </UAVariable>
+    <UAVariable DataType="SignalModeLight" ParentNodeId="ns=1;i=5026" NodeId="ns=1;i=6057" BrowseName="3:StacklightMode" AccessLevel="3">
+        <DisplayName>StacklightMode</DisplayName>
+        <References>
+            <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+            <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=5026</Reference>
+        </References>
+    </UAVariable>
+    <UAVariable DataType="StacklightOperationMode" ParentNodeId="ns=1;i=5025" NodeId="ns=1;i=6053" BrowseName="3:StacklightMode" AccessLevel="3">
+        <DisplayName>StacklightMode</DisplayName>
+        <References>
+            <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+            <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=5025</Reference>
         </References>
         <Value>
             <uax:Int32>0</uax:Int32>

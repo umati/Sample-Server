@@ -1,26 +1,33 @@
 ###########################
 # UaModeler Project File  #
-# Generated at 11.02.2020 #
+# Generated at 27.03.2020 #
 ###########################
 
-PROJECTNAME = UMATI
+PROJECTNAME = umati
 
 TEMPLATESET = ($TEMPLATES)/modeling/v1_0/t0/modeling.tt2set
 
 MODELS += ($MODELS)/Opc.Ua.NodeSet2.ua \
-    umati.ua \
+    ($MODELS)/Opc.Ua.Di.NodeSet2.ua \
+    machinery.ua \
+    machinetool.ua \
     iswexample.ua
 
-COLORS = ($MODELS)/Opc.Ua.NodeSet2.ua: #ff0000\
-    umati.ua: #0000ff\
+COLORS = ($MODELS)/Opc.Ua.NodeSet2.ua: #0000ff\
+    ($MODELS)/Opc.Ua.Di.NodeSet2.ua: #0000ff\
+    machinery.ua: #008000\
+    machinetool.ua: #0000ff\
     iswexample.ua: #0000ff
 
 OUTPUTPATH = 
 
-GENERATE += umati.ua \
+GENERATE += machinery.ua \
+    machinetool.ua \
     iswexample.ua
 
-LOCKEDMODELS += umati.ua
+LOCKEDMODELS += ($MODELS)/Opc.Ua.Di.NodeSet2.ua \
+    machinery.ua \
+    machinetool.ua
 
 NODEACCESSINFOROLES += Administrator \
     SecurityAdmin \

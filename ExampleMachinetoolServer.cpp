@@ -6,6 +6,8 @@
 #include "src_generated/namespace_di_generated.h"
 #include "src_generated/iswexample.h"
 #include "src_generated/machinetool_nodeids.h"
+#include "src_generated/di_nodeids.h"
+#include "src_generated/machinery.h"
 #include <cstdint>
 #include <functional>
 #include "NodeValue.hpp"
@@ -60,6 +62,17 @@ void bindPlaceholder(std::list<T> &member, UA_Server *pServer, UA_NodeId nodeId,
 template <typename T>
 void bindMembersRefl(T &instance, UA_Server *pServer, UA_NodeId nodeId, open62541Cpp::UA_RelativPathBase base, NodesMaster &nodesMaster)
 {
+  if constexpr (refl::descriptor::has_attribute<Bases>(refl::reflect<T>()))
+  {
+    constexpr auto bases = refl::descriptor::get_attribute<Bases>(refl::reflect<T>());
+    if constexpr (bases.descriptors.size)
+    {
+      refl::util::for_each(bases.descriptors, [&](auto t) {
+        bindMembersRefl(static_cast<typename decltype(t)::type &>(instance), pServer, nodeId, base, nodesMaster);
+      });
+    }
+  }
+
   for_each(refl::reflect(instance).members, [&](auto member) {
     auto childRelativPathElements = base();
 
@@ -108,9 +121,9 @@ void bindMembersRefl(T &instance, UA_Server *pServer, UA_NodeId nodeId, open6254
       {
         // Take index from type as default BrowseName Index
         auto objTypeAttr = refl::descriptor::get_attribute<open62541Cpp::attribute::UaObjectType>(refl::reflect<T>());
-        if(objTypeAttr.NodeId.NsUri != nullptr)
+        if (objTypeAttr.NodeId.NsUri != nullptr)
         {
-            nsIndex = nsFromUri(pServer, objTypeAttr.NodeId.NsUri);
+          nsIndex = nsFromUri(pServer, objTypeAttr.NodeId.NsUri);
         }
         else
         {
@@ -121,9 +134,9 @@ void bindMembersRefl(T &instance, UA_Server *pServer, UA_NodeId nodeId, open6254
       {
         // Take index from type as default BrowseName Index
         auto varTypeAttr = refl::descriptor::get_attribute<open62541Cpp::attribute::UaVariableType>(refl::reflect<T>());
-        if(varTypeAttr.NodeId.NsUri != nullptr)
+        if (varTypeAttr.NodeId.NsUri != nullptr)
         {
-            nsIndex = nsFromUri(pServer, varTypeAttr.NodeId.NsUri);
+          nsIndex = nsFromUri(pServer, varTypeAttr.NodeId.NsUri);
         }
         else
         {
@@ -234,7 +247,23 @@ void bindPlaceholder(std::list<T> &member, UA_Server *pServer, UA_NodeId baseNod
   UA_BrowseDescription_deleteMembers(&brDesc);
 }
 
-struct MachineToolIdentification_t
+struct IVendorNameplate_t{
+  std::string ProductInstanceUri;
+};
+REFL_TYPE(IVendorNameplate_t,
+          open62541Cpp::attribute::UaObjectType{.NodeId = open62541Cpp::constexp::NodeId(constants::NsDIUri, UA_DIID_IVENDORNAMEPLATETYPE)})
+REFL_FIELD(ProductInstanceUri);
+REFL_END
+
+struct IMachineVendorNameplate_t : public IVendorNameplate_t
+{
+};
+REFL_TYPE(IMachineVendorNameplate_t,
+          Bases<IVendorNameplate_t>(),
+          open62541Cpp::attribute::UaObjectType{.NodeId = open62541Cpp::constexp::NodeId(constants::NsMachineryUri, UA_MACHINERY_ID_IMACHINEVENDORNAMEPLATETYPE)})
+REFL_END
+
+struct MachineToolIdentification_t : public IMachineVendorNameplate_t
 {
   std::uint16_t YearOfConstruction;
   open62541Cpp::LocalizedText_t Model;
@@ -243,14 +272,15 @@ struct MachineToolIdentification_t
   std::string SerialNumber;
 };
 
-REFL_TYPE(MachineToolIdentification_t, open62541Cpp::attribute::UaObjectType{.NodeId = open62541Cpp::constexp::NodeId(constants::NsMachineToolUri, UA_MACHINETOOLID_MACHINETOOLIDENTIFICATIONTYPE)})
+REFL_TYPE(MachineToolIdentification_t,
+          Bases<IMachineVendorNameplate_t>(),
+          open62541Cpp::attribute::UaObjectType{.NodeId = open62541Cpp::constexp::NodeId(constants::NsMachineToolUri, UA_MACHINETOOLID_MACHINETOOLIDENTIFICATIONTYPE)})
 REFL_FIELD(YearOfConstruction, open62541Cpp::attribute::UaBrowseName{.NsURI = constants::NsMachineryUri})
 REFL_FIELD(Model, open62541Cpp::attribute::UaBrowseName{.NsURI = constants::NsDIUri})
 REFL_FIELD(SoftwareRevision, open62541Cpp::attribute::UaBrowseName{.NsURI = constants::NsDIUri})
 REFL_FIELD(Manufacturer, open62541Cpp::attribute::UaBrowseName{.NsURI = constants::NsDIUri})
 REFL_FIELD(SerialNumber, open62541Cpp::attribute::UaBrowseName{.NsURI = constants::NsDIUri})
 REFL_END
-
 
 struct SoftwareIdentification_t
 {
@@ -361,16 +391,18 @@ REFL_FIELD(Jobs, open62541Cpp::attribute::UaReference{
                      {.NodeId = open62541Cpp::constexp::NodeId(constants::Ns0Uri, UA_NS0ID_HASCOMPONENT)}})
 REFL_END
 
-struct Monitoring_t{
+struct Monitoring_t
+{
   std::list<ChannelMonitoring_t> Channels;
 };
 
 REFL_TYPE(Monitoring_t, open62541Cpp::attribute::UaObjectType{.NodeId = open62541Cpp::constexp::NodeId(constants::NsMachineToolUri, UA_MACHINETOOLID_MONITORINGTYPE)})
 REFL_FIELD(Channels, open62541Cpp::attribute::UaReference{
-                     {.NodeId = open62541Cpp::constexp::NodeId(constants::Ns0Uri, UA_NS0ID_HASCOMPONENT)}})
+                         {.NodeId = open62541Cpp::constexp::NodeId(constants::Ns0Uri, UA_NS0ID_HASCOMPONENT)}})
 REFL_END
 
-struct Production_t {
+struct Production_t
+{
   ProdictionJobList_t ProductionPlan;
 };
 
@@ -378,8 +410,8 @@ REFL_TYPE(Production_t, open62541Cpp::attribute::UaObjectType{.NodeId = open6254
 REFL_FIELD(ProductionPlan)
 REFL_END
 
-
-struct MachineTool_t{
+struct MachineTool_t
+{
   MachineToolIdentification_t Identification;
   Monitoring_t Monitoring;
   Production_t Production;
@@ -390,7 +422,6 @@ REFL_FIELD(Identification, open62541Cpp::attribute::UaBrowseName{.NsURI = consta
 REFL_FIELD(Monitoring)
 REFL_FIELD(Production)
 REFL_END
-
 
 bool first = true;
 
@@ -461,21 +492,17 @@ int main(int argc, char *argv[])
   std::mutex accessDataMutex;
   NodesMaster n(pServer);
   MachineTool_t machineTool = {
-    .Identification = {
-      .YearOfConstruction = 2020,
-      .Model = {
-        .locale ="",
-        .text ="ISW Example",
-      },
-      .SoftwareRevision = "master",
-      .Manufacturer = {
-        .locale ="",
-        .text ="ISW Christian von Arnim"
-        },
-      .SerialNumber = "3-1415926535-8979323846",
-    }
-  };
-
+      .Identification = {
+          .YearOfConstruction = 2020,
+          .Model = {
+              .locale = "",
+              .text = "ISW Example",
+          },
+          .SoftwareRevision = "master",
+          .Manufacturer = {.locale = "", .text = "ISW Christian von Arnim"},
+          .SerialNumber = "3-1415926535-8979323846",
+      }};
+  machineTool.Identification.ProductInstanceUri = "Prototype 01";
   ChannelMonitoring_t channel1 = {
       .ChannelState = UA_ChannelState::UA_CHANNELSTATE_INTERRUPTED,
       .FeedOverride = {
@@ -513,22 +540,22 @@ int main(int argc, char *argv[])
           }};
     }
 
-    for(auto &channel : machineTool.Monitoring.Channels)
+    for (auto &channel : machineTool.Monitoring.Channels)
     {
       channel = {
-      .ChannelState = UA_ChannelState::UA_CHANNELSTATE_INTERRUPTED,
-      .FeedOverride = {
-          .Value = 6,
-          .EURange = {
-              .low = 123.45,
-              .high = 234.56},
-          .EngineeringUnits{
-              .NamespaceUri = "eu://meter",
-              .UnitId = -1,
-              .DisplayName{.locale = "", .text = "Meter"},
-              .Description = {.locale = "en", .text = "100cm"},
-          },
-      }};
+          .ChannelState = UA_ChannelState::UA_CHANNELSTATE_INTERRUPTED,
+          .FeedOverride = {
+              .Value = 6,
+              .EURange = {
+                  .low = 123.45,
+                  .high = 234.56},
+              .EngineeringUnits{
+                  .NamespaceUri = "eu://meter",
+                  .UnitId = -1,
+                  .DisplayName{.locale = "", .text = "Meter"},
+                  .Description = {.locale = "en", .text = "100cm"},
+              },
+          }};
     }
   }
 

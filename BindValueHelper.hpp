@@ -17,6 +17,7 @@
 
 #include "BindValue.hpp"
 #include "BindStruct.hpp"
+#include "Variable.hpp"
 
 // Internal implementation for different cases
 struct bindValueByPathInternal
@@ -29,12 +30,18 @@ struct bindValueByPathInternal
       NodesMaster &nodesMaster,
       T &value);
 
+  template <class T>
+  friend void bindVariableByPath(UA_Server *pServer,
+                                 const open62541Cpp::UA_BrowsePath &brPath,
+                                 NodesMaster &nodesMaster,
+                                 Variable<T> &variable);
+
   static open62541Cpp::UA_NodeId resolveBrowsePath(
       UA_Server *pServer,
       const open62541Cpp::UA_BrowsePath &brPath)
   {
     // No Elements in browse path.
-    if(brPath.BrowsePath->relativePath.elementsSize == 0)
+    if (brPath.BrowsePath->relativePath.elementsSize == 0)
     {
       return open62541Cpp::UA_NodeId(brPath.BrowsePath->startingNode);
     }
@@ -65,33 +72,29 @@ struct bindValueByPathInternal
 private:
   // Primitive types including string
   template <typename T>
-  static void bindValueByPath(
+  static copyToVariantFunc getToVariantFunc(
       UA_Server *pServer,
       const open62541Cpp::UA_BrowsePath &brPath,
-      NodesMaster &nodesMaster,
       T &value)
   {
-    bindValue(
-        nodesMaster(resolveBrowsePath(pServer, brPath)),
-        &value);
+
+    return asVariantFunc(&value);
   }
 
   template <typename T>
-  static void bindEnumValueByPath(
+  static copyToVariantFunc getToVariantFuncForEnum(
       UA_Server *pServer,
       const open62541Cpp::UA_BrowsePath &brPath,
-      NodesMaster &nodesMaster,
       T &value)
   {
-    bindValueByPath(pServer, brPath, nodesMaster, *reinterpret_cast<std::int32_t *>(&value));
+    return getToVariantFunc(pServer, brPath, *reinterpret_cast<std::int32_t *>(&value));
   }
 
   // capture structs
   template <typename T>
-  static void bindStructuredValueByPath(UA_Server *pServer,
-                                        const open62541Cpp::UA_BrowsePath &brPath,
-                                        NodesMaster &nodesMaster,
-                                        T &value)
+  static copyToVariantFunc bindStructuredValueByPath(UA_Server *pServer,
+                                                     const open62541Cpp::UA_BrowsePath &brPath,
+                                                     T &value)
   {
     auto nodeId = resolveBrowsePath(pServer, brPath);
     UA_NodeId typeNodeId;
@@ -111,14 +114,36 @@ private:
     }
     if constexpr (refl::trait::is_reflectable<T>::value)
     {
-      bindStructRefl(nodesMaster(nodeId), value, pDataType);
+      return bindStructRefl(value, pDataType);
     }
     else
     {
-      bindStruct(
-          nodesMaster(nodeId),
+      return bindStruct(
           reinterpret_cast<void *>(&value),
           pDataType);
+    }
+  }
+
+  template <class T>
+  static copyToVariantFunc getToVariantFunc2(UA_Server *pServer,
+                                             const open62541Cpp::UA_BrowsePath &brPath,
+                                             T &value)
+  {
+    if constexpr (std::is_enum<T>::value)
+    {
+      return bindValueByPathInternal::getToVariantFuncForEnum(pServer, brPath, value);
+    }
+    else if constexpr (
+        std::is_class<T>::value &&
+        !(
+            std::is_same<std::string, T>::value ||
+            std::is_same<open62541Cpp::DateTime_t, T>::value))
+    {
+      return bindValueByPathInternal::bindStructuredValueByPath(pServer, brPath, value);
+    }
+    else
+    {
+      return bindValueByPathInternal::getToVariantFunc(pServer, brPath, value);
     }
   }
 };
@@ -129,20 +154,44 @@ void bindValueByPath(UA_Server *pServer,
                      NodesMaster &nodesMaster,
                      T &value)
 {
-  if constexpr (std::is_enum<T>::value)
-  {
-    bindValueByPathInternal::bindEnumValueByPath(pServer, brPath, nodesMaster, value);
-  }
-  else if constexpr (
-      std::is_class<T>::value &&
-      !(
-          std::is_same<std::string, T>::value ||
-          std::is_same<open62541Cpp::DateTime_t, T>::value))
-  {
-    bindValueByPathInternal::bindStructuredValueByPath(pServer, brPath, nodesMaster, value);
-  }
-  else
-  {
-    bindValueByPathInternal::bindValueByPath(pServer, brPath, nodesMaster, value);
-  }
+  copyToVariantFunc toVariantFunc = bindValueByPathInternal::getToVariantFunc2(pServer, brPath, value);
+
+  nodesMaster(bindValueByPathInternal::resolveBrowsePath(pServer, brPath)) = [toVariantFunc] {
+    UA_DataValue dataValue;
+    UA_DataValue_init(&dataValue);
+    toVariantFunc(&dataValue.value);
+    dataValue.hasValue = UA_TRUE;
+    dataValue.status = UA_STATUSCODE_GOOD;
+    dataValue.hasStatus = UA_TRUE;
+    return dataValue;
+  };
+}
+
+template <class T>
+void bindVariableByPath(UA_Server *pServer,
+                        const open62541Cpp::UA_BrowsePath &brPath,
+                        NodesMaster &nodesMaster,
+                        Variable<T> &variable)
+{
+  copyToVariantFunc toVariantFunc = bindValueByPathInternal::getToVariantFunc2(pServer, brPath, variable.value);
+  auto pVariable = &variable;
+  nodesMaster(bindValueByPathInternal::resolveBrowsePath(pServer, brPath)) = [toVariantFunc, pVariable] {
+    UA_DataValue dataValue;
+    UA_DataValue_init(&dataValue);
+    toVariantFunc(&dataValue.value);
+    dataValue.hasValue = UA_TRUE;
+    dataValue.status = pVariable->StatusCode;
+    dataValue.hasStatus = UA_TRUE;
+    if(pVariable->SourceTimestamp)
+    {
+      dataValue.hasSourceTimestamp = UA_TRUE;
+      dataValue.sourceTimestamp = pVariable->SourceTimestamp.value();
+    }
+    if(pVariable->ServerTimestamp)
+    {
+      dataValue.hasServerTimestamp = UA_TRUE;
+      dataValue.serverTimestamp = pVariable->ServerTimestamp.value();
+    }
+    return dataValue;
+  };
 }

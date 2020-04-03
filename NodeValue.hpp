@@ -11,7 +11,7 @@
 #include <Open62541Cpp/UA_NodeId.hpp>
 
 class NodeValue {
-  typedef std::function<UA_Variant()> GetValue_t;
+  typedef std::function<UA_DataValue()> GetValue_t;
   GetValue_t fCallback = nullptr;
   open62541Cpp::UA_NodeId NodeId;
   NodeValue(const NodeValue&) = delete;
@@ -22,5 +22,5 @@ class NodeValue {
   // Use variadict expression https://stackoverflow.com/questions/9242234/c11-variadic-stdfunction-parameter
   void operator=(GetValue_t F);
 
-  UA_Variant Value();
+  UA_DataValue Value();
 };

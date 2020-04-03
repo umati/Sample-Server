@@ -18,7 +18,8 @@ TEST(ExampleServerLib, BindStructure_Basic)
     .text = "BindStructure_Basic"
   };
 
-  auto variant = internal_bindStruct::convertToVariantRefl(&oriLocalText, &UA_TYPES[UA_TYPES_LOCALIZEDTEXT]);
+  UA_Variant variant;
+  internal_bindStruct::convertToVariantRefl(&oriLocalText, &UA_TYPES[UA_TYPES_LOCALIZEDTEXT], &variant);
   UA_LocalizedText *pLocalizedText = reinterpret_cast<UA_LocalizedText *>(variant.data);
   ASSERT_TRUE(pLocalizedText);
   auto lTxt = UA_LOCALIZEDTEXT_ALLOC("test", "content");
@@ -41,7 +42,9 @@ TEST(ExampleServerLib, BindStructure_Recursive)
     .DisplayName { .locale="", .text="Meter"},
     .Description = { .locale="en", .text="100cm"},
   };
-  auto variant = internal_bindStruct::convertToVariantRefl(&oriEuInformation, &UA_TYPES[UA_TYPES_EUINFORMATION]);
+
+  UA_Variant variant;
+  internal_bindStruct::convertToVariantRefl(&oriEuInformation, &UA_TYPES[UA_TYPES_EUINFORMATION], &variant);
   UA_EUInformation * pEuInformation = reinterpret_cast<UA_EUInformation *>(variant.data);
 
   auto newEuInformation = open62541Cpp::EUInformation_t::fromUa(*pEuInformation);

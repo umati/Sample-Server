@@ -7,11 +7,11 @@
 
 #include "NodeValue.hpp"
 
-void NodeValue::operator=(std::function<UA_Variant()> F) {
+void NodeValue::operator=(NodeValue::GetValue_t F) {
   fCallback = F;
 }
 
-UA_Variant NodeValue::Value() {
+UA_DataValue NodeValue::Value() {
   return fCallback();
 }
 

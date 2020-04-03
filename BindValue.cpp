@@ -10,54 +10,46 @@
 #include "BindValue.hpp"
 #include "UaTypeHelper.hpp"
 
-void bindValue(NodeValue &nodeValue, primitivTypes_t variable)
+copyToVariantFunc asVariantFunc(primitivTypes_t variable)
 {
   auto pDataType = std::visit(primitivTypeVisitor_getTypePointer(), variable);
 
   auto pVariable = std::visit(primitivTypeVisitor_getPointer(), variable);
-  nodeValue = [pVariable, pDataType] {
-    UA_Variant value;
-    UA_Variant_setScalarCopy(&value, pVariable, pDataType);
-    return value;
+
+  return [pVariable, pDataType] (UA_Variant* dst) {
+    UA_Variant_setScalarCopy(dst, pVariable, pDataType);
   };
 }
 
-void bindValue(NodeValue &nodeValue, std::string *variable)
+copyToVariantFunc asVariantFunc(std::string *variable)
 {
   auto pVariable = variable;
-  nodeValue = [pVariable] {
+  return [pVariable] (UA_Variant* dst) {
     open62541Cpp::UA_String str(*pVariable);
-    UA_Variant value;
-    UA_Variant_setScalarCopy(&value, str.String, &UA_TYPES[UA_TYPES_STRING]);
-    return value;
+    UA_Variant_setScalarCopy(dst, str.String, &UA_TYPES[UA_TYPES_STRING]);
   };
 }
 
 typedef std::ratio<1, 10000000> nano_100;
 typedef std::chrono::duration<std::int64_t, nano_100> nanoseconds_100;
 
-void bindValue(NodeValue &nodeValue, open62541Cpp::DateTime_t *variable)
+copyToVariantFunc asVariantFunc(open62541Cpp::DateTime_t *variable)
 {
   auto pVariable = variable;
-  nodeValue = [pVariable] {
+  return [pVariable] (UA_Variant* dst) {
     auto var_nano100 = std::chrono::duration_cast<nanoseconds_100>(pVariable->time_since_epoch());
-
     UA_DateTime var = var_nano100.count() + UA_DATETIME_UNIX_EPOCH;
-    UA_Variant value;
-    UA_Variant_setScalarCopy(&value, &var, &UA_TYPES[UA_TYPES_DATETIME]);
-    return value;
+    UA_Variant_setScalarCopy(dst, &var, &UA_TYPES[UA_TYPES_DATETIME]);
   };
 }
 
-void bindValue(NodeValue &nodeValue, bool *variable)
+copyToVariantFunc asVariantFunc(bool *variable)
 {
   auto pVariable = variable;
-  nodeValue = [pVariable] {
+  return [pVariable] (UA_Variant* dst) {
     UA_Boolean b;
     // Ensure OPC UA encoding
     b = *pVariable? UA_TRUE : UA_FALSE;
-    UA_Variant value;
-    UA_Variant_setScalarCopy(&value, &b, &UA_TYPES[UA_TYPES_BOOLEAN]);
-    return value;
+    UA_Variant_setScalarCopy(dst, &b, &UA_TYPES[UA_TYPES_BOOLEAN]);
   };
 }

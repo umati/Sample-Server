@@ -15,7 +15,7 @@
 #include <iostream>
 #include "OpcUaTypes/ReflectionHelper.hpp"
 
-void bindStruct(NodeValue &nodeValue, void *pVariable, const UA_DataType *typeDefinition);
+copyToVariantFunc bindStruct(void *pVariable, const UA_DataType *typeDefinition);
 
 namespace internal_bindStruct
 {
@@ -92,27 +92,23 @@ static void setNativ(const T &src, void *trg)
 }
 
 template <typename T>
-static UA_Variant convertToVariantRefl(T *pVariable, const UA_DataType *typeDefinition)
+static void convertToVariantRefl(T *pVariable, const UA_DataType *typeDefinition, UA_Variant* dst)
 {
 
   void *structData = UA_new(typeDefinition);
   UA_init(structData, typeDefinition);
   setByRefl(*pVariable, structData, typeDefinition);
 
-  UA_Variant value;
-  UA_Variant_init(&value);
-  UA_Variant_setScalar(&value, structData, typeDefinition);
-  return value;
+  UA_Variant_setScalar(dst, structData, typeDefinition);
 }
 
 }; // namespace internal_bindStruct
 
 template <typename T>
-void bindStructRefl(NodeValue &nodeValue, T &variable, const UA_DataType *typeDefinition)
+copyToVariantFunc bindStructRefl(T &variable, const UA_DataType *typeDefinition)
 {
   auto pVariable = &variable;
-  //nodeValue = std::bind(&internal_bindStruct::convertToVariantRefl, pVariable, typeDefinition);
-  nodeValue = [pVariable, typeDefinition] {
-    return internal_bindStruct::convertToVariantRefl(pVariable, typeDefinition);
+  return [pVariable, typeDefinition] (UA_Variant* dst) {
+    internal_bindStruct::convertToVariantRefl(pVariable, typeDefinition, dst);
   };
 }

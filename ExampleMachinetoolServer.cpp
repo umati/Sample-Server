@@ -69,7 +69,7 @@ struct MachineToolIdentification_t : public IMachineVendorNameplate_t
 REFL_TYPE(MachineToolIdentification_t,
           Bases<IMachineVendorNameplate_t>(),
           open62541Cpp::attribute::UaObjectType{.NodeId = open62541Cpp::constexp::NodeId(constants::NsMachineToolUri, UA_MACHINETOOLID_MACHINETOOLIDENTIFICATIONTYPE)})
-REFL_FIELD(YearOfConstruction, open62541Cpp::attribute::UaBrowseName{.NsURI = constants::NsMachineryUri})
+REFL_FIELD(YearOfConstruction, open62541Cpp::attribute::UaBrowseName{.NsURI = constants::NsMachineryUri}, open62541Cpp::attribute::PlaceholderOptional())
 REFL_FIELD(Model, open62541Cpp::attribute::UaBrowseName{.NsURI = constants::NsDIUri})
 REFL_FIELD(SoftwareRevision, open62541Cpp::attribute::UaBrowseName{.NsURI = constants::NsDIUri})
 REFL_FIELD(Manufacturer, open62541Cpp::attribute::UaBrowseName{.NsURI = constants::NsDIUri})

@@ -17,10 +17,10 @@ open62541Cpp::UA_NodeId resolveBrowsePath(
 
   if (trResult.statusCode != UA_STATUSCODE_GOOD)
   {
-    std::cout << "Resutl not good: " << UA_StatusCode_name(trResult.statusCode) << std::endl;
-    std::cout << "Could not resolve Path: " << static_cast<std::string>(brPath) << std::endl;
-
-    throw std::invalid_argument("Path not found.");
+    std::stringstream ss;
+    ss << "Resutl not good: " << UA_StatusCode_name(trResult.statusCode) << ". ";
+    ss << "Could not resolve Path: " << static_cast<std::string>(brPath);
+    throw open62541Cpp::Exceptions::NodeNotFound(ss.str());
   }
 
   if (trResult.targetsSize != 1)

@@ -37,4 +37,8 @@ namespace open62541Cpp::attribute
 
     };
 
+    struct PlaceholderOptional : refl::attr::usage::field {
+
+    };
+
 }

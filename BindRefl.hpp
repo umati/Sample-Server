@@ -10,6 +10,7 @@
 #include "BindValueHelper.hpp"
 #include "Util.hpp"
 #include "OpcUaTypes/Attributes.hpp"
+#include "Exceptions/NodeNotFound.hpp"
 
 template <typename T>
 void bindMemberRefl(
@@ -88,13 +89,25 @@ void bindMembersRefl(T &instance, UA_Server *pServer, open62541Cpp::UA_NodeId no
       auto pathEl = getBrowseName(instance, member, pServer);
       childRelativPathElements.push_back(pathEl);
     }
-
-    auto nodeIdChild = resolveBrowsePath(
+    constexpr bool isOptional = refl::descriptor::has_attribute<open62541Cpp::attribute::PlaceholderOptional>(member);
+    try{
+      auto nodeIdChild = resolveBrowsePath(
       pServer,
       open62541Cpp::UA_BrowsePath(
           *nodeId.NodeId,
           childRelativPathElements));
-    bindMemberRefl(member(instance), pServer, nodeIdChild, nodesMaster);
+      bindMemberRefl(member(instance), pServer, nodeIdChild, nodesMaster);
+    }
+    catch(const open62541Cpp::Exceptions::NodeNotFound &ex)
+    {
+      if constexpr(!isOptional)
+      {
+        std::stringstream ss;
+        ss << "Mandatory node not found for binding. " << ex.what();
+        throw std::runtime_error(ss.str());
+      }
+    }
+
   });
 }
 

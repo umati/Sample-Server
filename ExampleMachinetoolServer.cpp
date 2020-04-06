@@ -137,7 +137,6 @@ struct BaseEventType_t
   std::string SourceName;
   std::uint16_t Severity;
   open62541Cpp::LocalizedText_t Message;
-  void bind(UA_Server *pServer, UA_NodeId event, NodesMaster &nodesMaster);
 };
 
 REFL_TYPE(BaseEventType_t, open62541Cpp::attribute::UaObjectType{.NodeId = open62541Cpp::constexp::NodeId(constants::Ns0Uri, UA_NS0ID_BASEEVENTTYPE)})
@@ -146,11 +145,6 @@ REFL_FIELD(SourceName, open62541Cpp::attribute::UaBrowseName{.NsURI = constants:
 REFL_FIELD(Severity, open62541Cpp::attribute::UaBrowseName{.NsURI = constants::Ns0Uri})
 REFL_FIELD(Message, open62541Cpp::attribute::UaBrowseName{.NsURI = constants::Ns0Uri})
 REFL_END
-
-void BaseEventType_t::bind(UA_Server *pServer, UA_NodeId event, NodesMaster &nodesMaster)
-{
-  bindMembersRefl(*this, pServer, event, {}, nodesMaster);
-}
 
 struct ProductionJob_t
 {
@@ -289,7 +283,7 @@ int main(int argc, char *argv[])
   machineTool.Identification.ProductInstanceUri.StatusCode = UA_STATUSCODE_GOODEDITED;
   machineTool.Identification.ProductInstanceUri.SourceTimestamp = UA_DateTime_fromStruct(UA_DateTimeStruct{.sec = 13, .min = 12, .hour = 11, .day = 10, .month = 9, .year = 2008});
 
-  bindMembersRefl(machineTool, pServer, UA_NODEID_NUMERIC(5, UA_ISWEXAMPLE_ID_MACHINES_ISWEXAMPLEMACHINE), {}, n);
+  bindMembersRefl(machineTool, pServer, open62541Cpp::UA_NodeId(5, UA_ISWEXAMPLE_ID_MACHINES_ISWEXAMPLEMACHINE), n);
 
   // Assign placeholders after binding!
   {

@@ -56,7 +56,7 @@ protected:
             throw std::runtime_error("Could not create event.");
         }
 
-        bindMembersRefl(Data, pServer, *EventNodeId.NodeId, {}, nodesMaster);
+        bindMembersRefl(Data, pServer, EventNodeId, nodesMaster);
         nodesMaster.SetCallbacks();
     }
 };

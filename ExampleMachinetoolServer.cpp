@@ -11,7 +11,7 @@
 #include "src_generated/machinery.h"
 #include <cstdint>
 #include <functional>
-#include "BindableMember.hpp"
+#include "BindableMemberValue.hpp"
 #include "NodeValue.hpp"
 #include "NodesMaster.hpp"
 #include "SetupEvents.hpp"
@@ -42,7 +42,7 @@ constexpr const char *NsInstanceUri = "http://isw.example.com";
 
 struct IVendorNameplate_t
 {
-  BindableMember<std::string> ProductInstanceUri;
+  BindableMemberValue<std::string> ProductInstanceUri;
 };
 REFL_TYPE(IVendorNameplate_t,
           open62541Cpp::attribute::UaObjectType{.NodeId = open62541Cpp::constexp::NodeId(constants::NsDIUri, UA_DIID_IVENDORNAMEPLATETYPE)})
@@ -59,11 +59,11 @@ REFL_END
 
 struct MachineToolIdentification_t : public IMachineVendorNameplate_t
 {
-  BindableMember<std::uint16_t> YearOfConstruction;
-  BindableMember<open62541Cpp::LocalizedText_t> Model;
-  BindableMember<std::string> SoftwareRevision;
-  BindableMember<open62541Cpp::LocalizedText_t> Manufacturer;
-  BindableMember<std::string> SerialNumber;
+  BindableMemberValue<std::uint16_t> YearOfConstruction;
+  BindableMemberValue<open62541Cpp::LocalizedText_t> Model;
+  BindableMemberValue<std::string> SoftwareRevision;
+  BindableMemberValue<open62541Cpp::LocalizedText_t> Manufacturer;
+  BindableMemberValue<std::string> SerialNumber;
 };
 
 REFL_TYPE(MachineToolIdentification_t,
@@ -78,8 +78,8 @@ REFL_END
 
 struct SoftwareIdentification_t
 {
-  BindableMember<std::string> SoftwareRevision;
-  BindableMember<std::string> Identifier;
+  BindableMemberValue<std::string> SoftwareRevision;
+  BindableMemberValue<std::string> Identifier;
 };
 
 REFL_TYPE(SoftwareIdentification_t, open62541Cpp::attribute::UaObjectType())
@@ -90,9 +90,9 @@ REFL_END
 template <typename T>
 struct AnalogUnitRangeType_t
 {
-  BindableMember<T> Value;
-  BindableMember<UA_Range> EURange;
-  BindableMember<open62541Cpp::EUInformation_t> EngineeringUnits;
+  BindableMemberValue<T> Value;
+  BindableMemberValue<UA_Range> EURange;
+  BindableMemberValue<open62541Cpp::EUInformation_t> EngineeringUnits;
 };
 
 REFL_TEMPLATE((typename T), (AnalogUnitRangeType_t<T>), open62541Cpp::attribute::UaVariableType{.NodeId = open62541Cpp::constexp::NodeId(constants::Ns0Uri, UA_NS0ID_ANALOGUNITRANGETYPE)})
@@ -103,8 +103,8 @@ REFL_END
 
 struct ChannelMonitoring_t
 {
-  BindableMember<UA_ChannelState> ChannelState;
-  AnalogUnitRangeType_t<double> FeedOverride;
+  BindableMemberValue<UA_ChannelState> ChannelState;
+  BindableMember<AnalogUnitRangeType_t<double>> FeedOverride;
 };
 
 REFL_TYPE(ChannelMonitoring_t, open62541Cpp::attribute::UaObjectType{.NodeId = open62541Cpp::constexp::NodeId(constants::NsMachineToolUri, UA_MACHINETOOLID_CHANNELMONITORINGTYPE)})
@@ -114,8 +114,8 @@ REFL_END
 
 struct FiniteStateVariableType_t
 {
-  BindableMember<open62541Cpp::LocalizedText_t> Value;
-  BindableMember<UA_UInt32> Number;
+  BindableMemberValue<open62541Cpp::LocalizedText_t> Value;
+  BindableMemberValue<UA_UInt32> Number;
 };
 REFL_TYPE(FiniteStateVariableType_t, open62541Cpp::attribute::UaVariableType())
 REFL_FIELD(Value, open62541Cpp::attribute::UaVariableTypeValue())
@@ -124,7 +124,7 @@ REFL_END
 
 struct State_t
 {
-  FiniteStateVariableType_t CurrentState;
+  BindableMember<FiniteStateVariableType_t> CurrentState;
 };
 
 REFL_TYPE(State_t, open62541Cpp::attribute::UaObjectType{.NodeId = open62541Cpp::constexp::NodeId(constants::NsMachineToolUri, UA_MACHINETOOLID_PRODUCTIONJOBSTATEMACHINETYPE)})
@@ -148,10 +148,10 @@ REFL_END
 
 struct ProductionJob_t
 {
-  BindableMember<std::string> Identifier;
-  BindableMember<std::uint32_t> RunsCompleted;
-  BindableMember<std::uint32_t> RunsPlanned;
-  State_t State;
+  BindableMemberValue<std::string> Identifier;
+  BindableMemberValue<std::uint32_t> RunsCompleted;
+  BindableMemberValue<std::uint32_t> RunsPlanned;
+  BindableMember<State_t> State;
 };
 
 REFL_TYPE(ProductionJob_t, open62541Cpp::attribute::UaObjectType{.NodeId = open62541Cpp::constexp::NodeId(constants::NsMachineToolUri, UA_MACHINETOOLID_PRODUCTIONJOBTYPE)})
@@ -183,7 +183,7 @@ REFL_END
 
 struct Production_t
 {
-  ProdictionJobList_t ProductionPlan;
+  BindableMember<ProdictionJobList_t> ProductionPlan;
 };
 
 REFL_TYPE(Production_t, open62541Cpp::attribute::UaObjectType{.NodeId = open62541Cpp::constexp::NodeId(constants::NsMachineToolUri, UA_MACHINETOOLID_PRODUCTIONTYPE)})
@@ -192,9 +192,9 @@ REFL_END
 
 struct MachineTool_t
 {
-  MachineToolIdentification_t Identification;
-  Monitoring_t Monitoring;
-  Production_t Production;
+  BindableMember<MachineToolIdentification_t> Identification;
+  BindableMember<Monitoring_t> Monitoring;
+  BindableMember<Production_t> Production;
 };
 
 REFL_TYPE(MachineTool_t, open62541Cpp::attribute::UaObjectType{.NodeId = open62541Cpp::constexp::NodeId(constants::NsMachineToolUri, UA_MACHINETOOLID_MACHINETOOLTYPE)})
@@ -217,7 +217,7 @@ void simulate(MachineTool_t *pMachineTool,
   {
     ++i;
     ul.lock();
-    ++(pMachineTool->Identification.YearOfConstruction.value);
+    ++(pMachineTool->Identification->YearOfConstruction.value);
     //pChannel1->ChannelState = static_cast<UA_ChannelState>((((int)pChannel1->ChannelState) + 1) % (UA_ChannelState::UA_CHANNELSTATE_RESET + 1));
 
     {
@@ -273,40 +273,40 @@ int main(int argc, char *argv[])
   NodesMaster n(pServer);
   MachineTool_t machineTool;
 
-  machineTool.Identification.YearOfConstruction = 2020;
-  machineTool.Identification.Model = open62541Cpp::LocalizedText_t{.locale = "", .text = "ISW Example"};
-  machineTool.Identification.SoftwareRevision = std::string{"master"};
-  machineTool.Identification.Manufacturer = open62541Cpp::LocalizedText_t{.locale = "", .text = "ISW Christian von Arnim"};
-  machineTool.Identification.SerialNumber = std::string{"3-1415926535-8979323846"};
+  machineTool.Identification->YearOfConstruction = 2020;
+  machineTool.Identification->Model = open62541Cpp::LocalizedText_t{.locale = "", .text = "ISW Example"};
+  machineTool.Identification->SoftwareRevision = std::string{"master"};
+  machineTool.Identification->Manufacturer = open62541Cpp::LocalizedText_t{.locale = "", .text = "ISW Christian von Arnim"};
+  machineTool.Identification->SerialNumber = std::string{"3-1415926535-8979323846"};
 
-  machineTool.Identification.ProductInstanceUri.value = "Prototype 01";
-  machineTool.Identification.ProductInstanceUri.StatusCode = UA_STATUSCODE_GOODEDITED;
-  machineTool.Identification.ProductInstanceUri.SourceTimestamp = UA_DateTime_fromStruct(UA_DateTimeStruct{.sec = 13, .min = 12, .hour = 11, .day = 10, .month = 9, .year = 2008});
+  machineTool.Identification->ProductInstanceUri.value = "Prototype 01";
+  machineTool.Identification->ProductInstanceUri.StatusCode = UA_STATUSCODE_GOODEDITED;
+  machineTool.Identification->ProductInstanceUri.SourceTimestamp = UA_DateTime_fromStruct(UA_DateTimeStruct{.sec = 13, .min = 12, .hour = 11, .day = 10, .month = 9, .year = 2008});
 
   bindMembersRefl(machineTool, pServer, open62541Cpp::UA_NodeId(5, UA_ISWEXAMPLE_ID_MACHINES_ISWEXAMPLEMACHINE), n);
 
   // Assign placeholders after binding!
   {
     int i = 1;
-    for (auto &job : machineTool.Production.ProductionPlan.Jobs)
+    for (auto &job : machineTool.Production->ProductionPlan->Jobs)
     {
       std::stringstream ss;
       ss << "ID_" << i++ << std::endl;
       job.Identifier = ss.str();
       job.RunsCompleted = 8;
       job.RunsPlanned = 10;
-      job.State.CurrentState.Value = open62541Cpp::LocalizedText_t{.locale = "en-en", .text = "Testing State"};
-      job.State.CurrentState.Number = 1234;
+      job.State->CurrentState->Value = open62541Cpp::LocalizedText_t{.locale = "en-en", .text = "Testing State"};
+      job.State->CurrentState->Number = 1234;
     }
 
-    for (auto &channel : machineTool.Monitoring.Channels)
+    for (auto &channel : machineTool.Monitoring->Channels)
     {
       channel.ChannelState = UA_ChannelState::UA_CHANNELSTATE_INTERRUPTED;
-      channel.FeedOverride.Value = 6;
-      *channel.FeedOverride.EURange = {
+      channel.FeedOverride->Value = 6;
+      *channel.FeedOverride->EURange = {
           .low = 123.45,
           .high = 234.56};
-      *channel.FeedOverride.EngineeringUnits = {
+      *channel.FeedOverride->EngineeringUnits = {
           .NamespaceUri = "eu://meter",
           .UnitId = -1,
           .DisplayName{.locale = "", .text = "Meter"},

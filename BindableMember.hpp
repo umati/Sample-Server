@@ -1,16 +1,12 @@
-#pragma once
 
 #include "ValueDecorator.hpp"
-#include <optional>
-#include <Open62541Cpp/UA_RelativPathElement.hpp>
 
 template <typename T>
 class BindableMember : public ValueDecorator<T>
 {
-protected:
+  protected:
   bool m_isOptional = true;
   bool m_isBind = false;
-  open62541Cpp::UA_RelativPathElement m_relativPathElement;
 
 public:
   bool IsOptional() { return m_isOptional; }
@@ -19,18 +15,14 @@ public:
   void SetBind() { m_isBind = true; };
   void SetMandatory() { m_isOptional = false; };
 
-  BindableMember();
+  // Store location, so the node can be created at a later time
+  open62541Cpp::UA_RelativPathElement RelativPathElement;
+  open62541Cpp::UA_NodeId ParentNodeId;
+
+  BindableMember() = default;
   BindableMember(const T &val);
-  UA_StatusCode StatusCode = UA_STATUSCODE_GOOD;
-  std::optional<UA_DateTime> SourceTimestamp;
-  std::optional<UA_DateTime> ServerTimestamp;
 };
 
 template <typename T>
-BindableMember<T>::BindableMember(const T &val) : BindableMember()
-{
-  this->value = val;
-}
-
-template <typename T>
-BindableMember<T>::BindableMember() {}
+BindableMember<T>::BindableMember(const T &val) : ValueDecorator<T>(val)
+{}

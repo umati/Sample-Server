@@ -17,7 +17,7 @@
 
 #include "BindValue.hpp"
 #include "BindStruct.hpp"
-#include "BindableMember.hpp"
+#include "BindableMemberValue.hpp"
 
 // Internal implementation for different cases
 struct bindValueByPathInternal
@@ -35,7 +35,7 @@ struct bindValueByPathInternal
       UA_Server *pServer,
       const open62541Cpp::UA_NodeId &nodeId,
       NodesMaster &nodesMaster,
-      BindableMember<T> &variable);
+      BindableMemberValue<T> &variable);
 
 private:
   // Primitive types including string
@@ -65,7 +65,7 @@ private:
     if (statusCode != UA_STATUSCODE_GOOD)
     {
       std::cout << "UA_Server_readDataType: Resutl not good: " << UA_StatusCode_name(statusCode) << std::endl;
-      throw std::runtime_error("Type could be be fetched, no variable node?");
+      throw std::runtime_error("Type could not be be fetched, no variable node?");
     }
 
     const UA_DataType *pDataType = UA_findDataType(&typeNodeId);
@@ -136,7 +136,7 @@ void bindVariableByPath(
     UA_Server *pServer,
     const open62541Cpp::UA_NodeId &nodeId,
     NodesMaster &nodesMaster,
-    BindableMember<T> &variable)
+    BindableMemberValue<T> &variable)
 {
   copyToVariantFunc toVariantFunc = bindValueByPathInternal::getToVariantFunc2(pServer, nodeId, variable.value);
   auto pVariable = &variable;

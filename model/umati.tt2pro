@@ -1,6 +1,6 @@
 ###########################
 # UaModeler Project File  #
-# Generated at 28.03.2020 #
+# Generated at 08.04.2020 #
 ###########################
 
 PROJECTNAME = umati
@@ -26,8 +26,7 @@ GENERATE += machinery.ua \
     iswexample.ua
 
 LOCKEDMODELS += ($MODELS)/Opc.Ua.Di.NodeSet2.ua \
-    machinery.ua \
-    machinetool.ua
+    machinery.ua
 
 NODEACCESSINFOROLES += Administrator \
     SecurityAdmin \

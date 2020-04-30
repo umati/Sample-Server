@@ -140,10 +140,20 @@ struct BaseEventType_t
 };
 
 REFL_TYPE(BaseEventType_t, open62541Cpp::attribute::UaObjectType{.NodeId = open62541Cpp::constexp::NodeId(constants::Ns0Uri, UA_NS0ID_BASEEVENTTYPE)})
-REFL_FIELD(Time, open62541Cpp::attribute::UaBrowseName{.NsURI = constants::Ns0Uri})
-REFL_FIELD(SourceName, open62541Cpp::attribute::UaBrowseName{.NsURI = constants::Ns0Uri})
-REFL_FIELD(Severity, open62541Cpp::attribute::UaBrowseName{.NsURI = constants::Ns0Uri})
-REFL_FIELD(Message, open62541Cpp::attribute::UaBrowseName{.NsURI = constants::Ns0Uri})
+REFL_FIELD(Time)
+REFL_FIELD(SourceName)
+REFL_FIELD(Severity)
+REFL_FIELD(Message)
+REFL_END
+
+struct NotificationEvent_t : public BaseEventType_t
+{
+  std::string Identifier;
+};
+REFL_TYPE(NotificationEvent_t,
+          Bases<BaseEventType_t>(),
+          open62541Cpp::attribute::UaObjectType{.NodeId = open62541Cpp::constexp::NodeId(constants::NsMachineToolUri, UA_MACHINETOOLID_NOTIFICATIONEVENTTYPE)})
+REFL_FIELD(Identifier)
 REFL_END
 
 struct ProductionJob_t
@@ -221,21 +231,22 @@ void simulate(MachineTool_t *pMachineTool,
     //pChannel1->ChannelState = static_cast<UA_ChannelState>((((int)pChannel1->ChannelState) + 1) % (UA_ChannelState::UA_CHANNELSTATE_RESET + 1));
 
     {
-      BaseEventType_t baseEvent{
-          .Time = std::chrono::system_clock::now(),
-          .SourceName = "Reflection Event",
-          .Severity = 258,
-          .Message = {
-              .locale = "",
-              .text = "MyMessage"},
-      };
-      OpcUaEvent ev(baseEvent, pServer);
+      NotificationEvent_t notifEvent;
+
+      notifEvent.Time = std::chrono::system_clock::now();
+      notifEvent.SourceName = "Reflection Event";
+      notifEvent.Severity = 258;
+      std::stringstream ss;
+      ss << "A Message " << i;
+      notifEvent.Message = {
+          .locale = "",
+          .text = ss.str()};
+
+      notifEvent.Identifier = "A";
+
+      OpcUaEvent ev(notifEvent, pServer, open62541Cpp::UA_NodeId(UA_NODEID_NUMERIC(5, UA_ISWEXAMPLE_ID_MACHINES_ISWEXAMPLEMACHINE_NOTIFICATION_MESSAGES)));
     }
-    NotificationEvent_t ev{.Identifier = "MyId", .Message = "MessageTxt", .SourceName = "MySource", .Severity = 500};
-    /*
-    auto evNodeId = setupNotificationEvent(pServer, ev);
-    auto retval = UA_Server_triggerEvent(pServer, evNodeId, UA_NODEID_NUMERIC(0, UA_NS0ID_SERVER), NULL, UA_TRUE);
-    */
+
     if (first)
     {
       AlertCondition_t aev;

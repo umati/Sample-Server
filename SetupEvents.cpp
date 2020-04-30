@@ -28,7 +28,7 @@ UA_NodeId setupAlertConditionType(UA_Server *pServer, AlertCondition_t ev)
   UA_StatusCode retval = UA_Server_createCondition(
       pServer,
       UA_NODEID_NULL /*UA_NODEID_NUMERIC(0, UA_NS0ID_SYSTEMCONDITIONCLASSTYPE)*/,
-      UA_NODEID_NUMERIC(2, UA_MACHINETOOLID_ALERTCONDITIONTYPE),
+      UA_NODEID_NUMERIC(4, UA_MACHINETOOLID_ALERTCONDITIONTYPE),
       *open62541Cpp::UA_QualifiedName(0, "SystemConditionClassType").QualifiedName,
       UA_NODEID_NUMERIC(0, UA_NS0ID_SERVER),
       UA_NODEID_NULL, &eventNodeId);
@@ -129,88 +129,6 @@ UA_NodeId setupAlertConditionType(UA_Server *pServer, AlertCondition_t ev)
     );
     UA_Variant_delete(val);
     UA_LocalizedText_deleteMembers(&ltxtMessage);
-  }
-
-  return eventNodeId;
-}
-UA_NodeId setupNotificationEvent(UA_Server *pServer, NotificationEvent_t ev){
-  UA_NodeId eventNodeId;
-  UA_StatusCode retval = UA_Server_createEvent(
-      pServer,
-      UA_NODEID_NUMERIC(2, UA_MACHINETOOLID_NOTIFICATIONEVENTTYPE),
-      &eventNodeId);
-
-  if(retval != UA_STATUSCODE_GOOD){
-    std::cerr << "Could not create event: " << retval << std::endl;
-    return UA_NODEID_NULL;
-  }
-
-  // Setting the Time is required or else the event will not show up in UAExpert!
-  UA_DateTime eventTime = UA_DateTime_now();
-  UA_Server_writeObjectProperty_scalar(
-      pServer,
-      eventNodeId,
-      *open62541Cpp::UA_QualifiedName(0, "Time").QualifiedName,
-      &eventTime,
-      &UA_TYPES[UA_TYPES_DATETIME]
-      );
-  {
-    open62541Cpp::UA_String strIdentifier(ev.Identifier);
-    UA_Variant *val = UA_Variant_new();
-    UA_Variant_clear(val);
-    UA_Variant_setScalarCopy(val, strIdentifier.String, &UA_TYPES[UA_TYPES_STRING]);
-    UA_Server_writeObjectProperty(
-        pServer,
-        eventNodeId,
-        *open62541Cpp::UA_QualifiedName(2, "Identifier").QualifiedName,
-      *val
-    );
-    UA_Variant_delete(val);
-  }
-
-  {
-    open62541Cpp::UA_String strIdentifier(ev.SourceName);
-    UA_Variant *val = UA_Variant_new();
-    UA_Variant_clear(val);
-    UA_Variant_setScalarCopy(val, strIdentifier.String, &UA_TYPES[UA_TYPES_STRING]);
-    UA_Server_writeObjectProperty(
-        pServer,
-        eventNodeId,
-        *open62541Cpp::UA_QualifiedName(0, "SourceName").QualifiedName,
-        *val
-    );
-    UA_Variant_delete(val);
-  }
-
-  {
-    open62541Cpp::UA_String strMessage(ev.Message);
-    UA_Variant *val = UA_Variant_new();
-    UA_LocalizedText ltxtMessage = UA_LOCALIZEDTEXT_ALLOC("en-en", "");
-    UA_String_copy(strMessage.String, &ltxtMessage.text);
-
-    UA_Variant_clear(val);
-    UA_Variant_setScalarCopy(val, &ltxtMessage, &UA_TYPES[UA_TYPES_LOCALIZEDTEXT]);
-    UA_Server_writeObjectProperty(
-        pServer,
-        eventNodeId,
-        *open62541Cpp::UA_QualifiedName(0, "Message").QualifiedName,
-        *val
-    );
-    UA_LocalizedText_deleteMembers(&ltxtMessage);
-    UA_Variant_delete(val);
-  }
-
-  {
-    UA_Variant *val = UA_Variant_new();
-    UA_Variant_clear(val);
-    UA_Variant_setScalarCopy(val, &ev.Severity, &UA_TYPES[UA_TYPES_UINT16]);
-    UA_Server_writeObjectProperty(
-        pServer,
-        eventNodeId,
-        *open62541Cpp::UA_QualifiedName(0, "Severity").QualifiedName,
-        *val
-    );
-    UA_Variant_delete(val);
   }
 
   return eventNodeId;

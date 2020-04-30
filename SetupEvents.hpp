@@ -9,16 +9,15 @@
 #include <string>
 #include <open62541/server.h>
 
-struct NotificationEvent_t {
+struct NotificationEvent2_t {
   std::string Identifier;
   std::string Message;
   std::string SourceName;
   uint16_t Severity;
 };
-struct AlertCondition_t : public NotificationEvent_t{
+struct AlertCondition_t : public NotificationEvent2_t{
   bool Retain;
   bool Enable = true;
 };
 
 UA_NodeId setupAlertConditionType(UA_Server *pServer, AlertCondition_t ev);
-UA_NodeId setupNotificationEvent(UA_Server *pServer, NotificationEvent_t ev);

@@ -4,7 +4,7 @@
  * @date 2020-02-25
  * @copyright Copyright (c) 2020
  */
-
+#pragma once
 #include <open62541/server.h>
 #include <Open62541Cpp/UA_NodeId.hpp>
 
@@ -14,7 +14,8 @@ class OpcUaEvent
 public:
     T Data;
     open62541Cpp::UA_NodeId EventNodeId;
-    OpcUaEvent(const T &data, UA_Server *pServer) : Data(data), pServer(pServer), nodesMaster(pServer)
+    open62541Cpp::UA_NodeId Origin;
+    OpcUaEvent(const T &data, UA_Server *pServer, open62541Cpp::UA_NodeId origin ) : Data(data), pServer(pServer), nodesMaster(pServer), Origin(origin)
     {
         addEventToAddressSpace();
         Trigger();
@@ -24,7 +25,7 @@ public:
     void Trigger()
     {
         /// \todo ask for source node
-        UA_Server_triggerEvent(pServer, *EventNodeId.NodeId, UA_NODEID_NUMERIC(0, UA_NS0ID_SERVER), NULL, UA_FALSE);
+        UA_Server_triggerEvent(pServer, *EventNodeId.NodeId, *Origin.NodeId, NULL, UA_FALSE);
     }
 
     virtual ~OpcUaEvent()

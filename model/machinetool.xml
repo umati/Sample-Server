@@ -57,7 +57,7 @@
     </Aliases>
     <Extensions>
         <Extension>
-            <ua:ModelInfo Tool="UaModeler" Hash="qFSe8Pza168bCzkk7egNbQ==" Version="1.6.3"/>
+            <ua:ModelInfo Tool="UaModeler" Hash="3ck1OwNrjGkbpZl6nlBKXg==" Version="1.6.3"/>
         </Extension>
     </Extensions>
     <UADataType NodeId="ns=1;i=3004" BrowseName="1:ChannelState">
@@ -2924,7 +2924,7 @@
             <Reference ReferenceType="HasComponent">ns=1;i=5072</Reference>
         </References>
     </UAObject>
-    <UAObject ParentNodeId="ns=1;i=5068" NodeId="ns=1;i=5069" BrowseName="1:Messages">
+    <UAObject ParentNodeId="ns=1;i=5068" EventNotifier="1" NodeId="ns=1;i=5069" BrowseName="1:Messages">
         <DisplayName>Messages</DisplayName>
         <References>
             <Reference ReferenceType="GeneratesEvent">ns=1;i=1042</Reference>
@@ -3072,7 +3072,7 @@
             <Reference ReferenceType="HasComponent">ns=1;i=5026</Reference>
         </References>
     </UAObjectType>
-    <UAObject ParentNodeId="ns=1;i=1008" NodeId="ns=1;i=5020" BrowseName="1:Messages">
+    <UAObject ParentNodeId="ns=1;i=1008" EventNotifier="1" NodeId="ns=1;i=5020" BrowseName="1:Messages">
         <DisplayName>Messages</DisplayName>
         <References>
             <Reference ReferenceType="GeneratesEvent">ns=1;i=1042</Reference>

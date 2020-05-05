@@ -41,10 +41,10 @@ template <typename T, typename = std::enable_if_t<!is_base_of_template<BindableM
 void setBindOrMandatory(T &instance, bool bind = true, bool mandatory = true){};
 
 template <typename T>
-void setAddrSpaceLocation(BindableMember<T> &instance, const open62541Cpp::UA_NodeId &nodeId, const open62541Cpp::UA_RelativPathElement pathEl);
+void setAddrSpaceLocation(BindableMember<T> &instance, const open62541Cpp::UA_NodeId &parentNodeId, const open62541Cpp::UA_RelativPathElement pathEl);
 
 template <typename T, typename = std::enable_if_t<!is_base_of_template<BindableMember, T>::value>>
-void setAddrSpaceLocation(T &instance, const open62541Cpp::UA_NodeId &nodeId, const open62541Cpp::UA_RelativPathElement pathEl){};
+void setAddrSpaceLocation(T &instance, const open62541Cpp::UA_NodeId &parentNodeId, const open62541Cpp::UA_RelativPathElement pathEl){};
 
 /**
  * @brief Binding the members by it's reflection description
@@ -171,6 +171,12 @@ void bindMemberRefl(
     open62541Cpp::UA_NodeId nodeId,
     NodesMaster &nodesMaster)
 {
+  if constexpr (
+      is_base_of_template<BindableMember, T>::value)
+  {
+    member.NodeId = nodeId;
+  }
+
   if constexpr (
       hasAttributeIfReflectable<open62541Cpp::attribute::UaObjectType>(member) ||
       hasAttributeIfReflectable<open62541Cpp::attribute::UaVariableType>(member))
@@ -342,8 +348,8 @@ void setBindOrMandatory(BindableMember<T> &instance, bool bind, bool mandatory)
 }
 
 template <typename T>
-void setAddrSpaceLocation(BindableMember<T> &instance, const open62541Cpp::UA_NodeId &nodeId, const open62541Cpp::UA_RelativPathElement pathEl)
+void setAddrSpaceLocation(BindableMember<T> &instance, const open62541Cpp::UA_NodeId &parentNodeId, const open62541Cpp::UA_RelativPathElement pathEl)
 {
-  instance.ParentNodeId = nodeId;
+  instance.ParentNodeId = parentNodeId;
   instance.RelativPathElement = pathEl;
 }

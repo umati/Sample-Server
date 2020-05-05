@@ -18,6 +18,7 @@ public:
   // Store location, so the node can be created at a later time
   open62541Cpp::UA_RelativPathElement RelativPathElement;
   open62541Cpp::UA_NodeId ParentNodeId;
+  open62541Cpp::UA_NodeId NodeId;
 
   BindableMember() = default;
   BindableMember(const T &val);

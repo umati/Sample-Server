@@ -1,18 +1,29 @@
 <opc:TypeDictionary xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:tns="http://opcfoundation.org/UA/MachineTool/" DefaultByteOrder="LittleEndian" xmlns:opc="http://opcfoundation.org/BinarySchema/" xmlns:ua="http://opcfoundation.org/UA/" TargetNamespace="http://opcfoundation.org/UA/MachineTool/">
     <opc:Import Namespace="http://opcfoundation.org/UA/"/>
+    <opc:EnumeratedType LengthInBits="32" Name="ChannelMode">
+        <opc:EnumeratedValue Name="Automatic" Value="0"/>
+        <opc:EnumeratedValue Name="MdaMdi" Value="1"/>
+        <opc:EnumeratedValue Name="JogManual" Value="2"/>
+        <opc:EnumeratedValue Name="JogIncrement" Value="3"/>
+        <opc:EnumeratedValue Name="JogHandwheel" Value="4"/>
+        <opc:EnumeratedValue Name="JogTeaching" Value="5"/>
+        <opc:EnumeratedValue Name="TeachingHandle" Value="6"/>
+        <opc:EnumeratedValue Name="Remote" Value="7"/>
+        <opc:EnumeratedValue Name="Reference" Value="8"/>
+        <opc:EnumeratedValue Name="Edit" Value="9"/>
+        <opc:EnumeratedValue Name="Other" Value="10"/>
+    </opc:EnumeratedType>
     <opc:EnumeratedType LengthInBits="32" Name="ChannelState">
         <opc:EnumeratedValue Name="Active" Value="0"/>
         <opc:EnumeratedValue Name="Interrupted" Value="1"/>
         <opc:EnumeratedValue Name="Reset" Value="2"/>
     </opc:EnumeratedType>
-    <opc:EnumeratedType LengthInBits="32" Name="ControlMode">
+    <opc:EnumeratedType LengthInBits="32" Name="EDMGeneratorState">
         <opc:EnumeratedValue Name="Undefined" Value="0"/>
-        <opc:EnumeratedValue Name="Automatic" Value="1"/>
-        <opc:EnumeratedValue Name="AutoSingleStep" Value="2"/>
-        <opc:EnumeratedValue Name="MdaMdi" Value="3"/>
-        <opc:EnumeratedValue Name="JogManual" Value="4"/>
-        <opc:EnumeratedValue Name="JogIncrement" Value="5"/>
-        <opc:EnumeratedValue Name="Edit" Value="6"/>
+        <opc:EnumeratedValue Name="Ready" Value="1"/>
+        <opc:EnumeratedValue Name="Active_Low_Voltage" Value="2"/>
+        <opc:EnumeratedValue Name="Active_High_Voltage" Value="3"/>
+        <opc:EnumeratedValue Name="Error" Value="4"/>
     </opc:EnumeratedType>
     <opc:EnumeratedType LengthInBits="32" Name="LaserState">
         <opc:EnumeratedValue Name="Undefined" Value="0"/>
@@ -23,20 +34,16 @@
         <opc:EnumeratedValue Name="Manual" Value="0"/>
         <opc:EnumeratedValue Name="Automatic" Value="1"/>
         <opc:EnumeratedValue Name="Setup" Value="2"/>
-        <opc:EnumeratedValue Name="Service" Value="3"/>
-        <opc:EnumeratedValue Name="AutoWithManualIntervention" Value="4"/>
+        <opc:EnumeratedValue Name="AutoWithManualIntervention" Value="3"/>
+        <opc:EnumeratedValue Name="Service" Value="4"/>
         <opc:EnumeratedValue Name="Other" Value="5"/>
-    </opc:EnumeratedType>
-    <opc:EnumeratedType LengthInBits="32" Name="NCProcessing">
-        <opc:EnumeratedValue Name="Undefined" Value="0"/>
-        <opc:EnumeratedValue Name="SingleStep" Value="1"/>
-        <opc:EnumeratedValue Name="BlockSequence" Value="2"/>
     </opc:EnumeratedType>
     <opc:EnumeratedType LengthInBits="32" Name="PartQuality">
         <opc:EnumeratedValue Name="CapabilityUnavailable" Value="0"/>
         <opc:EnumeratedValue Name="Good" Value="1"/>
         <opc:EnumeratedValue Name="Bad" Value="2"/>
         <opc:EnumeratedValue Name="NotYetMeasured" Value="3"/>
+        <opc:EnumeratedValue Name="WillNotBeMeasured" Value="4"/>
     </opc:EnumeratedType>
     <opc:EnumeratedType LengthInBits="32" Name="ProcessIrregularity">
         <opc:EnumeratedValue Name="CapabilityUnavailable" Value="0"/>
@@ -44,23 +51,15 @@
         <opc:EnumeratedValue Name="NotDetected" Value="2"/>
         <opc:EnumeratedValue Name="NotYetDetermined" Value="3"/>
     </opc:EnumeratedType>
-    <opc:EnumeratedType LengthInBits="32" Name="SignalColor">
-        <opc:EnumeratedValue Name="Green" Value="0"/>
-        <opc:EnumeratedValue Name="Red" Value="1"/>
-        <opc:EnumeratedValue Name="Yellow" Value="2"/>
-        <opc:EnumeratedValue Name="Blue" Value="3"/>
-        <opc:EnumeratedValue Name="White" Value="4"/>
-        <opc:EnumeratedValue Name="Off" Value="5"/>
-    </opc:EnumeratedType>
-    <opc:EnumeratedType LengthInBits="32" Name="SignalModeLight">
-        <opc:EnumeratedValue Name="On" Value="0"/>
-        <opc:EnumeratedValue Name="Blinking" Value="1"/>
-        <opc:EnumeratedValue Name="Flashing" Value="2"/>
-    </opc:EnumeratedType>
-    <opc:EnumeratedType LengthInBits="32" Name="StacklightOperationMode">
-        <opc:EnumeratedValue Name="Segmented" Value="0"/>
-        <opc:EnumeratedValue Name="Levelmeter" Value="1"/>
-        <opc:EnumeratedValue Name="Running_Light" Value="2"/>
+    <opc:EnumeratedType LengthInBits="32" Name="ToolLifeIndication">
+        <opc:EnumeratedValue Name="Time" Value="0"/>
+        <opc:EnumeratedValue Name="NumberOfParts" Value="1"/>
+        <opc:EnumeratedValue Name="NumberOfUsages" Value="2"/>
+        <opc:EnumeratedValue Name="Feed_Distance" Value="3"/>
+        <opc:EnumeratedValue Name="Cutting_Distance" Value="4"/>
+        <opc:EnumeratedValue Name="Length" Value="5"/>
+        <opc:EnumeratedValue Name="Diameter" Value="6"/>
+        <opc:EnumeratedValue Name="Other" Value="7"/>
     </opc:EnumeratedType>
     <opc:EnumeratedType LengthInBits="32" Name="ToolLocked">
         <opc:EnumeratedValue Name="CapabilityUnavailable" Value="0"/>
@@ -73,14 +72,6 @@
     <opc:EnumeratedType LengthInBits="32" Name="ToolManagement">
         <opc:EnumeratedValue Name="NumberBased" Value="0"/>
         <opc:EnumeratedValue Name="GroupBased" Value="1"/>
-        <opc:EnumeratedValue Name="Custom" Value="2"/>
-    </opc:EnumeratedType>
-    <opc:EnumeratedType LengthInBits="32" Name="WearIndication">
-        <opc:EnumeratedValue Name="Time" Value="0"/>
-        <opc:EnumeratedValue Name="NumberOfParts" Value="1"/>
-        <opc:EnumeratedValue Name="NumberOfUsages" Value="2"/>
-        <opc:EnumeratedValue Name="Distance" Value="3"/>
-        <opc:EnumeratedValue Name="Length" Value="4"/>
-        <opc:EnumeratedValue Name="Diameter" Value="5"/>
+        <opc:EnumeratedValue Name="Other" Value="2"/>
     </opc:EnumeratedType>
 </opc:TypeDictionary>

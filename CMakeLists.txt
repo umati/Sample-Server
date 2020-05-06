@@ -57,14 +57,26 @@ file(TOUCH "${PROJECT_SOURCE_DIR}/src_generated/types_machinery_generated.h")
 # )
 
 ua_generate_nodeset_and_datatypes(
-    NAME "machinetool"
-    FILE_NS "${PROJECT_SOURCE_DIR}/model/machinetool.xml"
-    FILE_CSV "${PROJECT_SOURCE_DIR}/model/machinetool.csv"
-    FILE_BSD "${PROJECT_SOURCE_DIR}/model/machinetool.bsd"
+    NAME "industrial_automation"
+    FILE_NS "${PROJECT_SOURCE_DIR}/model/industrial_automation.xml"
+    FILE_CSV "${PROJECT_SOURCE_DIR}/model/industrial_automation.csv"
+    FILE_BSD "${PROJECT_SOURCE_DIR}/model/industrial_automation.bsd"
     OUTPUT_DIR "${PROJECT_SOURCE_DIR}/src_generated"
     NAMESPACE_IDX 4
-    DEPENDS_TYPES "UA_TYPES;UA_TYPES_DI;UA_TYPES_MACHINERY"
-    DEPENDS di machinery
+    DEPENDS_TYPES "UA_TYPES_IA;UA_TYPES_DI"
+    DEPENDS di
+    #DEPENDS_NS    "${UA_FILE_NS0}"
+)
+
+ua_generate_nodeset_and_datatypes(
+    NAME "machinetool"
+    FILE_NS "${PROJECT_SOURCE_DIR}/model/Opc.Ua.MachineTool.Nodeset2.xml"
+    FILE_CSV "${PROJECT_SOURCE_DIR}/model/Opc.Ua.MachineTool.Nodeset2.csv"
+    FILE_BSD "${PROJECT_SOURCE_DIR}/model/Opc.Ua.MachineTool.Nodeset2.bsd"
+    OUTPUT_DIR "${PROJECT_SOURCE_DIR}/src_generated"
+    NAMESPACE_IDX 5
+    DEPENDS_TYPES "UA_TYPES;UA_TYPES_DI;UA_TYPES_MACHINERY;UA_TYPES_IA"
+    DEPENDS di machinery industrial_automation
     #DEPENDS_NS    "${UA_FILE_NS0}"
 )
 
@@ -82,7 +94,7 @@ ua_generate_nodeset(
     OUTPUT_DIR "${PROJECT_SOURCE_DIR}/src_generated"
     # First NS0 Types, then other dependent namespaces
     DEPENDS_TYPES "UA_TYPES;UA_TYPES_DI;UA_TYPES_MACHINERY;UA_TYPES_MACHINETOOL"
-    DEPENDS_NS "${open62541_NODESET_DIR}/Schema/Opc.Ua.NodeSet2.xml;${open62541_NODESET_DIR}/DI/Opc.Ua.Di.NodeSet2.xml;${PROJECT_SOURCE_DIR}/model/machinery.xml;${PROJECT_SOURCE_DIR}/model/machinetool.xml"
+    DEPENDS_NS "${open62541_NODESET_DIR}/Schema/Opc.Ua.NodeSet2.xml;${open62541_NODESET_DIR}/DI/Opc.Ua.Di.NodeSet2.xml;${PROJECT_SOURCE_DIR}/model/machinery.xml;${PROJECT_SOURCE_DIR}/model/industrial_automation.xml;${PROJECT_SOURCE_DIR}/model/Opc.Ua.MachineTool.Nodeset2.xml"
     #DEPENDS_NS "${open62541_NODESET_DIR}/Schema/Opc.Ua.NodeSet2.xml;${PROJECT_SOURCE_DIR}/model/machinery.xml;${PROJECT_SOURCE_DIR}/model/machinetool.xml;${open62541_NODESET_DIR}/DI/Opc.Ua.Di.NodeSet2.xml"
 )
 
@@ -92,8 +104,9 @@ add_library(machinetool_generated
     src_generated/types_di_generated.h
     src_generated/di_nodeids.h
     src_generated/namespace_machinery_generated.c
-    #src_generated/types_machinery_generated.h
     src_generated/machinery.h
+    src_generated/types_industrial_automation_generated.h
+    src_generated/namespace_industrial_automation_generated.c
     src_generated/namespace_machinetool_generated.c
     src_generated/types_machinetool_generated.h
     src_generated/machinetool_nodeids.h

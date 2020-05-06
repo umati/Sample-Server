@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<UANodeSet xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd" xmlns="http://opcfoundation.org/UA/2011/03/UANodeSet.xsd" xmlns:s1="http://opcfoundation.org/UA/Machinery/Types.xsd" xmlns:s2="http://opcfoundation.org/UA/DI/Types.xsd" xmlns:ua="http://unifiedautomation.com/Configuration/NodeSet.xsd" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+<UANodeSet xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd" xmlns="http://opcfoundation.org/UA/2011/03/UANodeSet.xsd" xmlns:s1="http://opcfoundation.org/UA/Machinery/Types.xsd" xmlns:s2="http://opcfoundation.org/UA/DI/Types.xsd" xmlns:s3="http://opcfoundation.org/UA/MachineTool/Types.xsd" xmlns:ua="http://unifiedautomation.com/Configuration/NodeSet.xsd" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
     <NamespaceUris>
         <Uri>http://opcfoundation.org/UA/Machinery/</Uri>
         <Uri>http://opcfoundation.org/UA/DI/</Uri>
+        <Uri>http://opcfoundation.org/UA/MachineTool/</Uri>
     </NamespaceUris>
     <Models>
         <Model ModelUri="http://opcfoundation.org/UA/Machinery/" PublicationDate="2020-03-17T10:18:50Z" Version="0.1.6">
-            <RequiredModel ModelUri="http://opcfoundation.org/UA/" PublicationDate="2019-09-09T00:00:00Z" Version="1.04.3"/>
+            <RequiredModel ModelUri="http://opcfoundation.org/UA/" PublicationDate="2020-04-10T00:00:00Z" Version="1.04.7"/>
             <RequiredModel ModelUri="http://opcfoundation.org/UA/DI/" PublicationDate="2019-05-01T00:00:00Z" Version="1.02"/>
         </Model>
     </Models>
@@ -16,6 +17,7 @@
         <Alias Alias="UInt16">i=5</Alias>
         <Alias Alias="String">i=12</Alias>
         <Alias Alias="DateTime">i=13</Alias>
+        <Alias Alias="NodeId">i=17</Alias>
         <Alias Alias="QualifiedName">i=20</Alias>
         <Alias Alias="LocalizedText">i=21</Alias>
         <Alias Alias="Organizes">i=35</Alias>
@@ -30,7 +32,7 @@
     </Aliases>
     <Extensions>
         <Extension>
-            <ua:ModelInfo Tool="UaModeler" Hash="lISeAF8tIZA8/yIqpI+SSw==" Version="1.6.3"/>
+            <ua:ModelInfo Tool="UaModeler" Hash="D92cYs5U9HKwS6sEaUvTyg==" Version="1.6.3"/>
         </Extension>
     </Extensions>
     <UAObjectType NodeId="ns=1;i=1011" BrowseName="1:IMachineTagNameplateType">
@@ -49,7 +51,7 @@
             <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
         </References>
     </UAVariable>
-    <UAObjectType NodeId="ns=1;i=1010" BrowseName="1:IMachineVendorNameplateType">
+    <UAObjectType IsAbstract="true" NodeId="ns=1;i=1010" BrowseName="1:IMachineVendorNameplateType">
         <DisplayName>IMachineVendorNameplateType</DisplayName>
         <References>
             <Reference ReferenceType="HasSubtype" IsForward="false">ns=2;i=15035</Reference>
@@ -110,7 +112,21 @@
             <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=1010</Reference>
         </References>
     </UAVariable>
-    <UAObjectType NodeId="ns=1;i=1012" BrowseName="1:MachineIdentificationType">
+    <UAVariable DataType="String" ParentNodeId="ns=3;i=1034" NodeId="ns=1;i=6015" BrowseName="1:JobIdentifier" AccessLevel="3">
+        <DisplayName>JobIdentifier</DisplayName>
+        <References>
+            <Reference ReferenceType="HasTypeDefinition">i=63</Reference>
+            <Reference ReferenceType="HasModellingRule">i=80</Reference>
+        </References>
+    </UAVariable>
+    <UAVariable DataType="NodeId" ParentNodeId="ns=3;i=1034" NodeId="ns=1;i=6016" BrowseName="1:JobNodeId" AccessLevel="3">
+        <DisplayName>JobNodeId</DisplayName>
+        <References>
+            <Reference ReferenceType="HasTypeDefinition">i=63</Reference>
+            <Reference ReferenceType="HasModellingRule">i=80</Reference>
+        </References>
+    </UAVariable>
+    <UAObjectType IsAbstract="true" NodeId="ns=1;i=1012" BrowseName="1:MachineIdentificationType">
         <DisplayName>MachineIdentificationType</DisplayName>
         <References>
             <Reference ReferenceType="HasProperty">ns=1;i=6013</Reference>

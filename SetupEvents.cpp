@@ -28,7 +28,7 @@ UA_NodeId setupAlertConditionType(UA_Server *pServer, AlertCondition_t ev)
   UA_StatusCode retval = UA_Server_createCondition(
       pServer,
       UA_NODEID_NULL /*UA_NODEID_NUMERIC(0, UA_NS0ID_SYSTEMCONDITIONCLASSTYPE)*/,
-      UA_NODEID_NUMERIC(4, UA_MACHINETOOLID_ALERTCONDITIONTYPE),
+      UA_NODEID_NUMERIC(4, UA_MACHINETOOLID_ALERTTYPE),
       *open62541Cpp::UA_QualifiedName(0, "SystemConditionClassType").QualifiedName,
       UA_NODEID_NUMERIC(0, UA_NS0ID_SERVER),
       UA_NODEID_NULL, &eventNodeId);

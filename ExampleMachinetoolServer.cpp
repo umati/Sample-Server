@@ -5,6 +5,7 @@
 #include "src_generated/namespace_machinetool_generated.h"
 #include "src_generated/namespace_machinery_generated.h"
 #include "src_generated/namespace_di_generated.h"
+#include "src_generated/namespace_industrial_automation_generated.c"
 #include "src_generated/iswexample.h"
 #include "src_generated/machinetool_nodeids.h"
 #include "src_generated/di_nodeids.h"
@@ -244,7 +245,7 @@ void simulate(MachineTool_t *pMachineTool,
 
       notifEvent.Identifier = "A";
 
-      OpcUaEvent ev(notifEvent, pServer, open62541Cpp::UA_NodeId(UA_NODEID_NUMERIC(5, UA_ISWEXAMPLE_ID_MACHINES_ISWEXAMPLEMACHINE_NOTIFICATION_MESSAGES)));
+      OpcUaEvent ev(notifEvent, pServer, open62541Cpp::UA_NodeId(UA_NODEID_NUMERIC(6, UA_ISWEXAMPLE_ID_MACHINES_ISWEXAMPLEMACHINE_NOTIFICATION_MESSAGES)));
     }
 
     if (first)
@@ -277,6 +278,7 @@ int main(int argc, char *argv[])
   std::cout << "ExampleUmatiServer" << std::endl;
   namespace_di_generated(pServer);
   namespace_machinery_generated(pServer);
+  namespace_industrial_automation_generated(pServer);
   namespace_machinetool_generated(pServer);
   namespace_iswexample_generated(pServer);
 
@@ -294,7 +296,7 @@ int main(int argc, char *argv[])
   machineTool.Identification->ProductInstanceUri.StatusCode = UA_STATUSCODE_GOODEDITED;
   machineTool.Identification->ProductInstanceUri.SourceTimestamp = UA_DateTime_fromStruct(UA_DateTimeStruct{.sec = 13, .min = 12, .hour = 11, .day = 10, .month = 9, .year = 2008});
 
-  bindMembersRefl(machineTool, pServer, open62541Cpp::UA_NodeId(5, UA_ISWEXAMPLE_ID_MACHINES_ISWEXAMPLEMACHINE), n);
+  bindMembersRefl(machineTool, pServer, open62541Cpp::UA_NodeId(6, UA_ISWEXAMPLE_ID_MACHINES_ISWEXAMPLEMACHINE), n);
 
   // Assign placeholders after binding!
   {

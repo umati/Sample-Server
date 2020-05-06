@@ -41,40 +41,66 @@ constexpr const char *NsMachineToolUri = "http://opcfoundation.org/UA/MachineToo
 constexpr const char *NsInstanceUri = "http://isw.example.com";
 } // namespace constants
 
+struct ITagNameplate_t {
+  BindableMemberValue<std::string> AssetId;
+  BindableMemberValue<open62541Cpp::LocalizedText_t> ComponentName;
+};
+
+REFL_TYPE(ITagNameplate_t,
+          open62541Cpp::attribute::UaObjectType{.NodeId = open62541Cpp::constexp::NodeId(constants::NsDIUri, UA_DIID_ITAGNAMEPLATETYPE)})
+REFL_FIELD(AssetId, open62541Cpp::attribute::PlaceholderOptional())
+REFL_FIELD(ComponentName, open62541Cpp::attribute::PlaceholderOptional())
+REFL_END
+
+struct IMachineTagNameplate_t : public ITagNameplate_t{
+  BindableMemberValue<std::string> Location;
+};
+
+REFL_TYPE(IMachineTagNameplate_t,
+          Bases<ITagNameplate_t>(),
+          open62541Cpp::attribute::UaObjectType{.NodeId = open62541Cpp::constexp::NodeId(constants::NsDIUri, UA_DIID_ITAGNAMEPLATETYPE)})
+REFL_FIELD(Location, open62541Cpp::attribute::PlaceholderOptional())
+REFL_FIELD(ComponentName)
+REFL_END
+
 struct IVendorNameplate_t
 {
   BindableMemberValue<std::string> ProductInstanceUri;
-};
-REFL_TYPE(IVendorNameplate_t,
-          open62541Cpp::attribute::UaObjectType{.NodeId = open62541Cpp::constexp::NodeId(constants::NsDIUri, UA_DIID_IVENDORNAMEPLATETYPE)})
-REFL_FIELD(ProductInstanceUri);
-REFL_END
-
-struct IMachineVendorNameplate_t : public IVendorNameplate_t
-{
-};
-REFL_TYPE(IMachineVendorNameplate_t,
-          Bases<IVendorNameplate_t>(),
-          open62541Cpp::attribute::UaObjectType{.NodeId = open62541Cpp::constexp::NodeId(constants::NsMachineryUri, UA_MACHINERY_ID_IMACHINEVENDORNAMEPLATETYPE)})
-REFL_END
-
-struct MachineToolIdentification_t : public IMachineVendorNameplate_t
-{
-  BindableMemberValue<std::uint16_t> YearOfConstruction;
   BindableMemberValue<open62541Cpp::LocalizedText_t> Model;
   BindableMemberValue<std::string> SoftwareRevision;
   BindableMemberValue<open62541Cpp::LocalizedText_t> Manufacturer;
   BindableMemberValue<std::string> SerialNumber;
 };
+REFL_TYPE(IVendorNameplate_t,
+          open62541Cpp::attribute::UaObjectType{.NodeId = open62541Cpp::constexp::NodeId(constants::NsDIUri, UA_DIID_IVENDORNAMEPLATETYPE)})
+REFL_FIELD(ProductInstanceUri, open62541Cpp::attribute::PlaceholderOptional());
+REFL_FIELD(Model, open62541Cpp::attribute::PlaceholderOptional())
+REFL_FIELD(SoftwareRevision, open62541Cpp::attribute::PlaceholderOptional())
+REFL_FIELD(Manufacturer, open62541Cpp::attribute::PlaceholderOptional())
+REFL_FIELD(SerialNumber, open62541Cpp::attribute::PlaceholderOptional())
+REFL_END
+
+struct IMachineVendorNameplate_t : public IVendorNameplate_t
+{
+  BindableMemberValue<std::uint16_t> YearOfConstruction;
+};
+REFL_TYPE(IMachineVendorNameplate_t,
+          Bases<IVendorNameplate_t>(),
+          open62541Cpp::attribute::UaObjectType{.NodeId = open62541Cpp::constexp::NodeId(constants::NsMachineryUri, UA_MACHINERY_ID_IMACHINEVENDORNAMEPLATETYPE)})
+  REFL_FIELD(YearOfConstruction, open62541Cpp::attribute::PlaceholderOptional())
+  REFL_FIELD(Manufacturer);
+  REFL_FIELD(ProductInstanceUri);
+  REFL_FIELD(SerialNumber);
+REFL_END
+
+struct MachineToolIdentification_t : public IMachineVendorNameplate_t, public IMachineTagNameplate_t
+{
+
+};
 
 REFL_TYPE(MachineToolIdentification_t,
-          Bases<IMachineVendorNameplate_t>(),
+          Bases<IMachineVendorNameplate_t, IMachineTagNameplate_t>(),
           open62541Cpp::attribute::UaObjectType{.NodeId = open62541Cpp::constexp::NodeId(constants::NsMachineToolUri, UA_MACHINETOOLID_MACHINETOOLIDENTIFICATIONTYPE)})
-REFL_FIELD(YearOfConstruction, open62541Cpp::attribute::UaBrowseName{.NsURI = constants::NsMachineryUri}, open62541Cpp::attribute::PlaceholderOptional())
-REFL_FIELD(Model, open62541Cpp::attribute::UaBrowseName{.NsURI = constants::NsDIUri})
-REFL_FIELD(SoftwareRevision, open62541Cpp::attribute::UaBrowseName{.NsURI = constants::NsDIUri})
-REFL_FIELD(Manufacturer, open62541Cpp::attribute::UaBrowseName{.NsURI = constants::NsDIUri})
-REFL_FIELD(SerialNumber, open62541Cpp::attribute::UaBrowseName{.NsURI = constants::NsDIUri})
 REFL_END
 
 struct SoftwareIdentification_t

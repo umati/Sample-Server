@@ -1,3 +1,4 @@
+#pragma once
 
 #include "ValueDecorator.hpp"
 
@@ -15,13 +16,22 @@ public:
   void SetBind() { m_isBind = true; };
   void SetMandatory() { m_isOptional = false; };
 
-  // Store location, so the node can be created at a later time
-  open62541Cpp::UA_RelativPathElement RelativPathElement;
+  /// NodeId of the parent element, enable creating an optional member later on
   open62541Cpp::UA_NodeId ParentNodeId;
+
+  /// \TODO replace by utilizing MemerInTypeNodeId
+  open62541Cpp::UA_RelativPathElement RelativPathElement;
+
+  /// NodeId of this member in the type definition (taken from MemberInTypeNodeId atribute)
+  /// \TODO Replace by pointer to attribute
+  open62541Cpp::UA_NodeId MemerInTypeNodeId;
+
+  /// NodeId, when binded. Enable deletion later on
   open62541Cpp::UA_NodeId NodeId;
 
   BindableMember() = default;
   BindableMember(const T &val);
+  virtual ~BindableMember() {}
 };
 
 template <typename T>

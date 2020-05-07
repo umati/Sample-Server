@@ -41,6 +41,12 @@ template <typename T, typename = std::enable_if_t<!is_base_of_template<BindableM
 void setBindOrMandatory(T &instance, bool bind = true, bool mandatory = true){};
 
 template <typename T>
+void setMemberInTypeNodeId(BindableMember<T> &instance, const open62541Cpp::constexp::NodeId &nodeId, UA_Server *pServer);
+
+template <typename T, typename = std::enable_if_t<!is_base_of_template<BindableMember, T>::value>>
+void setMemberInTypeNodeId(T &instance, const open62541Cpp::constexp::NodeId &nodeId, UA_Server *pServer){};
+
+template <typename T>
 void setAddrSpaceLocation(BindableMember<T> &instance, const open62541Cpp::UA_NodeId &parentNodeId, const open62541Cpp::UA_RelativPathElement pathEl);
 
 template <typename T, typename = std::enable_if_t<!is_base_of_template<BindableMember, T>::value>>
@@ -104,6 +110,12 @@ void bindMembersRefl(T &instance, UA_Server *pServer, open62541Cpp::UA_NodeId no
       return;
     }
 
+    if constexpr (refl::descriptor::has_attribute<open62541Cpp::attribute::MemberInTypeNodeId>(member))
+    {
+      auto& attr = refl::descriptor::get_attribute<open62541Cpp::attribute::MemberInTypeNodeId>(member);
+      setMemberInTypeNodeId(member(instance), attr.NodeId, pServer);
+    }
+
     open62541Cpp::UA_RelativPathElement pathEl(getRelativPathElement(member(instance)));
     // Check if path was set by base class? => Skip use the previous RelativPath (with correct namespace)
     if(pathEl.RelativePathElement == nullptr)
@@ -147,7 +159,7 @@ void bindMembersRefl(T &instance, UA_Server *pServer, open62541Cpp::UA_NodeId no
 }
 
 template <typename AttributeType, typename T>
-constexpr bool hasAttributeIfReflectable(const T &member) noexcept
+constexpr bool hasAttributeIfReflectable() noexcept
 {
   if constexpr (!refl::trait::is_reflectable<T>::value)
   {
@@ -156,8 +168,14 @@ constexpr bool hasAttributeIfReflectable(const T &member) noexcept
   else
   {
     return refl::descriptor::has_attribute<AttributeType>(
-        refl::reflect(member));
+        refl::reflect<T>());
   }
+}
+
+template <typename AttributeType, typename T>
+constexpr bool hasAttributeIfReflectable(const T& member) noexcept
+{
+  return hasAttributeIfReflectable<AttributeType, T>();
 }
 
 template <typename T>
@@ -198,8 +216,8 @@ void bindMemberRefl(
   }
 
   if constexpr (
-      hasAttributeIfReflectable<open62541Cpp::attribute::UaObjectType>(member) ||
-      hasAttributeIfReflectable<open62541Cpp::attribute::UaVariableType>(member))
+      hasAttributeIfReflectable<open62541Cpp::attribute::UaObjectType, T>() ||
+      hasAttributeIfReflectable<open62541Cpp::attribute::UaVariableType, T>())
   {
     bindMembersRefl(member, pServer, nodeId, nodesMaster);
   }
@@ -372,4 +390,9 @@ void setAddrSpaceLocation(BindableMember<T> &instance, const open62541Cpp::UA_No
 {
   instance.ParentNodeId = parentNodeId;
   instance.RelativPathElement = pathEl;
+}
+
+template <typename T>
+void setMemberInTypeNodeId(BindableMember<T> &instance, const open62541Cpp::constexp::NodeId &memberInTypeNodeId, UA_Server *pServer) {
+  instance.MemerInTypeNodeId = memberInTypeNodeId.UANodeId(pServer);
 }

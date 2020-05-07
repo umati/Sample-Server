@@ -31,6 +31,7 @@
 
 #include "OpcUaTypes/ConstNodeId.hpp"
 #include "OpcUaEvent.hpp"
+#include "Instantiation.hpp"
 
 namespace constants
 {
@@ -88,7 +89,8 @@ struct IMachineVendorNameplate_t : public IVendorNameplate_t
 REFL_TYPE(IMachineVendorNameplate_t,
           Bases<IVendorNameplate_t>(),
           open62541Cpp::attribute::UaObjectType{.NodeId = open62541Cpp::constexp::NodeId(constants::NsMachineryUri, UA_MACHINERY_ID_IMACHINEVENDORNAMEPLATETYPE)})
-REFL_FIELD(YearOfConstruction, open62541Cpp::attribute::PlaceholderOptional())
+REFL_FIELD(YearOfConstruction, open62541Cpp::attribute::PlaceholderOptional(),
+  open62541Cpp::attribute::MemberInTypeNodeId {.NodeId = open62541Cpp::constexp::NodeId(constants::NsMachineryUri, UA_MACHINERY_ID_IMACHINEVENDORNAMEPLATETYPE_YEAROFCONSTRUCTION)})
 REFL_FIELD(Manufacturer);
 REFL_FIELD(ProductInstanceUri);
 REFL_FIELD(SerialNumber);
@@ -205,7 +207,7 @@ struct ProdictionJobList_t
 
 REFL_TYPE(ProdictionJobList_t, open62541Cpp::attribute::UaObjectType{.NodeId = open62541Cpp::constexp::NodeId(constants::NsMachineToolUri, UA_MACHINETOOLID_PRODUCTIONJOBLISTTYPE)})
 REFL_FIELD(Jobs, open62541Cpp::attribute::UaReference{
-                     {.NodeId = open62541Cpp::constexp::NodeId(constants::Ns0Uri, UA_NS0ID_HASCOMPONENT)}})
+                     .NodeId = open62541Cpp::constexp::NodeId(constants::Ns0Uri, UA_NS0ID_HASCOMPONENT)})
 REFL_END
 
 struct Monitoring_t
@@ -215,7 +217,7 @@ struct Monitoring_t
 
 REFL_TYPE(Monitoring_t, open62541Cpp::attribute::UaObjectType{.NodeId = open62541Cpp::constexp::NodeId(constants::NsMachineToolUri, UA_MACHINETOOLID_MONITORINGTYPE)})
 REFL_FIELD(Channels, open62541Cpp::attribute::UaReference{
-                         {.NodeId = open62541Cpp::constexp::NodeId(constants::Ns0Uri, UA_NS0ID_HASCOMPONENT)}})
+                         .NodeId = open62541Cpp::constexp::NodeId(constants::Ns0Uri, UA_NS0ID_HASCOMPONENT)})
 REFL_END
 
 struct Production_t
@@ -329,6 +331,7 @@ int main(int argc, char *argv[])
   UA_ObjectAttributes_clear(&objAttr);
   MachineTool_t machineTool2;
   machineTool2.Identification->Manufacturer = open62541Cpp::LocalizedText_t{.locale = "c++", .text = "ISW Christian von Arnim"};
+  machineTool2.Identification->YearOfConstruction = 2020;
 
   std::mutex accessDataMutex;
   NodesMaster n(pServer);
@@ -377,6 +380,8 @@ int main(int argc, char *argv[])
     }
   }
 
+  n.SetCallbacks();
+  InstatiateOptional(machineTool2.Identification->YearOfConstruction, pServer, n);
   n.SetCallbacks();
 
   std::atomic_bool running{true};

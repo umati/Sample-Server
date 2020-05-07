@@ -41,7 +41,8 @@ constexpr const char *NsMachineToolUri = "http://opcfoundation.org/UA/MachineToo
 constexpr const char *NsInstanceUri = "http://isw.example.com";
 } // namespace constants
 
-struct ITagNameplate_t {
+struct ITagNameplate_t
+{
   BindableMemberValue<std::string> AssetId;
   BindableMemberValue<open62541Cpp::LocalizedText_t> ComponentName;
 };
@@ -52,7 +53,8 @@ REFL_FIELD(AssetId, open62541Cpp::attribute::PlaceholderOptional())
 REFL_FIELD(ComponentName, open62541Cpp::attribute::PlaceholderOptional())
 REFL_END
 
-struct IMachineTagNameplate_t : public ITagNameplate_t{
+struct IMachineTagNameplate_t : public ITagNameplate_t
+{
   BindableMemberValue<std::string> Location;
 };
 
@@ -60,7 +62,6 @@ REFL_TYPE(IMachineTagNameplate_t,
           Bases<ITagNameplate_t>(),
           open62541Cpp::attribute::UaObjectType{.NodeId = open62541Cpp::constexp::NodeId(constants::NsDIUri, UA_DIID_ITAGNAMEPLATETYPE)})
 REFL_FIELD(Location, open62541Cpp::attribute::PlaceholderOptional())
-REFL_FIELD(ComponentName)
 REFL_END
 
 struct IVendorNameplate_t
@@ -87,15 +88,14 @@ struct IMachineVendorNameplate_t : public IVendorNameplate_t
 REFL_TYPE(IMachineVendorNameplate_t,
           Bases<IVendorNameplate_t>(),
           open62541Cpp::attribute::UaObjectType{.NodeId = open62541Cpp::constexp::NodeId(constants::NsMachineryUri, UA_MACHINERY_ID_IMACHINEVENDORNAMEPLATETYPE)})
-  REFL_FIELD(YearOfConstruction, open62541Cpp::attribute::PlaceholderOptional())
-  REFL_FIELD(Manufacturer);
-  REFL_FIELD(ProductInstanceUri);
-  REFL_FIELD(SerialNumber);
+REFL_FIELD(YearOfConstruction, open62541Cpp::attribute::PlaceholderOptional())
+REFL_FIELD(Manufacturer);
+REFL_FIELD(ProductInstanceUri);
+REFL_FIELD(SerialNumber);
 REFL_END
 
 struct MachineToolIdentification_t : public IMachineVendorNameplate_t, public IMachineTagNameplate_t
 {
-
 };
 
 REFL_TYPE(MachineToolIdentification_t,
@@ -224,7 +224,7 @@ struct Production_t
 };
 
 REFL_TYPE(Production_t, open62541Cpp::attribute::UaObjectType{.NodeId = open62541Cpp::constexp::NodeId(constants::NsMachineToolUri, UA_MACHINETOOLID_PRODUCTIONTYPE)})
-REFL_FIELD(ProductionPlan)
+REFL_FIELD(ProductionPlan, open62541Cpp::attribute::PlaceholderOptional())
 REFL_END
 
 struct MachineTool_t
@@ -308,6 +308,28 @@ int main(int argc, char *argv[])
   namespace_machinetool_generated(pServer);
   namespace_iswexample_generated(pServer);
 
+  UA_ObjectAttributes objAttr = UA_ObjectAttributes_default;
+
+  objAttr.displayName = UA_LOCALIZEDTEXT_ALLOC("", "Instance2");
+  objAttr.eventNotifier = UA_EVENTNOTIFIERTYPE_SUBSCRIBETOEVENTS;
+  open62541Cpp::UA_NodeId inst2((UA_UInt16)0, 0);
+
+  {
+    auto status = UA_Server_addObjectNode(
+        pServer,
+        UA_NODEID_NULL,
+        UA_NODEID_NUMERIC(nsFromUri(pServer, constants::NsMachineryUri), UA_MACHINERY_ID_MACHINES),
+        UA_NODEID_NUMERIC(0, UA_NS0ID_ORGANIZES),
+        UA_QUALIFIEDNAME(nsFromUri(pServer, constants::NsInstanceUri), "Instance2"),
+        UA_NODEID_NUMERIC(nsFromUri(pServer, constants::NsMachineToolUri), UA_MACHINETOOLID_MACHINETOOLTYPE),
+        objAttr,
+        nullptr,
+        inst2.NodeId);
+  }
+  UA_ObjectAttributes_clear(&objAttr);
+  MachineTool_t machineTool2;
+  machineTool2.Identification->Manufacturer = open62541Cpp::LocalizedText_t{.locale = "c++", .text = "ISW Christian von Arnim"};
+
   std::mutex accessDataMutex;
   NodesMaster n(pServer);
   MachineTool_t machineTool;
@@ -323,6 +345,7 @@ int main(int argc, char *argv[])
   machineTool.Identification->ProductInstanceUri.SourceTimestamp = UA_DateTime_fromStruct(UA_DateTimeStruct{.sec = 13, .min = 12, .hour = 11, .day = 10, .month = 9, .year = 2008});
 
   bindMembersRefl(machineTool, pServer, open62541Cpp::UA_NodeId(6, UA_ISWEXAMPLE_ID_MACHINES_ISWEXAMPLEMACHINE), n);
+  bindMembersRefl(machineTool2, pServer, inst2, n);
 
   // Assign placeholders after binding!
   {

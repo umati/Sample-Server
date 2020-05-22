@@ -1,6 +1,7 @@
 #pragma once
 
 #include "ValueDecorator.hpp"
+#include <Open62541Cpp/UA_NodeId.hpp>
 
 template <typename T>
 class BindableMember : public ValueDecorator<T>

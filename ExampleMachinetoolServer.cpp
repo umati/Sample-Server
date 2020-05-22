@@ -6,7 +6,7 @@
 #include "src_generated/namespace_machinetool_generated.h"
 #include "src_generated/namespace_machinery_generated.h"
 #include "src_generated/namespace_di_generated.h"
-#include "src_generated/namespace_industrial_automation_generated.c"
+#include "src_generated/namespace_industrial_automation_generated.h"
 #include "src_generated/iswexample.h"
 #include <cstdint>
 #include <functional>
@@ -105,7 +105,7 @@ int main(int argc, char *argv[])
         UA_NODEID_NULL,
         UA_NODEID_NUMERIC(nsFromUri(pServer, constants::NsMachineryUri), UA_MACHINERY_ID_MACHINES),
         UA_NODEID_NUMERIC(0, UA_NS0ID_ORGANIZES),
-        UA_QUALIFIEDNAME(nsFromUri(pServer, constants::NsInstanceUri), "Instance2"),
+        *open62541Cpp::UA_QualifiedName(nsFromUri(pServer, constants::NsInstanceUri), "Instance2").QualifiedName,
         UA_NODEID_NUMERIC(nsFromUri(pServer, constants::NsMachineToolUri), UA_MACHINETOOLID_MACHINETOOLTYPE),
         objAttr,
         nullptr,

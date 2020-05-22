@@ -4,7 +4,7 @@
 /// \date 14.01.2020
 ///
 
-#include <open62541Cpp/UA_String.hpp>
+#include <Open62541Cpp/UA_String.hpp>
 #include <atomic>
 #include <mutex>
 #include <chrono>

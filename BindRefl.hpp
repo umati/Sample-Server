@@ -331,7 +331,7 @@ open62541Cpp::UA_RelativPathElement getBrowseName(const B &instance, const refl:
   std::uint16_t nsIndex = ~static_cast<std::uint16_t>(0);
   std::string name(member.name);
   const char *nsUri = nullptr;
-  if constexpr (refl::descriptor::has_attribute<open62541Cpp::attribute::UaBrowseName>(member))
+  if constexpr (refl::descriptor::has_attribute<open62541Cpp::attribute::UaBrowseName>(refl::descriptor::field_descriptor<T, N>()))
   {
     const auto &attrBrowseName = refl::descriptor::get_attribute<open62541Cpp::attribute::UaBrowseName>(member);
     nsUri = attrBrowseName.NsURI;

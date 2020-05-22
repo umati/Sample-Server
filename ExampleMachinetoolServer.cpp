@@ -187,6 +187,6 @@ int main(int argc, char *argv[])
   t.join();
   std::cout << "Shut down OPC UA Server" << std::endl;
   UA_Server_run_shutdown(pServer);
-
+  UA_Server_delete(pServer);
   return 0;
 }

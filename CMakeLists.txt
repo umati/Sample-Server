@@ -1,5 +1,5 @@
-cmake_minimum_required(VERSION 3.0)
-project(ExampleMachinetoolServer)
+cmake_minimum_required(VERSION 3.15)
+project(ExampleMachinetoolServer VERSION 0.1)
 
 set(CMAKE_CXX_STANDARD 17)
 
@@ -126,6 +126,7 @@ add_library(ExampleServerLib
     OpcUaTypes/LocalizedText.cpp
     OpcUaTypes/EUInformation.cpp
     OpcUaTypes/ConstNodeId.cpp
+    Instantiation.cpp
 )
 set_target_properties(ExampleServerLib PROPERTIES LINKER_LANGUAGE CXX)
 set_target_properties(ExampleServerLib PROPERTIES DEBUG_POSTFIX "d")
@@ -146,3 +147,18 @@ target_link_libraries(${PROJECT_NAME} PUBLIC machinetool_generated)
 
 add_subdirectory(tests)
 include(CTest)
+
+
+include(GenerateExportHeader)
+
+set_property(TARGET ${PROJECT_NAME} PROPERTY VERSION ${PROJECT_VERSION})
+
+
+# export library (either static or shared depending on BUILD_SHARED_LIBS)
+install(TARGETS ${PROJECT_NAME}
+	EXPORT ${PROJECT_NAME}Targets
+	LIBRARY DESTINATION lib
+	ARCHIVE DESTINATION lib
+	RUNTIME DESTINATION bin
+	INCLUDES DESTINATION include
+	)

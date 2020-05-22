@@ -49,9 +49,9 @@ static void setByRefl(const T &src, void *trg, const UA_DataType *typeDefinition
 
   const UA_DataType *pTypeDefinition = typeDefinition;
 
-  if constexpr (refl::descriptor::has_attribute<open62541Cpp::attribute::UaDataType>(refl::reflect(src)))
+  if constexpr (refl::descriptor::has_attribute<open62541Cpp::attribute::UaDataType>(refl::reflect<T>()))
   {
-    pTypeDefinition = refl::descriptor::get_attribute<open62541Cpp::attribute::UaDataType>(refl::reflect(src)).pDataType;
+    pTypeDefinition = refl::descriptor::get_attribute<open62541Cpp::attribute::UaDataType>(refl::reflect<T>()).pDataType;
   }
 
   std::size_t numMembersSet = 0;

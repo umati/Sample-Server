@@ -6,7 +6,7 @@
 
 #include "NodeValue.hpp"
 #include <open62541/types_generated.h>
-#include <open62541Cpp/UA_String.hpp>
+#include <Open62541Cpp/UA_String.hpp>
 #include "BindValue.hpp"
 #include "UaTypeHelper.hpp"
 

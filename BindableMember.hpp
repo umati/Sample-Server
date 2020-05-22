@@ -2,6 +2,7 @@
 
 #include "ValueDecorator.hpp"
 #include <Open62541Cpp/UA_NodeId.hpp>
+#include <Open62541Cpp/UA_RelativPathElement.hpp>
 
 template <typename T>
 class BindableMember : public ValueDecorator<T>

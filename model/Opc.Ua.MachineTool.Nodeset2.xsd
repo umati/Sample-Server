@@ -6,13 +6,10 @@
             <xs:enumeration value="MdaMdi_1"/>
             <xs:enumeration value="JogManual_2"/>
             <xs:enumeration value="JogIncrement_3"/>
-            <xs:enumeration value="JogHandwheel_4"/>
-            <xs:enumeration value="JogTeaching_5"/>
-            <xs:enumeration value="TeachingHandle_6"/>
-            <xs:enumeration value="Remote_7"/>
-            <xs:enumeration value="Reference_8"/>
-            <xs:enumeration value="Edit_9"/>
-            <xs:enumeration value="Other_10"/>
+            <xs:enumeration value="TeachingHandle_4"/>
+            <xs:enumeration value="Remote_5"/>
+            <xs:enumeration value="Reference_6"/>
+            <xs:enumeration value="Other_7"/>
         </xs:restriction>
     </xs:simpleType>
     <xs:element type="tns:ChannelMode" name="ChannelMode"/>

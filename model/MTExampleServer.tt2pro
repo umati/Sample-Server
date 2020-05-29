@@ -1,9 +1,9 @@
 ###########################
 # UaModeler Project File  #
-# Generated at 06.05.2020 #
+# Generated at 29.05.2020 #
 ###########################
 
-PROJECTNAME = umati
+PROJECTNAME = MTExampleServer
 
 TEMPLATESET = ($TEMPLATES)/modeling/v1_0/t0/modeling.tt2set
 

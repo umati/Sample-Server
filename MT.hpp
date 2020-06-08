@@ -242,6 +242,7 @@ REFL_FIELD(ConditionSubClassName, open62541Cpp::attribute::PlaceholderOptional()
 REFL_FIELD(EnabledState)
 REFL_FIELD(LastSeverity)
 REFL_FIELD(Quality)
+REFL_FIELD(Retain)
 REFL_END
 
 class AcknowledgeableCondition_t : public Condition_t

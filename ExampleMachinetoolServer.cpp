@@ -12,15 +12,15 @@
 #include <functional>
 #include "NodeValue.hpp"
 #include "NodesMaster.hpp"
-#include "SetupEvents.hpp"
 #include <thread>
 #include <chrono>
 #include <mutex>
 #include <atomic>
 #include "OpcUaEvent.hpp"
 #include "Instantiation.hpp"
+#include "OpcUaCondition.hpp"
 
-bool first = true;
+std::shared_ptr<OpcUaCondition<Alert_t>> pCondition;
 
 void simulate(MT::MachineTool_t *pMachineTool,
               std::atomic_bool &running,
@@ -32,7 +32,6 @@ void simulate(MT::MachineTool_t *pMachineTool,
   int i = 0;
   while (running)
   {
-    ++i;
     ul.lock();
     ++(pMachineTool->Identification->YearOfConstruction.value);
     //pChannel1->ChannelState = static_cast<UA_ChannelState>((((int)pChannel1->ChannelState) + 1) % (UA_ChannelState::UA_CHANNELSTATE_RESET + 1));
@@ -53,23 +52,37 @@ void simulate(MT::MachineTool_t *pMachineTool,
 
       OpcUaEvent ev(notifEvent, pServer, open62541Cpp::UA_NodeId(UA_NODEID_NUMERIC(6, UA_ISWEXAMPLE_ID_MACHINES_ISWEXAMPLEMACHINE_NOTIFICATION_MESSAGES)));
     }
-
-    if (first)
+    if((i%10) == 1)
     {
-      AlertCondition_t aev;
-      aev.Identifier = "CondId";
-      aev.Message = "CondMessage";
-      aev.SourceName = "SrcCond";
-      aev.Severity = 123;
-      aev.Retain = true;
+      pCondition = std::make_shared<OpcUaCondition<Alert_t>>(pServer, open62541Cpp::UA_NodeId(UA_NODEID_NUMERIC(0, UA_NS0ID_SERVER)));
+      pCondition->Data.ErrorCode = "ERR404";
+      std::stringstream ss;
+      ss << "Cond Message: " << i;
+      pCondition->Data.Message = open62541Cpp::LocalizedText_t{"", ss.str()};
+      pCondition->Data.SourceName = "SrcCond";
+      pCondition->Data.Severity = 123;
+      pCondition->Data.Retain = true;
+      pCondition->Data.EnabledState->Value = {"", "Active"};
+      pCondition->Data.EnabledState->Id = true;
 
-      auto condNodeId = setupAlertConditionType(pServer, aev);
-      UA_Server_triggerConditionEvent(pServer, condNodeId, UA_NODEID_NUMERIC(0, UA_NS0ID_SERVER), NULL);
+      pCondition->Trigger();
     }
-    first = false;
+    else if((i%10) == 5)
+    {
+      if(pCondition)
+      {
+        pCondition->Data.Retain = false;
+        pCondition->Data.EnabledState->Id = true;
+        pCondition->Data.EnabledState->Value = {"", "Inactive"};
+        pCondition->Trigger();
+        pCondition = nullptr;
+      }
+    }
+
 
     //std::cout << i << std::endl;
     //running = i < 10;
+    ++i;
     ul.unlock();
     std::this_thread::yield();
     std::this_thread::sleep_for(std::chrono::seconds(1));

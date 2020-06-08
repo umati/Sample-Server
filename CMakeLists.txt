@@ -136,7 +136,6 @@ target_link_libraries(ExampleServerLib PUBLIC reflCpp::reflCpp)
 
 add_executable(
     ${PROJECT_NAME}
-    SetupEvents.cpp
     ExampleMachinetoolServer.cpp
 )
 

@@ -165,6 +165,7 @@ int main(int argc, char *argv[])
 
   bindMembersRefl(machineTool, pServer, open62541Cpp::UA_NodeId(6, UA_ISWEXAMPLE_ID_MACHINES_ISWEXAMPLEMACHINE), n);
   bindMembersRefl(machineTool2, pServer, inst2, n);
+  machineTool2.Monitoring->Channels.Add(pServer, n, {6,"InstChannel1"});
 
   // Assign placeholders after binding!
   {
@@ -180,8 +181,9 @@ int main(int argc, char *argv[])
       job.State->CurrentState->Number = 1234;
     }
 
-    for (auto &channel : machineTool.Monitoring->Channels)
+    for (auto &channelMember : machineTool.Monitoring->Channels.value)
     {
+      auto &channel = channelMember.value;
       channel.ChannelState = UA_ChannelState::UA_CHANNELSTATE_INTERRUPTED;
       channel.FeedOverride->Value = 6;
       *channel.FeedOverride->EURange = {

@@ -11,6 +11,7 @@
 #include "src_generated/machinery.h"
 #include "src_generated/types_machinetool_generated.h"
 #include "Util.hpp"
+#include "BindablePlaceholder.hpp"
 
 namespace constants
 {
@@ -310,12 +311,13 @@ REFL_END
 
 struct Monitoring_t
 {
-  std::list<ChannelMonitoring_t> Channels;
+  BindableMemberPlaceholder<BindableMember, ChannelMonitoring_t> Channels;
 };
 
 REFL_TYPE(Monitoring_t, open62541Cpp::attribute::UaObjectType{.NodeId = open62541Cpp::constexp::NodeId(constants::NsMachineToolUri, UA_MACHINETOOLID_MONITORINGTYPE)})
-REFL_FIELD(Channels, open62541Cpp::attribute::UaReference{
-                         .NodeId = open62541Cpp::constexp::NodeId(constants::Ns0Uri, UA_NS0ID_HASCOMPONENT)})
+REFL_FIELD(Channels, open62541Cpp::attribute::MemberInTypeNodeId{
+                         .NodeId = open62541Cpp::constexp::NodeId(constants::NsMachineToolUri, UA_MACHINETOOLID_MONITORINGTYPE_MONITOREDELEMENT)},
+                         open62541Cpp::attribute::PlaceholderOptional())
 REFL_END
 
 struct Production_t

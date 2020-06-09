@@ -54,7 +54,7 @@ void InstatiateOptional(BINDABLEMEMBER_T<T> &memberPar, UA_Server *pServer, Node
     {
       status = UA_Server_addObjectNode(
           pServer,
-          UA_NODEID_NULL,
+          UA_NODEID_NUMERIC(member.ParentNodeId.NodeId->namespaceIndex, 0),
           *member.ParentNodeId.NodeId,
           *referenceType.NodeId,
           *browseName.QualifiedName,
@@ -80,7 +80,7 @@ void InstatiateOptional(BINDABLEMEMBER_T<T> &memberPar, UA_Server *pServer, Node
       {
         status = UA_Server_addVariableNode(
             pServer,
-            UA_NODEID_NULL,
+            UA_NODEID_NUMERIC(member.ParentNodeId.NodeId->namespaceIndex, 0),
             *member.ParentNodeId.NodeId,
             *referenceType.NodeId,
             *browseName.QualifiedName,

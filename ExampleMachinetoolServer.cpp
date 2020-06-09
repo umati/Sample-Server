@@ -52,7 +52,7 @@ void simulate(MT::MachineTool_t *pMachineTool,
 
       OpcUaEvent ev(notifEvent, pServer, open62541Cpp::UA_NodeId(UA_NODEID_NUMERIC(6, UA_ISWEXAMPLE_ID_MACHINES_ISWEXAMPLEMACHINE_NOTIFICATION_MESSAGES)));
     }
-    if((i%10) == 1)
+    if ((i % 10) == 1)
     {
       pCondition = std::make_shared<OpcUaCondition<Alert_t>>(pServer, open62541Cpp::UA_NodeId(UA_NODEID_NUMERIC(0, UA_NS0ID_SERVER)));
       pCondition->Data.ErrorCode = "ERR404";
@@ -67,9 +67,9 @@ void simulate(MT::MachineTool_t *pMachineTool,
 
       pCondition->Trigger();
     }
-    else if((i%10) == 5)
+    else if ((i % 10) == 5)
     {
-      if(pCondition)
+      if (pCondition)
       {
         pCondition->Data.Retain = false;
         pCondition->Data.EnabledState->Id = true;
@@ -78,7 +78,6 @@ void simulate(MT::MachineTool_t *pMachineTool,
         pCondition = nullptr;
       }
     }
-
 
     //std::cout << i << std::endl;
     //running = i < 10;
@@ -89,11 +88,27 @@ void simulate(MT::MachineTool_t *pMachineTool,
   }
 }
 
+UA_StatusCode generateChildNodeIdInParentNs(
+    UA_Server *server,
+    const UA_NodeId *sessionId, void *sessionContext,
+    const UA_NodeId *sourceNodeId,
+    const UA_NodeId *targetParentNodeId,
+    const UA_NodeId *referenceTypeId,
+    UA_NodeId *targetNodeId)
+{
+  if(UA_NodeId_equal(targetNodeId, &UA_NODEID_NULL)
+  && !UA_NodeId_equal(targetParentNodeId, &UA_NODEID_NULL))
+  {
+    targetNodeId->namespaceIndex = targetParentNodeId->namespaceIndex;
+  }
+  return UA_STATUSCODE_GOOD;
+}
+
 int main(int argc, char *argv[])
 {
   UA_Server *pServer = UA_Server_new();
   UA_ServerConfig_setDefault(UA_Server_getConfig(pServer));
-
+  UA_Server_getConfig(pServer)->nodeLifecycle.generateChildNodeId = generateChildNodeIdInParentNs;
   std::cout << "ExampleUmatiServer" << std::endl;
   /*UA_Server_addNamespace(pServer, "http://opcfoundation.org/UA/DI/");
   UA_Server_addNamespace(pServer, "http://opcfoundation.org/UA/Machinery/");
@@ -115,7 +130,7 @@ int main(int argc, char *argv[])
   {
     auto status = UA_Server_addObjectNode(
         pServer,
-        UA_NODEID_NULL,
+        UA_NODEID_NUMERIC(nsFromUri(pServer, constants::NsInstanceUri),0),
         UA_NODEID_NUMERIC(nsFromUri(pServer, constants::NsMachineryUri), UA_MACHINERY_ID_MACHINES),
         UA_NODEID_NUMERIC(0, UA_NS0ID_ORGANIZES),
         *open62541Cpp::UA_QualifiedName(nsFromUri(pServer, constants::NsInstanceUri), "Instance2").QualifiedName,

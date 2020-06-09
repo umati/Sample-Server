@@ -62,21 +62,26 @@ void simulate(MT::MachineTool_t *pMachineTool,
       pCondition->Data.SourceName = "SrcCond";
       pCondition->Data.Severity = 123;
       pCondition->Data.Retain = true;
-      pCondition->Data.EnabledState->Value = {"", "Active"};
+      pCondition->Data.EnabledState->Value = {"", "Enabled"};
       pCondition->Data.EnabledState->Id = true;
+      pCondition->Data.AckedState->Id = false;
+      pCondition->Data.AckedState->Value = {"", "Unacknowledged"};
+      pCondition->Data.ConfirmedState->Id = false;
+      pCondition->Data.ConfirmedState->Value = {"", "Unconfirmed"};
 
       pCondition->Trigger();
     }
-    else if ((i % 10) == 5)
+    else if ((i % 10) == 5 && pCondition)
     {
-      if (pCondition)
-      {
-        pCondition->Data.Retain = false;
-        pCondition->Data.EnabledState->Id = true;
-        pCondition->Data.EnabledState->Value = {"", "Inactive"};
-        pCondition->Trigger();
-        pCondition = nullptr;
-      }
+      pCondition->Data.Retain = false;
+      pCondition->Data.EnabledState->Id = true;
+      pCondition->Data.EnabledState->Value = {"", "Disabled"};
+      pCondition->Data.AckedState->Id = true;
+      pCondition->Data.AckedState->Value = {"", "Acknowledged"};
+      pCondition->Data.ConfirmedState->Id = true;
+      pCondition->Data.ConfirmedState->Value = {"", "Confirmed"};
+      pCondition->Trigger();
+      pCondition = nullptr;
     }
 
     //std::cout << i << std::endl;

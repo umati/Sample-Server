@@ -17,6 +17,14 @@
 
 copyToVariantFunc bindStruct(void *pVariable, const UA_DataType *typeDefinition);
 
+template<typename T>
+copyToVariantFunc bindStructArray(std::vector<T> *pValue, const UA_DataType *typeDefinition)
+{
+  return [pValue, typeDefinition] (UA_Variant* dst) {
+    UA_Variant_setArrayCopy(dst, &(*pValue)[0], pValue->size(), typeDefinition);
+  };
+}
+
 namespace internal_bindStruct
 {
 

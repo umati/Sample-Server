@@ -26,6 +26,7 @@ NodeValue &NodesMaster::operator()(const open62541Cpp::UA_NodeId &nodeId)
   if (it == m_Nodes.end())
   {
     auto itNew = m_Nodes.insert(std::make_pair(nodeId, NodeValue(nodeId)));
+    setCallback(nodeId);
     return itNew.first->second;
   }
 
@@ -52,7 +53,26 @@ void NodesMaster::callback(UA_Server *pServer,
 
 void NodesMaster::SetCallbacks()
 {
-  ///\todo Use DataSource instead?
+  /*
+  for (auto &el : m_Nodes)
+  {
+    setCallback(el.first);
+  }*/
+}
+
+void NodesMaster::Remove(const open62541Cpp::UA_NodeId &nodeId)
+{
+  auto it = m_Nodes.find(nodeId);
+  if (it != m_Nodes.end())
+  {
+    UA_Server_setNodeContext(m_pServer, *it->first.NodeId, NULL);
+    m_Nodes.erase(it);
+  }
+}
+
+void NodesMaster::setCallback(const open62541Cpp::UA_NodeId &nodeId)
+{
+    ///\todo Use DataSource instead?
   // UA_DataSource dsCallback;
   // dsCallback.read = NodesMaster::callback;
   // dsCallback.write = nullptr;
@@ -61,12 +81,9 @@ void NodesMaster::SetCallbacks()
   UA_ValueCallback valCallback;
   valCallback.onWrite = nullptr;
   valCallback.onRead = NodesMaster::callback;
-  for (auto &el : m_Nodes)
-  {
-    UA_Server_setNodeContext(m_pServer, *el.first.NodeId, this);
-    UA_Server_setVariableNode_valueCallback(
-        m_pServer,
-        *el.first.NodeId,
-        valCallback);
-  }
+  UA_Server_setNodeContext(m_pServer, *nodeId.NodeId, this);
+  UA_Server_setVariableNode_valueCallback(
+      m_pServer,
+      *nodeId.NodeId,
+      valCallback);
 }

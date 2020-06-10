@@ -11,22 +11,31 @@
 #include <map>
 #include <Open62541Cpp/UA_NodeId.hpp>
 
-class NodesMaster {
- protected:
+class NodesMaster
+{
+protected:
   std::map<open62541Cpp::UA_NodeId, NodeValue> m_Nodes;
   UA_Server *m_pServer;
-  NodesMaster(const NodesMaster& other);
- public:
+  NodesMaster(const NodesMaster &other);
+  void setCallback(const open62541Cpp::UA_NodeId &nodeId);
+public:
   NodesMaster(UA_Server *pServer);
 
   NodeValue &operator()(int nsIndex, int nsIntId);
   NodeValue &operator()(const UA_NodeId &nodeId);
   NodeValue &operator()(const open62541Cpp::UA_NodeId &nodeId);
 
-  static void callback(UA_Server *pServer, const UA_NodeId *sessionId,
-                       void *sessionContext, const UA_NodeId *nodeid,
-                       void *nodeContext, const UA_NumericRange *range,
-                       const UA_DataValue *oldValue);
+  void Remove(const open62541Cpp::UA_NodeId &nodeId);
+
+  static void callback(
+      UA_Server *pServer,
+      const UA_NodeId *sessionId,
+      void *sessionContext,
+      const UA_NodeId *nodeid,
+      void *nodeContext,
+      const UA_NumericRange *range,
+      const UA_DataValue *oldValue);
 
   void SetCallbacks();
+
 };

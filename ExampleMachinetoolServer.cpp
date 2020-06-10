@@ -25,7 +25,9 @@ std::shared_ptr<OpcUaCondition<Alert_t>> pCondition;
 void simulate(MT::MachineTool_t *pMachineTool,
               std::atomic_bool &running,
               std::mutex &accessDataMutex,
-              UA_Server *pServer)
+              UA_Server *pServer,
+              NodesMaster &n,
+              MT::MachineTool_t &machineTool2)
 {
   std::unique_lock<std::remove_reference<decltype(accessDataMutex)>::type> ul(accessDataMutex);
   ul.unlock();
@@ -56,9 +58,11 @@ void simulate(MT::MachineTool_t *pMachineTool,
     {
       pCondition = std::make_shared<OpcUaCondition<Alert_t>>(pServer, open62541Cpp::UA_NodeId(UA_NODEID_NUMERIC(0, UA_NS0ID_SERVER)));
       pCondition->Data.ErrorCode = "ERR404";
-      std::stringstream ss;
-      ss << "Cond Message: " << i;
-      pCondition->Data.Message = open62541Cpp::LocalizedText_t{"", ss.str()};
+      {
+        std::stringstream ss;
+        ss << "Cond Message: " << i;
+        pCondition->Data.Message = open62541Cpp::LocalizedText_t{"", ss.str()};
+      }
       pCondition->Data.SourceName = "SrcCond";
       pCondition->Data.Severity = 123;
       pCondition->Data.Retain = true;
@@ -70,6 +74,12 @@ void simulate(MT::MachineTool_t *pMachineTool,
       pCondition->Data.ConfirmedState->Value = {"", "Unconfirmed"};
 
       pCondition->Trigger();
+      {
+        std::stringstream ss;
+        ss << "Channel " << i;
+        auto &channel = machineTool2.Monitoring->Channels.Add(pServer, n, {6, ss.str()});
+        channel.FeedOverride->Value = 82.0;
+      }
     }
     else if ((i % 10) == 5 && pCondition)
     {
@@ -82,6 +92,12 @@ void simulate(MT::MachineTool_t *pMachineTool,
       pCondition->Data.ConfirmedState->Value = {"", "Confirmed"};
       pCondition->Trigger();
       pCondition = nullptr;
+
+      if (!machineTool2.Monitoring->Channels->empty())
+      {
+        auto lastIt = --machineTool2.Monitoring->Channels->end();
+        machineTool2.Monitoring->Channels.Delete(lastIt, pServer, n);
+      }
     }
 
     //std::cout << i << std::endl;
@@ -101,8 +117,7 @@ UA_StatusCode generateChildNodeIdInParentNs(
     const UA_NodeId *referenceTypeId,
     UA_NodeId *targetNodeId)
 {
-  if(UA_NodeId_equal(targetNodeId, &UA_NODEID_NULL)
-  && !UA_NodeId_equal(targetParentNodeId, &UA_NODEID_NULL))
+  if (UA_NodeId_equal(targetNodeId, &UA_NODEID_NULL) && !UA_NodeId_equal(targetParentNodeId, &UA_NODEID_NULL))
   {
     targetNodeId->namespaceIndex = targetParentNodeId->namespaceIndex;
   }
@@ -135,7 +150,7 @@ int main(int argc, char *argv[])
   {
     auto status = UA_Server_addObjectNode(
         pServer,
-        UA_NODEID_NUMERIC(nsFromUri(pServer, constants::NsInstanceUri),0),
+        UA_NODEID_NUMERIC(nsFromUri(pServer, constants::NsInstanceUri), 0),
         UA_NODEID_NUMERIC(nsFromUri(pServer, constants::NsMachineryUri), UA_MACHINERY_ID_MACHINES),
         UA_NODEID_NUMERIC(0, UA_NS0ID_ORGANIZES),
         *open62541Cpp::UA_QualifiedName(nsFromUri(pServer, constants::NsInstanceUri), "Instance2").QualifiedName,
@@ -165,7 +180,9 @@ int main(int argc, char *argv[])
 
   bindMembersRefl(machineTool, pServer, open62541Cpp::UA_NodeId(6, UA_ISWEXAMPLE_ID_MACHINES_ISWEXAMPLEMACHINE), n);
   bindMembersRefl(machineTool2, pServer, inst2, n);
-  machineTool2.Monitoring->Channels.Add(pServer, n, {6,"InstChannel1"});
+  auto &channel = machineTool2.Monitoring->Channels.Add(pServer, n, {6, "InstChannel1"});
+  channel.ChannelState = UA_CHANNELSTATE_INTERRUPTED;
+  channel.FeedOverride->Value = 89.0;
 
   // Assign placeholders after binding!
   {
@@ -207,7 +224,7 @@ int main(int argc, char *argv[])
 
   UA_Server_run_startup(pServer);
   std::unique_lock<decltype(accessDataMutex)> ul(accessDataMutex);
-  std::thread t(simulate, &machineTool, std::ref(running), std::ref(accessDataMutex), pServer);
+  std::thread t(simulate, &machineTool, std::ref(running), std::ref(accessDataMutex), pServer, std::ref(n), std::ref(machineTool2));
   ul.unlock();
   while (running)
   {

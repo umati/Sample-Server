@@ -97,7 +97,26 @@ public:
     }
 
     bindMemberRefl(newEl.value, pServer, newEl.NodeId, nodesMaster);
+    newEl.SetBind();
+    ///\todo trigger ModelChangeEvent
 
     return newEl.value;
+  }
+
+  typename std::list<BINDABLEMEMBER_T<T>>::iterator Delete(typename std::list<BINDABLEMEMBER_T<T>>::iterator it, UA_Server* pServer, NodesMaster &nodesMaster)
+  {
+    BindableMember<T>& el = *it;
+    if(!el.IsBind())
+    {
+      std::cout << "Element not bind" << std::endl;
+    }
+    else
+    {
+      unbindMemberRefl(el, pServer, el.NodeId, nodesMaster);
+      UA_Server_deleteNode(pServer, *el.NodeId.NodeId, true);
+    }
+
+    ///\todo trigger ModelChangeEvent
+    return this->value.erase(it);
   }
 };

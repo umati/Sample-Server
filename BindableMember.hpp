@@ -16,6 +16,7 @@ public:
   bool IsBind() { return m_isBind; }
 
   void SetBind() { m_isBind = true; };
+  void ResetBind() { m_isBind = false; };
   void SetMandatory() { m_isOptional = false; };
 
   /// NodeId of the parent element, enable creating an optional member later on

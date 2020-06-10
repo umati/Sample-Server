@@ -11,7 +11,7 @@
 #include "src_generated/machinery.h"
 #include "src_generated/types_machinetool_generated.h"
 #include "Util.hpp"
-#include "BindablePlaceholder.hpp"
+#include "BindableMemberPlaceholder.hpp"
 
 namespace constants
 {

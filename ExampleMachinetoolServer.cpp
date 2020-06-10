@@ -184,41 +184,12 @@ int main(int argc, char *argv[])
   channel.ChannelState = UA_CHANNELSTATE_INTERRUPTED;
   channel.FeedOverride->Value = 89.0;
 
-  // Assign placeholders after binding!
-  {
-    int i = 1;
-    for (auto &job : machineTool.Production->ProductionPlan->Jobs)
-    {
-      std::stringstream ss;
-      ss << "ID_" << i++ << std::endl;
-      job.Identifier = ss.str();
-      job.RunsCompleted = 8;
-      job.RunsPlanned = 10;
-      job.State->CurrentState->Value = open62541Cpp::LocalizedText_t{.locale = "en-en", .text = "Testing State"};
-      job.State->CurrentState->Number = 1234;
-    }
-
-    for (auto &channelMember : machineTool.Monitoring->Channels.value)
-    {
-      auto &channel = channelMember.value;
-      channel.ChannelState = UA_ChannelState::UA_CHANNELSTATE_INTERRUPTED;
-      channel.FeedOverride->Value = 6;
-      *channel.FeedOverride->EURange = {
-          .low = 123.45,
-          .high = 234.56};
-      *channel.FeedOverride->EngineeringUnits = {
-          .NamespaceUri = "eu://meter",
-          .UnitId = -1,
-          .DisplayName{.locale = "", .text = "Meter"},
-          .Description = {.locale = "en", .text = "100cm"},
-      };
-    }
-  }
-
-  n.SetCallbacks();
   InstatiateOptional(machineTool2.Identification->YearOfConstruction, pServer, n);
   InstatiateOptional(machineTool2.Production->ProductionPlan, pServer, n);
-  n.SetCallbacks();
+  auto &job = machineTool2.Production->ProductionPlan->OrderedObjects.Add(pServer, n, {6, "MyJob 1"});
+  job.Identifier = std::string("ID 1");
+  job.RunsCompleted = 0;
+  job.RunsPlanned = 1;
 
   std::atomic_bool running{true};
 

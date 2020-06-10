@@ -69,6 +69,5 @@ protected:
     }
 
     bindMembersRefl(Data, pServer, ConditionNodeId, nodesMaster);
-    nodesMaster.SetCallbacks();
   }
 };

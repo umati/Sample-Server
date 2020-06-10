@@ -96,6 +96,22 @@ REFL_FIELD(SoftwareRevision)
 REFL_FIELD(Identifier)
 REFL_END
 
+///\todo limit T to IOrderedObject
+template <typename T>
+struct OrderedList_t
+{
+  BindableMemberValue<std::string> NodeVersion;
+  BindableMemberPlaceholder<BindableMember, T> OrderedObjects;
+};
+
+REFL_TEMPLATE((typename T), (OrderedList_t<T>), open62541Cpp::attribute::UaObjectType{.NodeId = open62541Cpp::constexp::NodeId(constants::Ns0Uri, UA_NS0ID_ORDEREDLISTTYPE)})
+REFL_FIELD(NodeVersion, open62541Cpp::attribute::PlaceholderOptional())
+REFL_FIELD(OrderedObjects,
+               open62541Cpp::attribute::MemberInTypeNodeId{
+                   .NodeId = open62541Cpp::constexp::NodeId(constants::Ns0Uri, UA_NS0ID_ORDEREDLISTTYPE_ORDEREDOBJECT_PLACEHOLDER)},
+               open62541Cpp::attribute::PlaceholderOptional())
+REFL_END
+
 template <typename T>
 struct AnalogUnitRangeType_t
 {
@@ -292,21 +308,25 @@ struct ProductionJob_t
   BindableMember<State_t> State;
 };
 
-REFL_TYPE(ProductionJob_t, open62541Cpp::attribute::UaObjectType{.NodeId = open62541Cpp::constexp::NodeId(constants::NsMachineToolUri, UA_MACHINETOOLID_PRODUCTIONJOBTYPE)})
+REFL_TYPE(ProductionJob_t,
+          open62541Cpp::attribute::UaObjectType{.NodeId = open62541Cpp::constexp::NodeId(constants::NsMachineToolUri, UA_MACHINETOOLID_PRODUCTIONJOBTYPE)})
 REFL_FIELD(Identifier)
 REFL_FIELD(RunsCompleted)
 REFL_FIELD(RunsPlanned)
 REFL_FIELD(State)
 REFL_END
 
-struct ProdictionJobList_t
+struct ProdictionJobList_t : public OrderedList_t<ProductionJob_t>
 {
-  std::list<ProductionJob_t> Jobs;
 };
 
-REFL_TYPE(ProdictionJobList_t, open62541Cpp::attribute::UaObjectType{.NodeId = open62541Cpp::constexp::NodeId(constants::NsMachineToolUri, UA_MACHINETOOLID_PRODUCTIONJOBLISTTYPE)})
-REFL_FIELD(Jobs, open62541Cpp::attribute::UaReference{
-                     .NodeId = open62541Cpp::constexp::NodeId(constants::Ns0Uri, UA_NS0ID_HASCOMPONENT)})
+REFL_TYPE(ProdictionJobList_t,
+          Bases<OrderedList_t<ProductionJob_t>>(),
+          open62541Cpp::attribute::UaObjectType{.NodeId = open62541Cpp::constexp::NodeId(constants::NsMachineToolUri, UA_MACHINETOOLID_PRODUCTIONJOBLISTTYPE)})
+REFL_FIELD(OrderedObjects,
+               open62541Cpp::attribute::MemberInTypeNodeId{
+                   .NodeId = open62541Cpp::constexp::NodeId(constants::NsMachineToolUri, UA_MACHINETOOLID_PRODUCTIONJOBLISTTYPE_ORDEREDOBJECT_PLACEHOLDER)},
+               open62541Cpp::attribute::PlaceholderOptional())
 REFL_END
 
 struct Monitoring_t
@@ -315,9 +335,8 @@ struct Monitoring_t
 };
 
 REFL_TYPE(Monitoring_t, open62541Cpp::attribute::UaObjectType{.NodeId = open62541Cpp::constexp::NodeId(constants::NsMachineToolUri, UA_MACHINETOOLID_MONITORINGTYPE)})
-REFL_FIELD(Channels, open62541Cpp::attribute::MemberInTypeNodeId{
-                         .NodeId = open62541Cpp::constexp::NodeId(constants::NsMachineToolUri, UA_MACHINETOOLID_MONITORINGTYPE_MONITOREDELEMENT)},
-                         open62541Cpp::attribute::PlaceholderOptional())
+REFL_FIELD(Channels, open62541Cpp::attribute::MemberInTypeNodeId{.NodeId = open62541Cpp::constexp::NodeId(constants::NsMachineToolUri, UA_MACHINETOOLID_MONITORINGTYPE_MONITOREDELEMENT)},
+           open62541Cpp::attribute::PlaceholderOptional())
 REFL_END
 
 struct Production_t

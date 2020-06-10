@@ -58,6 +58,5 @@ protected:
         }
 
         bindMembersRefl(Data, pServer, EventNodeId, nodesMaster);
-        nodesMaster.SetCallbacks();
     }
 };

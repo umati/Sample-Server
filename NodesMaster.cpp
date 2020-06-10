@@ -51,15 +51,6 @@ void NodesMaster::callback(UA_Server *pServer,
   }
 }
 
-void NodesMaster::SetCallbacks()
-{
-  /*
-  for (auto &el : m_Nodes)
-  {
-    setCallback(el.first);
-  }*/
-}
-
 void NodesMaster::Remove(const open62541Cpp::UA_NodeId &nodeId)
 {
   auto it = m_Nodes.find(nodeId);

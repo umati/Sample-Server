@@ -35,7 +35,4 @@ public:
       void *nodeContext,
       const UA_NumericRange *range,
       const UA_DataValue *oldValue);
-
-  void SetCallbacks();
-
 };

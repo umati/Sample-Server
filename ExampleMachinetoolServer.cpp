@@ -190,11 +190,14 @@ int main(int argc, char *argv[])
 
   InstatiateOptional(machineTool2.Identification->YearOfConstruction, pServer, n);
   InstatiateOptional(machineTool2.Production->ProductionPlan, pServer, n);
+  InstatiateOptional(machineTool2.Production->ProductionPlan->NodeVersion, pServer, n);
+  // Hack: Remove from bindings (Will be written by BindMemberPlaceholder)
+  // Can keep binding when writing is supported.
+  n.Remove(machineTool2.Production->ProductionPlan->NodeVersion.NodeId);
   auto &job = machineTool2.Production->ProductionPlan->OrderedObjects.Add(pServer, n, {6, "MyJob 1"});
   job.Identifier = std::string("ID 1");
   job.RunsCompleted = 0;
   job.RunsPlanned = 1;
-
   std::atomic_bool running{true};
 
   UA_Server_run_startup(pServer);

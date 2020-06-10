@@ -57,6 +57,13 @@ void NodesMaster::Remove(const open62541Cpp::UA_NodeId &nodeId)
   if (it != m_Nodes.end())
   {
     UA_Server_setNodeContext(m_pServer, *it->first.NodeId, NULL);
+    UA_ValueCallback valCallback;
+    valCallback.onWrite = nullptr;
+    valCallback.onRead = nullptr;
+    UA_Server_setVariableNode_valueCallback(
+      m_pServer,
+      *it->first.NodeId,
+      valCallback);
     m_Nodes.erase(it);
   }
 }

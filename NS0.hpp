@@ -16,7 +16,7 @@ class BindableMemberPlaceholder;
 
 namespace constants
 {
-  constexpr const char *Ns0Uri = "http://opcfoundation.org/UA/";
+constexpr const char *Ns0Uri = "http://opcfoundation.org/UA/";
 }
 
 ///\todo limit T to IOrderedObject
@@ -28,11 +28,14 @@ struct OrderedList_t
 };
 
 REFL_TEMPLATE((typename T), (OrderedList_t<T>), open62541Cpp::attribute::UaObjectType{.NodeId = open62541Cpp::constexp::NodeId(constants::Ns0Uri, UA_NS0ID_ORDEREDLISTTYPE)})
-REFL_FIELD(NodeVersion, open62541Cpp::attribute::PlaceholderOptional())
+REFL_FIELD(NodeVersion,
+           open62541Cpp::attribute::MemberInTypeNodeId{
+               .NodeId = open62541Cpp::constexp::NodeId(constants::Ns0Uri, UA_NS0ID_ORDEREDLISTTYPE_NODEVERSION)},
+           open62541Cpp::attribute::PlaceholderOptional())
 REFL_FIELD(OrderedObjects,
-               open62541Cpp::attribute::MemberInTypeNodeId{
-                   .NodeId = open62541Cpp::constexp::NodeId(constants::Ns0Uri, UA_NS0ID_ORDEREDLISTTYPE_ORDEREDOBJECT_PLACEHOLDER)},
-               open62541Cpp::attribute::PlaceholderOptional())
+           open62541Cpp::attribute::MemberInTypeNodeId{
+               .NodeId = open62541Cpp::constexp::NodeId(constants::Ns0Uri, UA_NS0ID_ORDEREDLISTTYPE_ORDEREDOBJECT_PLACEHOLDER)},
+           open62541Cpp::attribute::PlaceholderOptional())
 REFL_END
 
 template <typename T>
@@ -66,7 +69,6 @@ REFL_END
 
 struct BaseModelChangeEvent_t : public BaseEventType_t
 {
-
 };
 REFL_TYPE(BaseModelChangeEvent_t,
           Bases<BaseEventType_t>(),
@@ -83,7 +85,6 @@ REFL_TYPE(GeneralModelChangeEvent_t,
           open62541Cpp::attribute::UaObjectType{.NodeId = open62541Cpp::constexp::NodeId(constants::Ns0Uri, UA_NS0ID_GENERALMODELCHANGEEVENTTYPE)})
 REFL_FIELD(Changes)
 REFL_END
-
 
 struct StateVariable_t
 {

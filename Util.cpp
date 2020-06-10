@@ -50,5 +50,7 @@ bool isSubtypeOf(UA_Server *pServer, const open62541Cpp::UA_NodeId &typeNodeId, 
     }
   }
 
+  UA_Array_delete(pResult, resLen, &UA_TYPES[UA_TYPES_EXPANDEDNODEID]);
+
   return found;
 }

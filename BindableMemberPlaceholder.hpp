@@ -135,8 +135,77 @@ public:
       change.verb = verb;
       evModChange.Severity = 0;
       OpcUaEvent ev(evModChange, pServer, open62541Cpp::UA_NodeId(this->ParentNodeId));
+
+      updateNodeVersion(pServer);
+    }
+  }
+
+  void updateNodeVersion(UA_Server *pServer)
+  {
+    UA_Variant outVar;
+    UA_Variant_init(&outVar);
+    auto status = UA_Server_readObjectProperty(
+        pServer,
+        *this->ParentNodeId.NodeId,
+        *open62541Cpp::UA_QualifiedName(0, "NodeVersion").QualifiedName,
+        &outVar);
+    if (status != UA_STATUSCODE_GOOD)
+    {
+      std::cout << "Could not update NodeVerison " << UA_StatusCode_name(status) << std::endl;
+      return;
     }
 
-    ///\todo Update NodeVersion Property
+    if (UA_Variant_isEmpty(&outVar) || !UA_Variant_isScalar(&outVar) || outVar.type != &UA_TYPES[UA_TYPES_STRING])
+    {
+      // Initialize/ Reset to string
+      UA_Server_writeObjectProperty_scalar(
+          pServer,
+          *this->ParentNodeId.NodeId,
+          *open62541Cpp::UA_QualifiedName(0, "NodeVersion").QualifiedName,
+          &UA_STRING_NULL,
+          &UA_TYPES[UA_TYPES_STRING]);
+    }
+    else
+    {
+      open62541Cpp::UA_String uaStr(reinterpret_cast<UA_String *>(outVar.data), false);
+      auto str = static_cast<std::string>(uaStr);
+      bool changed = false;
+      for (int i = str.size() - 1; i >= 0; --i)
+      {
+        if (str[i] < 'a' || str[i] > 'z')
+        {
+          str[i] = 'a';
+          changed = true;
+          break;
+        }
+        else if (str[i] < 'z')
+        {
+          ++str[i];
+          changed = true;
+          break;
+        }
+        else //is 'z'
+        {
+          str[i] = 'a';
+        }
+      }
+
+      if (!changed)
+      {
+        std::stringstream ss;
+        ss << "a" << str;
+        str = ss.str();
+      }
+
+      open62541Cpp::UA_String newUaStr(str);
+      UA_Server_writeObjectProperty_scalar(
+          pServer,
+          *this->ParentNodeId.NodeId,
+          *open62541Cpp::UA_QualifiedName(0, "NodeVersion").QualifiedName,
+          newUaStr.String,
+          &UA_TYPES[UA_TYPES_STRING]);
+    }
+
+    UA_Variant_clear(&outVar);
   }
 };

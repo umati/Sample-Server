@@ -5,6 +5,9 @@
 #include "NodesMaster.hpp"
 #include <Open62541Cpp/UA_QualifiedName.hpp>
 #include "Instantiation.hpp"
+#include "Util.hpp"
+#include "NS0.hpp"
+#include "OpcUaEvent.hpp"
 
 ///\TODO enable if BINDABLEMEMBER_T is BindableMember(Value)
 template <template <typename...> class BINDABLEMEMBER_T, typename T /*, typename = std::enable_if_t<is_base_of_template<BindableMember, BINDABLEMEMBER_T<T>>::value>*/>
@@ -28,7 +31,7 @@ public:
       auto objTypeAttr = refl::descriptor::get_attribute<open62541Cpp::attribute::UaObjectType>(refl::reflect<T>());
       typeDef = objTypeAttr.NodeId.UANodeId(pServer);
     }
-    else if constexpr (hasAttributeIfReflectable<open62541Cpp::attribute::UaObjectType, T>())
+    else if constexpr (hasAttributeIfReflectable<open62541Cpp::attribute::UaVariableType, T>())
     {
       nodeClass = UA_NODECLASS_VARIABLETYPE;
       auto varTypeAttr = refl::descriptor::get_attribute<open62541Cpp::attribute::UaVariableType>(refl::reflect<T>());
@@ -36,10 +39,10 @@ public:
     }
     else
     {
-      static_assert(always_false<T>::value, "ADDED_T must be an ObjectType or VariableType");
+      static_assert(always_false<T>::value, "ADDED_T must have ObjectType or VariableType attribute");
     }
     auto referenceType = getReferenceTypeFromMemberNode(pServer, this->MemerInTypeNodeId, this->ParentNodeId);
-    
+
     UA_StatusCode status = -1;
     switch (nodeClass)
     {
@@ -48,18 +51,18 @@ public:
 
       UA_ObjectAttributes objAttr = UA_ObjectAttributes_default;
       UA_String_copy(&browseName.QualifiedName->name, &objAttr.displayName.text);
-      {
-        status = UA_Server_addObjectNode(
-            pServer,
-            UA_NODEID_NUMERIC(browseName.QualifiedName->namespaceIndex, 0),
-            *this->ParentNodeId.NodeId,
-            *referenceType.NodeId,
-            *browseName.QualifiedName,
-            *typeDef.NodeId,
-            objAttr,
-            nullptr,
-            newEl.NodeId.NodeId);
-      }
+
+      status = UA_Server_addObjectNode(
+          pServer,
+          UA_NODEID_NUMERIC(browseName.QualifiedName->namespaceIndex, 0),
+          *this->ParentNodeId.NodeId,
+          *referenceType.NodeId,
+          *browseName.QualifiedName,
+          *typeDef.NodeId,
+          objAttr,
+          nullptr,
+          newEl.NodeId.NodeId);
+
       UA_ObjectAttributes_clear(&objAttr);
     }
     break;
@@ -67,18 +70,18 @@ public:
     {
       UA_VariableAttributes varAttr = UA_VariableAttributes_default;
       UA_String_copy(&browseName.QualifiedName->name, &varAttr.displayName.text);
-      {
-        status = UA_Server_addVariableNode(
-            pServer,
-            UA_NODEID_NUMERIC(browseName.QualifiedName->namespaceIndex, 0),
-            *this->ParentNodeId.NodeId,
-            *referenceType.NodeId,
-            *browseName.QualifiedName,
-            *typeDef.NodeId,
-            varAttr,
-            nullptr,
-            newEl.NodeId.NodeId);
-      }
+
+      status = UA_Server_addVariableNode(
+          pServer,
+          UA_NODEID_NUMERIC(browseName.QualifiedName->namespaceIndex, 0),
+          *this->ParentNodeId.NodeId,
+          *referenceType.NodeId,
+          *browseName.QualifiedName,
+          *typeDef.NodeId,
+          varAttr,
+          nullptr,
+          newEl.NodeId.NodeId);
+
       UA_VariableAttributes_clear(&varAttr);
     }
     break;
@@ -98,15 +101,15 @@ public:
 
     bindMemberRefl(newEl.value, pServer, newEl.NodeId, nodesMaster);
     newEl.SetBind();
-    ///\todo trigger ModelChangeEvent
 
+    sendGeneralModelChangeEvent(pServer, 0x04);
     return newEl.value;
   }
 
-  typename std::list<BINDABLEMEMBER_T<T>>::iterator Delete(typename std::list<BINDABLEMEMBER_T<T>>::iterator it, UA_Server* pServer, NodesMaster &nodesMaster)
+  typename std::list<BINDABLEMEMBER_T<T>>::iterator Delete(typename std::list<BINDABLEMEMBER_T<T>>::iterator it, UA_Server *pServer, NodesMaster &nodesMaster)
   {
-    BindableMember<T>& el = *it;
-    if(!el.IsBind())
+    BindableMember<T> &el = *it;
+    if (!el.IsBind())
     {
       std::cout << "Element not bind" << std::endl;
     }
@@ -116,7 +119,24 @@ public:
       UA_Server_deleteNode(pServer, *el.NodeId.NodeId, true);
     }
 
-    ///\todo trigger ModelChangeEvent
+    sendGeneralModelChangeEvent(pServer, 0x08);
     return this->value.erase(it);
+  }
+
+  void sendGeneralModelChangeEvent(UA_Server *pServer, UA_Byte verb)
+  {
+    auto typeDefinition = readTypeDefinition(pServer, this->ParentNodeId);
+    if (isSubtypeOf(pServer, typeDefinition, open62541Cpp::UA_NodeId((UA_UInt16)0, UA_NS0ID_ORDEREDLISTTYPE)))
+    {
+      GeneralModelChangeEvent_t evModChange;
+      UA_ModelChangeStructureDataType &change = evModChange.Changes->emplace_back();
+      change.affected = *this->ParentNodeId.NodeId;
+      change.affectedType = *typeDefinition.NodeId;
+      change.verb = verb;
+      evModChange.Severity = 0;
+      OpcUaEvent ev(evModChange, pServer, open62541Cpp::UA_NodeId(this->ParentNodeId));
+    }
+
+    ///\todo Update NodeVersion Property
   }
 };

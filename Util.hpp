@@ -3,8 +3,11 @@
 #include <string>
 #include <type_traits>
 #include <refl.hpp>
+#include <Open62541Cpp/UA_NodeId.hpp>
 
 UA_Int16 nsFromUri(UA_Server *pServer, std::string uri);
+
+bool isSubtypeOf(UA_Server *pServer, const open62541Cpp::UA_NodeId &typeNodeId, const open62541Cpp::UA_NodeId &baseNodeId);
 
 template<typename Test, template<typename...> class TemplType>
 struct is_same_template : std::false_type {};

@@ -74,11 +74,14 @@ void simulate(MT::MachineTool_t *pMachineTool,
       pCondition->Data.ConfirmedState->Value = {"", "Unconfirmed"};
 
       pCondition->Trigger();
+
       {
         std::stringstream ss;
-        ss << "Channel " << i;
-        auto &channel = machineTool2.Monitoring->Channels.Add(pServer, n, {6, ss.str()});
-        channel.FeedOverride->Value = 82.0;
+        ss << "Job " << i;
+        auto &job = machineTool2.Production->ProductionPlan->OrderedObjects.Add(pServer, n, {6,ss.str()});
+        job.Identifier = ss.str();
+        job.RunsCompleted = 0;
+        job.RunsPlanned = 2;
       }
     }
     else if ((i % 10) == 5 && pCondition)
@@ -95,8 +98,8 @@ void simulate(MT::MachineTool_t *pMachineTool,
 
       if (!machineTool2.Monitoring->Channels->empty())
       {
-        auto lastIt = --machineTool2.Monitoring->Channels->end();
-        machineTool2.Monitoring->Channels.Delete(lastIt, pServer, n);
+        auto lastIt = --machineTool2.Production->ProductionPlan->OrderedObjects->end();
+        machineTool2.Production->ProductionPlan->OrderedObjects.Delete(lastIt, pServer, n);
       }
     }
 
@@ -180,6 +183,7 @@ int main(int argc, char *argv[])
 
   bindMembersRefl(machineTool, pServer, open62541Cpp::UA_NodeId(6, UA_ISWEXAMPLE_ID_MACHINES_ISWEXAMPLEMACHINE), n);
   bindMembersRefl(machineTool2, pServer, inst2, n);
+  UA_Server_writeEventNotifier(pServer, *machineTool2.Production->ProductionPlan.NodeId.NodeId, UA_EVENTNOTIFIERTYPE_SUBSCRIBETOEVENTS);
   auto &channel = machineTool2.Monitoring->Channels.Add(pServer, n, {6, "InstChannel1"});
   channel.ChannelState = UA_CHANNELSTATE_INTERRUPTED;
   channel.FeedOverride->Value = 89.0;

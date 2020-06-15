@@ -138,8 +138,12 @@ public:
   void sendGeneralModelChangeEvent(UA_Server *pServer, UA_Byte verb)
   {
     auto typeDefinition = readTypeDefinition(pServer, this->ParentNodeId);
-    if (isSubtypeOf(pServer, typeDefinition, open62541Cpp::UA_NodeId((UA_UInt16)0, UA_NS0ID_ORDEREDLISTTYPE)))
+    UA_Byte evNotifier = 0;
+    auto status = UA_Server_readEventNotifier(pServer, *this->ParentNodeId.NodeId, &evNotifier);
+    ///\todo also check if type should emit these events
+    if(status == UA_STATUSCODE_GOOD && (evNotifier & UA_EVENTNOTIFIERTYPE_SUBSCRIBETOEVENTS))
     {
+      ///\todo else create event on Server?
       GeneralModelChangeEvent_t evModChange;
       UA_ModelChangeStructureDataType &change = evModChange.Changes->emplace_back();
       change.affected = *this->ParentNodeId.NodeId;
@@ -147,9 +151,8 @@ public:
       change.verb = verb;
       evModChange.Severity = 0;
       OpcUaEvent ev(evModChange, pServer, open62541Cpp::UA_NodeId(this->ParentNodeId));
-
-      updateNodeVersion(pServer);
     }
+    updateNodeVersion(pServer);
   }
 
   void updateNodeVersion(UA_Server *pServer)
@@ -161,6 +164,12 @@ public:
         *this->ParentNodeId.NodeId,
         *open62541Cpp::UA_QualifiedName(0, "NodeVersion").QualifiedName,
         &outVar);
+    if(status == UA_STATUSCODE_BADNOMATCH)
+    {
+      // NodeVersion not available
+      return;
+    }
+
     if (status != UA_STATUSCODE_GOOD)
     {
       std::cout << "Could not update NodeVerison " << UA_StatusCode_name(status) << std::endl;

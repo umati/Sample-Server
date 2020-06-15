@@ -200,6 +200,16 @@ int main(int argc, char *argv[])
   job.RunsPlanned = 1;
   std::atomic_bool running{true};
 
+  InstatiateOptional(machineTool2.Notification->Prognoses, pServer, n);
+  InstatiateOptional(machineTool2.Notification->Prognoses->NodeVersion, pServer, n);
+  // Hack: Remove from bindings (Will be written by BindMemberPlaceholder)
+  // Can keep binding when writing is supported.
+  n.Remove(machineTool2.Notification->Prognoses->NodeVersion.NodeId);
+  auto &maintenancePrognosis = machineTool2.Notification->Prognoses->Prognosis.Add<MaintenancePrognosis_t>(pServer, n, {6, "Maintenance"});
+  maintenancePrognosis.Activity = open62541Cpp::LocalizedText_t{"", "Replace actuator."};
+  auto &utilityPrognosis = machineTool2.Notification->Prognoses->Prognosis.Add<UtilityChangePrognosis_t>(pServer, n, {6, "Utility"});
+  utilityPrognosis.UtilityName = open62541Cpp::LocalizedText_t{"", "H²"};
+
   UA_Server_run_startup(pServer);
   std::unique_lock<decltype(accessDataMutex)> ul(accessDataMutex);
   std::thread t(simulate, &machineTool, std::ref(running), std::ref(accessDataMutex), pServer, std::ref(n), std::ref(machineTool2));

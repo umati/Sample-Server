@@ -21,20 +21,25 @@ public:
     {
       throw std::runtime_error("Parent not bind.");
     }
-    auto &newEl = this->value.emplace_back(BINDABLEMEMBER_T<ADDED_T>());
 
+    auto &newEl = this->value.emplace_back(BINDABLEMEMBER_T<T>());
+    if constexpr (is_base_of_template<std::variant, T>::value)
+    {
+      // Set variant to correct type
+      newEl.value = ADDED_T();
+    }
     UA_NodeClass nodeClass = UA_NODECLASS_UNSPECIFIED;
     open62541Cpp::UA_NodeId typeDef;
-    if constexpr (hasAttributeIfReflectable<open62541Cpp::attribute::UaObjectType, T>())
+    if constexpr (hasAttributeIfReflectable<open62541Cpp::attribute::UaObjectType, ADDED_T>())
     {
       nodeClass = UA_NODECLASS_OBJECTTYPE;
-      auto objTypeAttr = refl::descriptor::get_attribute<open62541Cpp::attribute::UaObjectType>(refl::reflect<T>());
+      auto objTypeAttr = refl::descriptor::get_attribute<open62541Cpp::attribute::UaObjectType>(refl::reflect<ADDED_T>());
       typeDef = objTypeAttr.NodeId.UANodeId(pServer);
     }
-    else if constexpr (hasAttributeIfReflectable<open62541Cpp::attribute::UaVariableType, T>())
+    else if constexpr (hasAttributeIfReflectable<open62541Cpp::attribute::UaVariableType, ADDED_T>())
     {
       nodeClass = UA_NODECLASS_VARIABLETYPE;
-      auto varTypeAttr = refl::descriptor::get_attribute<open62541Cpp::attribute::UaVariableType>(refl::reflect<T>());
+      auto varTypeAttr = refl::descriptor::get_attribute<open62541Cpp::attribute::UaVariableType>(refl::reflect<ADDED_T>());
       typeDef = varTypeAttr.NodeId.UANodeId(pServer);
     }
     else
@@ -103,7 +108,14 @@ public:
     newEl.SetBind();
 
     sendGeneralModelChangeEvent(pServer, 0x04);
-    return newEl.value;
+    if constexpr (is_base_of_template<std::variant, T>::value)
+    {
+      return std::get<ADDED_T>(newEl.value);
+    }
+    else
+    {
+      return newEl.value;
+    }
   }
 
   typename std::list<BINDABLEMEMBER_T<T>>::iterator Delete(typename std::list<BINDABLEMEMBER_T<T>>::iterator it, UA_Server *pServer, NodesMaster &nodesMaster)

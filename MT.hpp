@@ -5,6 +5,7 @@
 #include "src_generated/machinery.h"
 #include "src_generated/types_machinetool_generated.h"
 #include "NS0.hpp"
+#include <variant>
 
 namespace constants
 {
@@ -99,6 +100,36 @@ REFL_FIELD(ChannelState)
 REFL_FIELD(FeedOverride)
 REFL_END
 
+struct Prognosis_t
+{
+  BindableMemberValue<open62541Cpp::DateTime_t> PredictedTime;
+};
+REFL_TYPE(Prognosis_t, open62541Cpp::attribute::UaObjectType{.NodeId = open62541Cpp::constexp::NodeId(constants::NsMachineToolUri, UA_MACHINETOOLID_PROGNOSISTYPE)})
+REFL_FIELD(PredictedTime)
+REFL_END
+
+struct MaintenancePrognosis_t : public Prognosis_t
+{
+  BindableMemberValue<open62541Cpp::LocalizedText_t> Activity;
+};
+REFL_TYPE(
+  MaintenancePrognosis_t,
+  Bases<Prognosis_t>(),
+  open62541Cpp::attribute::UaObjectType{.NodeId = open62541Cpp::constexp::NodeId(constants::NsMachineToolUri, UA_MACHINETOOLID_MAINTENANCEPROGNOSISTYPE)})
+REFL_FIELD(Activity)
+REFL_END
+
+struct UtilityChangePrognosis_t : public Prognosis_t
+{
+  BindableMemberValue<open62541Cpp::LocalizedText_t> UtilityName;
+};
+REFL_TYPE(
+  UtilityChangePrognosis_t,
+  Bases<Prognosis_t>(),
+  open62541Cpp::attribute::UaObjectType{.NodeId = open62541Cpp::constexp::NodeId(constants::NsMachineToolUri, UA_MACHINETOOLID_UTILITYCHANGEPROGNOSISTYPE)})
+REFL_FIELD(UtilityName)
+REFL_END
+
 struct FiniteStateVariableType_t
 {
   BindableMemberValue<open62541Cpp::LocalizedText_t> Value;
@@ -187,6 +218,30 @@ REFL_FIELD(ProductionPlan, open62541Cpp::attribute::PlaceholderOptional(),
            open62541Cpp::attribute::MemberInTypeNodeId{.NodeId = open62541Cpp::constexp::NodeId(constants::NsMachineToolUri, UA_MACHINETOOLID_PRODUCTIONTYPE_PRODUCTIONPLAN)})
 REFL_END
 
+struct PrognosisList_t
+{
+  BindableMemberValue<std::string> NodeVersion;
+  BindableMemberPlaceholder<BindableMember, std::variant<MaintenancePrognosis_t, UtilityChangePrognosis_t>> Prognosis;
+};
+REFL_TYPE(PrognosisList_t, open62541Cpp::attribute::UaObjectType{.NodeId = open62541Cpp::constexp::NodeId(constants::NsMachineToolUri, UA_MACHINETOOLID_PROGNOSISLISTTYPE)})
+REFL_FIELD(Prognosis, open62541Cpp::attribute::MemberInTypeNodeId{
+               .NodeId = open62541Cpp::constexp::NodeId(constants::NsMachineToolUri, UA_MACHINETOOLID_PROGNOSISLISTTYPE_PROGNOSIS)},
+           open62541Cpp::attribute::PlaceholderOptional())
+REFL_FIELD(NodeVersion, open62541Cpp::attribute::MemberInTypeNodeId{
+               .NodeId = open62541Cpp::constexp::NodeId(constants::NsMachineToolUri, UA_MACHINETOOLID_PROGNOSISLISTTYPE_NODEVERSION)},
+           open62541Cpp::attribute::PlaceholderOptional())
+REFL_END
+
+struct Notification_t
+{
+  BindableMember<PrognosisList_t> Prognoses;
+};
+REFL_TYPE(Notification_t, open62541Cpp::attribute::UaObjectType{.NodeId = open62541Cpp::constexp::NodeId(constants::NsMachineToolUri, UA_MACHINETOOLID_PROGNOSISLISTTYPE)})
+REFL_FIELD(Prognoses, open62541Cpp::attribute::MemberInTypeNodeId{
+               .NodeId = open62541Cpp::constexp::NodeId(constants::NsMachineToolUri, UA_MACHINETOOLID_NOTIFICATIONTYPE_PROGNOSES)},
+           open62541Cpp::attribute::PlaceholderOptional())
+REFL_END
+
 namespace MT
 {
 struct MachineTool_t
@@ -194,6 +249,7 @@ struct MachineTool_t
   BindableMember<MachineToolIdentification_t> Identification;
   BindableMember<Monitoring_t> Monitoring;
   BindableMember<Production_t> Production;
+  BindableMember<Notification_t> Notification;
 };
 } // namespace MT
 
@@ -201,4 +257,5 @@ REFL_TYPE(MT::MachineTool_t, open62541Cpp::attribute::UaObjectType{.NodeId = ope
 REFL_FIELD(Identification, open62541Cpp::attribute::UaBrowseName{.NsURI = constants::NsDIUri})
 REFL_FIELD(Monitoring)
 REFL_FIELD(Production)
+REFL_FIELD(Notification)
 REFL_END

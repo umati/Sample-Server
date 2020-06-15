@@ -11,6 +11,7 @@
 #include "Util.hpp"
 #include "OpcUaTypes/Attributes.hpp"
 #include "Exceptions/NodeNotFound.hpp"
+#include <variant>
 
 template <typename T>
 void bindMemberRefl(
@@ -332,6 +333,18 @@ void bindMemberRefl(
           member);
     }
   }
+}
+
+template <typename ...T>
+void bindMemberRefl(
+    std::variant<T...> &member, UA_Server *pServer,
+    open62541Cpp::UA_NodeId nodeId,
+    NodesMaster &nodesMaster)
+{
+  /// todo catch variant in BindableMember
+  std::visit([&](auto &&arg) {
+    bindMemberRefl(arg, pServer, nodeId, nodesMaster);
+  }, member);
 }
 
 /**

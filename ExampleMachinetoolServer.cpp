@@ -54,6 +54,46 @@ void simulate(MT::MachineTool_t *pMachineTool,
 
       OpcUaEvent ev(notifEvent, pServer, open62541Cpp::UA_NodeId(UA_NODEID_NUMERIC(6, UA_ISWEXAMPLE_ID_MACHINES_ISWEXAMPLEMACHINE_NOTIFICATION_MESSAGES)));
     }
+
+    switch(i%10)
+    {
+      case 0:
+      {
+          machineTool2.Production->ActiveProgram->State->CurrentState->Value = open62541Cpp::LocalizedText_t{"", "Initializing"};
+          machineTool2.Production->ActiveProgram->State->CurrentState->Id = UA_NODEID_NUMERIC(nsFromUri(pServer, constants::NsMachineToolUri), UA_MACHINETOOLID_PRODUCTIONSTATEMACHINETYPE_INITIALIZING);
+          machineTool2.Production->ActiveProgram->State->CurrentState->Number = 0;
+        break;
+      }
+      case 2:
+      {
+          machineTool2.Production->ActiveProgram->State->CurrentState->Value = open62541Cpp::LocalizedText_t{"", "Running"};
+          machineTool2.Production->ActiveProgram->State->CurrentState->Id = UA_NODEID_NUMERIC(nsFromUri(pServer, constants::NsMachineToolUri), UA_MACHINETOOLID_PRODUCTIONSTATEMACHINETYPE_RUNNING);
+          machineTool2.Production->ActiveProgram->State->CurrentState->Number = 1;
+        break;
+      }
+      case 4:
+      {
+          machineTool2.Production->ActiveProgram->State->CurrentState->Value = open62541Cpp::LocalizedText_t{"", "Interrupted"};
+          machineTool2.Production->ActiveProgram->State->CurrentState->Id = UA_NODEID_NUMERIC(nsFromUri(pServer, constants::NsMachineToolUri), UA_MACHINETOOLID_PRODUCTIONSTATEMACHINETYPE_INTERRUPTED);
+          machineTool2.Production->ActiveProgram->State->CurrentState->Number = 3;
+        break;
+      }
+      case 6:
+      {
+          machineTool2.Production->ActiveProgram->State->CurrentState->Value = open62541Cpp::LocalizedText_t{"", "Ended"};
+          machineTool2.Production->ActiveProgram->State->CurrentState->Id = UA_NODEID_NUMERIC(nsFromUri(pServer, constants::NsMachineToolUri), UA_MACHINETOOLID_PRODUCTIONSTATEMACHINETYPE_ENDED);
+          machineTool2.Production->ActiveProgram->State->CurrentState->Number = 2;
+        break;
+      }
+      case 8:
+      {
+          machineTool2.Production->ActiveProgram->State->CurrentState->Value = open62541Cpp::LocalizedText_t{"", "Aborted"};
+          machineTool2.Production->ActiveProgram->State->CurrentState->Id = UA_NODEID_NUMERIC(nsFromUri(pServer, constants::NsMachineToolUri), UA_MACHINETOOLID_PRODUCTIONSTATEMACHINETYPE_ABORTED);
+          machineTool2.Production->ActiveProgram->State->CurrentState->Number = 4;
+        break;
+      }
+    }
+
     if ((i % 10) == 1)
     {
       pCondition = std::make_shared<OpcUaCondition<Alert_t>>(pServer, open62541Cpp::UA_NodeId(UA_NODEID_NUMERIC(0, UA_NS0ID_SERVER)));
@@ -66,12 +106,12 @@ void simulate(MT::MachineTool_t *pMachineTool,
       pCondition->Data.SourceName = "SrcCond";
       pCondition->Data.Severity = 123;
       pCondition->Data.Retain = true;
-      pCondition->Data.EnabledState->Value = {"", "Enabled"};
+      pCondition->Data.EnabledState->Value = open62541Cpp::LocalizedText_t{"", "Enabled"};
       pCondition->Data.EnabledState->Id = true;
       pCondition->Data.AckedState->Id = false;
-      pCondition->Data.AckedState->Value = {"", "Unacknowledged"};
+      pCondition->Data.AckedState->Value = open62541Cpp::LocalizedText_t{"", "Unacknowledged"};
       pCondition->Data.ConfirmedState->Id = false;
-      pCondition->Data.ConfirmedState->Value = {"", "Unconfirmed"};
+      pCondition->Data.ConfirmedState->Value = open62541Cpp::LocalizedText_t{"", "Unconfirmed"};
 
       pCondition->Trigger();
 
@@ -88,11 +128,11 @@ void simulate(MT::MachineTool_t *pMachineTool,
     {
       pCondition->Data.Retain = false;
       pCondition->Data.EnabledState->Id = true;
-      pCondition->Data.EnabledState->Value = {"", "Disabled"};
+      pCondition->Data.EnabledState->Value = open62541Cpp::LocalizedText_t{"", "Disabled"};
       pCondition->Data.AckedState->Id = true;
-      pCondition->Data.AckedState->Value = {"", "Acknowledged"};
+      pCondition->Data.AckedState->Value = open62541Cpp::LocalizedText_t{"", "Acknowledged"};
       pCondition->Data.ConfirmedState->Id = true;
-      pCondition->Data.ConfirmedState->Value = {"", "Confirmed"};
+      pCondition->Data.ConfirmedState->Value = open62541Cpp::LocalizedText_t{"", "Confirmed"};
       pCondition->Trigger();
       pCondition = nullptr;
 
@@ -183,14 +223,20 @@ int main(int argc, char *argv[])
 
   bindMembersRefl(machineTool, pServer, open62541Cpp::UA_NodeId(6, UA_ISWEXAMPLE_ID_MACHINES_ISWEXAMPLEMACHINE), n);
   bindMembersRefl(machineTool2, pServer, inst2, n);
-  UA_Server_writeEventNotifier(pServer, *machineTool2.Production->ProductionPlan.NodeId.NodeId, UA_EVENTNOTIFIERTYPE_SUBSCRIBETOEVENTS);
+
   auto &channel = machineTool2.Monitoring->Channels.Add(pServer, n, {6, "InstChannel1"});
   channel.ChannelState = UA_CHANNELSTATE_INTERRUPTED;
   channel.FeedOverride->Value = 89.0;
 
-  InstatiateOptional(machineTool2.Identification->YearOfConstruction, pServer, n);
-  InstatiateOptional(machineTool2.Production->ProductionPlan, pServer, n);
-  InstatiateOptional(machineTool2.Production->ProductionPlan->NodeVersion, pServer, n);
+  InstantiateOptional(machineTool2.Production->ActiveProgram->State, pServer, n);
+  InstantiateOptional(machineTool2.Identification->YearOfConstruction, pServer, n);
+  InstantiateOptional(machineTool2.Production->ProductionPlan, pServer, n);
+  auto st = UA_Server_writeEventNotifier(pServer, *machineTool2.Production->ProductionPlan.NodeId.NodeId, UA_EVENTNOTIFIERTYPE_SUBSCRIBETOEVENTS);
+  if(st != UA_STATUSCODE_GOOD)
+  {
+    std::cout << "WriteEventNotifier failed: " << UA_StatusCode_name(st) << std::endl;
+  }
+  InstantiateOptional(machineTool2.Production->ProductionPlan->NodeVersion, pServer, n);
   // Hack: Remove from bindings (Will be written by BindMemberPlaceholder)
   // Can keep binding when writing is supported.
   n.Remove(machineTool2.Production->ProductionPlan->NodeVersion.NodeId);
@@ -200,8 +246,8 @@ int main(int argc, char *argv[])
   job.RunsPlanned = 1;
   std::atomic_bool running{true};
 
-  InstatiateOptional(machineTool2.Notification->Prognoses, pServer, n);
-  InstatiateOptional(machineTool2.Notification->Prognoses->NodeVersion, pServer, n);
+  InstantiateOptional(machineTool2.Notification->Prognoses, pServer, n);
+  InstantiateOptional(machineTool2.Notification->Prognoses->NodeVersion, pServer, n);
   // Hack: Remove from bindings (Will be written by BindMemberPlaceholder)
   // Can keep binding when writing is supported.
   n.Remove(machineTool2.Notification->Prognoses->NodeVersion.NodeId);

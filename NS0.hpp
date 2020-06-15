@@ -86,34 +86,33 @@ REFL_TYPE(GeneralModelChangeEvent_t,
 REFL_FIELD(Changes)
 REFL_END
 
+
+template<typename T>
 struct StateVariable_t
 {
-  // id omitted and defined in subsequent types
-  open62541Cpp::LocalizedText_t Value;
-  UA_QualifiedName Name;
-  UA_UInt32 Number;
-  open62541Cpp::LocalizedText_t EffectiveDisplayName;
+  BindableMemberValue<open62541Cpp::LocalizedText_t> Value;
+  BindableMemberValue<open62541Cpp::LocalizedText_t> EffectiveDisplayName;
+  BindableMemberValue<T> Id;
+  BindableMemberValue<UA_QualifiedName> Name;
+  BindableMemberValue<UA_UInt32> Number;
 };
-
-REFL_TYPE(StateVariable_t,
-          open62541Cpp::attribute::UaVariableType{.NodeId = open62541Cpp::constexp::NodeId(constants::Ns0Uri, UA_NS0ID_STATEVARIABLETYPE)})
+REFL_TEMPLATE((typename T), (StateVariable_t<T>), open62541Cpp::attribute::UaVariableType{.NodeId = open62541Cpp::constexp::NodeId(constants::Ns0Uri, UA_NS0ID_STATEVARIABLETYPE)})
+REFL_FIELD(Id)
 REFL_FIELD(Value, open62541Cpp::attribute::UaVariableTypeValue())
-REFL_FIELD(Name, open62541Cpp::attribute::PlaceholderOptional())
 REFL_FIELD(Number, open62541Cpp::attribute::PlaceholderOptional())
+REFL_FIELD(Name, open62541Cpp::attribute::PlaceholderOptional())
 REFL_FIELD(EffectiveDisplayName, open62541Cpp::attribute::PlaceholderOptional())
 REFL_END
 
-struct TwoStateVariable_t : public StateVariable_t
+struct TwoStateVariable_t : public StateVariable_t<bool>
 {
-  bool Id;
   open62541Cpp::DateTime_t EffectiveTransitionTime;
   open62541Cpp::DateTime_t TransitionTime;
   open62541Cpp::LocalizedText_t FalseState;
   open62541Cpp::LocalizedText_t TrueState;
 };
-
 REFL_TYPE(TwoStateVariable_t,
-          Bases<StateVariable_t>(),
+          Bases<StateVariable_t<bool>>(),
           open62541Cpp::attribute::UaVariableType{.NodeId = open62541Cpp::constexp::NodeId(constants::Ns0Uri, UA_NS0ID_TWOSTATEVARIABLETYPE)})
 REFL_FIELD(Id)
 REFL_FIELD(EffectiveTransitionTime, open62541Cpp::attribute::PlaceholderOptional())

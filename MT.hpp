@@ -130,23 +130,84 @@ REFL_TYPE(
 REFL_FIELD(UtilityName)
 REFL_END
 
-struct FiniteStateVariableType_t
+
+//\todo correct inheritance
+struct FiniteStateVariable_t : public StateVariable_t<UA_NodeId>
 {
-  BindableMemberValue<open62541Cpp::LocalizedText_t> Value;
-  BindableMemberValue<UA_UInt32> Number;
 };
-REFL_TYPE(FiniteStateVariableType_t, open62541Cpp::attribute::UaVariableType())
+REFL_TYPE(
+  FiniteStateVariable_t,
+  Bases<StateVariable_t<UA_NodeId>>(),
+  open62541Cpp::attribute::UaVariableType{.NodeId = open62541Cpp::constexp::NodeId(constants::Ns0Uri, UA_NS0ID_FINITESTATEVARIABLETYPE)})
 REFL_FIELD(Value, open62541Cpp::attribute::UaVariableTypeValue())
-REFL_FIELD(Number, open62541Cpp::attribute::UaBrowseName{.NsURI = constants::Ns0Uri})
 REFL_END
 
-struct State_t
-{
-  BindableMember<FiniteStateVariableType_t> CurrentState;
-};
+/// Virtual definition, not a UA type
+struct Production_FiniteStateVariable_t : public FiniteStateVariable_t
+{};
+REFL_TYPE(Production_FiniteStateVariable_t,
+  Bases<FiniteStateVariable_t>(),
+  open62541Cpp::attribute::UaVariableType{.NodeId = open62541Cpp::constexp::NodeId(constants::Ns0Uri, UA_NS0ID_FINITESTATEVARIABLETYPE)})
+REFL_FIELD(Number) // Override mandatory
+REFL_END
 
-REFL_TYPE(State_t, open62541Cpp::attribute::UaObjectType{.NodeId = open62541Cpp::constexp::NodeId(constants::NsMachineToolUri, UA_MACHINETOOLID_PRODUCTIONJOBSTATEMACHINETYPE)})
+template<typename T>
+struct TransitionVariable_t
+{
+  BindableMemberValue<open62541Cpp::LocalizedText_t> Value;
+  BindableMemberValue<T> Id;
+  BindableMemberValue<std::uint32_t> Number;
+  BindableMemberValue<UA_QualifiedName> Name;
+  BindableMemberValue<open62541Cpp::DateTime_t> TransitionTime;
+};
+REFL_TEMPLATE((typename T), (TransitionVariable_t<T>), open62541Cpp::attribute::UaVariableType{.NodeId = open62541Cpp::constexp::NodeId(constants::Ns0Uri, UA_NS0ID_TRANSITIONVARIABLETYPE)})
+REFL_FIELD(Id)
+REFL_FIELD(Value, open62541Cpp::attribute::UaVariableTypeValue())
+REFL_FIELD(Number, open62541Cpp::attribute::PlaceholderOptional())
+REFL_FIELD(Name, open62541Cpp::attribute::PlaceholderOptional())
+REFL_FIELD(TransitionTime, open62541Cpp::attribute::PlaceholderOptional())
+REFL_END
+
+struct FiniteTransitionVariable_t : public TransitionVariable_t<UA_NodeId>
+{
+
+};
+REFL_TYPE(FiniteTransitionVariable_t,
+          Bases<TransitionVariable_t<UA_NodeId>>(),
+          open62541Cpp::attribute::UaVariableType{.NodeId = open62541Cpp::constexp::NodeId(constants::Ns0Uri, UA_NS0ID_FINITETRANSITIONVARIABLETYPE)})
+REFL_END
+
+/// Virtual definition, not a UA type
+struct Production_FiniteTransitionVariable_t : public FiniteTransitionVariable_t
+{};
+REFL_TYPE(Production_FiniteTransitionVariable_t,
+  Bases<FiniteTransitionVariable_t>(),
+  open62541Cpp::attribute::UaVariableType{.NodeId = open62541Cpp::constexp::NodeId(constants::Ns0Uri, UA_NS0ID_FINITETRANSITIONVARIABLETYPE)})
+REFL_FIELD(Number) // Override mandatory
+REFL_END
+
+///\todo correc inheritance
+struct FiniteStateMachine_t
+{
+  BindableMember<FiniteStateVariable_t> CurrentState;
+  BindableMember<FiniteTransitionVariable_t> LastTransition;
+};
+REFL_TYPE(FiniteStateMachine_t,
+          open62541Cpp::attribute::UaObjectType{.NodeId = open62541Cpp::constexp::NodeId(constants::Ns0Uri, UA_NS0ID_FINITESTATEMACHINETYPE)})
+REFL_FIELD(CurrentState)
+REFL_FIELD(LastTransition, open62541Cpp::attribute::PlaceholderOptional())
+REFL_END
+
+struct ProductionStateMachine_t : public FiniteStateMachine_t
+{
+  BindableMember<Production_FiniteStateVariable_t> CurrentState; // Override
+  BindableMember<Production_FiniteTransitionVariable_t> LastTransition; // Override
+};
+REFL_TYPE(ProductionStateMachine_t,
+          Bases<FiniteStateMachine_t>(),
+          open62541Cpp::attribute::UaObjectType{.NodeId = open62541Cpp::constexp::NodeId(constants::NsMachineToolUri, UA_MACHINETOOLID_PRODUCTIONSTATEMACHINETYPE)})
 REFL_FIELD(CurrentState, open62541Cpp::attribute::UaBrowseName{.NsURI = constants::Ns0Uri})
+REFL_FIELD(LastTransition, open62541Cpp::attribute::UaBrowseName{.NsURI = constants::Ns0Uri}, open62541Cpp::attribute::PlaceholderOptional())
 REFL_END
 
 struct NotificationEvent_t : public BaseEventType_t
@@ -174,7 +235,7 @@ struct ProductionJob_t
   BindableMemberValue<std::string> Identifier;
   BindableMemberValue<std::uint32_t> RunsCompleted;
   BindableMemberValue<std::uint32_t> RunsPlanned;
-  BindableMember<State_t> State;
+  BindableMember<ProductionStateMachine_t> State;
 };
 
 REFL_TYPE(ProductionJob_t,
@@ -198,6 +259,33 @@ REFL_FIELD(OrderedObjects,
                open62541Cpp::attribute::PlaceholderOptional())
 REFL_END
 
+struct ProductionProgram_t
+{
+  BindableMemberValue<std::string> Name;
+  BindableMember<ProductionStateMachine_t> State;
+};
+REFL_TYPE(ProductionProgram_t,
+          open62541Cpp::attribute::UaObjectType{.NodeId = open62541Cpp::constexp::NodeId(constants::NsMachineToolUri, UA_MACHINETOOLID_PRODUCTIONPROGRAMTYPE)})
+REFL_FIELD(Name)
+REFL_FIELD(State,
+  open62541Cpp::attribute::MemberInTypeNodeId{
+                   .NodeId = open62541Cpp::constexp::NodeId(constants::NsMachineToolUri, UA_MACHINETOOLID_PRODUCTIONPROGRAMTYPE_STATE)},
+  open62541Cpp::attribute::PlaceholderOptional())
+REFL_END
+
+struct ProductionActiveProgram_t : public ProductionProgram_t
+{
+  BindableMemberValue<std::string> JobIdentifier;
+  BindableMemberValue<UA_NodeId> JobNodeId;
+};
+REFL_TYPE(ProductionActiveProgram_t,
+          Bases<ProductionProgram_t>(),
+          open62541Cpp::attribute::UaObjectType{.NodeId = open62541Cpp::constexp::NodeId(constants::NsMachineToolUri, UA_MACHINETOOLID_PRODUCTIONACTIVEPROGRAMTYPE)})
+//REFL_FIELD(State) // Override mandatory ///\todo requires fix in nodeset, i=5030 needs to be ProductionActiveProgramType not ProductionProgramType
+REFL_FIELD(JobIdentifier, open62541Cpp::attribute::PlaceholderOptional())
+REFL_FIELD(JobNodeId, open62541Cpp::attribute::PlaceholderOptional())
+REFL_END
+
 struct Monitoring_t
 {
   BindableMemberPlaceholder<BindableMember, ChannelMonitoring_t> Channels;
@@ -210,12 +298,14 @@ REFL_END
 
 struct Production_t
 {
+  BindableMember<ProductionActiveProgram_t> ActiveProgram;
   BindableMember<ProdictionJobList_t> ProductionPlan;
 };
 
 REFL_TYPE(Production_t, open62541Cpp::attribute::UaObjectType{.NodeId = open62541Cpp::constexp::NodeId(constants::NsMachineToolUri, UA_MACHINETOOLID_PRODUCTIONTYPE)})
 REFL_FIELD(ProductionPlan, open62541Cpp::attribute::PlaceholderOptional(),
            open62541Cpp::attribute::MemberInTypeNodeId{.NodeId = open62541Cpp::constexp::NodeId(constants::NsMachineToolUri, UA_MACHINETOOLID_PRODUCTIONTYPE_PRODUCTIONPLAN)})
+REFL_FIELD(ActiveProgram)
 REFL_END
 
 struct PrognosisList_t

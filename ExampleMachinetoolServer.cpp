@@ -173,7 +173,7 @@ int main(int argc, char *argv[])
   std::cout << "ExampleMTServer" << std::endl;
   OpcUaKeys keys("server_key.der", "server_cert.der");
   UA_Server *pServer = UA_Server_new();
-
+  auto pConfig = UA_Server_getConfig(pServer);
   try
   {
     keys.Load();
@@ -184,7 +184,6 @@ int main(int argc, char *argv[])
     UA_ByteString *trustList = NULL;
     size_t revocationListSize = 0;
     UA_ByteString *revocationList = NULL;
-    auto pConfig = UA_Server_getConfig(pServer);
     UA_ServerConfig_setDefaultWithSecurityPolicies(
         pConfig, 4840,
         &keys.PublicCert, &keys.PrivateKey,
@@ -197,12 +196,14 @@ int main(int argc, char *argv[])
     std::cout << "Could not load keys." << std::endl;
     std::cout << ex.what();
     std::cout << "Generate keys with create_self-signed.py in open62541/tools directory" << std::endl;
-    UA_ServerConfig_setDefault(UA_Server_getConfig(pServer));
+    UA_ServerConfig_setDefault(pConfig);
     std::cout << "No encryption will be available." << std::endl;
   }
-
-  UA_Server_getConfig(pServer)->nodeLifecycle.generateChildNodeId = generateChildNodeIdInParentNs;
-
+  if(argc >= 2)
+  {
+    pConfig->customHostname = UA_STRING_ALLOC(argv[1]);
+  }
+  pConfig->nodeLifecycle.generateChildNodeId = generateChildNodeIdInParentNs;
   namespace_di_generated(pServer);
   namespace_industrial_automation_generated(pServer);
   namespace_machinery_generated(pServer);

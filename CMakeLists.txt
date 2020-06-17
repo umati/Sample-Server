@@ -127,6 +127,7 @@ add_library(ExampleServerLib
     OpcUaTypes/EUInformation.cpp
     OpcUaTypes/ConstNodeId.cpp
     Instantiation.cpp
+    OpcUaKeys.cpp
 )
 set_target_properties(ExampleServerLib PROPERTIES LINKER_LANGUAGE CXX)
 set_target_properties(ExampleServerLib PROPERTIES DEBUG_POSTFIX "d")

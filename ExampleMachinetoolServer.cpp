@@ -19,6 +19,7 @@
 #include "OpcUaEvent.hpp"
 #include "Instantiation.hpp"
 #include "OpcUaCondition.hpp"
+#include "OpcUaKeys.hpp"
 
 std::shared_ptr<OpcUaCondition<Alert_t>> pCondition;
 
@@ -55,43 +56,43 @@ void simulate(MT::MachineTool_t *pMachineTool,
       OpcUaEvent ev(notifEvent, pServer, open62541Cpp::UA_NodeId(UA_NODEID_NUMERIC(6, UA_ISWEXAMPLE_ID_MACHINES_ISWEXAMPLEMACHINE_NOTIFICATION_MESSAGES)));
     }
 
-    switch(i%10)
+    switch (i % 10)
     {
-      case 0:
-      {
-          machineTool2.Production->ActiveProgram->State->CurrentState->Value = open62541Cpp::LocalizedText_t{"", "Initializing"};
-          machineTool2.Production->ActiveProgram->State->CurrentState->Id = UA_NODEID_NUMERIC(nsFromUri(pServer, constants::NsMachineToolUri), UA_MACHINETOOLID_PRODUCTIONSTATEMACHINETYPE_INITIALIZING);
-          machineTool2.Production->ActiveProgram->State->CurrentState->Number = 0;
-        break;
-      }
-      case 2:
-      {
-          machineTool2.Production->ActiveProgram->State->CurrentState->Value = open62541Cpp::LocalizedText_t{"", "Running"};
-          machineTool2.Production->ActiveProgram->State->CurrentState->Id = UA_NODEID_NUMERIC(nsFromUri(pServer, constants::NsMachineToolUri), UA_MACHINETOOLID_PRODUCTIONSTATEMACHINETYPE_RUNNING);
-          machineTool2.Production->ActiveProgram->State->CurrentState->Number = 1;
-        break;
-      }
-      case 4:
-      {
-          machineTool2.Production->ActiveProgram->State->CurrentState->Value = open62541Cpp::LocalizedText_t{"", "Interrupted"};
-          machineTool2.Production->ActiveProgram->State->CurrentState->Id = UA_NODEID_NUMERIC(nsFromUri(pServer, constants::NsMachineToolUri), UA_MACHINETOOLID_PRODUCTIONSTATEMACHINETYPE_INTERRUPTED);
-          machineTool2.Production->ActiveProgram->State->CurrentState->Number = 3;
-        break;
-      }
-      case 6:
-      {
-          machineTool2.Production->ActiveProgram->State->CurrentState->Value = open62541Cpp::LocalizedText_t{"", "Ended"};
-          machineTool2.Production->ActiveProgram->State->CurrentState->Id = UA_NODEID_NUMERIC(nsFromUri(pServer, constants::NsMachineToolUri), UA_MACHINETOOLID_PRODUCTIONSTATEMACHINETYPE_ENDED);
-          machineTool2.Production->ActiveProgram->State->CurrentState->Number = 2;
-        break;
-      }
-      case 8:
-      {
-          machineTool2.Production->ActiveProgram->State->CurrentState->Value = open62541Cpp::LocalizedText_t{"", "Aborted"};
-          machineTool2.Production->ActiveProgram->State->CurrentState->Id = UA_NODEID_NUMERIC(nsFromUri(pServer, constants::NsMachineToolUri), UA_MACHINETOOLID_PRODUCTIONSTATEMACHINETYPE_ABORTED);
-          machineTool2.Production->ActiveProgram->State->CurrentState->Number = 4;
-        break;
-      }
+    case 0:
+    {
+      machineTool2.Production->ActiveProgram->State->CurrentState->Value = open62541Cpp::LocalizedText_t{"", "Initializing"};
+      machineTool2.Production->ActiveProgram->State->CurrentState->Id = UA_NODEID_NUMERIC(nsFromUri(pServer, constants::NsMachineToolUri), UA_MACHINETOOLID_PRODUCTIONSTATEMACHINETYPE_INITIALIZING);
+      machineTool2.Production->ActiveProgram->State->CurrentState->Number = 0;
+      break;
+    }
+    case 2:
+    {
+      machineTool2.Production->ActiveProgram->State->CurrentState->Value = open62541Cpp::LocalizedText_t{"", "Running"};
+      machineTool2.Production->ActiveProgram->State->CurrentState->Id = UA_NODEID_NUMERIC(nsFromUri(pServer, constants::NsMachineToolUri), UA_MACHINETOOLID_PRODUCTIONSTATEMACHINETYPE_RUNNING);
+      machineTool2.Production->ActiveProgram->State->CurrentState->Number = 1;
+      break;
+    }
+    case 4:
+    {
+      machineTool2.Production->ActiveProgram->State->CurrentState->Value = open62541Cpp::LocalizedText_t{"", "Interrupted"};
+      machineTool2.Production->ActiveProgram->State->CurrentState->Id = UA_NODEID_NUMERIC(nsFromUri(pServer, constants::NsMachineToolUri), UA_MACHINETOOLID_PRODUCTIONSTATEMACHINETYPE_INTERRUPTED);
+      machineTool2.Production->ActiveProgram->State->CurrentState->Number = 3;
+      break;
+    }
+    case 6:
+    {
+      machineTool2.Production->ActiveProgram->State->CurrentState->Value = open62541Cpp::LocalizedText_t{"", "Ended"};
+      machineTool2.Production->ActiveProgram->State->CurrentState->Id = UA_NODEID_NUMERIC(nsFromUri(pServer, constants::NsMachineToolUri), UA_MACHINETOOLID_PRODUCTIONSTATEMACHINETYPE_ENDED);
+      machineTool2.Production->ActiveProgram->State->CurrentState->Number = 2;
+      break;
+    }
+    case 8:
+    {
+      machineTool2.Production->ActiveProgram->State->CurrentState->Value = open62541Cpp::LocalizedText_t{"", "Aborted"};
+      machineTool2.Production->ActiveProgram->State->CurrentState->Id = UA_NODEID_NUMERIC(nsFromUri(pServer, constants::NsMachineToolUri), UA_MACHINETOOLID_PRODUCTIONSTATEMACHINETYPE_ABORTED);
+      machineTool2.Production->ActiveProgram->State->CurrentState->Number = 4;
+      break;
+    }
     }
 
     if ((i % 10) == 1)
@@ -118,7 +119,7 @@ void simulate(MT::MachineTool_t *pMachineTool,
       {
         std::stringstream ss;
         ss << "Job " << i;
-        auto &job = machineTool2.Production->ProductionPlan->OrderedObjects.Add(pServer, n, {6,ss.str()});
+        auto &job = machineTool2.Production->ProductionPlan->OrderedObjects.Add(pServer, n, {6, ss.str()});
         job.Identifier = ss.str();
         job.RunsCompleted = 0;
         job.RunsPlanned = 2;
@@ -169,20 +170,48 @@ UA_StatusCode generateChildNodeIdInParentNs(
 
 int main(int argc, char *argv[])
 {
+  std::cout << "ExampleMTServer" << std::endl;
+  OpcUaKeys keys("server_key.der", "server_cert.der");
   UA_Server *pServer = UA_Server_new();
-  UA_ServerConfig_setDefault(UA_Server_getConfig(pServer));
+
+  try
+  {
+    keys.Load();
+    // Skip all certificate checks
+    size_t issuerListSize = 0;
+    UA_ByteString *issuerList = NULL;
+    size_t trustListSize = 0;
+    UA_ByteString *trustList = NULL;
+    size_t revocationListSize = 0;
+    UA_ByteString *revocationList = NULL;
+    auto pConfig = UA_Server_getConfig(pServer);
+    UA_ServerConfig_setDefaultWithSecurityPolicies(
+        pConfig, 4840,
+        &keys.PublicCert, &keys.PrivateKey,
+        trustList, trustListSize,
+        issuerList, issuerListSize,
+        revocationList, revocationListSize);
+  }
+  catch (std::exception &ex)
+  {
+    std::cout << "Could not load keys." << std::endl;
+    std::cout << ex.what();
+    std::cout << "Generate keys with create_self-signed.py in open62541/tools directory" << std::endl;
+    UA_ServerConfig_setDefault(UA_Server_getConfig(pServer));
+    std::cout << "No encryption will be available." << std::endl;
+  }
+
   UA_Server_getConfig(pServer)->nodeLifecycle.generateChildNodeId = generateChildNodeIdInParentNs;
-  std::cout << "ExampleUmatiServer" << std::endl;
-  /*UA_Server_addNamespace(pServer, "http://opcfoundation.org/UA/DI/");
-  UA_Server_addNamespace(pServer, "http://opcfoundation.org/UA/Machinery/");
-  UA_Server_addNamespace(pServer, "http://opcfoundation.org/UA/IA");
-  UA_Server_addNamespace(pServer, "http://opcfoundation.org/UA/MachineTool/");*/
 
   namespace_di_generated(pServer);
   namespace_industrial_automation_generated(pServer);
   namespace_machinery_generated(pServer);
   namespace_machinetool_generated(pServer);
   namespace_iswexample_generated(pServer);
+
+  std::mutex accessDataMutex;
+  NodesMaster n(pServer);
+  MT::MachineTool_t machineTool;
 
   UA_ObjectAttributes objAttr = UA_ObjectAttributes_default;
 
@@ -202,14 +231,12 @@ int main(int argc, char *argv[])
         nullptr,
         inst2.NodeId);
   }
+
   UA_ObjectAttributes_clear(&objAttr);
   MT::MachineTool_t machineTool2;
   machineTool2.Identification->Manufacturer = open62541Cpp::LocalizedText_t{.locale = "c++", .text = "ISW Christian von Arnim"};
   machineTool2.Identification->YearOfConstruction = 2020;
-
-  std::mutex accessDataMutex;
-  NodesMaster n(pServer);
-  MT::MachineTool_t machineTool;
+  machineTool2.Identification->Location = std::string("AMB 0 0/N 48.781340 E 9.165731");
 
   machineTool.Identification->YearOfConstruction = 2020;
   machineTool.Identification->Model = open62541Cpp::LocalizedText_t{.locale = "", .text = "ISW Example"};
@@ -228,11 +255,12 @@ int main(int argc, char *argv[])
   channel.ChannelState = UA_CHANNELSTATE_INTERRUPTED;
   channel.FeedOverride->Value = 89.0;
 
+  //InstantiateOptional(machineTool2.Identification->Location, pServer, n);
   InstantiateOptional(machineTool2.Production->ActiveProgram->State, pServer, n);
   InstantiateOptional(machineTool2.Identification->YearOfConstruction, pServer, n);
   InstantiateOptional(machineTool2.Production->ProductionPlan, pServer, n);
   auto st = UA_Server_writeEventNotifier(pServer, *machineTool2.Production->ProductionPlan.NodeId.NodeId, UA_EVENTNOTIFIERTYPE_SUBSCRIBETOEVENTS);
-  if(st != UA_STATUSCODE_GOOD)
+  if (st != UA_STATUSCODE_GOOD)
   {
     std::cout << "WriteEventNotifier failed: " << UA_StatusCode_name(st) << std::endl;
   }

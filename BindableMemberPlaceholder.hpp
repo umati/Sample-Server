@@ -6,8 +6,9 @@
 #include <Open62541Cpp/UA_QualifiedName.hpp>
 #include "Instantiation.hpp"
 #include "Util.hpp"
-#include "NS0.hpp"
 #include "OpcUaEvent.hpp"
+#include "TypeDefinition/ns0/GeneralModelChangeEvent.hpp"
+
 
 ///\TODO enable if BINDABLEMEMBER_T is BindableMember(Value)
 template <template <typename...> class BINDABLEMEMBER_T, typename T /*, typename = std::enable_if_t<is_base_of_template<BindableMember, BINDABLEMEMBER_T<T>>::value>*/>
@@ -144,7 +145,7 @@ public:
     if(status == UA_STATUSCODE_GOOD && (evNotifier & UA_EVENTNOTIFIERTYPE_SUBSCRIBETOEVENTS))
     {
       ///\todo else create event on Server?
-      GeneralModelChangeEvent_t evModChange;
+      ns0::GeneralModelChangeEvent_t evModChange;
       UA_ModelChangeStructureDataType &change = evModChange.Changes->emplace_back();
       change.affected = *this->ParentNodeId.NodeId;
       change.affectedType = *typeDefinition.NodeId;

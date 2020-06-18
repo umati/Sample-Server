@@ -1,4 +1,3 @@
-#include "MT.hpp"
 #include "BindRefl.hpp"
 #include <iostream>
 #include <open62541/server_config_default.h>
@@ -21,14 +20,23 @@
 #include "OpcUaCondition.hpp"
 #include "OpcUaKeys.hpp"
 
-std::shared_ptr<OpcUaCondition<Alert_t>> pCondition;
+#include "TypeDefinition/MachineTool/MachineTool.hpp"
+#include "TypeDefinition/MachineTool/Alert.hpp"
+#include "TypeDefinition/MachineTool/NotificationEvent.hpp"
 
-void simulate(MT::MachineTool_t *pMachineTool,
+std::shared_ptr<OpcUaCondition<machineTool::Alert_t>> pCondition;
+
+namespace constants
+{
+constexpr const char *NsInstanceUri = "http://isw.example.com";
+} // namespace constants
+
+void simulate(machineTool::MachineTool_t *pMachineTool,
               std::atomic_bool &running,
               std::mutex &accessDataMutex,
               UA_Server *pServer,
               NodesMaster &n,
-              MT::MachineTool_t &machineTool2)
+              machineTool::MachineTool_t &machineTool2)
 {
   std::unique_lock<std::remove_reference<decltype(accessDataMutex)>::type> ul(accessDataMutex);
   ul.unlock();
@@ -40,7 +48,7 @@ void simulate(MT::MachineTool_t *pMachineTool,
     //pChannel1->ChannelState = static_cast<UA_ChannelState>((((int)pChannel1->ChannelState) + 1) % (UA_ChannelState::UA_CHANNELSTATE_RESET + 1));
 
     {
-      NotificationEvent_t notifEvent;
+      machineTool::NotificationEvent_t notifEvent;
 
       notifEvent.Time = std::chrono::system_clock::now();
       notifEvent.SourceName = "Reflection Event";
@@ -97,7 +105,7 @@ void simulate(MT::MachineTool_t *pMachineTool,
 
     if ((i % 10) == 1)
     {
-      pCondition = std::make_shared<OpcUaCondition<Alert_t>>(pServer, open62541Cpp::UA_NodeId(UA_NODEID_NUMERIC(0, UA_NS0ID_SERVER)));
+      pCondition = std::make_shared<OpcUaCondition<machineTool::Alert_t>>(pServer, open62541Cpp::UA_NodeId(UA_NODEID_NUMERIC(0, UA_NS0ID_SERVER)));
       pCondition->Data.ErrorCode = "ERR404";
       {
         std::stringstream ss;
@@ -212,7 +220,7 @@ int main(int argc, char *argv[])
 
   std::mutex accessDataMutex;
   NodesMaster n(pServer);
-  MT::MachineTool_t machineTool;
+  machineTool::MachineTool_t machineTool;
 
   UA_ObjectAttributes objAttr = UA_ObjectAttributes_default;
 
@@ -234,7 +242,7 @@ int main(int argc, char *argv[])
   }
 
   UA_ObjectAttributes_clear(&objAttr);
-  MT::MachineTool_t machineTool2;
+  machineTool::MachineTool_t machineTool2;
   machineTool2.Identification->Manufacturer = open62541Cpp::LocalizedText_t{.locale = "c++", .text = "ISW Christian von Arnim"};
   machineTool2.Identification->YearOfConstruction = 2020;
   machineTool2.Identification->Location = std::string("AMB 0 0/N 48.781340 E 9.165731");
@@ -280,9 +288,9 @@ int main(int argc, char *argv[])
   // Hack: Remove from bindings (Will be written by BindMemberPlaceholder)
   // Can keep binding when writing is supported.
   n.Remove(machineTool2.Notification->Prognoses->NodeVersion.NodeId);
-  auto &maintenancePrognosis = machineTool2.Notification->Prognoses->Prognosis.Add<MaintenancePrognosis_t>(pServer, n, {6, "Maintenance"});
+  auto &maintenancePrognosis = machineTool2.Notification->Prognoses->Prognosis.Add<machineTool::MaintenancePrognosis_t>(pServer, n, {6, "Maintenance"});
   maintenancePrognosis.Activity = open62541Cpp::LocalizedText_t{"", "Replace actuator."};
-  auto &utilityPrognosis = machineTool2.Notification->Prognoses->Prognosis.Add<UtilityChangePrognosis_t>(pServer, n, {6, "Utility"});
+  auto &utilityPrognosis = machineTool2.Notification->Prognoses->Prognosis.Add<machineTool::UtilityChangePrognosis_t>(pServer, n, {6, "Utility"});
   utilityPrognosis.UtilityName = open62541Cpp::LocalizedText_t{"", "H²"};
 
   UA_Server_run_startup(pServer);

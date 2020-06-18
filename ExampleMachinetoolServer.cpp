@@ -257,8 +257,8 @@ int main(int argc, char *argv[])
   machineTool.Identification->ProductInstanceUri.StatusCode = UA_STATUSCODE_GOODEDITED;
   machineTool.Identification->ProductInstanceUri.SourceTimestamp = UA_DateTime_fromStruct(UA_DateTimeStruct{.sec = 13, .min = 12, .hour = 11, .day = 10, .month = 9, .year = 2008});
 
-  bindMembersRefl(machineTool, pServer, open62541Cpp::UA_NodeId(6, UA_ISWEXAMPLE_ID_MACHINES_ISWEXAMPLEMACHINE), n);
-  bindMembersRefl(machineTool2, pServer, inst2, n);
+  UmatiServerLib::Bind::MembersRefl(machineTool, pServer, open62541Cpp::UA_NodeId(6, UA_ISWEXAMPLE_ID_MACHINES_ISWEXAMPLEMACHINE), n);
+  UmatiServerLib::Bind::MembersRefl(machineTool2, pServer, inst2, n);
 
   auto &channel = machineTool2.Monitoring->Channels.Add(pServer, n, {6, "InstChannel1"});
   channel.ChannelState = UA_CHANNELSTATE_INTERRUPTED;

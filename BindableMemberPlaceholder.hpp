@@ -1,5 +1,5 @@
 #pragma once
-
+#include "UnbindRefl.hpp"
 #include "BindableMember.hpp"
 #include <list>
 #include "NodesMaster.hpp"
@@ -105,7 +105,7 @@ public:
       throw std::runtime_error(ss.str());
     }
 
-    bindMemberRefl(newEl.value, pServer, newEl.NodeId, nodesMaster);
+    UmatiServerLib::Bind::MemberRefl(newEl.value, pServer, newEl.NodeId, nodesMaster);
     newEl.SetBind();
 
     sendGeneralModelChangeEvent(pServer, 0x04);
@@ -128,7 +128,7 @@ public:
     }
     else
     {
-      unbindMemberRefl(el, pServer, el.NodeId, nodesMaster);
+      UmatiServerLib::Bind::MemberRefl(el, pServer, el.NodeId, nodesMaster);
       UA_Server_deleteNode(pServer, *el.NodeId.NodeId, true);
     }
 

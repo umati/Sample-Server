@@ -1,4 +1,5 @@
 #pragma once
+#include "BindHelper.hpp"
 
 #include <iostream>
 #include <open62541/server.h>
@@ -13,79 +14,63 @@
 #include "Exceptions/NodeNotFound.hpp"
 #include <variant>
 
-template <typename T>
-void bindMemberRefl(
-    T &member,
-    UA_Server *pServer,
-    open62541Cpp::UA_NodeId nodeId,
-    NodesMaster &nodesMaster);
-
-template <typename T>
-void unbindMemberRefl(
-    T &member,
-    UA_Server *pServer,
-    open62541Cpp::UA_NodeId nodeId,
-    NodesMaster &nodesMaster);
-
-template <typename T>
-void unbindMembersRefl(T &instance, UA_Server *pServer, open62541Cpp::UA_NodeId nodeId, NodesMaster &nodesMaster);
-
-template <typename T>
-void bindPlaceholder(
-    std::list<T> &member,
-    UA_Server *pServer,
-    open62541Cpp::UA_NodeId nodeId,
-    NodesMaster &nodesMaster,
-    open62541Cpp::UA_NodeId refTypeNodeId);
-
-open62541Cpp::UA_NodeId resolveBrowsePath(
-    UA_Server *pServer,
-    const open62541Cpp::UA_BrowsePath &brPath);
-
-template <typename B, typename... T>
-open62541Cpp::UA_RelativPathElement getBrowseName(const B &instance, const refl::descriptor::field_descriptor<T...> &member, UA_Server *pServer);
-
-template <typename T>
-void setBindOrMandatory(BindableMember<T> &instance, bool bind = true, bool mandatory = true);
-
-template <typename T, typename = std::enable_if_t<!is_base_of_template<BindableMember, T>::value>>
-void setBindOrMandatory(T &instance, bool bind = true, bool mandatory = true){};
-
-template <typename T>
-void setMemberInTypeNodeId(BindableMember<T> &instance, const open62541Cpp::constexp::NodeId &nodeId, UA_Server *pServer);
-
-template <typename T, typename = std::enable_if_t<!is_base_of_template<BindableMember, T>::value>>
-void setMemberInTypeNodeId(T &instance, const open62541Cpp::constexp::NodeId &nodeId, UA_Server *pServer){};
-
-template <typename T>
-void setAddrSpaceLocation(BindableMember<T> &instance, const open62541Cpp::UA_NodeId &parentNodeId, const open62541Cpp::UA_RelativPathElement pathEl);
-
-template <typename T, typename = std::enable_if_t<!is_base_of_template<BindableMember, T>::value>>
-void setAddrSpaceLocation(T &instance, const open62541Cpp::UA_NodeId &parentNodeId, const open62541Cpp::UA_RelativPathElement pathEl){};
-
-template <typename T>
-open62541Cpp::UA_RelativPathElement getRelativPathElement(BindableMember<T> &instance)
+namespace UmatiServerLib
 {
-  return instance.RelativPathElement;
-}
-
-template <typename T, typename = std::enable_if_t<!is_base_of_template<BindableMember, T>::value>>
-open62541Cpp::UA_RelativPathElement getRelativPathElement(T &instance)
+class Bind
 {
-  return open62541Cpp::UA_RelativPathElement();
+public:
+  /**
+ * @brief Bind a member/instance using reflection
+ *
+ * When the member is a Object or Variable all childs are iterated. Otherwise the value is bind to the correspoding OPC UA Value
+ *
+ * @tparam T
+ * @param member
+ * @param pServer
+ * @param nodeId
+
+ * @param nodesMaster
+ */
+  template <typename T>
+  static void MemberRefl(
+      T &member,
+      UA_Server *pServer,
+      open62541Cpp::UA_NodeId nodeId,
+      NodesMaster &nodesMaster);
+
+  template <typename... T>
+  static void MemberRefl(
+      std::variant<T...> &member, UA_Server *pServer,
+      open62541Cpp::UA_NodeId nodeId,
+      NodesMaster &nodesMaster);
+
+  /**
+   * @brief Binding the members by it's reflection description
+   *
+   * @tparam T Any type with defined reflection
+   * @param instance Instance to be bind
+   * @param pServer Pointer to OPC UA Server
+   * @param nodeId Start reference for binding
+   * @param nodesMaster NodesMaster instace for resolving the bindings.
+   */
+  template <typename T>
+  static void MembersRefl(
+      T &instance,
+      UA_Server *pServer,
+      open62541Cpp::UA_NodeId nodeId,
+      NodesMaster &nodesMaster);
+
+  template <typename T>
+  static void Placeholder(
+      std::list<T> &member,
+      UA_Server *pServer,
+      open62541Cpp::UA_NodeId nodeId,
+      NodesMaster &nodesMaster,
+      open62541Cpp::UA_NodeId refTypeNodeId);
 };
 
-/**
- * @brief Binding the members by it's reflection description
- *
- * @tparam T Any type with defined reflection
- * @param instance Instance to be bind
- * @param pServer Pointer to OPC UA Server
- * @param nodeId Start reference for binding
- * @param nodesMaster NodesMaster instace for resolving the bindings.
- */
 template <typename T>
-void bindMembersRefl(T &instance, UA_Server *pServer, open62541Cpp::UA_NodeId nodeId, NodesMaster &nodesMaster)
+void Bind::MembersRefl(T &instance, UA_Server *pServer, open62541Cpp::UA_NodeId nodeId, NodesMaster &nodesMaster)
 {
   open62541Cpp::UA_RelativPathBase basePath;
   // Handle base classes first
@@ -95,7 +80,7 @@ void bindMembersRefl(T &instance, UA_Server *pServer, open62541Cpp::UA_NodeId no
     if constexpr (bases.descriptors.size)
     {
       refl::util::for_each(bases.descriptors, [&](auto t) {
-        bindMembersRefl(static_cast<typename decltype(t)::type &>(instance), pServer, nodeId, nodesMaster);
+        MembersRefl(static_cast<typename decltype(t)::type &>(instance), pServer, nodeId, nodesMaster);
       });
     }
   }
@@ -155,7 +140,7 @@ void bindMembersRefl(T &instance, UA_Server *pServer, open62541Cpp::UA_NodeId no
           open62541Cpp::UA_BrowsePath(
               *nodeId.NodeId,
               childRelativPathElements));
-      bindMemberRefl(member(instance), pServer, nodeIdChild, nodesMaster);
+      MemberRefl(member(instance), pServer, nodeIdChild, nodesMaster);
       setBindOrMandatory(member(instance), true, !isOptional);
     }
     catch (const open62541Cpp::Exceptions::NodeNotFound &ex)
@@ -171,119 +156,7 @@ void bindMembersRefl(T &instance, UA_Server *pServer, open62541Cpp::UA_NodeId no
 }
 
 template <typename T>
-void unbindMembersRefl(T &instance, UA_Server *pServer, open62541Cpp::UA_NodeId nodeId, NodesMaster &nodesMaster)
-{
-  open62541Cpp::UA_RelativPathBase basePath;
-  // Handle base classes first
-  if constexpr (refl::descriptor::has_attribute<Bases>(refl::reflect<T>()))
-  {
-    constexpr auto bases = refl::descriptor::get_attribute<Bases>(refl::reflect<T>());
-    if constexpr (bases.descriptors.size)
-    {
-      refl::util::for_each(bases.descriptors, [&](auto t) {
-        unbindMembersRefl(static_cast<typename decltype(t)::type &>(instance), pServer, nodeId, nodesMaster);
-      });
-    }
-  }
-
-  for_each(refl::reflect(instance).members, [&](auto member) {
-    auto childRelativPathElements = basePath();
-
-    if constexpr (
-        is_same_template<typename decltype(member)::value_type, std::list>::value)
-    {
-      std::cout << member.name << " is a placeholder." << std::endl;
-      std::cout << "Unbind placeholder not implemented." << std::endl;
-      return;
-    }
-
-    open62541Cpp::UA_RelativPathElement pathEl(getRelativPathElement(member(instance)));
-    // Check if path was set by base class? => Skip use the previous RelativPath (with correct namespace)
-    if (pathEl.RelativePathElement == nullptr)
-    {
-      // Check if this is not the value of a variable type
-      // If this is the value of a variable type bind it to the base without appending a browse name (skip adding a browse name)
-      if constexpr (
-          !refl::descriptor::has_attribute<open62541Cpp::attribute::UaVariableTypeValue>(member))
-      {
-        pathEl = getBrowseName(instance, member, pServer);
-        childRelativPathElements.push_back(pathEl);
-      }
-    }
-    else
-    {
-      childRelativPathElements.push_back(pathEl);
-    }
-
-    constexpr bool isOptional = refl::descriptor::has_attribute<open62541Cpp::attribute::PlaceholderOptional>(member);
-    try
-    {
-      auto nodeIdChild = resolveBrowsePath(
-          pServer,
-          open62541Cpp::UA_BrowsePath(
-              *nodeId.NodeId,
-              childRelativPathElements));
-      unbindMemberRefl(member(instance), pServer, nodeIdChild, nodesMaster);
-    }
-    catch (const open62541Cpp::Exceptions::NodeNotFound &ex)
-    {
-      if constexpr (!isOptional)
-      {
-        std::stringstream ss;
-        ss << "Mandatory node not found for binding. " << ex.what();
-        throw std::runtime_error(ss.str());
-      }
-    }
-  });
-}
-
-template <typename AttributeType, typename T>
-constexpr bool hasAttributeIfReflectable() noexcept
-{
-  if constexpr (!refl::trait::is_reflectable<T>::value)
-  {
-    return false;
-  }
-  else
-  {
-    return refl::descriptor::has_attribute<AttributeType>(
-        refl::reflect<T>());
-  }
-}
-
-template <typename AttributeType, typename T>
-constexpr bool hasAttributeIfReflectable(const T &member) noexcept
-{
-  return hasAttributeIfReflectable<AttributeType, T>();
-}
-
-template <typename T>
-auto &getValueFromBindableMember(T &instance, bool bind = true, bool mandatory = true)
-{
-  if constexpr (is_base_of_template<BindableMember, T>::value)
-  {
-    return instance.value;
-  }
-  else
-  {
-    return instance;
-  }
-}
-
-/**
- * @brief Bind a member/instance using reflection
- *
- * When the member is a Object or Variable all childs are iterated. Otherwise the value is bind to the correspoding OPC UA Value
- *
- * @tparam T
- * @param member
- * @param pServer
- * @param nodeId
-
- * @param nodesMaster
- */
-template <typename T>
-void bindMemberRefl(
+void Bind::MemberRefl(
     T &member, UA_Server *pServer,
     open62541Cpp::UA_NodeId nodeId,
     NodesMaster &nodesMaster)
@@ -298,7 +171,7 @@ void bindMemberRefl(
       hasAttributeIfReflectable<open62541Cpp::attribute::UaObjectType, T>() ||
       hasAttributeIfReflectable<open62541Cpp::attribute::UaVariableType, T>())
   {
-    bindMembersRefl(member, pServer, nodeId, nodesMaster);
+    MembersRefl(member, pServer, nodeId, nodesMaster);
   }
   else if constexpr (
       is_same_template<T, BindableMember>::value)
@@ -307,7 +180,7 @@ void bindMemberRefl(
         hasAttributeIfReflectable<open62541Cpp::attribute::UaObjectType>(member.value) ||
         hasAttributeIfReflectable<open62541Cpp::attribute::UaVariableType>(member.value))
     {
-      bindMembersRefl(member.value, pServer, nodeId, nodesMaster);
+      MembersRefl(member.value, pServer, nodeId, nodesMaster);
     }
     else
     {
@@ -335,64 +208,22 @@ void bindMemberRefl(
   }
 }
 
-template <typename ...T>
-void bindMemberRefl(
+template <typename... T>
+void Bind::MemberRefl(
     std::variant<T...> &member, UA_Server *pServer,
     open62541Cpp::UA_NodeId nodeId,
     NodesMaster &nodesMaster)
 {
   /// todo catch variant in BindableMember
-  std::visit([&](auto &&arg) {
-    bindMemberRefl(arg, pServer, nodeId, nodesMaster);
-  }, member);
-}
-
-/**
- * @brief Remove all bindings of this member
- *
- * @tparam T
- * @param member
- * @param pServer
- * @param nodeId
- * @param nodesMaster
- */
-template <typename T>
-void unbindMemberRefl(
-    T &member, UA_Server *pServer,
-    open62541Cpp::UA_NodeId nodeId,
-    NodesMaster &nodesMaster)
-{
-  if constexpr (
-      hasAttributeIfReflectable<open62541Cpp::attribute::UaObjectType, T>() ||
-      hasAttributeIfReflectable<open62541Cpp::attribute::UaVariableType, T>())
-  {
-    unbindMembersRefl(member, pServer, nodeId, nodesMaster);
-  }
-  else if constexpr (
-      is_same_template<T, BindableMember>::value)
-  {
-    if constexpr (
-        hasAttributeIfReflectable<open62541Cpp::attribute::UaObjectType>(member.value) ||
-        hasAttributeIfReflectable<open62541Cpp::attribute::UaVariableType>(member.value))
-    {
-      unbindMembersRefl(member.value, pServer, nodeId, nodesMaster);
-    }
-    else
-    {
-      static_assert(always_false<T>::value, "BindableMember must be an Object or VariableType");
-    }
-  }
-
-  nodesMaster.Remove(nodeId);
-  if constexpr (
-      is_base_of_template<BindableMember, T>::value)
-  {
-    member.ResetBind();
-  }
+  std::visit(
+      [&](auto &&arg) {
+        MemberRefl(arg, pServer, nodeId, nodesMaster);
+      },
+      member);
 }
 
 template <typename T>
-void bindPlaceholder(
+void Bind::Placeholder(
     std::list<T> &member,
     UA_Server *pServer,
     open62541Cpp::UA_NodeId nodeId,
@@ -444,7 +275,7 @@ void bindPlaceholder(
       std::cout << "Placeholder type match" << std::endl;
       member.push_back(T());
       T &instance = *(member.rbegin());
-      bindMembersRefl(instance, pServer, open62541Cpp::UA_NodeId(browseResult.references[i].nodeId.nodeId), nodesMaster);
+      MembersRefl(instance, pServer, open62541Cpp::UA_NodeId(browseResult.references[i].nodeId.nodeId), nodesMaster);
     }
   }
 
@@ -452,83 +283,4 @@ void bindPlaceholder(
   UA_BrowseDescription_deleteMembers(&brDesc);
 }
 
-/**
- * @brief Get the BrowseName from a member
- * Checks specific BrowseName definition, a
- * @tparam T
- * @param member
- * @param pServer
- * @return open62541Cpp::UA_RelativPathElement
- */
-template <typename B, typename T, size_t N>
-open62541Cpp::UA_RelativPathElement getBrowseName(const B &instance, const refl::descriptor::field_descriptor<T, N> &member, UA_Server *pServer)
-{
-  std::uint16_t nsIndex = ~static_cast<std::uint16_t>(0);
-  std::string name(member.name);
-  const char *nsUri = nullptr;
-  if constexpr (refl::descriptor::has_attribute<open62541Cpp::attribute::UaBrowseName>(refl::descriptor::field_descriptor<T, N>()))
-  {
-    const auto &attrBrowseName = refl::descriptor::get_attribute<open62541Cpp::attribute::UaBrowseName>(member);
-    nsUri = attrBrowseName.NsURI;
-
-    if (attrBrowseName.Name != nullptr)
-    {
-      name = attrBrowseName.Name;
-    }
-  }
-  else if constexpr (refl::descriptor::has_attribute<open62541Cpp::attribute::UaObjectType>(refl::reflect<B>()))
-  {
-    // Take index from type as default BrowseName Index
-    auto objTypeAttr = refl::descriptor::get_attribute<open62541Cpp::attribute::UaObjectType>(refl::reflect<B>());
-    nsUri = objTypeAttr.NodeId.NsUri;
-  }
-  else if constexpr (refl::descriptor::has_attribute<open62541Cpp::attribute::UaVariableType>(refl::reflect<B>()))
-  {
-    // Take index from type as default BrowseName Index
-    auto varTypeAttr = refl::descriptor::get_attribute<open62541Cpp::attribute::UaVariableType>(refl::reflect<B>());
-    nsUri = varTypeAttr.NodeId.NsUri;
-  }
-  else
-  {
-    static_assert(always_false<B>::value, "Unknown source of browse name");
-  }
-
-  if (nsUri != nullptr)
-  {
-    nsIndex = nsFromUri(pServer, nsUri);
-  }
-  else
-  {
-    std::cout << "Namespace URI null" << std::endl;
-    throw std::runtime_error("Namespace URI is null, no index for browse name could be identified.");
-  }
-
-  return open62541Cpp::UA_RelativPathElement(nsIndex, name);
-}
-
-template <typename T>
-void setBindOrMandatory(BindableMember<T> &instance, bool bind, bool mandatory)
-{
-  if (bind)
-  {
-    instance.SetBind();
-  }
-
-  if (mandatory)
-  {
-    instance.SetMandatory();
-  }
-}
-
-template <typename T>
-void setAddrSpaceLocation(BindableMember<T> &instance, const open62541Cpp::UA_NodeId &parentNodeId, const open62541Cpp::UA_RelativPathElement pathEl)
-{
-  instance.ParentNodeId = parentNodeId;
-  instance.RelativPathElement = pathEl;
-}
-
-template <typename T>
-void setMemberInTypeNodeId(BindableMember<T> &instance, const open62541Cpp::constexp::NodeId &memberInTypeNodeId, UA_Server *pServer)
-{
-  instance.MemerInTypeNodeId = memberInTypeNodeId.UANodeId(pServer);
-}
+} // namespace UmatiServerLib

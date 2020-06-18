@@ -119,7 +119,7 @@ set_target_properties(machinetool_generated PROPERTIES DEBUG_POSTFIX "d")
 add_library(ExampleServerLib
     BindValue.cpp
     BindStruct.cpp
-    BindRefl.cpp
+    BindHelper.cpp
     NodesMaster.cpp
     NodeValue.cpp
     Util.cpp

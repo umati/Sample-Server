@@ -106,5 +106,5 @@ void InstantiateOptional(BINDABLEMEMBER_T<T> &memberPar, UA_Server *pServer, Nod
     throw std::runtime_error(ss.str());
   }
 
-  bindMemberRefl(memberPar, pServer, member.NodeId, nodesMaster);
+  UmatiServerLib::Bind::MemberRefl(memberPar, pServer, member.NodeId, nodesMaster);
 }

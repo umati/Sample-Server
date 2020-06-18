@@ -57,6 +57,6 @@ protected:
             throw std::runtime_error("Could not create event.");
         }
 
-        bindMembersRefl(Data, pServer, EventNodeId, nodesMaster);
+        UmatiServerLib::Bind::MembersRefl(Data, pServer, EventNodeId, nodesMaster);
     }
 };

@@ -68,6 +68,6 @@ protected:
       throw std::runtime_error("Could not create condition.");
     }
 
-    bindMembersRefl(Data, pServer, ConditionNodeId, nodesMaster);
+    UmatiServerLib::Bind::MembersRefl(Data, pServer, ConditionNodeId, nodesMaster);
   }
 };

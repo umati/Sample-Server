@@ -138,6 +138,8 @@ target_link_libraries(ExampleServerLib PUBLIC reflCpp::reflCpp)
 add_executable(
     ${PROJECT_NAME}
     ExampleMachinetoolServer.cpp
+    MachineTools/FullMachineTool.cpp
+    MachineTools/SimulatedMachineTool.cpp
 )
 
 set_target_properties(${PROJECT_NAME} PROPERTIES LINKER_LANGUAGE CXX)

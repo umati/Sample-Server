@@ -1,5 +1,5 @@
 ///
-/// \file BindStruct.cpp
+/// \file Test_BindStructValue.cpp
 /// \author Christian von Arnim
 /// \date 11.02.2020
 ///
@@ -8,7 +8,13 @@
 #include "../OpcUaTypes/LocalizedText.hpp"
 #include "../OpcUaTypes/EUInformation.hpp"
 #include <Open62541Cpp/UA_String.hpp>
-#include "../BindStruct.hpp"
+#include "../ConvertStructValue.hpp"
+
+class Test_Exposure : public UmatiServerLib::ConvertStructValue
+{
+  public:
+  using ConvertStructValue::convertToVariantRefl;
+};
 
 TEST(ExampleServerLib, BindStructure_Basic)
 {
@@ -19,7 +25,7 @@ TEST(ExampleServerLib, BindStructure_Basic)
   };
 
   UA_Variant variant;
-  internal_bindStruct::convertToVariantRefl(&oriLocalText, &UA_TYPES[UA_TYPES_LOCALIZEDTEXT], &variant);
+  Test_Exposure::convertToVariantRefl(&oriLocalText, &UA_TYPES[UA_TYPES_LOCALIZEDTEXT], &variant);
   UA_LocalizedText *pLocalizedText = reinterpret_cast<UA_LocalizedText *>(variant.data);
   ASSERT_TRUE(pLocalizedText);
   auto lTxt = UA_LOCALIZEDTEXT_ALLOC("test", "content");
@@ -44,7 +50,7 @@ TEST(ExampleServerLib, BindStructure_Recursive)
   };
 
   UA_Variant variant;
-  internal_bindStruct::convertToVariantRefl(&oriEuInformation, &UA_TYPES[UA_TYPES_EUINFORMATION], &variant);
+  Test_Exposure::convertToVariantRefl(&oriEuInformation, &UA_TYPES[UA_TYPES_EUINFORMATION], &variant);
   UA_EUInformation * pEuInformation = reinterpret_cast<UA_EUInformation *>(variant.data);
 
   auto newEuInformation = open62541Cpp::EUInformation_t::fromUa(*pEuInformation);

@@ -117,8 +117,8 @@ target_link_libraries(machinetool_generated PUBLIC open62541::open62541)
 set_target_properties(machinetool_generated PROPERTIES DEBUG_POSTFIX "d")
 
 add_library(ExampleServerLib
-    BindValue.cpp
-    BindStruct.cpp
+    ConvertSimpleValue.cpp
+    ConvertStructValue.cpp
     BindHelper.cpp
     NodesMaster.cpp
     NodeValue.cpp

@@ -3,6 +3,8 @@
 #include "../BindRefl.hpp"
 #include "../OpcUaCondition.hpp"
 #include "../TypeDefinition/MachineTool/Alert.hpp"
+#include "../TypeDefinition/MachineTool/NotificationEvent.hpp"
+#include "../ServerHelper.hpp"
 
 FullMachineTool::FullMachineTool(UA_Server *pServer)
     : m_pServer(pServer), NsIndex(m_nsIndex), n(pServer)
@@ -41,11 +43,8 @@ void FullMachineTool::CreateObject()
   InstantiateOptional(mt.Production->ActiveProgram->State, m_pServer, n);
   InstantiateOptional(mt.Identification->YearOfConstruction, m_pServer, n);
   InstantiateOptional(mt.Production->ProductionPlan, m_pServer, n);
-  auto st = UA_Server_writeEventNotifier(m_pServer, *mt.Production->ProductionPlan.NodeId.NodeId, UA_EVENTNOTIFIERTYPE_SUBSCRIBETOEVENTS);
-  if (st != UA_STATUSCODE_GOOD)
-  {
-    std::cout << "WriteEventNotifier failed: " << UA_StatusCode_name(st) << std::endl;
-  }
+  writeEventNotifier(m_pServer, mt.Production->ProductionPlan.NodeId);
+
   InstantiateOptional(mt.Production->ProductionPlan->NodeVersion, m_pServer, n);
   // Hack: Remove from bindings (Will be written by BindMemberPlaceholder)
   // Can keep binding when writing is supported.
@@ -56,19 +55,21 @@ void FullMachineTool::CreateObject()
   job.RunsPlanned = 1;
 
   InstantiateOptional(mt.Notification->Messages, m_pServer, n);
+  writeEventNotifier(m_pServer, mt.Notification->Messages.NodeId);
   InstantiateOptional(mt.Notification->Prognoses, m_pServer, n);
   InstantiateOptional(mt.Notification->Prognoses->NodeVersion, m_pServer, n);
   // Hack: Remove from bindings (Will be written by BindMemberPlaceholder)
   // Can keep binding when writing is supported.
   n.Remove(mt.Notification->Prognoses->NodeVersion.NodeId);
+  writeEventNotifier(m_pServer, mt.Notification->Prognoses.NodeId);
   auto &maintenancePrognosis = mt.Notification->Prognoses->Prognosis.Add<machineTool::MaintenancePrognosis_t>(m_pServer, n, {m_nsIndex, "Maintenance"});
-  maintenancePrognosis.Activity = open62541Cpp::LocalizedText_t{"", "Replace actuator."};
+  maintenancePrognosis.Activity = {"", "Replace actuator."};
   auto &utilityPrognosis = mt.Notification->Prognoses->Prognosis.Add<machineTool::UtilityChangePrognosis_t>(m_pServer, n, {m_nsIndex, "Utility"});
-  utilityPrognosis.UtilityName = open62541Cpp::LocalizedText_t{"", "H²"};
+  utilityPrognosis.UtilityName = {"", "H²"};
 
-  mt.Identification->Manufacturer = open62541Cpp::LocalizedText_t{.locale = "c++", .text = "ISW Christian von Arnim"};
+  mt.Identification->Manufacturer = {"c++", "ISW Christian von Arnim"};
   mt.Identification->YearOfConstruction = 2020;
-  mt.Identification->Location = std::string("AMB 0 0/N 48.781340 E 9.165731");
+  mt.Identification->Location = "AMB 0 0/N 48.781340 E 9.165731";
 
   InstantiateOptional(mt.Monitoring->Stacklight, m_pServer, n);
   InstantiateOptional(mt.Monitoring->Stacklight->NodeVersion, m_pServer, n);
@@ -86,7 +87,7 @@ void FullMachineTool::CreateObject()
   tool.Locked->Value = false;
   tool.Locked->ReasonForLocking = UA_ToolLocked::UA_TOOLLOCKED_OTHER;
   tool.Locked->ReasonForLocking.StatusCode = UA_STATUSCODE_BADNOTHINGTODO;
-  tool.Name = open62541Cpp::LocalizedText_t{"", "Tool1"};
+  tool.Name = {"", "Tool1"};
   InstantiateOptional(tool.Name, m_pServer, n);
 }
 
@@ -98,35 +99,35 @@ void FullMachineTool::Simulate()
   {
   case 0:
   {
-    mt.Production->ActiveProgram->State->CurrentState->Value = open62541Cpp::LocalizedText_t{"", "Initializing"};
+    mt.Production->ActiveProgram->State->CurrentState->Value = {"", "Initializing"};
     mt.Production->ActiveProgram->State->CurrentState->Id = UA_NODEID_NUMERIC(nsFromUri(m_pServer, constants::NsMachineToolUri), UA_MACHINETOOLID_PRODUCTIONSTATEMACHINETYPE_INITIALIZING);
     mt.Production->ActiveProgram->State->CurrentState->Number = 0;
     break;
   }
   case 2:
   {
-    mt.Production->ActiveProgram->State->CurrentState->Value = open62541Cpp::LocalizedText_t{"", "Running"};
+    mt.Production->ActiveProgram->State->CurrentState->Value = {"", "Running"};
     mt.Production->ActiveProgram->State->CurrentState->Id = UA_NODEID_NUMERIC(nsFromUri(m_pServer, constants::NsMachineToolUri), UA_MACHINETOOLID_PRODUCTIONSTATEMACHINETYPE_RUNNING);
     mt.Production->ActiveProgram->State->CurrentState->Number = 1;
     break;
   }
   case 4:
   {
-    mt.Production->ActiveProgram->State->CurrentState->Value = open62541Cpp::LocalizedText_t{"", "Interrupted"};
+    mt.Production->ActiveProgram->State->CurrentState->Value = {"", "Interrupted"};
     mt.Production->ActiveProgram->State->CurrentState->Id = UA_NODEID_NUMERIC(nsFromUri(m_pServer, constants::NsMachineToolUri), UA_MACHINETOOLID_PRODUCTIONSTATEMACHINETYPE_INTERRUPTED);
     mt.Production->ActiveProgram->State->CurrentState->Number = 3;
     break;
   }
   case 6:
   {
-    mt.Production->ActiveProgram->State->CurrentState->Value = open62541Cpp::LocalizedText_t{"", "Ended"};
+    mt.Production->ActiveProgram->State->CurrentState->Value = {"", "Ended"};
     mt.Production->ActiveProgram->State->CurrentState->Id = UA_NODEID_NUMERIC(nsFromUri(m_pServer, constants::NsMachineToolUri), UA_MACHINETOOLID_PRODUCTIONSTATEMACHINETYPE_ENDED);
     mt.Production->ActiveProgram->State->CurrentState->Number = 2;
     break;
   }
   case 8:
   {
-    mt.Production->ActiveProgram->State->CurrentState->Value = open62541Cpp::LocalizedText_t{"", "Aborted"};
+    mt.Production->ActiveProgram->State->CurrentState->Value = {"", "Aborted"};
     mt.Production->ActiveProgram->State->CurrentState->Id = UA_NODEID_NUMERIC(nsFromUri(m_pServer, constants::NsMachineToolUri), UA_MACHINETOOLID_PRODUCTIONSTATEMACHINETYPE_ABORTED);
     mt.Production->ActiveProgram->State->CurrentState->Number = 4;
     break;
@@ -140,17 +141,17 @@ void FullMachineTool::Simulate()
     {
       std::stringstream ss;
       ss << "Cond Message: " << m_simStep;
-      m_pAlert->Data.Message = open62541Cpp::LocalizedText_t{"", ss.str()};
+      m_pAlert->Data.Message = {"", ss.str()};
     }
     m_pAlert->Data.SourceName = "SrcCond";
     m_pAlert->Data.Severity = 123;
     m_pAlert->Data.Retain = true;
-    m_pAlert->Data.EnabledState->Value = open62541Cpp::LocalizedText_t{"", "Enabled"};
+    m_pAlert->Data.EnabledState->Value = {"", "Enabled"};
     m_pAlert->Data.EnabledState->Id = true;
     m_pAlert->Data.AckedState->Id = false;
-    m_pAlert->Data.AckedState->Value = open62541Cpp::LocalizedText_t{"", "Unacknowledged"};
+    m_pAlert->Data.AckedState->Value = {"", "Unacknowledged"};
     m_pAlert->Data.ConfirmedState->Id = false;
-    m_pAlert->Data.ConfirmedState->Value = open62541Cpp::LocalizedText_t{"", "Unconfirmed"};
+    m_pAlert->Data.ConfirmedState->Value = {"", "Unconfirmed"};
 
     m_pAlert->Trigger();
 
@@ -167,11 +168,11 @@ void FullMachineTool::Simulate()
   {
     m_pAlert->Data.Retain = false;
     m_pAlert->Data.EnabledState->Id = true;
-    m_pAlert->Data.EnabledState->Value = open62541Cpp::LocalizedText_t{"", "Disabled"};
+    m_pAlert->Data.EnabledState->Value = {"", "Disabled"};
     m_pAlert->Data.AckedState->Id = true;
-    m_pAlert->Data.AckedState->Value = open62541Cpp::LocalizedText_t{"", "Acknowledged"};
+    m_pAlert->Data.AckedState->Value = {"", "Acknowledged"};
     m_pAlert->Data.ConfirmedState->Id = true;
-    m_pAlert->Data.ConfirmedState->Value = open62541Cpp::LocalizedText_t{"", "Confirmed"};
+    m_pAlert->Data.ConfirmedState->Value = {"", "Confirmed"};
     m_pAlert->Trigger();
     m_pAlert = nullptr;
 
@@ -180,5 +181,17 @@ void FullMachineTool::Simulate()
       auto lastIt = --mt.Production->ProductionPlan->OrderedObjects->end();
       mt.Production->ProductionPlan->OrderedObjects.Delete(lastIt, m_pServer, n);
     }
+  }
+
+  if ((m_simStep % 10) == 8)
+  {
+    machineTool::NotificationEvent_t notification;
+    notification.Identifier = "Custom Event";
+    std::stringstream ss;
+    ss << "Full MT Msg " << m_simStep;
+    notification.Message = {"", ss.str()};
+    notification.Severity = (m_simStep-8) % 300;
+    notification.SourceName = "FullMachineTool";
+    OpcUaEvent ev(notification, m_pServer, mt.Notification->Messages.NodeId);
   }
 }

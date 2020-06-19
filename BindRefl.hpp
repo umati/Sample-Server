@@ -8,7 +8,7 @@
 #include <list>
 #include <Open62541Cpp/UA_RelativPathBase.hpp>
 #include <Open62541Cpp/UA_BrowsePath.hpp>
-#include "BindValueHelper.hpp"
+#include "BindVariable.hpp"
 #include "Util.hpp"
 #include "OpcUaTypes/Attributes.hpp"
 #include "Exceptions/NodeNotFound.hpp"
@@ -189,22 +189,11 @@ void Bind::MemberRefl(
   }
   else
   {
-    if constexpr (is_same_template<T, BindableMemberValue>::value)
-    {
-      bindVariableByPath(
-          pServer,
-          nodeId,
-          nodesMaster,
-          member);
-    }
-    else
-    {
-      bindValueByPath(
-          pServer,
-          nodeId,
-          nodesMaster,
-          member);
-    }
+    BindVariable::ToNode(
+        pServer,
+        nodeId,
+        nodesMaster,
+        member);
   }
 }
 

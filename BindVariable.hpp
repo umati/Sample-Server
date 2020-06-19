@@ -1,5 +1,5 @@
 ///
-/// \file bindValueHelper.hpp
+/// \file BindVariable.hpp
 /// \author Christian von Arnim
 /// \date 15.01.2020
 ///
@@ -19,26 +19,24 @@
 #include "BindStruct.hpp"
 #include "BindableMemberValue.hpp"
 #include "Util.hpp"
-
-// Internal implementation for different cases
-struct bindValueByPathInternal
+namespace UmatiServerLib
 {
+class BindVariable{
+public:
+  template <class T>
+  static void ToNode(
+    UA_Server *pServer,
+    const open62541Cpp::UA_NodeId &nodeId,
+    NodesMaster &nodesMaster,
+    T &value);
 
   template <class T>
-  friend void bindValueByPath(
-      UA_Server *pServer,
-      const open62541Cpp::UA_NodeId &nodeId,
-      NodesMaster &nodesMaster,
-      T &value);
-
-  template <class T>
-  friend void bindVariableByPath(
-      UA_Server *pServer,
-      const open62541Cpp::UA_NodeId &nodeId,
-      NodesMaster &nodesMaster,
-      BindableMemberValue<T> &variable);
-
-private:
+  static void ToNode(
+    UA_Server *pServer,
+    const open62541Cpp::UA_NodeId &nodeId,
+    NodesMaster &nodesMaster,
+    BindableMemberValue<T> &variable);
+protected:
   // Primitive types including string
   template <typename T>
   static copyToVariantFunc getToVariantFunc(T &value)
@@ -66,7 +64,7 @@ private:
     return getToVariantFuncArray(*reinterpret_cast<std::vector<int32_t>*>(&value));
   }
 
-  // capture structs
+// Handle structs
   template <typename T>
   static copyToVariantFunc bindStructuredValueByPath(
       UA_Server *pServer,
@@ -100,7 +98,7 @@ private:
     }
   }
 
-  // capture structs arrays
+  // Handle struct arrays
   template <typename T>
   static copyToVariantFunc bindStructuredValueByPathArray(
       UA_Server *pServer,
@@ -143,7 +141,7 @@ private:
   {
     if constexpr (std::is_enum<T>::value)
     {
-      return bindValueByPathInternal::getToVariantFuncForEnumArray(value);
+      return getToVariantFuncForEnumArray(value);
     }
     else if constexpr (
         std::is_class<T>::value &&
@@ -151,11 +149,11 @@ private:
             std::is_same<std::string, T>::value ||
             std::is_same<open62541Cpp::DateTime_t, T>::value))
     {
-      return bindValueByPathInternal::bindStructuredValueByPathArray(pServer, nodeId, value);
+      return bindStructuredValueByPathArray(pServer, nodeId, value);
     }
     else
     {
-      return bindValueByPathInternal::getToVariantFuncArray(value);
+      return getToVariantFuncArray(value);
     }
   }
 
@@ -167,7 +165,7 @@ private:
   {
     if constexpr (std::is_enum<T>::value)
     {
-      return bindValueByPathInternal::getToVariantFuncForEnum(value);
+      return getToVariantFuncForEnum(value);
     }
     else if constexpr (
         std::is_class<T>::value &&
@@ -175,23 +173,25 @@ private:
             std::is_same<std::string, T>::value ||
             std::is_same<open62541Cpp::DateTime_t, T>::value))
     {
-      return bindValueByPathInternal::bindStructuredValueByPath(pServer, nodeId, value);
+      return bindStructuredValueByPath(pServer, nodeId, value);
     }
     else
     {
-      return bindValueByPathInternal::getToVariantFunc(value);
+      return getToVariantFunc(value);
     }
   }
+
 };
 
+
 template <class T>
-void bindValueByPath(
+void BindVariable::ToNode(
     UA_Server *pServer,
     const open62541Cpp::UA_NodeId &nodeId,
     NodesMaster &nodesMaster,
     T &value)
 {
-  copyToVariantFunc toVariantFunc = bindValueByPathInternal::getToVariantFunc2(pServer, nodeId, value);
+  copyToVariantFunc toVariantFunc = getToVariantFunc2(pServer, nodeId, value);
 
   nodesMaster(nodeId) = [toVariantFunc] {
     UA_DataValue dataValue;
@@ -205,13 +205,13 @@ void bindValueByPath(
 }
 
 template <class T>
-void bindVariableByPath(
+void BindVariable::ToNode(
     UA_Server *pServer,
     const open62541Cpp::UA_NodeId &nodeId,
     NodesMaster &nodesMaster,
     BindableMemberValue<T> &variable)
 {
-  copyToVariantFunc toVariantFunc = bindValueByPathInternal::getToVariantFunc2(pServer, nodeId, variable.value);
+  copyToVariantFunc toVariantFunc = getToVariantFunc2(pServer, nodeId, variable.value);
   auto pVariable = &variable;
   nodesMaster(nodeId) = [toVariantFunc, pVariable] {
     UA_DataValue dataValue;
@@ -232,4 +232,6 @@ void bindVariableByPath(
     }
     return dataValue;
   };
+}
+
 }

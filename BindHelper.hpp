@@ -1,6 +1,6 @@
 #pragma once
 
-#include <open62541Cpp/UA_NodeId.hpp>
+#include <Open62541Cpp/UA_NodeId.hpp>
 #include <open62541/server.h>
 #include <refl.hpp>
 #include <Open62541Cpp/UA_BrowsePath.hpp>

@@ -4,9 +4,9 @@
 #include "NodesMaster.hpp"
 #include "Exceptions/NodeNotFound.hpp"
 #include "BindHelper.hpp"
-#include <open62541Cpp/UA_NodeId.hpp>
-#include <open62541Cpp/UA_RelativPathBase.hpp>
-#include <open62541Cpp/UA_BrowsePath.hpp>
+#include <Open62541Cpp/UA_NodeId.hpp>
+#include <Open62541Cpp/UA_RelativPathBase.hpp>
+#include <Open62541Cpp/UA_BrowsePath.hpp>
 #include <iostream>
 #include <list>
 

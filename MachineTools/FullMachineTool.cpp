@@ -55,6 +55,7 @@ void FullMachineTool::CreateObject()
   job.RunsCompleted = 0;
   job.RunsPlanned = 1;
 
+  InstantiateOptional(mt.Notification->Messages, m_pServer, n);
   InstantiateOptional(mt.Notification->Prognoses, m_pServer, n);
   InstantiateOptional(mt.Notification->Prognoses->NodeVersion, m_pServer, n);
   // Hack: Remove from bindings (Will be written by BindMemberPlaceholder)
@@ -68,6 +69,25 @@ void FullMachineTool::CreateObject()
   mt.Identification->Manufacturer = open62541Cpp::LocalizedText_t{.locale = "c++", .text = "ISW Christian von Arnim"};
   mt.Identification->YearOfConstruction = 2020;
   mt.Identification->Location = std::string("AMB 0 0/N 48.781340 E 9.165731");
+
+  InstantiateOptional(mt.Monitoring->Stacklight, m_pServer, n);
+  InstantiateOptional(mt.Monitoring->Stacklight->NodeVersion, m_pServer, n);
+  auto &light1 = mt.Monitoring->Stacklight->OrderedObjects.Add(m_pServer, n, {m_nsIndex, "Light 1"});
+  light1.IsPartOfBase = false;
+  light1.NumberInList = 1;
+  light1.SignalOn = true;
+
+  InstantiateOptional(mt.Equipment->Tools, m_pServer, n);
+  InstantiateOptional(mt.Equipment->Tools->NodeVersion, m_pServer, n);
+  n.Remove(mt.Equipment->Tools->NodeVersion.NodeId);
+  auto &tool = mt.Equipment->Tools->Tool.Add(m_pServer, n, {m_nsIndex, "Tool1"});
+  tool.ControlIdentifier1 = 2;
+  tool.ControlIdentifierInterpretation = UA_ToolManagement::UA_TOOLMANAGEMENT_NUMBERBASED;
+  tool.Locked->Value = false;
+  tool.Locked->ReasonForLocking = UA_ToolLocked::UA_TOOLLOCKED_OTHER;
+  tool.Locked->ReasonForLocking.StatusCode = UA_STATUSCODE_BADNOTHINGTODO;
+  tool.Name = open62541Cpp::LocalizedText_t{"", "Tool1"};
+  InstantiateOptional(tool.Name, m_pServer, n);
 }
 
 void FullMachineTool::Simulate()

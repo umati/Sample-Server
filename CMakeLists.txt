@@ -110,6 +110,7 @@ add_library(machinetool_generated
     src_generated/namespace_machinetool_generated.c
     src_generated/types_machinetool_generated.h
     src_generated/machinetool_nodeids.h
+    src_generated/industrial_automation_nodeids.h
     src_generated/namespace_iswexample_generated.c
     src_generated/iswexample.h
     )

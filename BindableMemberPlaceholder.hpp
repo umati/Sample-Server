@@ -8,7 +8,7 @@
 #include "Util.hpp"
 #include "OpcUaEvent.hpp"
 #include "TypeDefinition/ns0/GeneralModelChangeEvent.hpp"
-
+#include <variant>
 
 ///\TODO enable if BINDABLEMEMBER_T is BindableMember(Value)
 template <template <typename...> class BINDABLEMEMBER_T, typename T /*, typename = std::enable_if_t<is_base_of_template<BindableMember, BINDABLEMEMBER_T<T>>::value>*/>
@@ -101,7 +101,7 @@ public:
     if (status != UA_STATUSCODE_GOOD)
     {
       std::stringstream ss;
-      ss << "Could create node, Error: " << UA_StatusCode_name(status);
+      ss << "Could not create placeholder node, Error: " << UA_StatusCode_name(status);
       throw std::runtime_error(ss.str());
     }
 

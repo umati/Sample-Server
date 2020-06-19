@@ -12,6 +12,7 @@
 
 open62541Cpp::UA_QualifiedName readBrowseName(UA_Server *pServer, open62541Cpp::UA_NodeId nodeId);
 UA_NodeClass readNodeClass(UA_Server *pServer, open62541Cpp::UA_NodeId nodeId);
+open62541Cpp::UA_NodeId readDataType(UA_Server *pServer, open62541Cpp::UA_NodeId nodeId);
 open62541Cpp::UA_NodeId readTypeDefinition(UA_Server *pServer, open62541Cpp::UA_NodeId nodeId);
 open62541Cpp::UA_NodeId getReferenceTypeFromMemberNode(UA_Server *pServer, open62541Cpp::UA_NodeId nodeId, open62541Cpp::UA_NodeId parentNodeId);
 
@@ -76,7 +77,9 @@ void InstantiateOptional(BINDABLEMEMBER_T<T> &memberPar, UA_Server *pServer, Nod
       typeDef = varTypeAttr.NodeId.UANodeId(pServer);
     }
       UA_VariableAttributes varAttr = UA_VariableAttributes_default;
+      auto dataType = readDataType(pServer, member.MemerInTypeNodeId);
       UA_String_copy(&browseName.QualifiedName->name, &varAttr.displayName.text);
+      UA_NodeId_copy(dataType.NodeId, &varAttr.dataType);
       {
         status = UA_Server_addVariableNode(
             pServer,
@@ -102,7 +105,7 @@ void InstantiateOptional(BINDABLEMEMBER_T<T> &memberPar, UA_Server *pServer, Nod
   if (status != UA_STATUSCODE_GOOD)
   {
     std::stringstream ss;
-    ss << "Could create node, Error: " << UA_StatusCode_name(status);
+    ss << "Could not create optional node, Error: " << UA_StatusCode_name(status);
     throw std::runtime_error(ss.str());
   }
 

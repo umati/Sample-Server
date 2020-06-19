@@ -29,7 +29,9 @@ template <typename T>
 void setMemberInTypeNodeId(BindableMember<T> &instance, const open62541Cpp::constexp::NodeId &nodeId, UA_Server *pServer);
 
 template <typename T, typename = std::enable_if_t<!is_base_of_template<BindableMember, T>::value>>
-void setMemberInTypeNodeId(T &instance, const open62541Cpp::constexp::NodeId &nodeId, UA_Server *pServer){};
+void setMemberInTypeNodeId(T &instance, const open62541Cpp::constexp::NodeId &nodeId, UA_Server *pServer){
+  static_assert(always_false<T>::value, "Try to set MemberInType for non Bindable Member");
+};
 
 template <typename T>
 void setAddrSpaceLocation(BindableMember<T> &instance, const open62541Cpp::UA_NodeId &parentNodeId, const open62541Cpp::UA_RelativPathElement pathEl);

@@ -28,6 +28,20 @@ UA_NodeClass readNodeClass(UA_Server *pServer, open62541Cpp::UA_NodeId nodeId)
   return ret;
 }
 
+open62541Cpp::UA_NodeId readDataType(UA_Server *pServer, open62541Cpp::UA_NodeId nodeId)
+{
+  open62541Cpp::UA_NodeId ret((std::uint16_t)0,0);
+  UA_StatusCode status = UA_Server_readDataType(pServer, *nodeId.NodeId, ret.NodeId);
+  if (status != UA_STATUSCODE_GOOD)
+  {
+    std::stringstream ss;
+    ss << "Could not read DataType from NodeId, Error: " << UA_StatusCode_name(status);
+    throw std::runtime_error(ss.str());
+  }
+
+  return ret;
+}
+
 open62541Cpp::UA_NodeId readTypeDefinition(UA_Server *pServer, open62541Cpp::UA_NodeId nodeId)
 {
   open62541Cpp::UA_NodeId ret;

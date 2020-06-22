@@ -7,33 +7,15 @@
 #include "../ServerHelper.hpp"
 
 FullMachineTool::FullMachineTool(UA_Server *pServer)
-    : m_pServer(pServer), NsIndex(m_nsIndex), n(pServer)
+    : InstantiatedMachineTool(pServer)
 {
+  MachineName = "FullMachineTool";
   CreateObject();
 }
 
 void FullMachineTool::CreateObject()
 {
-  m_nsIndex = UA_Server_addNamespace(m_pServer, "http://example.com/FullMachineTool/");
-  UA_ObjectAttributes objAttr = UA_ObjectAttributes_default;
-
-  objAttr.displayName = UA_LOCALIZEDTEXT_ALLOC("", "FullMachineTool");
-  objAttr.eventNotifier = UA_EVENTNOTIFIERTYPE_SUBSCRIBETOEVENTS;
-  open62541Cpp::UA_NodeId inst2((UA_UInt16)0, 0);
-
-  auto status = UA_Server_addObjectNode(
-      m_pServer,
-      UA_NODEID_NUMERIC(m_nsIndex, 0),
-      UA_NODEID_NUMERIC(nsFromUri(m_pServer, constants::NsMachineryUri), UA_MACHINERY_ID_MACHINES),
-      UA_NODEID_NUMERIC(0, UA_NS0ID_ORGANIZES),
-      *open62541Cpp::UA_QualifiedName(m_nsIndex, "FullMachineTool").QualifiedName,
-      UA_NODEID_NUMERIC(nsFromUri(m_pServer, constants::NsMachineToolUri), UA_MACHINETOOLID_MACHINETOOLTYPE),
-      objAttr,
-      nullptr,
-      m_nodeId.NodeId);
-
-  UA_ObjectAttributes_clear(&objAttr);
-  UmatiServerLib::Bind::MembersRefl(mt, m_pServer, m_nodeId, n);
+  InstantiatedMachineTool::CreateObject();
 
   InstantiateIdentification();
   InstantiateMonitoring();
@@ -59,6 +41,8 @@ void FullMachineTool::CreateObject()
 
 void FullMachineTool::InstantiateIdentification()
 {
+  InstantiatedMachineTool::InstantiateIdentification();
+
   InstantiateOptional(mt.Identification->Location, m_pServer, n);
   InstantiateOptional(mt.Identification->YearOfConstruction, m_pServer, n);
   InstantiateOptional(mt.Identification->MonthOfConstruction, m_pServer, n);
@@ -66,9 +50,9 @@ void FullMachineTool::InstantiateIdentification()
   InstantiateOptional(mt.Identification->ComponentName, m_pServer, n);
   InstantiateOptional(mt.Identification->Model, m_pServer, n);
 
-  mt.Identification->Manufacturer = {"c++", "ISW Christian von Arnim"};
   mt.Identification->YearOfConstruction = 2020;
-  mt.Identification->Location = "AMB 0 0/N 48.781340 E 9.165731";
+  mt.Identification->Location = "AMB 0 1/N 48.781340 E 9.165731";
+  mt.Identification->SerialNumber = std::string{"3-1415926535-8979323846"};
 }
 void FullMachineTool::InstantiateTools()
 {
@@ -94,12 +78,12 @@ void FullMachineTool::InstantiateTools()
   auto &multiTool = mt.Equipment->Tools->Tool.Add<machineTool::MultiTool_t>(m_pServer, n, {m_nsIndex, "Multi 1"});
   multiTool.Name = {"", "Multi 1"};
   multiTool.Identifier = "Multi01-ID";
-  for(std::size_t i = 0; i < 3; ++i)
+  for (std::size_t i = 0; i < 3; ++i)
   {
     std::stringstream ss;
     ss << "SubTool " << i;
     auto &subTool = multiTool.Tool.Add(m_pServer, n, {m_nsIndex, ss.str()});
-    subTool.ControlIdentifier1 = i*1021 % 881;
+    subTool.ControlIdentifier1 = i * 1021 % 881;
     subTool.ControlIdentifierInterpretation = UA_ToolManagement::UA_TOOLMANAGEMENT_NUMBERBASED;
     subTool.Locked->Value = false;
     subTool.Locked->ReasonForLocking = UA_ToolLocked::UA_TOOLLOCKED_OTHER;
@@ -174,7 +158,6 @@ void FullMachineTool::InstantiatePrognosis()
   toolUnloadPrognosis.Location = {"", "Magazine 3"};
   auto &utilityPrognosis = mt.Notification->Prognoses->Prognosis.Add<machineTool::UtilityChangePrognosis_t>(m_pServer, n, {m_nsIndex, "UtilityChange"});
   utilityPrognosis.UtilityName = {"", "H²"};
-
 }
 
 void FullMachineTool::Simulate()

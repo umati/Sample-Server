@@ -22,12 +22,12 @@ public:
   /// NodeId of the parent element, enable creating an optional member later on
   open62541Cpp::UA_NodeId ParentNodeId;
 
-  /// \TODO replace by utilizing MemerInTypeNodeId
+  /// \TODO replace by utilizing MemberInTypeNodeId
   open62541Cpp::UA_RelativPathElement RelativPathElement;
 
   /// NodeId of this member in the type definition (taken from MemberInTypeNodeId atribute)
   /// \TODO Replace by pointer to attribute
-  open62541Cpp::UA_NodeId MemerInTypeNodeId;
+  open62541Cpp::UA_NodeId MemberInTypeNodeId;
 
   /// NodeId, when binded. Enable deletion later on
   open62541Cpp::UA_NodeId NodeId;

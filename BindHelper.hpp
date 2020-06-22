@@ -162,5 +162,5 @@ void setAddrSpaceLocation(BindableMember<T> &instance, const open62541Cpp::UA_No
 template <typename T>
 void setMemberInTypeNodeId(BindableMember<T> &instance, const open62541Cpp::constexp::NodeId &memberInTypeNodeId, UA_Server *pServer)
 {
-  instance.MemerInTypeNodeId = memberInTypeNodeId.UANodeId(pServer);
+  instance.MemberInTypeNodeId = memberInTypeNodeId.UANodeId(pServer);
 }

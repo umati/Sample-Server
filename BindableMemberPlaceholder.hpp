@@ -18,7 +18,7 @@ public:
   template <typename ADDED_T = T>
   ADDED_T &Add(UA_Server *pServer, NodesMaster &nodesMaster, open62541Cpp::UA_QualifiedName browseName)
   {
-    if (this->ParentNodeId.NodeId == nullptr || this->MemerInTypeNodeId.NodeId == nullptr)
+    if (this->ParentNodeId.NodeId == nullptr || this->MemberInTypeNodeId.NodeId == nullptr)
     {
       throw std::runtime_error("Parent not bind.");
     }
@@ -40,14 +40,12 @@ public:
     else if constexpr (hasAttributeIfReflectable<open62541Cpp::attribute::UaVariableType, ADDED_T>())
     {
       nodeClass = UA_NODECLASS_VARIABLETYPE;
-      auto varTypeAttr = refl::descriptor::get_attribute<open62541Cpp::attribute::UaVariableType>(refl::reflect<ADDED_T>());
-      typeDef = varTypeAttr.NodeId.UANodeId(pServer);
     }
     else
     {
       static_assert(always_false<T>::value, "ADDED_T must have ObjectType or VariableType attribute");
     }
-    auto referenceType = getReferenceTypeFromMemberNode(pServer, this->MemerInTypeNodeId, this->ParentNodeId);
+    auto referenceType = getReferenceTypeFromMemberNode(pServer, this->MemberInTypeNodeId, this->ParentNodeId);
 
     UA_StatusCode status = -1;
     switch (nodeClass)
@@ -74,24 +72,7 @@ public:
     break;
     case UA_NODECLASS_VARIABLETYPE:
     {
-      UA_VariableAttributes varAttr = UA_VariableAttributes_default;
-      auto dataType = readDataType(pServer, this->MemerInTypeNodeId);
-      varAttr.valueRank = readValueRank(pServer, this->MemerInTypeNodeId);
-      UA_String_copy(&browseName.QualifiedName->name, &varAttr.displayName.text);
-      UA_NodeId_copy(dataType.NodeId, &varAttr.dataType);
-
-      status = UA_Server_addVariableNode(
-          pServer,
-          UA_NODEID_NUMERIC(browseName.QualifiedName->namespaceIndex, 0),
-          *this->ParentNodeId.NodeId,
-          *referenceType.NodeId,
-          *browseName.QualifiedName,
-          *typeDef.NodeId,
-          varAttr,
-          nullptr,
-          newEl.NodeId.NodeId);
-
-      UA_VariableAttributes_clear(&varAttr);
+      status = InstantiateVariable<ADDED_T>(pServer, this->MemberInTypeNodeId, browseName, referenceType, this->ParentNodeId, newEl.NodeId);
     }
     break;
     default:

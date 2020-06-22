@@ -19,6 +19,9 @@ class FullMachineTool : public SimulatedMachineTool
   const std::uint16_t &NsIndex;
   protected:
   void CreateObject();
+  void InstantiateIdentification();
+  void InstantiateMonitoring();
+  void InstantiateTools();
   
   std::uint16_t m_nsIndex;
   int m_simStep = 0;

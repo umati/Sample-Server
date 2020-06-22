@@ -16,6 +16,10 @@ struct ITagNameplate_t
 REFL_TYPE(di::ITagNameplate_t,
           open62541Cpp::attribute::UaObjectType{
               .NodeId = open62541Cpp::constexp::NodeId(constants::NsDIUri, UA_DIID_ITAGNAMEPLATETYPE)})
-REFL_FIELD(AssetId, open62541Cpp::attribute::PlaceholderOptional())
-REFL_FIELD(ComponentName, open62541Cpp::attribute::PlaceholderOptional())
+REFL_FIELD(AssetId, open62541Cpp::attribute::PlaceholderOptional(),
+          open62541Cpp::attribute::MemberInTypeNodeId{
+              .NodeId = open62541Cpp::constexp::NodeId(constants::NsDIUri, UA_DIID_ITAGNAMEPLATETYPE_ASSETID)})
+REFL_FIELD(ComponentName, open62541Cpp::attribute::PlaceholderOptional(),
+          open62541Cpp::attribute::MemberInTypeNodeId{
+              .NodeId = open62541Cpp::constexp::NodeId(constants::NsDIUri, UA_DIID_ITAGNAMEPLATETYPE_COMPONENTNAME)})
 REFL_END

@@ -9,6 +9,8 @@ namespace machinery
 struct IMachineVendorNameplate_t : public di::IVendorNameplate_t
 {
   BindableMemberValue<std::uint16_t> YearOfConstruction;
+  BindableMemberValue<std::uint8_t> MonthOfConstruction;
+
 };
 
 } // namespace machinery
@@ -20,7 +22,10 @@ REFL_TYPE(machinery::IMachineVendorNameplate_t,
 REFL_FIELD(YearOfConstruction, open62541Cpp::attribute::PlaceholderOptional(),
            open62541Cpp::attribute::MemberInTypeNodeId{
                .NodeId = open62541Cpp::constexp::NodeId(constants::NsMachineryUri, UA_MACHINERY_ID_IMACHINEVENDORNAMEPLATETYPE_YEAROFCONSTRUCTION)})
-REFL_FIELD(Manufacturer);
-REFL_FIELD(ProductInstanceUri);
-REFL_FIELD(SerialNumber);
+REFL_FIELD(MonthOfConstruction, open62541Cpp::attribute::PlaceholderOptional(),
+           open62541Cpp::attribute::MemberInTypeNodeId{
+               .NodeId = open62541Cpp::constexp::NodeId(constants::NsMachineryUri, UA_MACHINERY_ID_IMACHINEVENDORNAMEPLATETYPE_MONTHOFCONSTRUCTION)})
+REFL_FIELD(Manufacturer)
+REFL_FIELD(ProductInstanceUri)
+REFL_FIELD(SerialNumber)
 REFL_END

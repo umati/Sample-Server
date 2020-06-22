@@ -3,6 +3,7 @@
 #include "Constants.hpp"
 #include "../ns0/Constants.hpp"
 #include "Tool.hpp"
+#include "MultiTool.hpp"
 #include "../../BindableMemberPlaceholder.hpp"
 
 namespace machineTool
@@ -11,7 +12,7 @@ namespace machineTool
   struct ToolList_t
   {
     BindableMemberValue<std::string> NodeVersion;
-    BindableMemberPlaceholder<BindableMember, Tool_t> Tool;
+    BindableMemberPlaceholder<BindableMember, std::variant<Tool_t, MultiTool_t>> Tool;
   };
 
 } // namespace machineTool

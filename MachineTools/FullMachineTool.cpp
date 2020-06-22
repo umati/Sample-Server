@@ -35,13 +35,11 @@ void FullMachineTool::CreateObject()
   UA_ObjectAttributes_clear(&objAttr);
   UmatiServerLib::Bind::MembersRefl(mt, m_pServer, m_nodeId, n);
 
-  auto &channel = mt.Monitoring->Channels.Add(m_pServer, n, {m_nsIndex, "InstChannel1"});
-  channel.ChannelState = UA_CHANNELSTATE_INTERRUPTED;
-  channel.FeedOverride->Value = 89.0;
+  InstantiateIdentification();
+  InstantiateMonitoring();
+  InstantiateTools();
 
-  //InstantiateOptional(mt.Identification->Location, m_pServer, n);
   InstantiateOptional(mt.Production->ActiveProgram->State, m_pServer, n);
-  InstantiateOptional(mt.Identification->YearOfConstruction, m_pServer, n);
   InstantiateOptional(mt.Production->ProductionPlan, m_pServer, n);
   writeEventNotifier(m_pServer, mt.Production->ProductionPlan.NodeId);
 
@@ -66,22 +64,27 @@ void FullMachineTool::CreateObject()
   maintenancePrognosis.Activity = {"", "Replace actuator."};
   auto &utilityPrognosis = mt.Notification->Prognoses->Prognosis.Add<machineTool::UtilityChangePrognosis_t>(m_pServer, n, {m_nsIndex, "Utility"});
   utilityPrognosis.UtilityName = {"", "H²"};
+}
+
+void FullMachineTool::InstantiateIdentification()
+{
+  InstantiateOptional(mt.Identification->Location, m_pServer, n);
+  InstantiateOptional(mt.Identification->YearOfConstruction, m_pServer, n);
+  InstantiateOptional(mt.Identification->MonthOfConstruction, m_pServer, n);
+  InstantiateOptional(mt.Identification->DeviceClass, m_pServer, n);
+  InstantiateOptional(mt.Identification->ComponentName, m_pServer, n);
+  InstantiateOptional(mt.Identification->Model, m_pServer, n);
 
   mt.Identification->Manufacturer = {"c++", "ISW Christian von Arnim"};
   mt.Identification->YearOfConstruction = 2020;
   mt.Identification->Location = "AMB 0 0/N 48.781340 E 9.165731";
-
-  InstantiateOptional(mt.Monitoring->Stacklight, m_pServer, n);
-  InstantiateOptional(mt.Monitoring->Stacklight->NodeVersion, m_pServer, n);
-  auto &light1 = mt.Monitoring->Stacklight->OrderedObjects.Add(m_pServer, n, {m_nsIndex, "Light 1"});
-  light1.IsPartOfBase = false;
-  light1.NumberInList = 1;
-  light1.SignalOn = true;
-
+}
+void FullMachineTool::InstantiateTools()
+{
   InstantiateOptional(mt.Equipment->Tools, m_pServer, n);
   InstantiateOptional(mt.Equipment->Tools->NodeVersion, m_pServer, n);
   n.Remove(mt.Equipment->Tools->NodeVersion.NodeId);
-  auto &tool = mt.Equipment->Tools->Tool.Add(m_pServer, n, {m_nsIndex, "Tool1"});
+  auto &tool = mt.Equipment->Tools->Tool.Add<machineTool::Tool_t>(m_pServer, n, {m_nsIndex, "Tool1"});
   tool.ControlIdentifier1 = 2;
   tool.ControlIdentifierInterpretation = UA_ToolManagement::UA_TOOLMANAGEMENT_NUMBERBASED;
   tool.Locked->Value = false;
@@ -89,6 +92,64 @@ void FullMachineTool::CreateObject()
   tool.Locked->ReasonForLocking.StatusCode = UA_STATUSCODE_BADNOTHINGTODO;
   tool.Name = {"", "Tool1"};
   InstantiateOptional(tool.Name, m_pServer, n);
+  InstantiateOptional(tool.ToolLife, m_pServer, n);
+  auto &toolLifeRotations = tool.ToolLife->ToolLifeEntry.Add<machineTool::ToolLife_t<std::int32_t>>(m_pServer, n, {m_nsIndex, "Rotations"});
+  toolLifeRotations.Indication = UA_ToolLifeIndication::UA_TOOLLIFEINDICATION_OTHER;
+  toolLifeRotations.Value = 512;
+  toolLifeRotations.IsCountingUp = true;
+  toolLifeRotations.LimitValue = 1 << 20;
+  InstantiateOptional(toolLifeRotations.LimitValue, m_pServer, n);
+
+  auto &multiTool = mt.Equipment->Tools->Tool.Add<machineTool::MultiTool_t>(m_pServer, n, {m_nsIndex, "Multi 1"});
+  multiTool.Name = {"", "Multi 1"};
+  multiTool.Identifier = "Multi01-ID";
+  for(std::size_t i = 0; i < 3; ++i)
+  {
+    std::stringstream ss;
+    ss << "SubTool " << i;
+    auto &subTool = multiTool.Tool.Add(m_pServer, n, {m_nsIndex, ss.str()});
+    subTool.ControlIdentifier1 = i*1021 % 881;
+    subTool.ControlIdentifierInterpretation = UA_ToolManagement::UA_TOOLMANAGEMENT_NUMBERBASED;
+    subTool.Locked->Value = false;
+    subTool.Locked->ReasonForLocking = UA_ToolLocked::UA_TOOLLOCKED_OTHER;
+    subTool.Locked->ReasonForLocking.StatusCode = UA_STATUSCODE_BADNOTHINGTODO;
+    subTool.Identifier = ss.str();
+    InstantiateOptional(subTool.Identifier, m_pServer, n);
+  }
+}
+
+void FullMachineTool::InstantiateMonitoring()
+{
+  InstantiateOptional(mt.Monitoring->Stacklight, m_pServer, n);
+  InstantiateOptional(mt.Monitoring->Stacklight->NodeVersion, m_pServer, n);
+  auto &light1 = mt.Monitoring->Stacklight->OrderedObjects.Add(m_pServer, n, {m_nsIndex, "Light 1"});
+  light1.IsPartOfBase = false;
+  light1.NumberInList = 1;
+  light1.SignalOn = true;
+
+  auto &channel = mt.Monitoring->Channels.Add(m_pServer, n, {m_nsIndex, "InstChannel1"});
+  channel.ChannelState = UA_CHANNELSTATE_INTERRUPTED;
+  channel.FeedOverride->Value = 89.0;
+
+  auto &spindle1 = mt.Monitoring->MonitoredElement.Add<machineTool::SpindleMonitoring_t>(m_pServer, n, {m_nsIndex, "Spindle 1"});
+  InstantiateOptional(spindle1.Override, m_pServer, n);
+  InstantiateOptional(spindle1.IsUsedAsAxis, m_pServer, n);
+  spindle1.Override->Value = 78;
+  spindle1.Override->EURange->high = 127.99;
+  spindle1.Override->EURange->low = 0.0;
+  spindle1.IsRotating = true;
+  spindle1.Name = "Spindle 1";
+  spindle1.IsUsedAsAxis = false;
+
+  auto &edm = mt.Monitoring->MonitoredElement.Add<machineTool::EDMGeneratorMonitoring_t>(m_pServer, n, {m_nsIndex, "EDM"});
+  edm.IsOn = true;
+  edm.Name = "EDM";
+  edm.EDMGeneratorState = UA_EDMGeneratorState::UA_EDMGENERATORSTATE_ACTIVE_HIGH_VOLTAGE;
+
+  auto &lsr = mt.Monitoring->MonitoredElement.Add<machineTool::LaserMonitoring_t>(m_pServer, n, {m_nsIndex, "Laser"});
+  lsr.IsOn = false;
+  lsr.Name = "Laser";
+  lsr.LaserState = UA_LaserState::UA_LASERSTATE_READY;
 }
 
 void FullMachineTool::Simulate()
@@ -190,7 +251,7 @@ void FullMachineTool::Simulate()
     std::stringstream ss;
     ss << "Full MT Msg " << m_simStep;
     notification.Message = {"", ss.str()};
-    notification.Severity = (m_simStep-8) % 300;
+    notification.Severity = (m_simStep - 8) % 300;
     notification.SourceName = "FullMachineTool";
     OpcUaEvent ev(notification, m_pServer, mt.Notification->Messages.NodeId);
   }

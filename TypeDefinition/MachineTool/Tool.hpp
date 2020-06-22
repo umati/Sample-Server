@@ -3,6 +3,7 @@
 #include "Constants.hpp"
 #include "BaseTool.hpp"
 #include "../../src_generated/types_machinetool_generated.h"
+#include "ToolLife.hpp"
 
 namespace machineTool
 {
@@ -10,6 +11,11 @@ namespace machineTool
   {
     BindableMemberValue<bool> Value;
     BindableMemberValue<UA_ToolLocked> ReasonForLocking;
+  };
+
+  struct Tool_ToolLife_t
+  {
+    BindableMemberPlaceholder<BindableMember, std::variant<ToolLife_t<std::int32_t>, ToolLife_t<double>>> ToolLifeEntry;
   };
 
   struct Tool_t : public BaseTool_t
@@ -20,7 +26,7 @@ namespace machineTool
     BindableMemberValue<open62541Cpp::DateTime_t> LastUsage;
     BindableMember<Tool_Locked_t> Locked;
     BindableMemberValue<bool> PlannedForOperating;
-    //ToolLife;
+    BindableMember<Tool_ToolLife_t> ToolLife;
     //Location;
   };
 
@@ -36,6 +42,15 @@ REFL_FIELD(Value,
 REFL_FIELD(ReasonForLocking,
            open62541Cpp::attribute::MemberInTypeNodeId{
                .NodeId = open62541Cpp::constexp::NodeId(constants::NsMachineToolUri, UA_MACHINETOOLID_TOOLTYPE_LOCKED_REASONFORLOCKING)})
+REFL_END
+
+REFL_TYPE(machineTool::Tool_ToolLife_t,
+          open62541Cpp::attribute::UaObjectType{ // TOOD handle correctly when this is pointing to an object instead of an object type
+              .NodeId = open62541Cpp::constexp::NodeId(constants::Ns0Uri, UA_NS0ID_BASEOBJECTTYPE)})
+REFL_FIELD(ToolLifeEntry,
+  open62541Cpp::attribute::PlaceholderOptional(),
+  open62541Cpp::attribute::MemberInTypeNodeId{
+               .NodeId = open62541Cpp::constexp::NodeId(constants::NsMachineToolUri, UA_MACHINETOOLID_TOOLTYPE_TOOLLIFE_TOOLLIFEENTRY)})
 REFL_END
 
 REFL_TYPE(machineTool::Tool_t,
@@ -60,5 +75,9 @@ REFL_FIELD(Locked,
 REFL_FIELD(PlannedForOperating,
            open62541Cpp::attribute::MemberInTypeNodeId{
                .NodeId = open62541Cpp::constexp::NodeId(constants::NsMachineToolUri, UA_MACHINETOOLID_TOOLTYPE_PLANNEDFOROPERATING)},
+           open62541Cpp::attribute::PlaceholderOptional())
+REFL_FIELD(ToolLife,
+           open62541Cpp::attribute::MemberInTypeNodeId{
+               .NodeId = open62541Cpp::constexp::NodeId(constants::NsMachineToolUri, UA_MACHINETOOLID_TOOLTYPE_TOOLLIFE)},
            open62541Cpp::attribute::PlaceholderOptional())
 REFL_END

@@ -14,6 +14,7 @@ open62541Cpp::UA_QualifiedName readBrowseName(UA_Server *pServer, open62541Cpp::
 UA_NodeClass readNodeClass(UA_Server *pServer, open62541Cpp::UA_NodeId nodeId);
 open62541Cpp::UA_NodeId readDataType(UA_Server *pServer, open62541Cpp::UA_NodeId nodeId);
 open62541Cpp::UA_NodeId readTypeDefinition(UA_Server *pServer, open62541Cpp::UA_NodeId nodeId);
+UA_Int32 readValueRank(UA_Server *pServer, open62541Cpp::UA_NodeId nodeId);
 open62541Cpp::UA_NodeId getReferenceTypeFromMemberNode(UA_Server *pServer, open62541Cpp::UA_NodeId nodeId, open62541Cpp::UA_NodeId parentNodeId);
 
 template <template <typename> class BINDABLEMEMBER_T, typename T, typename = std::enable_if_t<is_base_of_template<BindableMember, BINDABLEMEMBER_T<T>>::value>>

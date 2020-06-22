@@ -75,7 +75,10 @@ public:
     case UA_NODECLASS_VARIABLETYPE:
     {
       UA_VariableAttributes varAttr = UA_VariableAttributes_default;
+      auto dataType = readDataType(pServer, this->MemerInTypeNodeId);
+      varAttr.valueRank = readValueRank(pServer, this->MemerInTypeNodeId);
       UA_String_copy(&browseName.QualifiedName->name, &varAttr.displayName.text);
+      UA_NodeId_copy(dataType.NodeId, &varAttr.dataType);
 
       status = UA_Server_addVariableNode(
           pServer,

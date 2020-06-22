@@ -42,6 +42,20 @@ open62541Cpp::UA_NodeId readDataType(UA_Server *pServer, open62541Cpp::UA_NodeId
   return ret;
 }
 
+UA_Int32 readValueRank(UA_Server *pServer, open62541Cpp::UA_NodeId nodeId)
+{
+  UA_Int32 ret;
+  UA_StatusCode status = UA_Server_readValueRank(pServer, *nodeId.NodeId, &ret);
+  if (status != UA_STATUSCODE_GOOD)
+  {
+    std::stringstream ss;
+    ss << "Could not read DataType from NodeId, Error: " << UA_StatusCode_name(status);
+    throw std::runtime_error(ss.str());
+  }
+
+  return ret;
+}
+
 open62541Cpp::UA_NodeId readTypeDefinition(UA_Server *pServer, open62541Cpp::UA_NodeId nodeId)
 {
   open62541Cpp::UA_NodeId ret;

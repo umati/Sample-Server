@@ -22,7 +22,7 @@ class FullMachineTool : public SimulatedMachineTool
   void InstantiateIdentification();
   void InstantiateMonitoring();
   void InstantiateTools();
-  
+  void InstantiatePrognosis();
   std::uint16_t m_nsIndex;
   int m_simStep = 0;
   std::shared_ptr<OpcUaCondition<machineTool::Alert_t>> m_pAlert;

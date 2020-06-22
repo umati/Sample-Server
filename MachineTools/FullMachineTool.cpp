@@ -38,6 +38,7 @@ void FullMachineTool::CreateObject()
   InstantiateIdentification();
   InstantiateMonitoring();
   InstantiateTools();
+  InstantiatePrognosis();
 
   InstantiateOptional(mt.Production->ActiveProgram->State, m_pServer, n);
   InstantiateOptional(mt.Production->ProductionPlan, m_pServer, n);
@@ -54,16 +55,6 @@ void FullMachineTool::CreateObject()
 
   InstantiateOptional(mt.Notification->Messages, m_pServer, n);
   writeEventNotifier(m_pServer, mt.Notification->Messages.NodeId);
-  InstantiateOptional(mt.Notification->Prognoses, m_pServer, n);
-  InstantiateOptional(mt.Notification->Prognoses->NodeVersion, m_pServer, n);
-  // Hack: Remove from bindings (Will be written by BindMemberPlaceholder)
-  // Can keep binding when writing is supported.
-  n.Remove(mt.Notification->Prognoses->NodeVersion.NodeId);
-  writeEventNotifier(m_pServer, mt.Notification->Prognoses.NodeId);
-  auto &maintenancePrognosis = mt.Notification->Prognoses->Prognosis.Add<machineTool::MaintenancePrognosis_t>(m_pServer, n, {m_nsIndex, "Maintenance"});
-  maintenancePrognosis.Activity = {"", "Replace actuator."};
-  auto &utilityPrognosis = mt.Notification->Prognoses->Prognosis.Add<machineTool::UtilityChangePrognosis_t>(m_pServer, n, {m_nsIndex, "Utility"});
-  utilityPrognosis.UtilityName = {"", "H²"};
 }
 
 void FullMachineTool::InstantiateIdentification()
@@ -150,6 +141,40 @@ void FullMachineTool::InstantiateMonitoring()
   lsr.IsOn = false;
   lsr.Name = "Laser";
   lsr.LaserState = UA_LaserState::UA_LASERSTATE_READY;
+}
+
+void FullMachineTool::InstantiatePrognosis()
+{
+  InstantiateOptional(mt.Notification->Prognoses, m_pServer, n);
+  InstantiateOptional(mt.Notification->Prognoses->NodeVersion, m_pServer, n);
+  // Hack: Remove from bindings (Will be written by BindMemberPlaceholder)
+  // Can keep binding when writing is supported.
+  n.Remove(mt.Notification->Prognoses->NodeVersion.NodeId);
+  writeEventNotifier(m_pServer, mt.Notification->Prognoses.NodeId);
+  auto &maintenancePrognosis = mt.Notification->Prognoses->Prognosis.Add<machineTool::MaintenancePrognosis_t>(m_pServer, n, {m_nsIndex, "Maintenance"});
+  maintenancePrognosis.Activity = {"", "Replace actuator."};
+  auto &manualPrognosis = mt.Notification->Prognoses->Prognosis.Add<machineTool::ManualActivityPrognosis_t>(m_pServer, n, {m_nsIndex, "Manual"});
+  manualPrognosis.Activity = {"", "Open Window"};
+  auto &partLoadPrognosis = mt.Notification->Prognoses->Prognosis.Add<machineTool::PartLoadPrognosis_t>(m_pServer, n, {m_nsIndex, "PartLoad"});
+  partLoadPrognosis.Location = {"", "Left"};
+  partLoadPrognosis.PartName = "Circle";
+  auto &partUnLoadPrognosis = mt.Notification->Prognoses->Prognosis.Add<machineTool::PartUnLoadPrognosis_t>(m_pServer, n, {m_nsIndex, "PartUnLoad"});
+  partUnLoadPrognosis.Location = {"", "Right"};
+  partUnLoadPrognosis.PartName = "Smiley";
+  auto &processChangeoverPrognosis = mt.Notification->Prognoses->Prognosis.Add<machineTool::ProcessChangeoverPrognosis_t>(m_pServer, n, {m_nsIndex, "ProcessChangeover"});
+  processChangeoverPrognosis.Location = {"", "Mid"};
+  processChangeoverPrognosis.Activity = {"", "Flip"};
+  auto &productionJobEndPrognosis = mt.Notification->Prognoses->Prognosis.Add<machineTool::ProductionJobEndPrognosis_t>(m_pServer, n, {m_nsIndex, "ProductionJobEnd"});
+  productionJobEndPrognosis.SourceIdentifier = "100x Smiley Job";
+  auto &toolChangePrognosis = mt.Notification->Prognoses->Prognosis.Add<machineTool::ToolChangePrognosis_t>(m_pServer, n, {m_nsIndex, "ToolChange"});
+  toolChangePrognosis.Location = {"", "Magazine 1"};
+  auto &toolLoadPrognosis = mt.Notification->Prognoses->Prognosis.Add<machineTool::ToolLoadPrognosis_t>(m_pServer, n, {m_nsIndex, "ToolLoad"});
+  toolLoadPrognosis.Location = {"", "Magazine 2"};
+  auto &toolUnloadPrognosis = mt.Notification->Prognoses->Prognosis.Add<machineTool::ToolUnloadPrognosis_t>(m_pServer, n, {m_nsIndex, "ToolUnLoad"});
+  toolUnloadPrognosis.Location = {"", "Magazine 3"};
+  auto &utilityPrognosis = mt.Notification->Prognoses->Prognosis.Add<machineTool::UtilityChangePrognosis_t>(m_pServer, n, {m_nsIndex, "UtilityChange"});
+  utilityPrognosis.UtilityName = {"", "H²"};
+
 }
 
 void FullMachineTool::Simulate()

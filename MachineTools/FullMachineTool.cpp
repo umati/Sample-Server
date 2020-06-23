@@ -43,12 +43,10 @@ void FullMachineTool::InstantiateIdentification()
 {
   InstantiatedMachineTool::InstantiateIdentification();
 
-  InstantiateOptional(mt.Identification->Location, m_pServer, n);
   InstantiateOptional(mt.Identification->YearOfConstruction, m_pServer, n);
   InstantiateOptional(mt.Identification->MonthOfConstruction, m_pServer, n);
   InstantiateOptional(mt.Identification->DeviceClass, m_pServer, n);
   InstantiateOptional(mt.Identification->ComponentName, m_pServer, n);
-  InstantiateOptional(mt.Identification->Model, m_pServer, n);
 
   mt.Identification->YearOfConstruction = 2020;
   mt.Identification->Location = "AMB 0 1/N 48.781340 E 9.165731";

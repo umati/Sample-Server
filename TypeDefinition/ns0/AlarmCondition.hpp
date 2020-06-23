@@ -15,6 +15,6 @@ struct AlarmCondition_t : public AcknowledgeableCondition_t
 
 REFL_TYPE(ns0::AlarmCondition_t,
           Bases<ns0::AcknowledgeableCondition_t>(),
-          open62541Cpp::attribute::UaObjectType{
-              .NodeId = open62541Cpp::constexp::NodeId(constants::Ns0Uri, UA_NS0ID_ALARMCONDITIONTYPE)})
+          UmatiServerLib::attribute::UaObjectType{
+              .NodeId = UmatiServerLib::constexp::NodeId(constants::Ns0Uri, UA_NS0ID_ALARMCONDITIONTYPE)})
 REFL_END

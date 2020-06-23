@@ -31,13 +31,13 @@ public:
     }
     UA_NodeClass nodeClass = UA_NODECLASS_UNSPECIFIED;
     open62541Cpp::UA_NodeId typeDef;
-    if constexpr (hasAttributeIfReflectable<open62541Cpp::attribute::UaObjectType, ADDED_T>())
+    if constexpr (hasAttributeIfReflectable<UmatiServerLib::attribute::UaObjectType, ADDED_T>())
     {
       nodeClass = UA_NODECLASS_OBJECTTYPE;
-      auto objTypeAttr = refl::descriptor::get_attribute<open62541Cpp::attribute::UaObjectType>(refl::reflect<ADDED_T>());
+      auto objTypeAttr = refl::descriptor::get_attribute<UmatiServerLib::attribute::UaObjectType>(refl::reflect<ADDED_T>());
       typeDef = objTypeAttr.NodeId.UANodeId(pServer);
     }
-    else if constexpr (hasAttributeIfReflectable<open62541Cpp::attribute::UaVariableType, ADDED_T>())
+    else if constexpr (hasAttributeIfReflectable<UmatiServerLib::attribute::UaVariableType, ADDED_T>())
     {
       nodeClass = UA_NODECLASS_VARIABLETYPE;
     }

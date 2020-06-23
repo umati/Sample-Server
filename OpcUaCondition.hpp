@@ -49,8 +49,8 @@ protected:
   void addConditionToAddressSpace()
   {
     // Get Event Type from reflection Information
-    static_assert(refl::descriptor::has_attribute<open62541Cpp::attribute::UaObjectType>(refl::reflect<T>()), "Event must have an UaObjectType-attribute with node ID.");
-    auto objTypeAttr = refl::descriptor::get_attribute<open62541Cpp::attribute::UaObjectType>(refl::reflect<T>());
+    static_assert(refl::descriptor::has_attribute<UmatiServerLib::attribute::UaObjectType>(refl::reflect<T>()), "Event must have an UaObjectType-attribute with node ID.");
+    auto objTypeAttr = refl::descriptor::get_attribute<UmatiServerLib::attribute::UaObjectType>(refl::reflect<T>());
     auto conditionTypeNodeId = objTypeAttr.NodeId.UANodeId(pServer);
     auto name = refl::reflect<T>().name;
     UA_StatusCode retvalCreateCondition = UA_Server_createCondition(

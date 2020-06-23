@@ -65,7 +65,7 @@ void Unbind::MembersRefl(T &instance, UA_Server *pServer, open62541Cpp::UA_NodeI
       // Check if this is not the value of a variable type
       // If this is the value of a variable type bind it to the base without appending a browse name (skip adding a browse name)
       if constexpr (
-          !refl::descriptor::has_attribute<open62541Cpp::attribute::UaVariableTypeValue>(member))
+          !refl::descriptor::has_attribute<UmatiServerLib::attribute::UaVariableTypeValue>(member))
       {
         pathEl = getBrowseName(instance, member, pServer);
         childRelativPathElements.push_back(pathEl);
@@ -76,7 +76,7 @@ void Unbind::MembersRefl(T &instance, UA_Server *pServer, open62541Cpp::UA_NodeI
       childRelativPathElements.push_back(pathEl);
     }
 
-    constexpr bool isOptional = refl::descriptor::has_attribute<open62541Cpp::attribute::PlaceholderOptional>(member);
+    constexpr bool isOptional = refl::descriptor::has_attribute<UmatiServerLib::attribute::PlaceholderOptional>(member);
     try
     {
       auto nodeIdChild = resolveBrowsePath(
@@ -86,7 +86,7 @@ void Unbind::MembersRefl(T &instance, UA_Server *pServer, open62541Cpp::UA_NodeI
               childRelativPathElements));
       MemberRefl(member(instance), pServer, nodeIdChild, nodesMaster);
     }
-    catch (const open62541Cpp::Exceptions::NodeNotFound &ex)
+    catch (const UmatiServerLib::Exceptions::NodeNotFound &ex)
     {
       if constexpr (!isOptional)
       {
@@ -115,8 +115,8 @@ void Unbind::MemberRefl(
     NodesMaster &nodesMaster)
 {
   if constexpr (
-      hasAttributeIfReflectable<open62541Cpp::attribute::UaObjectType, T>() ||
-      hasAttributeIfReflectable<open62541Cpp::attribute::UaVariableType, T>())
+      hasAttributeIfReflectable<UmatiServerLib::attribute::UaObjectType, T>() ||
+      hasAttributeIfReflectable<UmatiServerLib::attribute::UaVariableType, T>())
   {
     MembersRefl(member, pServer, nodeId, nodesMaster);
   }
@@ -124,8 +124,8 @@ void Unbind::MemberRefl(
       is_same_template<T, BindableMember>::value)
   {
     if constexpr (
-        hasAttributeIfReflectable<open62541Cpp::attribute::UaObjectType>(member.value) ||
-        hasAttributeIfReflectable<open62541Cpp::attribute::UaVariableType>(member.value))
+        hasAttributeIfReflectable<UmatiServerLib::attribute::UaObjectType>(member.value) ||
+        hasAttributeIfReflectable<UmatiServerLib::attribute::UaVariableType>(member.value))
     {
       MembersRefl(member.value, pServer, nodeId, nodesMaster);
     }

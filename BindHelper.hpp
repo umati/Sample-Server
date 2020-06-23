@@ -26,10 +26,10 @@ template <typename T, typename = std::enable_if_t<!is_base_of_template<BindableM
 void setBindOrMandatory(T &instance, bool bind = true, bool mandatory = true){};
 
 template <typename T>
-void setMemberInTypeNodeId(BindableMember<T> &instance, const open62541Cpp::constexp::NodeId &nodeId, UA_Server *pServer);
+void setMemberInTypeNodeId(BindableMember<T> &instance, const UmatiServerLib::constexp::NodeId &nodeId, UA_Server *pServer);
 
 template <typename T, typename = std::enable_if_t<!is_base_of_template<BindableMember, T>::value>>
-void setMemberInTypeNodeId(T &instance, const open62541Cpp::constexp::NodeId &nodeId, UA_Server *pServer){
+void setMemberInTypeNodeId(T &instance, const UmatiServerLib::constexp::NodeId &nodeId, UA_Server *pServer){
   static_assert(always_false<T>::value, "Try to set MemberInType for non Bindable Member");
 };
 
@@ -98,9 +98,9 @@ open62541Cpp::UA_RelativPathElement getBrowseName(const B &instance, const refl:
   std::uint16_t nsIndex = ~static_cast<std::uint16_t>(0);
   std::string name(member.name);
   const char *nsUri = nullptr;
-  if constexpr (refl::descriptor::has_attribute<open62541Cpp::attribute::UaBrowseName>(refl::descriptor::field_descriptor<T, N>()))
+  if constexpr (refl::descriptor::has_attribute<UmatiServerLib::attribute::UaBrowseName>(refl::descriptor::field_descriptor<T, N>()))
   {
-    const auto &attrBrowseName = refl::descriptor::get_attribute<open62541Cpp::attribute::UaBrowseName>(member);
+    const auto &attrBrowseName = refl::descriptor::get_attribute<UmatiServerLib::attribute::UaBrowseName>(member);
     nsUri = attrBrowseName.NsURI;
 
     if (attrBrowseName.Name != nullptr)
@@ -108,16 +108,16 @@ open62541Cpp::UA_RelativPathElement getBrowseName(const B &instance, const refl:
       name = attrBrowseName.Name;
     }
   }
-  else if constexpr (refl::descriptor::has_attribute<open62541Cpp::attribute::UaObjectType>(refl::reflect<B>()))
+  else if constexpr (refl::descriptor::has_attribute<UmatiServerLib::attribute::UaObjectType>(refl::reflect<B>()))
   {
     // Take index from type as default BrowseName Index
-    auto objTypeAttr = refl::descriptor::get_attribute<open62541Cpp::attribute::UaObjectType>(refl::reflect<B>());
+    auto objTypeAttr = refl::descriptor::get_attribute<UmatiServerLib::attribute::UaObjectType>(refl::reflect<B>());
     nsUri = objTypeAttr.NodeId.NsUri;
   }
-  else if constexpr (refl::descriptor::has_attribute<open62541Cpp::attribute::UaVariableType>(refl::reflect<B>()))
+  else if constexpr (refl::descriptor::has_attribute<UmatiServerLib::attribute::UaVariableType>(refl::reflect<B>()))
   {
     // Take index from type as default BrowseName Index
-    auto varTypeAttr = refl::descriptor::get_attribute<open62541Cpp::attribute::UaVariableType>(refl::reflect<B>());
+    auto varTypeAttr = refl::descriptor::get_attribute<UmatiServerLib::attribute::UaVariableType>(refl::reflect<B>());
     nsUri = varTypeAttr.NodeId.NsUri;
   }
   else
@@ -160,7 +160,7 @@ void setAddrSpaceLocation(BindableMember<T> &instance, const open62541Cpp::UA_No
 }
 
 template <typename T>
-void setMemberInTypeNodeId(BindableMember<T> &instance, const open62541Cpp::constexp::NodeId &memberInTypeNodeId, UA_Server *pServer)
+void setMemberInTypeNodeId(BindableMember<T> &instance, const UmatiServerLib::constexp::NodeId &memberInTypeNodeId, UA_Server *pServer)
 {
   instance.MemberInTypeNodeId = memberInTypeNodeId.UANodeId(pServer);
 }

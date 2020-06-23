@@ -21,18 +21,18 @@ namespace machineTool
 } // namespace machineTool
 
 REFL_TYPE(machineTool::Monitoring_t,
-          open62541Cpp::attribute::UaObjectType{
-              .NodeId = open62541Cpp::constexp::NodeId(constants::NsMachineToolUri, UA_MACHINETOOLID_MONITORINGTYPE)})
+          UmatiServerLib::attribute::UaObjectType{
+              .NodeId = UmatiServerLib::constexp::NodeId(constants::NsMachineToolUri, UA_MACHINETOOLID_MONITORINGTYPE)})
 REFL_FIELD(Channels,
-           open62541Cpp::attribute::MemberInTypeNodeId{
-               .NodeId = open62541Cpp::constexp::NodeId(constants::NsMachineToolUri, UA_MACHINETOOLID_MONITORINGTYPE_MONITOREDELEMENT)},
-           open62541Cpp::attribute::PlaceholderOptional())
+           UmatiServerLib::attribute::MemberInTypeNodeId{
+               .NodeId = UmatiServerLib::constexp::NodeId(constants::NsMachineToolUri, UA_MACHINETOOLID_MONITORINGTYPE_MONITOREDELEMENT)},
+           UmatiServerLib::attribute::PlaceholderOptional())
 REFL_FIELD(MonitoredElement,
-           open62541Cpp::attribute::MemberInTypeNodeId{
-               .NodeId = open62541Cpp::constexp::NodeId(constants::NsMachineToolUri, UA_MACHINETOOLID_MONITORINGTYPE_MONITOREDELEMENT)},
-           open62541Cpp::attribute::PlaceholderOptional())
+           UmatiServerLib::attribute::MemberInTypeNodeId{
+               .NodeId = UmatiServerLib::constexp::NodeId(constants::NsMachineToolUri, UA_MACHINETOOLID_MONITORINGTYPE_MONITOREDELEMENT)},
+           UmatiServerLib::attribute::PlaceholderOptional())
 REFL_FIELD(Stacklight,
-            open62541Cpp::attribute::MemberInTypeNodeId{
-               .NodeId = open62541Cpp::constexp::NodeId(constants::NsMachineToolUri, UA_MACHINETOOLID_MONITORINGTYPE_STACKLIGHT)},
-           open62541Cpp::attribute::PlaceholderOptional())
+            UmatiServerLib::attribute::MemberInTypeNodeId{
+               .NodeId = UmatiServerLib::constexp::NodeId(constants::NsMachineToolUri, UA_MACHINETOOLID_MONITORINGTYPE_STACKLIGHT)},
+           UmatiServerLib::attribute::PlaceholderOptional())
 REFL_END

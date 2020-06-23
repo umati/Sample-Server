@@ -35,7 +35,7 @@ namespace UmatiServerLib
   typedef std::ratio<1, 10000000> nano_100;
   typedef std::chrono::duration<std::int64_t, nano_100> nanoseconds_100;
 
-  copyToVariantFunc ConvertSimpleValue::asVariantFunc(open62541Cpp::DateTime_t *variable)
+  copyToVariantFunc ConvertSimpleValue::asVariantFunc(UmatiServerLib::DateTime_t *variable)
   {
     auto pVariable = variable;
     return [pVariable](UA_Variant *dst) {

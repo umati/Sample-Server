@@ -18,14 +18,14 @@ namespace machineTool
 } // namespace machineTool
 
 REFL_TYPE(machineTool::ToolList_t,
-          open62541Cpp::attribute::UaObjectType{
-              .NodeId = open62541Cpp::constexp::NodeId(constants::NsMachineToolUri, UA_MACHINETOOLID_TOOLLISTTYPE)})
+          UmatiServerLib::attribute::UaObjectType{
+              .NodeId = UmatiServerLib::constexp::NodeId(constants::NsMachineToolUri, UA_MACHINETOOLID_TOOLLISTTYPE)})
 REFL_FIELD(NodeVersion,
-           open62541Cpp::attribute::MemberInTypeNodeId{
-               .NodeId = open62541Cpp::constexp::NodeId(constants::NsMachineToolUri, UA_MACHINETOOLID_TOOLLISTTYPE_NODEVERSION)},
-               open62541Cpp::attribute::UaBrowseName{.NsURI = constants::Ns0Uri},
-           open62541Cpp::attribute::PlaceholderOptional())
+           UmatiServerLib::attribute::MemberInTypeNodeId{
+               .NodeId = UmatiServerLib::constexp::NodeId(constants::NsMachineToolUri, UA_MACHINETOOLID_TOOLLISTTYPE_NODEVERSION)},
+               UmatiServerLib::attribute::UaBrowseName{.NsURI = constants::Ns0Uri},
+           UmatiServerLib::attribute::PlaceholderOptional())
 REFL_FIELD(Tool,
-           open62541Cpp::attribute::MemberInTypeNodeId{.NodeId = open62541Cpp::constexp::NodeId(constants::NsMachineToolUri, UA_MACHINETOOLID_TOOLLISTTYPE_TOOL)},
-           open62541Cpp::attribute::PlaceholderOptional())
+           UmatiServerLib::attribute::MemberInTypeNodeId{.NodeId = UmatiServerLib::constexp::NodeId(constants::NsMachineToolUri, UA_MACHINETOOLID_TOOLLISTTYPE_TOOL)},
+           UmatiServerLib::attribute::PlaceholderOptional())
 REFL_END

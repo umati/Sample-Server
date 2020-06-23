@@ -19,7 +19,7 @@ class Test_Exposure : public UmatiServerLib::ConvertStructValue
 TEST(ExampleServerLib, BindStructure_Basic)
 {
 
-  open62541Cpp::LocalizedText_t oriLocalText {
+  UmatiServerLib::LocalizedText_t oriLocalText {
     .locale = "en-en",
     .text = "BindStructure_Basic"
   };
@@ -42,7 +42,7 @@ TEST(ExampleServerLib, BindStructure_Basic)
 
 TEST(ExampleServerLib, BindStructure_Recursive)
 {
-  open62541Cpp::EUInformation_t oriEuInformation {
+  UmatiServerLib::EUInformation_t oriEuInformation {
     .NamespaceUri ="eu://meter",
     .UnitId = -1,
     .DisplayName { .locale="", .text="Meter"},
@@ -53,6 +53,6 @@ TEST(ExampleServerLib, BindStructure_Recursive)
   Test_Exposure::convertToVariantRefl(&oriEuInformation, &UA_TYPES[UA_TYPES_EUINFORMATION], &variant);
   UA_EUInformation * pEuInformation = reinterpret_cast<UA_EUInformation *>(variant.data);
 
-  auto newEuInformation = open62541Cpp::EUInformation_t::fromUa(*pEuInformation);
+  auto newEuInformation = UmatiServerLib::EUInformation_t::fromUa(*pEuInformation);
   EXPECT_EQ(oriEuInformation, newEuInformation);
 }

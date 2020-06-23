@@ -14,7 +14,7 @@ struct IOrderedObject_t
 } // namespace ns0
 
 REFL_TEMPLATE((typename T), (ns0::IOrderedObject_t<T>),
-              open62541Cpp::attribute::UaObjectType{
-                  .NodeId = open62541Cpp::constexp::NodeId(constants::Ns0Uri, UA_NS0ID_IORDEREDOBJECTTYPE)})
+              UmatiServerLib::attribute::UaObjectType{
+                  .NodeId = UmatiServerLib::constexp::NodeId(constants::Ns0Uri, UA_NS0ID_IORDEREDOBJECTTYPE)})
 REFL_FIELD(NumberInList)
 REFL_END

@@ -20,7 +20,7 @@ open62541Cpp::UA_NodeId resolveBrowsePath(
     std::stringstream ss;
     ss << "Resutl not good: " << UA_StatusCode_name(trResult.statusCode) << ". ";
     ss << "Could not resolve Path: " << static_cast<std::string>(brPath);
-    throw open62541Cpp::Exceptions::NodeNotFound(ss.str());
+    throw UmatiServerLib::Exceptions::NodeNotFound(ss.str());
   }
 
   if (trResult.targetsSize != 1)

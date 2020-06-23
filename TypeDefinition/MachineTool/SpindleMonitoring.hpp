@@ -17,13 +17,13 @@ namespace machineTool
 
 REFL_TYPE(machineTool::SpindleMonitoring_t,
           Bases<machineTool::WorkingUnitMonitoring_t>(),
-          open62541Cpp::attribute::UaObjectType{
-              .NodeId = open62541Cpp::constexp::NodeId(constants::NsMachineToolUri, UA_MACHINETOOLID_SPINDLEMONITORINGTYPE)})
+          UmatiServerLib::attribute::UaObjectType{
+              .NodeId = UmatiServerLib::constexp::NodeId(constants::NsMachineToolUri, UA_MACHINETOOLID_SPINDLEMONITORINGTYPE)})
 REFL_FIELD(IsRotating)
-REFL_FIELD(IsUsedAsAxis, open62541Cpp::attribute::PlaceholderOptional(),
-          open62541Cpp::attribute::MemberInTypeNodeId{
-              .NodeId = open62541Cpp::constexp::NodeId(constants::NsMachineToolUri, UA_MACHINETOOLID_SPINDLEMONITORINGTYPE_ISUSEDASAXIS)})
-REFL_FIELD(Override, open62541Cpp::attribute::PlaceholderOptional(),
-          open62541Cpp::attribute::MemberInTypeNodeId{
-              .NodeId = open62541Cpp::constexp::NodeId(constants::NsMachineToolUri, UA_MACHINETOOLID_SPINDLEMONITORINGTYPE_OVERRIDE)})
+REFL_FIELD(IsUsedAsAxis, UmatiServerLib::attribute::PlaceholderOptional(),
+          UmatiServerLib::attribute::MemberInTypeNodeId{
+              .NodeId = UmatiServerLib::constexp::NodeId(constants::NsMachineToolUri, UA_MACHINETOOLID_SPINDLEMONITORINGTYPE_ISUSEDASAXIS)})
+REFL_FIELD(Override, UmatiServerLib::attribute::PlaceholderOptional(),
+          UmatiServerLib::attribute::MemberInTypeNodeId{
+              .NodeId = UmatiServerLib::constexp::NodeId(constants::NsMachineToolUri, UA_MACHINETOOLID_SPINDLEMONITORINGTYPE_OVERRIDE)})
 REFL_END

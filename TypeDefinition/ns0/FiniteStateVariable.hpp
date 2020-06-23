@@ -16,7 +16,7 @@ struct FiniteStateVariable_t : public StateVariable_t<UA_NodeId>
 REFL_TYPE(
     ns0::FiniteStateVariable_t,
     Bases<ns0::StateVariable_t<UA_NodeId>>(),
-    open62541Cpp::attribute::UaVariableType{
-        .NodeId = open62541Cpp::constexp::NodeId(constants::Ns0Uri, UA_NS0ID_FINITESTATEVARIABLETYPE)})
-REFL_FIELD(Value, open62541Cpp::attribute::UaVariableTypeValue())
+    UmatiServerLib::attribute::UaVariableType{
+        .NodeId = UmatiServerLib::constexp::NodeId(constants::Ns0Uri, UA_NS0ID_FINITESTATEVARIABLETYPE)})
+REFL_FIELD(Value, UmatiServerLib::attribute::UaVariableTypeValue())
 REFL_END

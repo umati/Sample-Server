@@ -17,13 +17,13 @@ namespace ia
 
 REFL_TYPE(ia::StackElement_t,
           Bases<ns0::IOrderedObject_t<std::uint16_t>>(),
-          open62541Cpp::attribute::UaObjectType{
-              .NodeId = open62541Cpp::constexp::NodeId(constants::NsIAUri, UA_INDUSTRIAL_AUTOMATIONID_STACKELEMENTTYPE)})
+          UmatiServerLib::attribute::UaObjectType{
+              .NodeId = UmatiServerLib::constexp::NodeId(constants::NsIAUri, UA_INDUSTRIAL_AUTOMATIONID_STACKELEMENTTYPE)})
 
-REFL_FIELD(IsPartOfBase, open62541Cpp::attribute::MemberInTypeNodeId{
-               .NodeId = open62541Cpp::constexp::NodeId(constants::NsIAUri, UA_INDUSTRIAL_AUTOMATIONID_STACKELEMENTTYPE_ISPARTOFBASE)},
-           open62541Cpp::attribute::PlaceholderOptional())
-REFL_FIELD(SignalOn, open62541Cpp::attribute::MemberInTypeNodeId{
-               .NodeId = open62541Cpp::constexp::NodeId(constants::NsIAUri, UA_INDUSTRIAL_AUTOMATIONID_STACKELEMENTTYPE_SIGNALON)},
-           open62541Cpp::attribute::PlaceholderOptional())
+REFL_FIELD(IsPartOfBase, UmatiServerLib::attribute::MemberInTypeNodeId{
+               .NodeId = UmatiServerLib::constexp::NodeId(constants::NsIAUri, UA_INDUSTRIAL_AUTOMATIONID_STACKELEMENTTYPE_ISPARTOFBASE)},
+           UmatiServerLib::attribute::PlaceholderOptional())
+REFL_FIELD(SignalOn, UmatiServerLib::attribute::MemberInTypeNodeId{
+               .NodeId = UmatiServerLib::constexp::NodeId(constants::NsIAUri, UA_INDUSTRIAL_AUTOMATIONID_STACKELEMENTTYPE_SIGNALON)},
+           UmatiServerLib::attribute::PlaceholderOptional())
 REFL_END

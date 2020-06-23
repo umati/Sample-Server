@@ -8,7 +8,7 @@ namespace machineTool
 
 struct UtilityChangePrognosis_t : public Prognosis_t
 {
-  BindableMemberValue<open62541Cpp::LocalizedText_t> UtilityName;
+  BindableMemberValue<UmatiServerLib::LocalizedText_t> UtilityName;
 };
 
 } // namespace machineTool
@@ -16,7 +16,7 @@ struct UtilityChangePrognosis_t : public Prognosis_t
 REFL_TYPE(
     machineTool::UtilityChangePrognosis_t,
     Bases<machineTool::Prognosis_t>(),
-    open62541Cpp::attribute::UaObjectType{
-        .NodeId = open62541Cpp::constexp::NodeId(constants::NsMachineToolUri, UA_MACHINETOOLID_UTILITYCHANGEPROGNOSISTYPE)})
+    UmatiServerLib::attribute::UaObjectType{
+        .NodeId = UmatiServerLib::constexp::NodeId(constants::NsMachineToolUri, UA_MACHINETOOLID_UTILITYCHANGEPROGNOSISTYPE)})
 REFL_FIELD(UtilityName)
 REFL_END

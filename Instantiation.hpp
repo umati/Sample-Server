@@ -54,9 +54,9 @@ void InstantiateOptional(BINDABLEMEMBER_T<T> &memberPar, UA_Server *pServer, Nod
   case UA_NODECLASS_OBJECT:
   {
     auto typeDef = readTypeDefinition(pServer, member.MemberInTypeNodeId);
-    if constexpr (hasAttributeIfReflectable<open62541Cpp::attribute::UaObjectType, T>())
+    if constexpr (hasAttributeIfReflectable<UmatiServerLib::attribute::UaObjectType, T>())
     {
-      auto objTypeAttr = refl::descriptor::get_attribute<open62541Cpp::attribute::UaObjectType>(refl::reflect<T>());
+      auto objTypeAttr = refl::descriptor::get_attribute<UmatiServerLib::attribute::UaObjectType>(refl::reflect<T>());
       typeDef = objTypeAttr.NodeId.UANodeId(pServer);
     }
 
@@ -111,10 +111,10 @@ UA_StatusCode InstantiateVariable(
 {
   UA_StatusCode status;
   auto typeDef = readTypeDefinition(pServer, memberInTypeNodeId);
-    if constexpr (hasAttributeIfReflectable<open62541Cpp::attribute::UaVariableType, T>())
+    if constexpr (hasAttributeIfReflectable<UmatiServerLib::attribute::UaVariableType, T>())
     {
       // Instantiate Variable Type
-      auto varTypeAttr = refl::descriptor::get_attribute<open62541Cpp::attribute::UaVariableType>(refl::reflect<T>());
+      auto varTypeAttr = refl::descriptor::get_attribute<UmatiServerLib::attribute::UaVariableType>(refl::reflect<T>());
       typeDef = varTypeAttr.NodeId.UANodeId(pServer);
     }
     UA_VariableAttributes varAttr = UA_VariableAttributes_default;

@@ -16,8 +16,8 @@ struct ChannelMonitoring_t
 } // namespace machineTool
 
 REFL_TYPE(machineTool::ChannelMonitoring_t,
-          open62541Cpp::attribute::UaObjectType{
-              .NodeId = open62541Cpp::constexp::NodeId(constants::NsMachineToolUri, UA_MACHINETOOLID_CHANNELMONITORINGTYPE)})
+          UmatiServerLib::attribute::UaObjectType{
+              .NodeId = UmatiServerLib::constexp::NodeId(constants::NsMachineToolUri, UA_MACHINETOOLID_CHANNELMONITORINGTYPE)})
 REFL_FIELD(ChannelState)
 REFL_FIELD(FeedOverride)
 REFL_END

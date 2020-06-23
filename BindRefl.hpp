@@ -94,12 +94,12 @@ namespace UmatiServerLib
         std::cout << member.name << " is a placeholder." << std::endl;
 
         if constexpr (
-            !refl::descriptor::has_attribute<open62541Cpp::attribute::UaReference>(member))
+            !refl::descriptor::has_attribute<UmatiServerLib::attribute::UaReference>(member))
         {
           std::cout << "Placeholder " << member.name << " has no UaReference." << std::endl;
           throw std::runtime_error("Required attribute UaReference not found.");
         }
-        const auto &reference = refl::descriptor::get_attribute<open62541Cpp::attribute::UaReference>(member);
+        const auto &reference = refl::descriptor::get_attribute<UmatiServerLib::attribute::UaReference>(member);
         auto refTypeNodeId = reference.NodeId.UANodeId(pServer);
 
         bindPlaceholder(member(instance), pServer, nodeId, nodesMaster, refTypeNodeId);
@@ -107,9 +107,9 @@ namespace UmatiServerLib
         return;
       }
 
-      if constexpr (refl::descriptor::has_attribute<open62541Cpp::attribute::MemberInTypeNodeId>(member))
+      if constexpr (refl::descriptor::has_attribute<UmatiServerLib::attribute::MemberInTypeNodeId>(member))
       {
-        auto &attr = refl::descriptor::get_attribute<open62541Cpp::attribute::MemberInTypeNodeId>(member);
+        auto &attr = refl::descriptor::get_attribute<UmatiServerLib::attribute::MemberInTypeNodeId>(member);
         setMemberInTypeNodeId(member(instance), attr.NodeId, pServer);
       }
 
@@ -120,7 +120,7 @@ namespace UmatiServerLib
         // Check if this is not the value of a variable type
         // If this is the value of a variable type bind it to the base without appending a browse name (skip adding a browse name)
         if constexpr (
-            !refl::descriptor::has_attribute<open62541Cpp::attribute::UaVariableTypeValue>(member))
+            !refl::descriptor::has_attribute<UmatiServerLib::attribute::UaVariableTypeValue>(member))
         {
           pathEl = getBrowseName(instance, member, pServer);
           childRelativPathElements.push_back(pathEl);
@@ -131,7 +131,7 @@ namespace UmatiServerLib
         childRelativPathElements.push_back(pathEl);
       }
 
-      constexpr bool isOptional = refl::descriptor::has_attribute<open62541Cpp::attribute::PlaceholderOptional>(member);
+      constexpr bool isOptional = refl::descriptor::has_attribute<UmatiServerLib::attribute::PlaceholderOptional>(member);
       try
       {
         setAddrSpaceLocation(member(instance), nodeId, pathEl);
@@ -143,7 +143,7 @@ namespace UmatiServerLib
         MemberRefl(member(instance), pServer, nodeIdChild, nodesMaster);
         setBindOrMandatory(member(instance), true, !isOptional);
       }
-      catch (const open62541Cpp::Exceptions::NodeNotFound &ex)
+      catch (const UmatiServerLib::Exceptions::NodeNotFound &ex)
       {
         if constexpr (!isOptional)
         {
@@ -168,8 +168,8 @@ namespace UmatiServerLib
     }
 
     if constexpr (
-        hasAttributeIfReflectable<open62541Cpp::attribute::UaObjectType, T>() ||
-        hasAttributeIfReflectable<open62541Cpp::attribute::UaVariableType, T>())
+        hasAttributeIfReflectable<UmatiServerLib::attribute::UaObjectType, T>() ||
+        hasAttributeIfReflectable<UmatiServerLib::attribute::UaVariableType, T>())
     {
       MembersRefl(member, pServer, nodeId, nodesMaster);
     }
@@ -177,8 +177,8 @@ namespace UmatiServerLib
         is_same_template<T, BindableMember>::value)
     {
       if constexpr (
-          hasAttributeIfReflectable<open62541Cpp::attribute::UaObjectType>(member.value) ||
-          hasAttributeIfReflectable<open62541Cpp::attribute::UaVariableType>(member.value))
+          hasAttributeIfReflectable<UmatiServerLib::attribute::UaObjectType>(member.value) ||
+          hasAttributeIfReflectable<UmatiServerLib::attribute::UaVariableType>(member.value))
       {
         MembersRefl(member.value, pServer, nodeId, nodesMaster);
       }
@@ -231,9 +231,9 @@ namespace UmatiServerLib
       static_assert(always_false<T>::value, "T not reflectable");
     }
 
-    if constexpr (refl::descriptor::has_attribute<open62541Cpp::attribute::UaObjectType>(refl::reflect<T>()))
+    if constexpr (refl::descriptor::has_attribute<UmatiServerLib::attribute::UaObjectType>(refl::reflect<T>()))
     {
-      auto objTypeAttr = refl::descriptor::get_attribute<open62541Cpp::attribute::UaObjectType>(refl::reflect<T>());
+      auto objTypeAttr = refl::descriptor::get_attribute<UmatiServerLib::attribute::UaObjectType>(refl::reflect<T>());
       typeNodeId = objTypeAttr.NodeId.UANodeId(pServer);
       brDesc.nodeClassMask = UA_NODECLASS_OBJECT;
     }

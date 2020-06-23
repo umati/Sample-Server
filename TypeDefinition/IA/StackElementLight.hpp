@@ -18,12 +18,12 @@ namespace ia
 
 REFL_TYPE(ia::StackElementLight_t,
           Bases<ia::StackElement_t>(),
-          open62541Cpp::attribute::UaObjectType{
-              .NodeId = open62541Cpp::constexp::NodeId(constants::NsIAUri, UA_INDUSTRIAL_AUTOMATIONID_STACKELEMENTLIGHTTYPE)})
-REFL_FIELD(Intensity, open62541Cpp::attribute::MemberInTypeNodeId{
-               .NodeId = open62541Cpp::constexp::NodeId(constants::NsIAUri, UA_INDUSTRIAL_AUTOMATIONID_STACKELEMENTLIGHTTYPE_INTENSITY)},
-           open62541Cpp::attribute::PlaceholderOptional())
-REFL_FIELD(SignalColor, open62541Cpp::attribute::MemberInTypeNodeId{
-               .NodeId = open62541Cpp::constexp::NodeId(constants::NsIAUri, UA_INDUSTRIAL_AUTOMATIONID_STACKELEMENTLIGHTTYPE_SIGNALCOLOR)},
-           open62541Cpp::attribute::PlaceholderOptional())
+          UmatiServerLib::attribute::UaObjectType{
+              .NodeId = UmatiServerLib::constexp::NodeId(constants::NsIAUri, UA_INDUSTRIAL_AUTOMATIONID_STACKELEMENTLIGHTTYPE)})
+REFL_FIELD(Intensity, UmatiServerLib::attribute::MemberInTypeNodeId{
+               .NodeId = UmatiServerLib::constexp::NodeId(constants::NsIAUri, UA_INDUSTRIAL_AUTOMATIONID_STACKELEMENTLIGHTTYPE_INTENSITY)},
+           UmatiServerLib::attribute::PlaceholderOptional())
+REFL_FIELD(SignalColor, UmatiServerLib::attribute::MemberInTypeNodeId{
+               .NodeId = UmatiServerLib::constexp::NodeId(constants::NsIAUri, UA_INDUSTRIAL_AUTOMATIONID_STACKELEMENTLIGHTTYPE_SIGNALCOLOR)},
+           UmatiServerLib::attribute::PlaceholderOptional())
 REFL_END

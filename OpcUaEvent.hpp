@@ -42,8 +42,8 @@ protected:
     void addEventToAddressSpace()
     {
         // Get Event Type from reflection Information
-        static_assert(refl::descriptor::has_attribute<open62541Cpp::attribute::UaObjectType>(refl::reflect<T>()), "Event must have an UaObjectType-attribute with node ID.");
-        auto objTypeAttr = refl::descriptor::get_attribute<open62541Cpp::attribute::UaObjectType>(refl::reflect<T>());
+        static_assert(refl::descriptor::has_attribute<UmatiServerLib::attribute::UaObjectType>(refl::reflect<T>()), "Event must have an UaObjectType-attribute with node ID.");
+        auto objTypeAttr = refl::descriptor::get_attribute<UmatiServerLib::attribute::UaObjectType>(refl::reflect<T>());
         auto eventTypeNodeId = objTypeAttr.NodeId.UANodeId(pServer);
 
         UA_StatusCode retvalCreateEvent = UA_Server_createEvent(

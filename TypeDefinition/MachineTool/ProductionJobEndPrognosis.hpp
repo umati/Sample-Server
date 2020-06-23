@@ -17,11 +17,11 @@ struct ProductionJobEndPrognosis_t : public Prognosis_t
 REFL_TYPE(
     machineTool::ProductionJobEndPrognosis_t,
     Bases<machineTool::Prognosis_t>(),
-    open62541Cpp::attribute::UaObjectType{
-        .NodeId = open62541Cpp::constexp::NodeId(constants::NsMachineToolUri, UA_MACHINETOOLID_PRODUCTIONJOBENDPROGNOSISTYPE)})
+    UmatiServerLib::attribute::UaObjectType{
+        .NodeId = UmatiServerLib::constexp::NodeId(constants::NsMachineToolUri, UA_MACHINETOOLID_PRODUCTIONJOBENDPROGNOSISTYPE)})
 REFL_FIELD(JobNodeId,
-           open62541Cpp::attribute::PlaceholderOptional(),
-           open62541Cpp::attribute::MemberInTypeNodeId{
-               .NodeId = open62541Cpp::constexp::NodeId(constants::NsMachineToolUri, UA_MACHINETOOLID_PRODUCTIONJOBENDPROGNOSISTYPE_JOBNODEID)})
+           UmatiServerLib::attribute::PlaceholderOptional(),
+           UmatiServerLib::attribute::MemberInTypeNodeId{
+               .NodeId = UmatiServerLib::constexp::NodeId(constants::NsMachineToolUri, UA_MACHINETOOLID_PRODUCTIONJOBENDPROGNOSISTYPE_JOBNODEID)})
 REFL_FIELD(SourceIdentifier)
 REFL_END

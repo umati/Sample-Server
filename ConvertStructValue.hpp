@@ -68,9 +68,9 @@ namespace UmatiServerLib
   {
     const UA_DataType *pTypeDefinition = typeDefinition;
 
-    if constexpr (refl::descriptor::has_attribute<open62541Cpp::attribute::UaDataType>(refl::reflect<T>()))
+    if constexpr (refl::descriptor::has_attribute<UmatiServerLib::attribute::UaDataType>(refl::reflect<T>()))
     {
-      pTypeDefinition = refl::descriptor::get_attribute<open62541Cpp::attribute::UaDataType>(refl::reflect<T>()).pDataType;
+      pTypeDefinition = refl::descriptor::get_attribute<UmatiServerLib::attribute::UaDataType>(refl::reflect<T>()).pDataType;
     }
 
     std::size_t numMembersSet = 0;

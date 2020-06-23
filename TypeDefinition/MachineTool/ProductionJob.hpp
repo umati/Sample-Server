@@ -16,8 +16,8 @@ struct ProductionJob_t
 } // namespace machineTool
 
 REFL_TYPE(machineTool::ProductionJob_t,
-          open62541Cpp::attribute::UaObjectType{
-              .NodeId = open62541Cpp::constexp::NodeId(constants::NsMachineToolUri, UA_MACHINETOOLID_PRODUCTIONJOBTYPE)})
+          UmatiServerLib::attribute::UaObjectType{
+              .NodeId = UmatiServerLib::constexp::NodeId(constants::NsMachineToolUri, UA_MACHINETOOLID_PRODUCTIONJOBTYPE)})
 REFL_FIELD(Identifier)
 REFL_FIELD(RunsCompleted)
 REFL_FIELD(RunsPlanned)

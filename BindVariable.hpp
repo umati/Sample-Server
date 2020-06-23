@@ -150,7 +150,7 @@ namespace UmatiServerLib
           std::is_class<T>::value &&
           !(
               std::is_same<std::string, T>::value ||
-              std::is_same<open62541Cpp::DateTime_t, T>::value))
+              std::is_same<UmatiServerLib::DateTime_t, T>::value))
       {
         return bindStructuredValueByPathArray(pServer, nodeId, value);
       }
@@ -174,7 +174,7 @@ namespace UmatiServerLib
           std::is_class<T>::value &&
           !(
               std::is_same<std::string, T>::value ||
-              std::is_same<open62541Cpp::DateTime_t, T>::value))
+              std::is_same<UmatiServerLib::DateTime_t, T>::value))
       {
         return bindStructuredValueByPath(pServer, nodeId, value);
       }

@@ -38,7 +38,7 @@ namespace UmatiServerLib
   public:
     static copyToVariantFunc asVariantFunc(primitivTypes_t pVariable);
     static copyToVariantFunc asVariantFunc(std::string *variable);
-    static copyToVariantFunc asVariantFunc(open62541Cpp::DateTime_t *variable);
+    static copyToVariantFunc asVariantFunc(UmatiServerLib::DateTime_t *variable);
     static copyToVariantFunc asVariantFunc(bool *pVariable);
   };
 

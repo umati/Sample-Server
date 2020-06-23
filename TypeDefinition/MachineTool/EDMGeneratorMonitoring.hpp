@@ -15,8 +15,8 @@ namespace machineTool
 
 REFL_TYPE(machineTool::EDMGeneratorMonitoring_t,
           Bases<machineTool::WorkingUnitMonitoring_t>(),
-          open62541Cpp::attribute::UaObjectType{
-              .NodeId = open62541Cpp::constexp::NodeId(constants::NsMachineToolUri, UA_MACHINETOOLID_EDMGENERATORMONITORINGTYPE)})
+          UmatiServerLib::attribute::UaObjectType{
+              .NodeId = UmatiServerLib::constexp::NodeId(constants::NsMachineToolUri, UA_MACHINETOOLID_EDMGENERATORMONITORINGTYPE)})
 REFL_FIELD(EDMGeneratorState)
 REFL_FIELD(IsOn)
 REFL_END

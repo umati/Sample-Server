@@ -15,8 +15,8 @@ struct FiniteStateMachine_t
 } // namespace ns0
 
 REFL_TYPE(ns0::FiniteStateMachine_t,
-          open62541Cpp::attribute::UaObjectType{
-              .NodeId = open62541Cpp::constexp::NodeId(constants::Ns0Uri, UA_NS0ID_FINITESTATEMACHINETYPE)})
+          UmatiServerLib::attribute::UaObjectType{
+              .NodeId = UmatiServerLib::constexp::NodeId(constants::Ns0Uri, UA_NS0ID_FINITESTATEMACHINETYPE)})
 REFL_FIELD(CurrentState)
-REFL_FIELD(LastTransition, open62541Cpp::attribute::PlaceholderOptional())
+REFL_FIELD(LastTransition, UmatiServerLib::attribute::PlaceholderOptional())
 REFL_END

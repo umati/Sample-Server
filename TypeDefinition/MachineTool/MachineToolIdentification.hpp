@@ -15,6 +15,6 @@ struct MachineToolIdentification_t : public machinery::IMachineVendorNameplate_t
 
 REFL_TYPE(machineTool::MachineToolIdentification_t,
           Bases<machinery::IMachineVendorNameplate_t, machinery::IMachineTagNameplate_t>(),
-          open62541Cpp::attribute::UaObjectType{
-              .NodeId = open62541Cpp::constexp::NodeId(constants::NsMachineToolUri, UA_MACHINETOOLID_MACHINETOOLIDENTIFICATIONTYPE)})
+          UmatiServerLib::attribute::UaObjectType{
+              .NodeId = UmatiServerLib::constexp::NodeId(constants::NsMachineToolUri, UA_MACHINETOOLID_MACHINETOOLIDENTIFICATIONTYPE)})
 REFL_END

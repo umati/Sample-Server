@@ -15,7 +15,7 @@ struct AnalogUnitRange_t : public AnalogItem_t<T>
 
 REFL_TEMPLATE((typename T), (ns0::AnalogUnitRange_t<T>),
               Bases<ns0::AnalogItem_t<T>>(),
-              open62541Cpp::attribute::UaVariableType{
-                  .NodeId = open62541Cpp::constexp::NodeId(constants::Ns0Uri, UA_NS0ID_ANALOGUNITRANGETYPE)})
+              UmatiServerLib::attribute::UaVariableType{
+                  .NodeId = UmatiServerLib::constexp::NodeId(constants::Ns0Uri, UA_NS0ID_ANALOGUNITRANGETYPE)})
 REFL_FIELD(EngineeringUnits)
 REFL_END

@@ -14,8 +14,8 @@ struct SoftwareIdentification_t
 } // namespace machineTool
 
 REFL_TYPE(machineTool::SoftwareIdentification_t,
-  open62541Cpp::attribute::UaObjectType{
-  .NodeId = open62541Cpp::constexp::NodeId(constants::NsMachineToolUri, UA_MACHINETOOLID_SOFTWAREIDENTIFICATIONTYPE)}
+  UmatiServerLib::attribute::UaObjectType{
+  .NodeId = UmatiServerLib::constexp::NodeId(constants::NsMachineToolUri, UA_MACHINETOOLID_SOFTWAREIDENTIFICATIONTYPE)}
 })
 REFL_FIELD(SoftwareRevision)
 REFL_FIELD(Identifier)

@@ -14,6 +14,6 @@ struct BaseModelChangeEvent_t : public BaseEvent_t
 
 REFL_TYPE(ns0::BaseModelChangeEvent_t,
           Bases<ns0::BaseEvent_t>(),
-          open62541Cpp::attribute::UaObjectType{
-              .NodeId = open62541Cpp::constexp::NodeId(constants::Ns0Uri, UA_NS0ID_BASEMODELCHANGEEVENTTYPE)})
+          UmatiServerLib::attribute::UaObjectType{
+              .NodeId = UmatiServerLib::constexp::NodeId(constants::Ns0Uri, UA_NS0ID_BASEMODELCHANGEEVENTTYPE)})
 REFL_END

@@ -1,8 +1,9 @@
 #include "SimulatedMachineTool.hpp"
+#include <cstdint>
 
 SimulatedMachineTool::SimulatedMachineTool()
 {
-  rnd.seed(reinterpret_cast<unsigned int>(this));
+  rnd.seed(static_cast<unsigned int>(reinterpret_cast<std::uintptr_t>(this)));
 }
 
 SimulatedMachineTool::~SimulatedMachineTool()

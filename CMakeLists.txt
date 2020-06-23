@@ -118,18 +118,18 @@ target_link_libraries(machinetool_generated PUBLIC open62541::open62541)
 set_target_properties(machinetool_generated PROPERTIES DEBUG_POSTFIX "d")
 
 add_library(ExampleServerLib
-    ConvertSimpleValue.cpp
-    ConvertStructValue.cpp
-    BindHelper.cpp
-    NodesMaster.cpp
-    NodeValue.cpp
-    Util.cpp
+    UmatiServerLib/ConvertSimpleValue.cpp
+    UmatiServerLib/ConvertStructValue.cpp
+    UmatiServerLib/BindHelper.cpp
+    UmatiServerLib/NodesMaster.cpp
+    UmatiServerLib/NodeValue.cpp
+    UmatiServerLib/Util.cpp
+    UmatiServerLib/Instantiation.cpp
+    UmatiServerLib/OpcUaKeys.cpp
+    UmatiServerLib/ServerHelper.cpp
     OpcUaTypes/LocalizedText.cpp
     OpcUaTypes/EUInformation.cpp
     OpcUaTypes/ConstNodeId.cpp
-    Instantiation.cpp
-    OpcUaKeys.cpp
-    ServerHelper.cpp
 )
 set_target_properties(ExampleServerLib PROPERTIES LINKER_LANGUAGE CXX)
 set_target_properties(ExampleServerLib PROPERTIES DEBUG_POSTFIX "d")

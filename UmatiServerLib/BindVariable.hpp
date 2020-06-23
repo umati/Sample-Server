@@ -12,7 +12,7 @@
 #include <Open62541Cpp/UA_RelativPathElement.hpp>
 #include <list>
 #include <Open62541Cpp/UA_BrowsePath.hpp>
-#include "OpcUaTypes/DateTime.hpp"
+#include "../OpcUaTypes/DateTime.hpp"
 #include <exception>
 
 #include "ConvertSimpleValue.hpp"

@@ -2,15 +2,16 @@
 
 #include <Open62541Cpp/UA_NodeId.hpp>
 #include <open62541/server.h>
-#include <refl.hpp>
 #include <Open62541Cpp/UA_BrowsePath.hpp>
 #include "BindableMember.hpp"
 #include "BindableMemberValue.hpp"
 #include "Util.hpp"
-#include "OpcUaTypes/ConstNodeId.hpp"
-#include "OpcUaTypes/Attributes.hpp"
+#include "../OpcUaTypes/ConstNodeId.hpp"
+#include "../OpcUaTypes/Attributes.hpp"
+#include "../Exceptions/NodeNotFound.hpp"
+
+#include <refl.hpp>
 #include <iostream>
-#include "Exceptions/NodeNotFound.hpp"
 
 open62541Cpp::UA_NodeId resolveBrowsePath(
     UA_Server *pServer,

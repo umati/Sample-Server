@@ -8,7 +8,7 @@
 #include "../OpcUaTypes/LocalizedText.hpp"
 #include "../OpcUaTypes/EUInformation.hpp"
 #include <Open62541Cpp/UA_String.hpp>
-#include "../ConvertStructValue.hpp"
+#include "../UmatiServerLib/ConvertStructValue.hpp"
 
 class Test_Exposure : public UmatiServerLib::ConvertStructValue
 {

@@ -1,9 +1,9 @@
 #pragma once
 
-#include <open62541/server.h>
 #include "NodesMaster.hpp"
-#include "Exceptions/NodeNotFound.hpp"
 #include "BindHelper.hpp"
+#include "../Exceptions/NodeNotFound.hpp"
+#include <open62541/server.h>
 #include <Open62541Cpp/UA_NodeId.hpp>
 #include <Open62541Cpp/UA_RelativPathBase.hpp>
 #include <Open62541Cpp/UA_BrowsePath.hpp>

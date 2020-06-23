@@ -11,7 +11,7 @@
 #include <functional>
 
 #include "NodeValue.hpp"
-#include "OpcUaTypes/DateTime.hpp"
+#include "../OpcUaTypes/DateTime.hpp"
 #include <variant>
 #include <open62541/types.h>
 

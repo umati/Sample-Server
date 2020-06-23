@@ -2,7 +2,7 @@
 
 #include "InstantiatedMachineTool.hpp"
 #include <memory>
-#include "../OpcUaCondition.hpp"
+#include "../UmatiServerLib/OpcUaCondition.hpp"
 #include "../TypeDefinition/MachineTool/Alert.hpp"
 
 class FullMachineTool : public InstantiatedMachineTool

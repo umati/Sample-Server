@@ -1,7 +1,7 @@
 #pragma once
 #include "../TypeDefiniton.hpp"
 #include "Constants.hpp"
-#include "../../BindableMemberPlaceholder.hpp"
+#include "../../UmatiServerLib/BindableMemberPlaceholder.hpp"
 #include "ChannelMonitoring.hpp"
 #include "../IA/BasicStacklight.hpp"
 #include "EDMGeneratorMonitoring.hpp"

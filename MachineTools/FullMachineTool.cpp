@@ -1,10 +1,10 @@
 #include "FullMachineTool.hpp"
-#include <open62541/types_generated.h>
-#include "../BindRefl.hpp"
-#include "../OpcUaCondition.hpp"
+#include "../UmatiServerLib/BindRefl.hpp"
+#include "../UmatiServerLib/OpcUaCondition.hpp"
+#include "../UmatiServerLib/ServerHelper.hpp"
 #include "../TypeDefinition/MachineTool/Alert.hpp"
 #include "../TypeDefinition/MachineTool/NotificationEvent.hpp"
-#include "../ServerHelper.hpp"
+#include <open62541/types_generated.h>
 
 FullMachineTool::FullMachineTool(UA_Server *pServer)
     : InstantiatedMachineTool(pServer)

@@ -3,7 +3,7 @@
 #include "src_generated/namespace_di_generated.h"
 #include "src_generated/namespace_industrial_automation_generated.h"
 
-#include "OpcUaKeys.hpp"
+#include "UmatiServerLib/OpcUaKeys.hpp"
 
 #include <iostream>
 #include <open62541/server_config_default.h>

@@ -4,7 +4,7 @@
 #include "../ns0/Constants.hpp"
 #include "Tool.hpp"
 #include "MultiTool.hpp"
-#include "../../BindableMemberPlaceholder.hpp"
+#include "../../UmatiServerLib/BindableMemberPlaceholder.hpp"
 
 namespace machineTool
 {

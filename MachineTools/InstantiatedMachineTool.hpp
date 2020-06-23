@@ -2,7 +2,7 @@
 #pragma once
 #include "SimulatedMachineTool.hpp"
 #include "../TypeDefinition/MachineTool/MachineTool.hpp"
-#include "../NodesMaster.hpp"
+#include "../UmatiServerLib/NodesMaster.hpp"
 
 #include <open62541/server.h>
 #include <Open62541Cpp/UA_NodeId.hpp>

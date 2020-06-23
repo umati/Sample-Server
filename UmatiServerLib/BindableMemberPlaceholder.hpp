@@ -7,7 +7,7 @@
 #include "Instantiation.hpp"
 #include "Util.hpp"
 #include "OpcUaEvent.hpp"
-#include "TypeDefinition/ns0/GeneralModelChangeEvent.hpp"
+#include "../TypeDefinition/ns0/GeneralModelChangeEvent.hpp"
 #include <variant>
 
 ///\TODO enable if BINDABLEMEMBER_T is BindableMember(Value)

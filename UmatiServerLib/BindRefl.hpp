@@ -10,8 +10,8 @@
 #include <Open62541Cpp/UA_BrowsePath.hpp>
 #include "BindVariable.hpp"
 #include "Util.hpp"
-#include "OpcUaTypes/Attributes.hpp"
-#include "Exceptions/NodeNotFound.hpp"
+#include "../OpcUaTypes/Attributes.hpp"
+#include "../Exceptions/NodeNotFound.hpp"
 #include <variant>
 
 namespace UmatiServerLib

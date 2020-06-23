@@ -16,11 +16,17 @@
 #include "MachineTools/FullMachineTool.hpp"
 #include "MachineTools/BasicMachineTool.hpp"
 
+std::atomic_bool running {true};
+void sigHandler(int sig)
+{
+  std::cout << "Caught signal " << sig << std::endl;
+  std::cout << "Stop application..." << std::endl;
+  running = false;
+}
 void simulate(
-              std::atomic_bool &running,
-              std::mutex &accessDataMutex,
-              UA_Server *pServer,
-              std::list<std::shared_ptr<SimulatedMachineTool>> &machineTools)
+    std::mutex &accessDataMutex,
+    UA_Server *pServer,
+    std::list<std::shared_ptr<SimulatedMachineTool>> &machineTools)
 {
   std::unique_lock<std::remove_reference<decltype(accessDataMutex)>::type> ul(accessDataMutex);
   ul.unlock();
@@ -28,7 +34,7 @@ void simulate(
   while (running)
   {
     ul.lock();
-    for(auto &mt: machineTools)
+    for (auto &mt : machineTools)
     {
       mt->Simulate();
     }
@@ -59,7 +65,11 @@ UA_StatusCode generateChildNodeIdInParentNs(
 
 int main(int argc, char *argv[])
 {
-  std::cout << "ExampleMTServer" << std::endl;
+  signal(SIGINT, sigHandler);
+  signal(SIGABRT, sigHandler);
+  signal(SIGTERM, sigHandler);
+
+  std::cout << "ExampleMTServer, exit with Ctrl+C" << std::endl;
   OpcUaKeys keys("server_key.der", "server_cert.der");
   UA_Server *pServer = UA_Server_new();
   auto pConfig = UA_Server_getConfig(pServer);
@@ -82,14 +92,14 @@ int main(int argc, char *argv[])
   }
   catch (std::exception &ex)
   {
-    std::cout << "Could not load keys." << std::endl;
+    std::cout << "Could not load keys 'server_key.der' and 'server_cert.der'  for encryption." << std::endl;
     std::cout << ex.what();
-    std::cout << "Generate keys with create_self-signed.py in open62541/tools directory" << std::endl;
+    std::cout << "Generate keys with create_self-signed.py in the open62541/tools directory" << std::endl;
     UA_ServerConfig_setDefault(pConfig);
     std::cout << "No encryption will be available." << std::endl;
   }
 
-  if(argc >= 2)
+  if (argc >= 2)
   {
     pConfig->customHostname = UA_STRING_ALLOC(argv[1]);
   }
@@ -102,7 +112,6 @@ int main(int argc, char *argv[])
   namespace_machinetool_generated(pServer);
 
   std::mutex accessDataMutex;
-  std::atomic_bool running{true};
 
   std::list<std::shared_ptr<SimulatedMachineTool>> machineTools;
   machineTools.push_back(std::make_shared<FullMachineTool>(pServer));
@@ -110,7 +119,7 @@ int main(int argc, char *argv[])
 
   UA_Server_run_startup(pServer);
   std::unique_lock<decltype(accessDataMutex)> ul(accessDataMutex);
-  std::thread t(simulate, std::ref(running), std::ref(accessDataMutex), pServer, std::ref(machineTools));
+  std::thread t(simulate, std::ref(accessDataMutex), pServer, std::ref(machineTools));
   ul.unlock();
   while (running)
   {
@@ -123,6 +132,8 @@ int main(int argc, char *argv[])
 
   std::cout << "Waiting for exiting simulate-thread." << std::endl;
   t.join();
+  // Ensure that all simulated machines are cleared, so no interaction with the OPC UA Server anymore.
+  machineTools.erase(machineTools.begin(), machineTools.end());
   std::cout << "Shut down OPC UA Server" << std::endl;
   UA_Server_run_shutdown(pServer);
   UA_Server_delete(pServer);

@@ -7,6 +7,7 @@
 #include "EDMGeneratorMonitoring.hpp"
 #include "SpindleMonitoring.hpp"
 #include "LaserMonitoring.hpp"
+#include "MachineOperationMonitoring.hpp"
 
 namespace machineTool
 {
@@ -16,6 +17,7 @@ namespace machineTool
     BindableMemberPlaceholder<BindableMember, ChannelMonitoring_t> Channels; // TODO embed as MonitoredElement?!
     BindableMemberPlaceholder<BindableMember, std::variant<SpindleMonitoring_t, EDMGeneratorMonitoring_t, LaserMonitoring_t>> MonitoredElement;
     BindableMember<ia::BasicStacklight_t> Stacklight;
+    BindableMember<MachineOperationMonitoring_t> MachineTool;
   };
 
 } // namespace machineTool
@@ -23,6 +25,7 @@ namespace machineTool
 REFL_TYPE(machineTool::Monitoring_t,
           UmatiServerLib::attribute::UaObjectType{
               .NodeId = UmatiServerLib::constexp::NodeId(constants::NsMachineToolUri, UA_MACHINETOOLID_MONITORINGTYPE)})
+REFL_FIELD(MachineTool)
 REFL_FIELD(Channels,
            UmatiServerLib::attribute::MemberInTypeNodeId{
                .NodeId = UmatiServerLib::constexp::NodeId(constants::NsMachineToolUri, UA_MACHINETOOLID_MONITORINGTYPE_MONITOREDELEMENT)},

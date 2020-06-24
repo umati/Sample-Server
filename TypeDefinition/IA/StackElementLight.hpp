@@ -12,6 +12,7 @@ namespace ia
   {
     BindableMemberValue<ns0::AnalogItem_t<float>> Intensity;
     BindableMemberValue<UA_SignalColor> SignalColor;
+    BindableMemberValue<UA_SignalModeLight> StacklightMode;
   };
 
 } // namespace ia
@@ -25,5 +26,8 @@ REFL_FIELD(Intensity, UmatiServerLib::attribute::MemberInTypeNodeId{
            UmatiServerLib::attribute::PlaceholderOptional())
 REFL_FIELD(SignalColor, UmatiServerLib::attribute::MemberInTypeNodeId{
                .NodeId = UmatiServerLib::constexp::NodeId(constants::NsIAUri, UA_INDUSTRIAL_AUTOMATIONID_STACKELEMENTLIGHTTYPE_SIGNALCOLOR)},
+           UmatiServerLib::attribute::PlaceholderOptional())
+REFL_FIELD(StacklightMode, UmatiServerLib::attribute::MemberInTypeNodeId{
+               .NodeId = UmatiServerLib::constexp::NodeId(constants::NsIAUri, UA_INDUSTRIAL_AUTOMATIONID_STACKELEMENTLIGHTTYPE_STACKLIGHTMODE)},
            UmatiServerLib::attribute::PlaceholderOptional())
 REFL_END

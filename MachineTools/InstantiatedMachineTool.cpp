@@ -53,3 +53,61 @@ void InstantiatedMachineTool::InstantiateIdentification()
     mt.Identification->SerialNumber = ss.str();
   }
 }
+
+void InstantiatedMachineTool::InstantiateMonitoringStacklight(std::list<UA_SignalColor> stacklightColors)
+{
+  InstantiateOptional(mt.Monitoring->Stacklight, m_pServer, n);
+  InstantiateOptional(mt.Monitoring->Stacklight->NodeVersion, m_pServer, n);
+  mt.Monitoring->Stacklight->StacklightMode = UA_StacklightOperationMode::UA_STACKLIGHTOPERATIONMODE_SEGMENTED;
+
+  for (size_t i = 1; i <= stacklightColors.size(); ++i)
+  {
+    std::stringstream ss;
+    ss << "Light " << i;
+    auto &light = mt.Monitoring->Stacklight->OrderedObjects.Add(m_pServer, n, {m_nsIndex, ss.str()});
+    InstantiateOptional(light.IsPartOfBase, m_pServer, n);
+    InstantiateOptional(light.SignalOn, m_pServer, n);
+    InstantiateOptional(light.StacklightMode, m_pServer, n);
+
+    light.StacklightMode = UA_SignalModeLight::UA_SIGNALMODELIGHT_CONTINUOUS;
+    light.IsPartOfBase = false;
+    light.NumberInList = i;
+    light.SignalOn = true;
+    if (!stacklightColors.empty())
+    {
+      light.SignalColor = stacklightColors.front();
+      InstantiateOptional(light.SignalColor, m_pServer, n);
+      stacklightColors.pop_front();
+    }
+  }
+}
+
+void InstantiatedMachineTool::InstantiateMonitoringChannel(int numChannels)
+{
+  for (std::size_t i = 1; i <= numChannels; ++i)
+  {
+    std::stringstream ss;
+    ss << "Channel " << i;
+    auto &channel = mt.Monitoring->Channels.Add(m_pServer, n, {m_nsIndex, ss.str()});
+    channel.ChannelState = UA_CHANNELSTATE_INTERRUPTED;
+    channel.FeedOverride->EngineeringUnits->DisplayName = {"", "%"};
+    channel.FeedOverride->EURange->low = 0;
+    channel.FeedOverride->EURange->high = (rnd() % 5) * 10 + 100;
+    channel.FeedOverride->Value = std::fmod(rnd() / 100.0, channel.FeedOverride->EURange->high);
+    channel.Name = ss.str();
+    channel.ChannelMode = UA_ChannelMode::UA_CHANNELMODE_AUTOMATIC;
+  }
+}
+
+void InstantiatedMachineTool::SimulateStacklight()
+{
+  for (auto &light : mt.Monitoring->Stacklight->OrderedObjects.value)
+  {
+    light->SignalOn = (rnd() % 2) == 0;
+  }
+}
+
+void InstantiatedMachineTool::InstantiateMonitoringMT()
+{
+  mt.Monitoring->MachineTool->OperationMode = UA_MachineOperationMode::UA_MACHINEOPERATIONMODE_AUTOMATIC;
+}

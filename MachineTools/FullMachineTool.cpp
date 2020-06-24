@@ -23,6 +23,11 @@ void FullMachineTool::CreateObject()
   InstantiatePrognosis();
 
   InstantiateOptional(mt.Production->ActiveProgram->State, m_pServer, n);
+  mt.Production->ActiveProgram->NumberInList = 0;
+  mt.Production->ActiveProgram->Name = "Full Program";
+  InstantiateOptional(mt.Production->ActiveProgram->JobNodeId, m_pServer, n);
+  InstantiateOptional(mt.Production->ActiveProgram->JobIdentifier, m_pServer, n);
+
   InstantiateOptional(mt.Production->ProductionPlan, m_pServer, n);
   writeEventNotifier(m_pServer, mt.Production->ProductionPlan.NodeId);
 
@@ -49,8 +54,11 @@ void FullMachineTool::InstantiateIdentification()
   InstantiateOptional(mt.Identification->ComponentName, m_pServer, n);
 
   mt.Identification->YearOfConstruction = 2020;
+  mt.Identification->MonthOfConstruction = 6;
   mt.Identification->Location = "AMB 0 1/N 48.781340 E 9.165731";
-  mt.Identification->SerialNumber = std::string{"3-1415926535-8979323846"};
+  mt.Identification->SerialNumber = "3-1415926535-8979323846";
+  mt.Identification->DeviceClass = "MachineTool";
+  mt.Identification->ComponentName = {"", MachineName};
 }
 void FullMachineTool::InstantiateTools()
 {
@@ -93,16 +101,15 @@ void FullMachineTool::InstantiateTools()
 
 void FullMachineTool::InstantiateMonitoring()
 {
-  InstantiateOptional(mt.Monitoring->Stacklight, m_pServer, n);
-  InstantiateOptional(mt.Monitoring->Stacklight->NodeVersion, m_pServer, n);
-  auto &light1 = mt.Monitoring->Stacklight->OrderedObjects.Add(m_pServer, n, {m_nsIndex, "Light 1"});
-  light1.IsPartOfBase = false;
-  light1.NumberInList = 1;
-  light1.SignalOn = true;
+  InstantiateMonitoringMT();
+  InstantiateMonitoringStacklight({
+      UA_SignalColor::UA_SIGNALCOLOR_RED,
+      UA_SignalColor::UA_SIGNALCOLOR_YELLOW,
+      UA_SignalColor::UA_SIGNALCOLOR_GREEN,
+      UA_SignalColor::UA_SIGNALCOLOR_WHITE,
+  });
 
-  auto &channel = mt.Monitoring->Channels.Add(m_pServer, n, {m_nsIndex, "InstChannel1"});
-  channel.ChannelState = UA_CHANNELSTATE_INTERRUPTED;
-  channel.FeedOverride->Value = 89.0;
+  InstantiateMonitoringChannel(4);
 
   auto &spindle1 = mt.Monitoring->MonitoredElement.Add<machineTool::SpindleMonitoring_t>(m_pServer, n, {m_nsIndex, "Spindle 1"});
   InstantiateOptional(spindle1.Override, m_pServer, n);
@@ -161,6 +168,10 @@ void FullMachineTool::InstantiatePrognosis()
 void FullMachineTool::Simulate()
 {
   ++m_simStep;
+  if ((m_simStep % 2) == 1)
+  {
+    SimulateStacklight();
+  }
 
   switch (m_simStep % 10)
   {
@@ -229,6 +240,8 @@ void FullMachineTool::Simulate()
       job.Identifier = ss.str();
       job.RunsCompleted = 0;
       job.RunsPlanned = 2;
+      mt.Production->ActiveProgram->JobIdentifier = mt.Production->ProductionPlan->OrderedObjects.value.back()->Identifier.value;
+      mt.Production->ActiveProgram->JobNodeId = *mt.Production->ProductionPlan->OrderedObjects.value.back().NodeId.NodeId;
     }
   }
   else if ((m_simStep % 10) == 8 && m_pAlert)
@@ -247,6 +260,8 @@ void FullMachineTool::Simulate()
     {
       auto lastIt = --mt.Production->ProductionPlan->OrderedObjects->end();
       mt.Production->ProductionPlan->OrderedObjects.Delete(lastIt, m_pServer, n);
+      mt.Production->ActiveProgram->JobIdentifier = mt.Production->ProductionPlan->OrderedObjects.value.front()->Identifier.value;
+      mt.Production->ActiveProgram->JobNodeId = *mt.Production->ProductionPlan->OrderedObjects.value.front().NodeId.NodeId;
     }
   }
 

@@ -12,6 +12,7 @@
 #include <mutex>
 #include <atomic>
 #include <list>
+#include <csignal>
 
 #include "MachineTools/FullMachineTool.hpp"
 #include "MachineTools/BasicMachineTool.hpp"

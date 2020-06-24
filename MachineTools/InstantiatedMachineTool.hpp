@@ -14,10 +14,15 @@ class InstantiatedMachineTool : public SimulatedMachineTool
   InstantiatedMachineTool(UA_Server *pServer);
 
   const std::uint16_t &NsIndex;
+
   protected:
   virtual void CreateObject();
 
-  virtual void InstantiateIdentification();
+  virtual void InstantiateIdentification() ;
+  virtual void InstantiateMonitoringMT();
+  virtual void InstantiateMonitoringStacklight(std::list<UA_SignalColor> stacklightColors);
+  virtual void InstantiateMonitoringChannel(int numChannels);
+  virtual void SimulateStacklight();
 
   std::string MachineName;
   std::uint16_t m_nsIndex;

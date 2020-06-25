@@ -214,7 +214,7 @@ void FullMachineTool::Simulate()
 
   if ((m_simStep % 10) == 1)
   {
-    m_pAlert = std::make_shared<OpcUaCondition<machineTool::Alert_t>>(m_pServer, open62541Cpp::UA_NodeId(UA_NODEID_NUMERIC(0, UA_NS0ID_SERVER)));
+    m_pAlert = std::make_shared<OpcUaCondition<machineTool::Alert_t>>(m_pServer, mt.Notification->Messages.NodeId);
     m_pAlert->Data.ErrorCode = "ERR404";
     {
       std::stringstream ss;

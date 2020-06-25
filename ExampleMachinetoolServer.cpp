@@ -127,7 +127,7 @@ int main(int argc, char *argv[])
     ul.lock();
     std::uint16_t timeout = UA_Server_run_iterate(pServer, false);
     ul.unlock();
-    std::this_thread::yield();
+    //std::this_thread::yield();
     std::this_thread::sleep_for(std::chrono::milliseconds(timeout));
   }
 

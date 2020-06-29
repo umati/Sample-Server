@@ -26,6 +26,8 @@ ua_generate_nodeset_and_datatypes(
   FILE_NS "${open62541_NODESET_DIR}/DI/Opc.Ua.Di.NodeSet2.xml"
   OUTPUT_DIR "${PROJECT_SOURCE_DIR}/src_generated"
 )
+
+# See https://github.com/open62541/open62541/issues/3747
 ua_generate_nodeid_header(
     NAME "machinery"
     FILE_CSV "${PROJECT_SOURCE_DIR}/model/machinery.csv"
@@ -80,6 +82,7 @@ ua_generate_nodeset_and_datatypes(
     #DEPENDS_NS    "${UA_FILE_NS0}"
 )
 
+# See https://github.com/open62541/open62541/issues/3747
 ua_generate_nodeid_header(
     NAME "iswexample"
     FILE_CSV "${PROJECT_SOURCE_DIR}/model/iswexample.csv"
@@ -95,7 +98,6 @@ ua_generate_nodeset(
     # First NS0 Types, then other dependent namespaces
     DEPENDS_TYPES "UA_TYPES;UA_TYPES_DI;UA_TYPES_MACHINERY;UA_TYPES_MACHINETOOL"
     DEPENDS_NS "${open62541_NODESET_DIR}/Schema/Opc.Ua.NodeSet2.xml;${open62541_NODESET_DIR}/DI/Opc.Ua.Di.NodeSet2.xml;${PROJECT_SOURCE_DIR}/model/machinery.xml;${PROJECT_SOURCE_DIR}/model/industrial_automation.xml;${PROJECT_SOURCE_DIR}/model/Opc.Ua.MachineTool.Nodeset2.xml"
-    #DEPENDS_NS "${open62541_NODESET_DIR}/Schema/Opc.Ua.NodeSet2.xml;${PROJECT_SOURCE_DIR}/model/machinery.xml;${PROJECT_SOURCE_DIR}/model/machinetool.xml;${open62541_NODESET_DIR}/DI/Opc.Ua.Di.NodeSet2.xml"
 )
 
 add_library(machinetool_generated

@@ -17,7 +17,7 @@
 #include "MachineTools/FullMachineTool.hpp"
 #include "MachineTools/BasicMachineTool.hpp"
 
-std::atomic_bool running {true};
+std::atomic_bool running{true};
 void sigHandler(int sig)
 {
   std::cout << "Caught signal " << sig << std::endl;

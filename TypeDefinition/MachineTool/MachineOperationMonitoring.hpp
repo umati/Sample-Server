@@ -23,7 +23,7 @@ REFL_TYPE(machineTool::MachineOperationMonitoring_t,
               .NodeId = UmatiServerLib::constexp::NodeId(constants::NsMachineToolUri, UA_MACHINETOOLID_MACHINEOPERATIONMONITORINGTYPE)})
 REFL_FIELD(OperationMode)
 REFL_FIELD(FeedOverride, UmatiServerLib::attribute::MemberInTypeNodeId{
-               .NodeId = UmatiServerLib::constexp::NodeId(constants::NsMachineToolUri, UA_MACHINETOOLID_MACHINEOPERATIONMONITORINGTYPE)},
+               .NodeId = UmatiServerLib::constexp::NodeId(constants::NsMachineToolUri, UA_MACHINETOOLID_MACHINEOPERATIONMONITORINGTYPE_FEEDOVERRIDE)},
            UmatiServerLib::attribute::PlaceholderOptional())
 REFL_FIELD(PowerOnDuration, UmatiServerLib::attribute::MemberInTypeNodeId{
                .NodeId = UmatiServerLib::constexp::NodeId(constants::NsMachineToolUri, UA_MACHINETOOLID_MACHINEOPERATIONMONITORINGTYPE_POWERONDURATION)},

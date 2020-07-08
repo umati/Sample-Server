@@ -60,10 +60,12 @@ void InstantiatedMachineTool::InstantiateMonitoringStacklight(std::list<UA_Signa
   InstantiateOptional(mt.Monitoring->Stacklight->NodeVersion, m_pServer, n);
   mt.Monitoring->Stacklight->StacklightMode = UA_StacklightOperationMode::UA_STACKLIGHTOPERATIONMODE_SEGMENTED;
 
-  for (size_t i = 1; i <= stacklightColors.size(); ++i)
+  // Store size, as the list will become shorter
+  std::size_t s = stacklightColors.size();
+  for (std::size_t i = 0; i < s; ++i)
   {
     std::stringstream ss;
-    ss << "Light " << i;
+    ss << "Light " << (i+1);
     auto &light = mt.Monitoring->Stacklight->OrderedObjects.Add(m_pServer, n, {m_nsIndex, ss.str()});
     InstantiateOptional(light.IsPartOfBase, m_pServer, n);
     InstantiateOptional(light.SignalOn, m_pServer, n);

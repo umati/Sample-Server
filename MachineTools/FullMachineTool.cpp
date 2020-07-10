@@ -256,7 +256,7 @@ void FullMachineTool::Simulate()
     m_pAlert->Trigger();
     m_pAlert = nullptr;
 
-    if (!mt.Monitoring->Channels->empty())
+    if (!mt.Production->ProductionPlan->OrderedObjects->empty())
     {
       auto lastIt = --mt.Production->ProductionPlan->OrderedObjects->end();
       mt.Production->ProductionPlan->OrderedObjects.Delete(lastIt, m_pServer, n);

@@ -146,6 +146,7 @@ add_executable(
     MachineTools/InstantiatedMachineTool.cpp
     MachineTools/FullMachineTool.cpp
     MachineTools/BasicMachineTool.cpp
+    MachineTools/MRMachineTool.cpp
 )
 
 set_target_properties(${PROJECT_NAME} PROPERTIES LINKER_LANGUAGE CXX)

@@ -65,7 +65,7 @@ void InstantiatedMachineTool::InstantiateMonitoringStacklight(std::list<UA_Signa
   for (std::size_t i = 0; i < s; ++i)
   {
     std::stringstream ss;
-    ss << "Light " << (i+1);
+    ss << "Light " << i;
     auto &light = mt.Monitoring->Stacklight->OrderedObjects.Add(m_pServer, n, {m_nsIndex, ss.str()});
     InstantiateOptional(light.IsPartOfBase, m_pServer, n);
     InstantiateOptional(light.SignalOn, m_pServer, n);

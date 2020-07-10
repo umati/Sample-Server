@@ -16,6 +16,7 @@
 
 #include "MachineTools/FullMachineTool.hpp"
 #include "MachineTools/BasicMachineTool.hpp"
+#include "MachineTools/MRMachineTool.hpp"
 
 std::atomic_bool running{true};
 void sigHandler(int sig)
@@ -117,6 +118,7 @@ int main(int argc, char *argv[])
   std::list<std::shared_ptr<SimulatedMachineTool>> machineTools;
   machineTools.push_back(std::make_shared<FullMachineTool>(pServer));
   machineTools.push_back(std::make_shared<BasicMachineTool>(pServer));
+  machineTools.push_back(std::make_shared<MRMachineTool>(pServer));
 
   UA_Server_run_startup(pServer);
   std::unique_lock<decltype(accessDataMutex)> ul(accessDataMutex);

@@ -19,8 +19,7 @@ struct Condition_t : public BaseEvent_t
   UA_NodeId ConditionSubClassId;
   UmatiServerLib::LocalizedText_t ConditionSubClassName;
   TwoStateVariable_t EnabledState;
-  ConditionVariable_t<UmatiServerLib::LocalizedText_t> LastSeverity;
-  //ConditionVariable_t<UmatiServerLib::LocalizedText_t> LastSeverity;
+  ConditionVariable_t<std::uint16_t> LastSeverity;
   ConditionVariable_t<UmatiServerLib::StatusCode_t> Quality;
   bool Retain;
 };

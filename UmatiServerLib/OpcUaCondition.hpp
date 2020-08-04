@@ -55,7 +55,7 @@ protected:
     auto name = refl::reflect<T>().name;
     UA_StatusCode retvalCreateCondition = UA_Server_createCondition(
         pServer,
-        UA_NODEID_NULL,
+        UA_NODEID_NUMERIC(Source.NodeId->namespaceIndex,0),
         *conditionTypeNodeId.NodeId,
         *open62541Cpp::UA_QualifiedName(conditionTypeNodeId.NodeId->namespaceIndex, static_cast<std::string>(name)).QualifiedName,
         *Source.NodeId,

@@ -13,6 +13,7 @@
 #include <list>
 #include <Open62541Cpp/UA_BrowsePath.hpp>
 #include "../OpcUaTypes/DateTime.hpp"
+#include "../OpcUaTypes/StatusCode.hpp"
 #include <exception>
 
 #include "ConvertSimpleValue.hpp"
@@ -150,6 +151,7 @@ namespace UmatiServerLib
           std::is_class<T>::value &&
           !(
               std::is_same<std::string, T>::value ||
+              std::is_same<UmatiServerLib::StatusCode_t, T>::value ||
               std::is_same<UmatiServerLib::DateTime_t, T>::value))
       {
         return bindStructuredValueByPathArray(pServer, nodeId, value);
@@ -174,6 +176,7 @@ namespace UmatiServerLib
           std::is_class<T>::value &&
           !(
               std::is_same<std::string, T>::value ||
+              std::is_same<UmatiServerLib::StatusCode_t, T>::value ||
               std::is_same<UmatiServerLib::DateTime_t, T>::value))
       {
         return bindStructuredValueByPath(pServer, nodeId, value);

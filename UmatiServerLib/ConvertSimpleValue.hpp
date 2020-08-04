@@ -12,6 +12,7 @@
 
 #include "NodeValue.hpp"
 #include "../OpcUaTypes/DateTime.hpp"
+#include "../OpcUaTypes/StatusCode.hpp"
 #include <variant>
 #include <open62541/types.h>
 
@@ -39,6 +40,7 @@ namespace UmatiServerLib
     static copyToVariantFunc asVariantFunc(primitivTypes_t pVariable);
     static copyToVariantFunc asVariantFunc(std::string *variable);
     static copyToVariantFunc asVariantFunc(UmatiServerLib::DateTime_t *variable);
+    static copyToVariantFunc asVariantFunc(UmatiServerLib::StatusCode_t *variable);
     static copyToVariantFunc asVariantFunc(bool *pVariable);
   };
 

@@ -3,6 +3,7 @@
 #include "Constants.hpp"
 #include "ConditionVariable.hpp"
 #include "TwoStateVariable.hpp"
+#include "../../OpcUaTypes/StatusCode.hpp"
 
 namespace ns0
 {
@@ -19,7 +20,8 @@ struct Condition_t : public BaseEvent_t
   UmatiServerLib::LocalizedText_t ConditionSubClassName;
   TwoStateVariable_t EnabledState;
   ConditionVariable_t<UmatiServerLib::LocalizedText_t> LastSeverity;
-  ConditionVariable_t<UA_StatusCode> Quality;
+  //ConditionVariable_t<UmatiServerLib::LocalizedText_t> LastSeverity;
+  ConditionVariable_t<UmatiServerLib::StatusCode_t> Quality;
   bool Retain;
 };
 

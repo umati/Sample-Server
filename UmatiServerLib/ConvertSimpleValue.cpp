@@ -56,4 +56,13 @@ namespace UmatiServerLib
     };
   }
 
+  copyToVariantFunc ConvertSimpleValue::asVariantFunc(UmatiServerLib::StatusCode_t *variable)
+  {
+    auto pVariable = variable;
+    return [pVariable](UA_Variant *dst) {
+      UA_StatusCode s = pVariable->code;
+      UA_Variant_setScalarCopy(dst, &s, &UA_TYPES[UA_TYPES_STATUSCODE]);
+    };
+  }
+
 } // namespace UmatiServerLib

@@ -52,6 +52,8 @@ void FullMachineTool::InstantiateIdentification()
   InstantiateOptional(mt.Identification->MonthOfConstruction, m_pServer, n);
   InstantiateOptional(mt.Identification->DeviceClass, m_pServer, n);
   InstantiateOptional(mt.Identification->ComponentName, m_pServer, n);
+  InstantiateOptional(mt.Identification->SoftwareIdentification, m_pServer, n);
+
 
   mt.Identification->YearOfConstruction = 2020;
   mt.Identification->MonthOfConstruction = 6;
@@ -59,6 +61,10 @@ void FullMachineTool::InstantiateIdentification()
   mt.Identification->SerialNumber = "3-1415926535-8979323846";
   mt.Identification->DeviceClass = "MachineTool";
   mt.Identification->ComponentName = {"", MachineName};
+
+  auto &swOS = mt.Identification->SoftwareIdentification->SoftwareItem.Add(m_pServer, n, {m_nsIndex, "OS"});
+  swOS.Identifier = "Alpine Container";
+  swOS.SoftwareRevision = "latest";
 }
 void FullMachineTool::InstantiateTools()
 {

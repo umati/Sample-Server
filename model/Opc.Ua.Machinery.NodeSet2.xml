@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<UANodeSet xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd" xmlns="http://opcfoundation.org/UA/2011/03/UANodeSet.xsd" xmlns:s1="http://opcfoundation.org/UA/Machinery/Types.xsd" xmlns:s2="http://opcfoundation.org/UA/DI/Types.xsd" xmlns:s3="http://opcfoundation.org/UA/MachineTool/Types.xsd" xmlns:ua="http://unifiedautomation.com/Configuration/NodeSet.xsd" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+<UANodeSet xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd" xmlns="http://opcfoundation.org/UA/2011/03/UANodeSet.xsd" xmlns:s1="http://opcfoundation.org/UA/Machinery/Types.xsd" xmlns:s2="http://opcfoundation.org/UA/DI/Types.xsd" xmlns:ua="http://unifiedautomation.com/Configuration/NodeSet.xsd" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
     <NamespaceUris>
         <Uri>http://opcfoundation.org/UA/Machinery/</Uri>
         <Uri>http://opcfoundation.org/UA/DI/</Uri>
-        <Uri>http://opcfoundation.org/UA/MachineTool/</Uri>
     </NamespaceUris>
     <Models>
-        <Model ModelUri="http://opcfoundation.org/UA/Machinery/" PublicationDate="2020-03-17T10:18:50Z" Version="0.1.6">
+        <Model ModelUri="http://opcfoundation.org/UA/Machinery/" PublicationDate="2020-06-01T00:00:00Z" Version="1.0.0">
             <RequiredModel ModelUri="http://opcfoundation.org/UA/" PublicationDate="2020-04-10T00:00:00Z" Version="1.04.7"/>
             <RequiredModel ModelUri="http://opcfoundation.org/UA/DI/" PublicationDate="2019-05-01T00:00:00Z" Version="1.02"/>
         </Model>
@@ -17,7 +16,6 @@
         <Alias Alias="UInt16">i=5</Alias>
         <Alias Alias="String">i=12</Alias>
         <Alias Alias="DateTime">i=13</Alias>
-        <Alias Alias="NodeId">i=17</Alias>
         <Alias Alias="QualifiedName">i=20</Alias>
         <Alias Alias="LocalizedText">i=21</Alias>
         <Alias Alias="Organizes">i=35</Alias>
@@ -32,11 +30,12 @@
     </Aliases>
     <Extensions>
         <Extension>
-            <ua:ModelInfo Tool="UaModeler" Hash="D92cYs5U9HKwS6sEaUvTyg==" Version="1.6.3"/>
+            <ua:ModelInfo Tool="UaModeler" Hash="i2K81+2e9+UAcDH+kuq9Lw==" Version="1.6.3"/>
         </Extension>
     </Extensions>
-    <UAObjectType NodeId="ns=1;i=1011" BrowseName="1:IMachineTagNameplateType">
+    <UAObjectType IsAbstract="true" NodeId="ns=1;i=1011" BrowseName="1:IMachineTagNameplateType">
         <DisplayName>IMachineTagNameplateType</DisplayName>
+        <Description Locale="en">Interface containing information of the identification of a machine set by the customer</Description>
         <References>
             <Reference ReferenceType="HasSubtype" IsForward="false">ns=2;i=15048</Reference>
             <Reference ReferenceType="HasProperty">ns=1;i=6028</Reference>
@@ -45,6 +44,7 @@
     </UAObjectType>
     <UAVariable DataType="String" ParentNodeId="ns=1;i=1011" NodeId="ns=1;i=6028" BrowseName="1:Location" AccessLevel="3">
         <DisplayName>Location</DisplayName>
+        <Description Locale="en">To be used by end users to store the location of the machine in a scheme specific to the end user. The minimum number of Unicode characters of this Property shall be 60 characters, i.e. clients can expect to be able to write strings with a length of 40 Unicode characters into that field.</Description>
         <References>
             <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=1011</Reference>
             <Reference ReferenceType="HasModellingRule">i=80</Reference>
@@ -53,6 +53,7 @@
     </UAVariable>
     <UAObjectType IsAbstract="true" NodeId="ns=1;i=1010" BrowseName="1:IMachineVendorNameplateType">
         <DisplayName>IMachineVendorNameplateType</DisplayName>
+        <Description Locale="en">Interface containing identification and nameplate information for a machine provided by the machine vendor</Description>
         <References>
             <Reference ReferenceType="HasSubtype" IsForward="false">ns=2;i=15035</Reference>
             <Reference ReferenceType="HasProperty">ns=1;i=6027</Reference>
@@ -66,6 +67,7 @@
     </UAObjectType>
     <UAVariable DataType="DateTime" ParentNodeId="ns=1;i=1010" NodeId="ns=1;i=6027" BrowseName="1:InitialOperationDate">
         <DisplayName>InitialOperationDate</DisplayName>
+        <Description Locale="en">The date, when the machine was switched on the first time after it has left the manufacturer plant.</Description>
         <References>
             <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=1010</Reference>
             <Reference ReferenceType="HasModellingRule">i=80</Reference>
@@ -74,6 +76,7 @@
     </UAVariable>
     <UAVariable DataType="LocalizedText" ParentNodeId="ns=1;i=1010" NodeId="ns=1;i=6022" BrowseName="2:Manufacturer">
         <DisplayName>Manufacturer</DisplayName>
+        <Description Locale="en">A human-readable, localized name of the manufacturer of the machine</Description>
         <References>
             <Reference ReferenceType="HasModellingRule">i=78</Reference>
             <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=1010</Reference>
@@ -82,6 +85,7 @@
     </UAVariable>
     <UAVariable DataType="Byte" ParentNodeId="ns=1;i=1010" NodeId="ns=1;i=6026" BrowseName="1:MonthOfConstruction">
         <DisplayName>MonthOfConstruction</DisplayName>
+        <Description Locale="en">The month in which the manufacturing process of the machine has been completed. It shall be a number between 1 and 12, representing the month from January to December.</Description>
         <References>
             <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=1010</Reference>
             <Reference ReferenceType="HasModellingRule">i=80</Reference>
@@ -90,6 +94,7 @@
     </UAVariable>
     <UAVariable DataType="String" ParentNodeId="ns=1;i=1010" NodeId="ns=1;i=6023" BrowseName="2:ProductInstanceUri">
         <DisplayName>ProductInstanceUri</DisplayName>
+        <Description Locale="en">A globally unique resource identifier provided by the manufacturer of the machine</Description>
         <References>
             <Reference ReferenceType="HasModellingRule">i=78</Reference>
             <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=1010</Reference>
@@ -98,6 +103,7 @@
     </UAVariable>
     <UAVariable DataType="String" ParentNodeId="ns=1;i=1010" NodeId="ns=1;i=6024" BrowseName="2:SerialNumber">
         <DisplayName>SerialNumber</DisplayName>
+        <Description Locale="en">A string containing a unique production number of the manufacturer of the machine. The global uniqueness of the serial number is only given in the context of the manufacturer, and potentially the model. The value shall not change during the life-cycle of the machine.</Description>
         <References>
             <Reference ReferenceType="HasModellingRule">i=78</Reference>
             <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
@@ -106,28 +112,16 @@
     </UAVariable>
     <UAVariable DataType="UInt16" ParentNodeId="ns=1;i=1010" NodeId="ns=1;i=6025" BrowseName="1:YearOfConstruction">
         <DisplayName>YearOfConstruction</DisplayName>
+        <Description Locale="en">The year (Gregorian calendar) in which the manufacturing process of the machine has been completed. It shall be a four-digit number and never change during the life-cycle of a machine.</Description>
         <References>
             <Reference ReferenceType="HasModellingRule">i=80</Reference>
             <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
             <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=1010</Reference>
         </References>
     </UAVariable>
-    <UAVariable DataType="String" ParentNodeId="ns=3;i=1034" NodeId="ns=1;i=6015" BrowseName="1:JobIdentifier" AccessLevel="3">
-        <DisplayName>JobIdentifier</DisplayName>
-        <References>
-            <Reference ReferenceType="HasTypeDefinition">i=63</Reference>
-            <Reference ReferenceType="HasModellingRule">i=80</Reference>
-        </References>
-    </UAVariable>
-    <UAVariable DataType="NodeId" ParentNodeId="ns=3;i=1034" NodeId="ns=1;i=6016" BrowseName="1:JobNodeId" AccessLevel="3">
-        <DisplayName>JobNodeId</DisplayName>
-        <References>
-            <Reference ReferenceType="HasTypeDefinition">i=63</Reference>
-            <Reference ReferenceType="HasModellingRule">i=80</Reference>
-        </References>
-    </UAVariable>
-    <UAObjectType IsAbstract="true" NodeId="ns=1;i=1012" BrowseName="1:MachineIdentificationType">
+    <UAObjectType NodeId="ns=1;i=1012" BrowseName="1:MachineIdentificationType">
         <DisplayName>MachineIdentificationType</DisplayName>
+        <Description Locale="en">Contains information about the identification and nameplate of a machine</Description>
         <References>
             <Reference ReferenceType="HasProperty">ns=1;i=6013</Reference>
             <Reference ReferenceType="HasProperty">ns=1;i=6014</Reference>
@@ -152,6 +146,7 @@
     </UAObjectType>
     <UAVariable DataType="String" ParentNodeId="ns=1;i=1012" NodeId="ns=1;i=6013" BrowseName="2:AssetId" AccessLevel="3">
         <DisplayName>AssetId</DisplayName>
+        <Description Locale="en">To be used by end users to store a unique identification in the context of their overall application. The minimum number of Unicode characters of this Property shall be 40 characters, i.e. clients can expect to be able to write strings with a length of 40 Unicode characters into that field.</Description>
         <References>
             <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=1012</Reference>
             <Reference ReferenceType="HasModellingRule">i=80</Reference>
@@ -160,6 +155,7 @@
     </UAVariable>
     <UAVariable DataType="LocalizedText" ParentNodeId="ns=1;i=1012" NodeId="ns=1;i=6014" BrowseName="2:ComponentName" AccessLevel="3">
         <DisplayName>ComponentName</DisplayName>
+        <Description Locale="en">To be used by end users to store a human-readable localized text for the machine. The minimum number of locales supported for this Property shall be two. The minimum number of Unicode characters for the text part of each locale shall be 40 characters, i.e. clients can expect to be able to write strings with a length of 40 Unicode characters into that field.</Description>
         <References>
             <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=1012</Reference>
             <Reference ReferenceType="HasModellingRule">i=80</Reference>
@@ -168,19 +164,21 @@
     </UAVariable>
     <UAVariable DataType="QualifiedName" ParentNodeId="ns=1;i=1012" NodeId="ns=1;i=6030" BrowseName="DefaultInstanceBrowseName">
         <DisplayName>DefaultInstanceBrowseName</DisplayName>
+        <Description Locale="en">The default BrowseName for instances of the type.</Description>
         <References>
             <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=1012</Reference>
             <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
         </References>
         <Value>
             <uax:QualifiedName>
-                <uax:NamespaceIndex>2</uax:NamespaceIndex>
+                <uax:NamespaceIndex>1</uax:NamespaceIndex>
                 <uax:Name>Identification</uax:Name>
             </uax:QualifiedName>
         </Value>
     </UAVariable>
     <UAVariable DataType="String" ParentNodeId="ns=1;i=1012" NodeId="ns=1;i=6012" BrowseName="2:DeviceClass">
         <DisplayName>DeviceClass</DisplayName>
+        <Description Locale="en">Indicates in which domain or for what purpose the machine is used.</Description>
         <References>
             <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=1012</Reference>
             <Reference ReferenceType="HasModellingRule">i=80</Reference>
@@ -189,6 +187,7 @@
     </UAVariable>
     <UAVariable DataType="String" ParentNodeId="ns=1;i=1012" NodeId="ns=1;i=6010" BrowseName="2:HardwareRevision">
         <DisplayName>HardwareRevision</DisplayName>
+        <Description Locale="en">A string representation of the revision level of the hardware of a machine. Hardware is physical equipment, as opposed to programs, procedures, rules and associated documentation. Many machines will not provide such information due to the modular and configurable nature of the machine.</Description>
         <References>
             <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=1012</Reference>
             <Reference ReferenceType="HasModellingRule">i=80</Reference>
@@ -197,6 +196,7 @@
     </UAVariable>
     <UAVariable DataType="DateTime" ParentNodeId="ns=1;i=1012" NodeId="ns=1;i=6006" BrowseName="1:InitialOperationDate">
         <DisplayName>InitialOperationDate</DisplayName>
+        <Description Locale="en">The date, when the machine was switched on the first time after it has left the manufacturer plant.</Description>
         <References>
             <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=1012</Reference>
             <Reference ReferenceType="HasModellingRule">i=80</Reference>
@@ -205,6 +205,7 @@
     </UAVariable>
     <UAVariable DataType="String" ParentNodeId="ns=1;i=1012" NodeId="ns=1;i=6029" BrowseName="1:Location" AccessLevel="3">
         <DisplayName>Location</DisplayName>
+        <Description Locale="en">To be used by end users to store the location of the machine in a scheme specific to the end user. The minimum number of Unicode characters of this Property shall be 60 characters, i.e. clients can expect to be able to write strings with a length of 40 Unicode characters into that field.</Description>
         <References>
             <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=1012</Reference>
             <Reference ReferenceType="HasModellingRule">i=80</Reference>
@@ -213,6 +214,7 @@
     </UAVariable>
     <UAVariable DataType="LocalizedText" ParentNodeId="ns=1;i=1012" NodeId="ns=1;i=6002" BrowseName="2:Manufacturer">
         <DisplayName>Manufacturer</DisplayName>
+        <Description Locale="en">A human-readable, localized name of the manufacturer of the machine</Description>
         <References>
             <Reference ReferenceType="HasModellingRule">i=78</Reference>
             <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=1012</Reference>
@@ -221,6 +223,7 @@
     </UAVariable>
     <UAVariable DataType="String" ParentNodeId="ns=1;i=1012" NodeId="ns=1;i=6007" BrowseName="2:ManufacturerUri">
         <DisplayName>ManufacturerUri</DisplayName>
+        <Description Locale="en">A globally unique identifier of the manufacturer of the machine</Description>
         <References>
             <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=1012</Reference>
             <Reference ReferenceType="HasModellingRule">i=80</Reference>
@@ -229,6 +232,7 @@
     </UAVariable>
     <UAVariable DataType="LocalizedText" ParentNodeId="ns=1;i=1012" NodeId="ns=1;i=6008" BrowseName="2:Model">
         <DisplayName>Model</DisplayName>
+        <Description Locale="en">A human-readable, localized name of the model of the machine</Description>
         <References>
             <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=1012</Reference>
             <Reference ReferenceType="HasModellingRule">i=80</Reference>
@@ -237,6 +241,7 @@
     </UAVariable>
     <UAVariable DataType="Byte" ParentNodeId="ns=1;i=1012" NodeId="ns=1;i=6005" BrowseName="1:MonthOfConstruction">
         <DisplayName>MonthOfConstruction</DisplayName>
+        <Description Locale="en">The month in which the manufacturing process of the machine has been completed. It shall be a number between 1 and 12, representing the month from January to December.</Description>
         <References>
             <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=1012</Reference>
             <Reference ReferenceType="HasModellingRule">i=80</Reference>
@@ -245,6 +250,7 @@
     </UAVariable>
     <UAVariable DataType="String" ParentNodeId="ns=1;i=1012" NodeId="ns=1;i=6009" BrowseName="2:ProductCode">
         <DisplayName>ProductCode</DisplayName>
+        <Description Locale="en">A machine-readable string of the model of the machine, that might include options like the hardware configuration of the model. This information might be provided by the ERP system of the machine vendor and can be used for example as order information.</Description>
         <References>
             <Reference ReferenceType="HasModellingRule">i=80</Reference>
             <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=1012</Reference>
@@ -253,6 +259,7 @@
     </UAVariable>
     <UAVariable DataType="String" ParentNodeId="ns=1;i=1012" NodeId="ns=1;i=6001" BrowseName="2:ProductInstanceUri">
         <DisplayName>ProductInstanceUri</DisplayName>
+        <Description Locale="en">A globally unique resource identifier provided by the manufacturer of the machine</Description>
         <References>
             <Reference ReferenceType="HasModellingRule">i=78</Reference>
             <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=1012</Reference>
@@ -261,6 +268,7 @@
     </UAVariable>
     <UAVariable DataType="String" ParentNodeId="ns=1;i=1012" NodeId="ns=1;i=6003" BrowseName="2:SerialNumber">
         <DisplayName>SerialNumber</DisplayName>
+        <Description Locale="en">A string containing a unique production number of the manufacturer of the machine. The global uniqueness of the serial number is only given in the context of the manufacturer, and potentially the model. The value shall not change during the life-cycle of the machine.</Description>
         <References>
             <Reference ReferenceType="HasModellingRule">i=78</Reference>
             <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
@@ -269,6 +277,7 @@
     </UAVariable>
     <UAVariable DataType="String" ParentNodeId="ns=1;i=1012" NodeId="ns=1;i=6011" BrowseName="2:SoftwareRevision">
         <DisplayName>SoftwareRevision</DisplayName>
+        <Description Locale="en">A string representation of the revision level of a machine. In most cases, machines consist of several software components. In that case, information about the software components might be provided as additional information in the address space, including individual revision information. In that case, this property is either not provided or provides an overall software revision level. The value might change during the life-cycle of a machine.</Description>
         <References>
             <Reference ReferenceType="HasModellingRule">i=80</Reference>
             <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
@@ -277,6 +286,7 @@
     </UAVariable>
     <UAVariable DataType="UInt16" ParentNodeId="ns=1;i=1012" NodeId="ns=1;i=6004" BrowseName="1:YearOfConstruction">
         <DisplayName>YearOfConstruction</DisplayName>
+        <Description Locale="en">The year (Gregorian calendar) in which the manufacturing process of the machine has been completed. It shall be a four-digit number and never change during the life-cycle of a machine.</Description>
         <References>
             <Reference ReferenceType="HasModellingRule">i=80</Reference>
             <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
@@ -285,6 +295,7 @@
     </UAVariable>
     <UAObject EventNotifier="1" NodeId="ns=1;i=1001" BrowseName="1:Machines">
         <DisplayName>Machines</DisplayName>
+        <Description Locale="en">This object is the entry point to machines managed in the server. All machines are directly referenced by this object.</Description>
         <References>
             <Reference ReferenceType="HasTypeDefinition">i=61</Reference>
             <Reference ReferenceType="Organizes" IsForward="false">i=85</Reference>
@@ -321,7 +332,7 @@
             <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
         </References>
         <Value>
-            <uax:DateTime>2020-03-17T10:18:50Z</uax:DateTime>
+            <uax:DateTime>2020-06-01T00:00:00Z</uax:DateTime>
         </Value>
     </UAVariable>
     <UAVariable DataType="String" ParentNodeId="ns=1;i=5001" NodeId="ns=1;i=6033" BrowseName="NamespaceUri">
@@ -341,7 +352,7 @@
             <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
         </References>
         <Value>
-            <uax:String>0.1.6</uax:String>
+            <uax:String>1.0.0</uax:String>
         </Value>
     </UAVariable>
     <UAVariable DataType="IdType" ParentNodeId="ns=1;i=5001" ValueRank="1" NodeId="ns=1;i=6035" ArrayDimensions="0" BrowseName="StaticNodeIdTypes">
@@ -368,6 +379,69 @@
         <References>
             <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
             <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=5001</Reference>
+        </References>
+    </UAVariable>
+    <UAObject SymbolicName="http___opcfoundation_org_UA_Machinery" NodeId="ns=1;i=5002" BrowseName="1:http://opcfoundation.org/UA/Machinery/">
+        <DisplayName>http://opcfoundation.org/UA/Machinery/</DisplayName>
+        <References>
+            <Reference ReferenceType="Organizes" IsForward="false">i=11715</Reference>
+            <Reference ReferenceType="HasProperty">ns=1;i=6015</Reference>
+            <Reference ReferenceType="HasTypeDefinition">i=11616</Reference>
+            <Reference ReferenceType="HasProperty">ns=1;i=6016</Reference>
+            <Reference ReferenceType="HasProperty">ns=1;i=6017</Reference>
+            <Reference ReferenceType="HasProperty">ns=1;i=6018</Reference>
+            <Reference ReferenceType="HasProperty">ns=1;i=6019</Reference>
+            <Reference ReferenceType="HasProperty">ns=1;i=6020</Reference>
+            <Reference ReferenceType="HasProperty">ns=1;i=6021</Reference>
+        </References>
+    </UAObject>
+    <UAVariable DataType="Boolean" ParentNodeId="ns=1;i=5002" NodeId="ns=1;i=6015" BrowseName="IsNamespaceSubset">
+        <DisplayName>IsNamespaceSubset</DisplayName>
+        <References>
+            <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=5002</Reference>
+            <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+        </References>
+    </UAVariable>
+    <UAVariable DataType="DateTime" ParentNodeId="ns=1;i=5002" NodeId="ns=1;i=6016" BrowseName="NamespacePublicationDate">
+        <DisplayName>NamespacePublicationDate</DisplayName>
+        <References>
+            <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=5002</Reference>
+            <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+        </References>
+    </UAVariable>
+    <UAVariable DataType="String" ParentNodeId="ns=1;i=5002" NodeId="ns=1;i=6017" BrowseName="NamespaceUri">
+        <DisplayName>NamespaceUri</DisplayName>
+        <References>
+            <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=5002</Reference>
+            <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+        </References>
+    </UAVariable>
+    <UAVariable DataType="String" ParentNodeId="ns=1;i=5002" NodeId="ns=1;i=6018" BrowseName="NamespaceVersion">
+        <DisplayName>NamespaceVersion</DisplayName>
+        <References>
+            <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=5002</Reference>
+            <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+        </References>
+    </UAVariable>
+    <UAVariable DataType="IdType" ParentNodeId="ns=1;i=5002" ValueRank="1" NodeId="ns=1;i=6019" ArrayDimensions="0" BrowseName="StaticNodeIdTypes">
+        <DisplayName>StaticNodeIdTypes</DisplayName>
+        <References>
+            <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+            <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=5002</Reference>
+        </References>
+    </UAVariable>
+    <UAVariable DataType="NumericRange" ParentNodeId="ns=1;i=5002" ValueRank="1" NodeId="ns=1;i=6020" ArrayDimensions="0" BrowseName="StaticNumericNodeIdRange">
+        <DisplayName>StaticNumericNodeIdRange</DisplayName>
+        <References>
+            <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+            <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=5002</Reference>
+        </References>
+    </UAVariable>
+    <UAVariable DataType="String" ParentNodeId="ns=1;i=5002" NodeId="ns=1;i=6021" BrowseName="StaticStringNodeIdPattern">
+        <DisplayName>StaticStringNodeIdPattern</DisplayName>
+        <References>
+            <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+            <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=5002</Reference>
         </References>
     </UAVariable>
 </UANodeSet>

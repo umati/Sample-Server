@@ -3,5 +3,5 @@
 
 namespace constants
 {
-constexpr const char *NsIAUri = "http://opcfoundation.org/UA/IA";
+constexpr const char *NsIAUri = "http://opcfoundation.org/UA/IA/";
 }

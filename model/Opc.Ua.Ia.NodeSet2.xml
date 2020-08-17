@@ -1,15 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <UANodeSet xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd" xmlns="http://opcfoundation.org/UA/2011/03/UANodeSet.xsd" xmlns:s1="http://opcfoundation.org/UA/IA/Types.xsd" xmlns:s2="http://opcfoundation.org/UA/DI/Types.xsd" xmlns:ua="http://unifiedautomation.com/Configuration/NodeSet.xsd" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
     <NamespaceUris>
-        <Uri>http://opcfoundation.org/UA/IA</Uri>
+        <Uri>http://opcfoundation.org/UA/IA/</Uri>
         <Uri>http://opcfoundation.org/UA/DI/</Uri>
     </NamespaceUris>
-    <Models>
-        <Model ModelUri="http://opcfoundation.org/UA/IA" PublicationDate="2020-04-28T12:58:51Z" Version="1.0.0">
-            <RequiredModel ModelUri="http://opcfoundation.org/UA/" PublicationDate="2020-04-10T00:00:00Z" Version="1.04.7"/>
-            <RequiredModel ModelUri="http://opcfoundation.org/UA/DI/" PublicationDate="2019-05-01T00:00:00Z" Version="1.02"/>
-        </Model>
-    </Models>
     <Aliases>
         <Alias Alias="Boolean">i=1</Alias>
         <Alias Alias="UInt32">i=7</Alias>
@@ -39,7 +33,7 @@
     </Aliases>
     <Extensions>
         <Extension>
-            <ua:ModelInfo Tool="UaModeler" Hash="5MVpc7Q1SDrv81ZIlsW8kA==" Version="1.6.3"/>
+            <ua:ModelInfo Tool="UaModeler" Hash="5ZWaFkY6+E17HUsLEoymgQ==" Version="1.6.3"/>
         </Extension>
     </Extensions>
     <UADataType NodeId="ns=1;i=3003" BrowseName="1:LevelDisplayMode">
@@ -521,44 +515,44 @@
         <Value>
             <uax:ByteString>PG9wYzpUeXBlRGljdGlvbmFyeSB4bWxuczp4c2k9Imh0dHA6Ly93d3cudzMub3JnLzIwMDEvWE1MU2NoZ
         W1hLWluc3RhbmNlIiB4bWxuczp0bnM9Imh0dHA6Ly9vcGNmb3VuZGF0aW9uLm9yZy9VQS9JQ
-        SIgRGVmYXVsdEJ5dGVPcmRlcj0iTGl0dGxlRW5kaWFuIiB4bWxuczpvcGM9Imh0dHA6Ly9vc
-        GNmb3VuZGF0aW9uLm9yZy9CaW5hcnlTY2hlbWEvIiB4bWxuczp1YT0iaHR0cDovL29wY2Zvd
-        W5kYXRpb24ub3JnL1VBLyIgVGFyZ2V0TmFtZXNwYWNlPSJodHRwOi8vb3BjZm91bmRhdGlvb
-        i5vcmcvVUEvSUEiPgogPG9wYzpJbXBvcnQgTmFtZXNwYWNlPSJodHRwOi8vb3BjZm91bmRhd
-        Glvbi5vcmcvVUEvIi8+CiA8b3BjOkVudW1lcmF0ZWRUeXBlIExlbmd0aEluQml0cz0iMzIiI
-        E5hbWU9IkxldmVsRGlzcGxheU1vZGUiPgogIDxvcGM6RG9jdW1lbnRhdGlvbj5Db250YWluc
-        yB0aGUgdmFsdWVzIHVzZWQgdG8gaW5kaWNhdGUgaG93IGEgcGVyY2VudHVhbCB2YWx1ZSBpc
-        yBkaXNwbGF5ZWQgaWYgdGhlIHN0YWNrbGlnaHQgdW5pdCB3b3JrcyBpbiBMZXZlbG1ldGVyI
-        G1vZGUuPC9vcGM6RG9jdW1lbnRhdGlvbj4KICA8b3BjOkVudW1lcmF0ZWRWYWx1ZSBOYW1lP
-        SJEaW1tZWQiIFZhbHVlPSIwIi8+CiAgPG9wYzpFbnVtZXJhdGVkVmFsdWUgTmFtZT0iQmxpb
-        mtpbmciIFZhbHVlPSIxIi8+CiAgPG9wYzpFbnVtZXJhdGVkVmFsdWUgTmFtZT0iT3RoZXIiI
-        FZhbHVlPSIyIi8+CiA8L29wYzpFbnVtZXJhdGVkVHlwZT4KIDxvcGM6RW51bWVyYXRlZFR5c
-        GUgTGVuZ3RoSW5CaXRzPSIzMiIgTmFtZT0iU2lnbmFsQ29sb3IiPgogIDxvcGM6RG9jdW1lb
-        nRhdGlvbj5Ib2xkcyB0aGUgcG9zc2libGUgY29sb3VyIHZhbHVlcyBmb3Igc3RhY2tsaWdod
-        CBsYW1wcy48L29wYzpEb2N1bWVudGF0aW9uPgogIDxvcGM6RW51bWVyYXRlZFZhbHVlIE5hb
-        WU9Ik9mZiIgVmFsdWU9IjAiLz4KICA8b3BjOkVudW1lcmF0ZWRWYWx1ZSBOYW1lPSJSZWQiI
-        FZhbHVlPSIxIi8+CiAgPG9wYzpFbnVtZXJhdGVkVmFsdWUgTmFtZT0iR3JlZW4iIFZhbHVlP
-        SIyIi8+CiAgPG9wYzpFbnVtZXJhdGVkVmFsdWUgTmFtZT0iQmx1ZSIgVmFsdWU9IjMiLz4KI
-        CA8b3BjOkVudW1lcmF0ZWRWYWx1ZSBOYW1lPSJZZWxsb3ciIFZhbHVlPSI0Ii8+CiAgPG9wY
-        zpFbnVtZXJhdGVkVmFsdWUgTmFtZT0iUHVycGxlIiBWYWx1ZT0iNSIvPgogIDxvcGM6RW51b
-        WVyYXRlZFZhbHVlIE5hbWU9IkN5YW4iIFZhbHVlPSI2Ii8+CiAgPG9wYzpFbnVtZXJhdGVkV
-        mFsdWUgTmFtZT0iV2hpdGUiIFZhbHVlPSI3Ii8+CiA8L29wYzpFbnVtZXJhdGVkVHlwZT4KI
-        DxvcGM6RW51bWVyYXRlZFR5cGUgTGVuZ3RoSW5CaXRzPSIzMiIgTmFtZT0iU2lnbmFsTW9kZ
-        UxpZ2h0Ij4KICA8b3BjOkRvY3VtZW50YXRpb24+Q29udGFpbnMgdGhlIHZhbHVlcyB1c2VkI
-        HRvIGluZGljYXRlIGluIHdoYXQgd2F5IGEgbGFtcCBiZWhhdmVzIHdoZW4gc3dpdGNoZWQgb
-        24uPC9vcGM6RG9jdW1lbnRhdGlvbj4KICA8b3BjOkVudW1lcmF0ZWRWYWx1ZSBOYW1lPSJDb
-        250aW51b3VzIiBWYWx1ZT0iMCIvPgogIDxvcGM6RW51bWVyYXRlZFZhbHVlIE5hbWU9IkJsa
-        W5raW5nIiBWYWx1ZT0iMSIvPgogIDxvcGM6RW51bWVyYXRlZFZhbHVlIE5hbWU9IkZsYXNoa
-        W5nIiBWYWx1ZT0iMiIvPgogIDxvcGM6RW51bWVyYXRlZFZhbHVlIE5hbWU9Ik90aGVyIiBWY
-        Wx1ZT0iMyIvPgogPC9vcGM6RW51bWVyYXRlZFR5cGU+CiA8b3BjOkVudW1lcmF0ZWRUeXBlI
-        Exlbmd0aEluQml0cz0iMzIiIE5hbWU9IlN0YWNrbGlnaHRPcGVyYXRpb25Nb2RlIj4KICA8b
-        3BjOkRvY3VtZW50YXRpb24+Q29udGFpbnMgdGhlIHZhbHVlcyB1c2VkIHRvIGluZGljYXRlI
-        GhvdyBhIHN0YWNrbGlnaHQgKGFzIGEgd2hvbGUgdW5pdCkgaXMgdXNlZC48L29wYzpEb2N1b
-        WVudGF0aW9uPgogIDxvcGM6RW51bWVyYXRlZFZhbHVlIE5hbWU9IlNlZ21lbnRlZCIgVmFsd
-        WU9IjAiLz4KICA8b3BjOkVudW1lcmF0ZWRWYWx1ZSBOYW1lPSJMZXZlbG1ldGVyIiBWYWx1Z
-        T0iMSIvPgogIDxvcGM6RW51bWVyYXRlZFZhbHVlIE5hbWU9IlJ1bm5pbmdfTGlnaHQiIFZhb
-        HVlPSIyIi8+CiAgPG9wYzpFbnVtZXJhdGVkVmFsdWUgTmFtZT0iT3RoZXIiIFZhbHVlPSIzI
-        i8+CiA8L29wYzpFbnVtZXJhdGVkVHlwZT4KPC9vcGM6VHlwZURpY3Rpb25hcnk+Cg==</uax:ByteString>
+        S8iIERlZmF1bHRCeXRlT3JkZXI9IkxpdHRsZUVuZGlhbiIgeG1sbnM6b3BjPSJodHRwOi8vb
+        3BjZm91bmRhdGlvbi5vcmcvQmluYXJ5U2NoZW1hLyIgeG1sbnM6dWE9Imh0dHA6Ly9vcGNmb
+        3VuZGF0aW9uLm9yZy9VQS8iIFRhcmdldE5hbWVzcGFjZT0iaHR0cDovL29wY2ZvdW5kYXRpb
+        24ub3JnL1VBL0lBLyI+CiA8b3BjOkltcG9ydCBOYW1lc3BhY2U9Imh0dHA6Ly9vcGNmb3VuZ
+        GF0aW9uLm9yZy9VQS8iLz4KIDxvcGM6RW51bWVyYXRlZFR5cGUgTGVuZ3RoSW5CaXRzPSIzM
+        iIgTmFtZT0iTGV2ZWxEaXNwbGF5TW9kZSI+CiAgPG9wYzpEb2N1bWVudGF0aW9uPkNvbnRha
+        W5zIHRoZSB2YWx1ZXMgdXNlZCB0byBpbmRpY2F0ZSBob3cgYSBwZXJjZW50dWFsIHZhbHVlI
+        GlzIGRpc3BsYXllZCBpZiB0aGUgc3RhY2tsaWdodCB1bml0IHdvcmtzIGluIExldmVsbWV0Z
+        XIgbW9kZS48L29wYzpEb2N1bWVudGF0aW9uPgogIDxvcGM6RW51bWVyYXRlZFZhbHVlIE5hb
+        WU9IkRpbW1lZCIgVmFsdWU9IjAiLz4KICA8b3BjOkVudW1lcmF0ZWRWYWx1ZSBOYW1lPSJCb
+        Glua2luZyIgVmFsdWU9IjEiLz4KICA8b3BjOkVudW1lcmF0ZWRWYWx1ZSBOYW1lPSJPdGhlc
+        iIgVmFsdWU9IjIiLz4KIDwvb3BjOkVudW1lcmF0ZWRUeXBlPgogPG9wYzpFbnVtZXJhdGVkV
+        HlwZSBMZW5ndGhJbkJpdHM9IjMyIiBOYW1lPSJTaWduYWxDb2xvciI+CiAgPG9wYzpEb2N1b
+        WVudGF0aW9uPkhvbGRzIHRoZSBwb3NzaWJsZSBjb2xvdXIgdmFsdWVzIGZvciBzdGFja2xpZ
+        2h0IGxhbXBzLjwvb3BjOkRvY3VtZW50YXRpb24+CiAgPG9wYzpFbnVtZXJhdGVkVmFsdWUgT
+        mFtZT0iT2ZmIiBWYWx1ZT0iMCIvPgogIDxvcGM6RW51bWVyYXRlZFZhbHVlIE5hbWU9IlJlZ
+        CIgVmFsdWU9IjEiLz4KICA8b3BjOkVudW1lcmF0ZWRWYWx1ZSBOYW1lPSJHcmVlbiIgVmFsd
+        WU9IjIiLz4KICA8b3BjOkVudW1lcmF0ZWRWYWx1ZSBOYW1lPSJCbHVlIiBWYWx1ZT0iMyIvP
+        gogIDxvcGM6RW51bWVyYXRlZFZhbHVlIE5hbWU9IlllbGxvdyIgVmFsdWU9IjQiLz4KICA8b
+        3BjOkVudW1lcmF0ZWRWYWx1ZSBOYW1lPSJQdXJwbGUiIFZhbHVlPSI1Ii8+CiAgPG9wYzpFb
+        nVtZXJhdGVkVmFsdWUgTmFtZT0iQ3lhbiIgVmFsdWU9IjYiLz4KICA8b3BjOkVudW1lcmF0Z
+        WRWYWx1ZSBOYW1lPSJXaGl0ZSIgVmFsdWU9IjciLz4KIDwvb3BjOkVudW1lcmF0ZWRUeXBlP
+        gogPG9wYzpFbnVtZXJhdGVkVHlwZSBMZW5ndGhJbkJpdHM9IjMyIiBOYW1lPSJTaWduYWxNb
+        2RlTGlnaHQiPgogIDxvcGM6RG9jdW1lbnRhdGlvbj5Db250YWlucyB0aGUgdmFsdWVzIHVzZ
+        WQgdG8gaW5kaWNhdGUgaW4gd2hhdCB3YXkgYSBsYW1wIGJlaGF2ZXMgd2hlbiBzd2l0Y2hlZ
+        CBvbi48L29wYzpEb2N1bWVudGF0aW9uPgogIDxvcGM6RW51bWVyYXRlZFZhbHVlIE5hbWU9I
+        kNvbnRpbnVvdXMiIFZhbHVlPSIwIi8+CiAgPG9wYzpFbnVtZXJhdGVkVmFsdWUgTmFtZT0iQ
+        mxpbmtpbmciIFZhbHVlPSIxIi8+CiAgPG9wYzpFbnVtZXJhdGVkVmFsdWUgTmFtZT0iRmxhc
+        2hpbmciIFZhbHVlPSIyIi8+CiAgPG9wYzpFbnVtZXJhdGVkVmFsdWUgTmFtZT0iT3RoZXIiI
+        FZhbHVlPSIzIi8+CiA8L29wYzpFbnVtZXJhdGVkVHlwZT4KIDxvcGM6RW51bWVyYXRlZFR5c
+        GUgTGVuZ3RoSW5CaXRzPSIzMiIgTmFtZT0iU3RhY2tsaWdodE9wZXJhdGlvbk1vZGUiPgogI
+        DxvcGM6RG9jdW1lbnRhdGlvbj5Db250YWlucyB0aGUgdmFsdWVzIHVzZWQgdG8gaW5kaWNhd
+        GUgaG93IGEgc3RhY2tsaWdodCAoYXMgYSB3aG9sZSB1bml0KSBpcyB1c2VkLjwvb3BjOkRvY
+        3VtZW50YXRpb24+CiAgPG9wYzpFbnVtZXJhdGVkVmFsdWUgTmFtZT0iU2VnbWVudGVkIiBWY
+        Wx1ZT0iMCIvPgogIDxvcGM6RW51bWVyYXRlZFZhbHVlIE5hbWU9IkxldmVsbWV0ZXIiIFZhb
+        HVlPSIxIi8+CiAgPG9wYzpFbnVtZXJhdGVkVmFsdWUgTmFtZT0iUnVubmluZ19MaWdodCIgV
+        mFsdWU9IjIiLz4KICA8b3BjOkVudW1lcmF0ZWRWYWx1ZSBOYW1lPSJPdGhlciIgVmFsdWU9I
+        jMiLz4KIDwvb3BjOkVudW1lcmF0ZWRUeXBlPgo8L29wYzpUeXBlRGljdGlvbmFyeT4K</uax:ByteString>
         </Value>
     </UAVariable>
     <UAVariable DataType="String" ParentNodeId="ns=1;i=6002" NodeId="ns=1;i=6003" BrowseName="NamespaceUri">
@@ -568,7 +562,7 @@
             <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
         </References>
         <Value>
-            <uax:String>http://opcfoundation.org/UA/IA</uax:String>
+            <uax:String>http://opcfoundation.org/UA/IA/</uax:String>
         </Value>
     </UAVariable>
     <UAVariable SymbolicName="TypeDictionary_XmlSchema" DataType="ByteString" NodeId="ns=1;i=6004" BrowseName="1:TypeDictionary">
@@ -902,6 +896,7 @@
     </UAVariable>
     <UAObject ParentNodeId="ns=1;i=1002" NodeId="ns=1;i=5005" BrowseName="1:StackRunning">
         <DisplayName>StackRunning</DisplayName>
+        <Description Locale="en">Valid if the stacklight is used in “Running_Light” StacklightMode.</Description>
         <References>
             <Reference ReferenceType="HasModellingRule">i=80</Reference>
             <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=1002</Reference>
@@ -918,7 +913,7 @@
             <Reference ReferenceType="HasSubtype" IsForward="false">ns=1;i=1002</Reference>
         </References>
     </UAObjectType>
-    <UAVariable DataType="DeviceHealthEnumeration" ParentNodeId="ns=1;i=1010" NodeId="ns=1;i=6038" BrowseName="1:DeviceHealth" AccessLevel="3">
+    <UAVariable DataType="DeviceHealthEnumeration" ParentNodeId="ns=1;i=1010" NodeId="ns=1;i=6038" BrowseName="2:DeviceHealth" AccessLevel="3">
         <DisplayName>DeviceHealth</DisplayName>
         <Description Locale="en">Contains the health status information of the stacklight.</Description>
         <References>
@@ -927,7 +922,7 @@
             <Reference ReferenceType="HasModellingRule">i=80</Reference>
         </References>
     </UAVariable>
-    <UAObject ParentNodeId="ns=1;i=1010" NodeId="ns=1;i=5007" BrowseName="1:DeviceHealthAlarms">
+    <UAObject ParentNodeId="ns=1;i=1010" NodeId="ns=1;i=5007" BrowseName="2:DeviceHealthAlarms">
         <DisplayName>DeviceHealthAlarms</DisplayName>
         <Description Locale="en">Contains alarms of the stacklights providing more detailed information on the health of the stacklight.</Description>
         <References>
@@ -1047,8 +1042,8 @@
             <Reference ReferenceType="HasComponent">ns=1;i=5002</Reference>
             <Reference ReferenceType="HasComponent">ns=1;i=6018</Reference>
             <Reference ReferenceType="HasComponent">ns=1;i=6016</Reference>
-            <Reference ReferenceType="HasSubtype" IsForward="false">ns=1;i=1005</Reference>
             <Reference ReferenceType="HasComponent">ns=1;i=6017</Reference>
+            <Reference ReferenceType="HasSubtype" IsForward="false">ns=1;i=1005</Reference>
         </References>
     </UAObjectType>
     <UAObject SymbolicName="ControlChannel" ParentNodeId="ns=1;i=1006" NodeId="ns=1;i=5002" BrowseName="1:&lt;ControlChannel>">
@@ -1117,8 +1112,8 @@
             <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=1006</Reference>
         </References>
     </UAVariable>
-    <UAVariable DataType="SignalModeLight" ParentNodeId="ns=1;i=1006" NodeId="ns=1;i=6017" BrowseName="1:StacklightMode" AccessLevel="3">
-        <DisplayName>StacklightMode</DisplayName>
+    <UAVariable DataType="SignalModeLight" ParentNodeId="ns=1;i=1006" NodeId="ns=1;i=6017" BrowseName="1:SignalMode" AccessLevel="3">
+        <DisplayName>SignalMode</DisplayName>
         <Description Locale="en">Shows in what way the lamp is used (continuous light, flashing, blinking) when switched on.</Description>
         <References>
             <Reference ReferenceType="HasTypeDefinition">i=63</Reference>
@@ -1169,8 +1164,8 @@
             <Reference ReferenceType="HasSubtype" IsForward="false">i=58</Reference>
         </References>
     </UAObjectType>
-    <UAObject SymbolicName="http___opcfoundation_org_UA_IA" NodeId="ns=1;i=5008" BrowseName="1:http://opcfoundation.org/UA/IA">
-        <DisplayName>http://opcfoundation.org/UA/IA</DisplayName>
+    <UAObject SymbolicName="http___opcfoundation_org_UA_IA" NodeId="ns=1;i=5008" BrowseName="1:http://opcfoundation.org/UA/IA/">
+        <DisplayName>http://opcfoundation.org/UA/IA/</DisplayName>
         <References>
             <Reference ReferenceType="HasProperty">ns=1;i=6039</Reference>
             <Reference ReferenceType="HasTypeDefinition">i=11616</Reference>
@@ -1200,7 +1195,7 @@
             <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
         </References>
         <Value>
-            <uax:DateTime>2020-04-28T12:58:51Z</uax:DateTime>
+            <uax:DateTime>2020-07-17T00:00:00Z</uax:DateTime>
         </Value>
     </UAVariable>
     <UAVariable DataType="String" ParentNodeId="ns=1;i=5008" NodeId="ns=1;i=6041" BrowseName="NamespaceUri">

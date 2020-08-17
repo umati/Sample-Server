@@ -28,6 +28,6 @@ REFL_FIELD(SignalColor, UmatiServerLib::attribute::MemberInTypeNodeId{
                .NodeId = UmatiServerLib::constexp::NodeId(constants::NsIAUri, UA_INDUSTRIAL_AUTOMATIONID_STACKELEMENTLIGHTTYPE_SIGNALCOLOR)},
            UmatiServerLib::attribute::PlaceholderOptional())
 REFL_FIELD(StacklightMode, UmatiServerLib::attribute::MemberInTypeNodeId{
-               .NodeId = UmatiServerLib::constexp::NodeId(constants::NsIAUri, UA_INDUSTRIAL_AUTOMATIONID_STACKELEMENTLIGHTTYPE_STACKLIGHTMODE)},
+               .NodeId = UmatiServerLib::constexp::NodeId(constants::NsIAUri, UA_INDUSTRIAL_AUTOMATIONID_STACKELEMENTLIGHTTYPE_SIGNALMODE)},
            UmatiServerLib::attribute::PlaceholderOptional())
 REFL_END

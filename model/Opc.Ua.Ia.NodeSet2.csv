@@ -39,7 +39,7 @@ StackElementType_SignalOn,6013,Variable
 StackElementType_IsPartOfBase,6014,Variable
 StackElementType_NumberInList,6015,Variable
 StackElementLightType_SignalColor,6016,Variable
-StackElementLightType_StacklightMode,6017,Variable
+StackElementLightType_SignalMode,6017,Variable
 StackElementLightType_Intensity,6018,Variable
 StackElementLightType_Intensity_EURange,6019,Variable
 StackElementAcousticType_OperationMode,6020,Variable

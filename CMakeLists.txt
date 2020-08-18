@@ -125,6 +125,7 @@ add_executable(
     MachineTools/SimulatedMachineTool.cpp
     MachineTools/InstantiatedMachineTool.cpp
     MachineTools/FullMachineTool.cpp
+    MachineTools/FullMachineToolDynamic.cpp
     MachineTools/BasicMachineTool.cpp
     MachineTools/MRMachineTool.cpp
 )

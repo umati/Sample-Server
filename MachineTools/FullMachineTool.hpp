@@ -13,6 +13,8 @@ class FullMachineTool : public InstantiatedMachineTool
   void Simulate() override;
 
   protected:
+  // Allow skipping initialization in subclasses
+  FullMachineTool(UA_Server *pServer, bool initialize);
   void CreateObject() override;
 
   void InstantiateIdentification();

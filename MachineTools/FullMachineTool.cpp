@@ -7,10 +7,18 @@
 #include <open62541/types_generated.h>
 
 FullMachineTool::FullMachineTool(UA_Server *pServer)
+:FullMachineTool(pServer, true)
+{
+}
+
+FullMachineTool::FullMachineTool(UA_Server *pServer, bool initialize)
     : InstantiatedMachineTool(pServer)
 {
-  MachineName = "FullMachineTool";
-  CreateObject();
+  if(initialize)
+  {
+    MachineName = "FullMachineTool";
+    CreateObject();
+  }
 }
 
 void FullMachineTool::CreateObject()
@@ -238,17 +246,6 @@ void FullMachineTool::Simulate()
     m_pAlert->Data.ConfirmedState->Value = {"", "Unconfirmed"};
 
     m_pAlert->Trigger();
-
-    {
-      std::stringstream ss;
-      ss << "Job " << m_simStep;
-      auto &job = mt.Production->ProductionPlan->OrderedObjects.Add(m_pServer, n, {m_nsIndex, ss.str()});
-      job.Identifier = ss.str();
-      job.RunsCompleted = 0;
-      job.RunsPlanned = 2;
-      mt.Production->ActiveProgram->JobIdentifier = mt.Production->ProductionPlan->OrderedObjects.value.back()->Identifier.value;
-      mt.Production->ActiveProgram->JobNodeId = *mt.Production->ProductionPlan->OrderedObjects.value.back().NodeId.NodeId;
-    }
   }
   else if ((m_simStep % 10) == 8 && m_pAlert)
   {
@@ -261,14 +258,6 @@ void FullMachineTool::Simulate()
     m_pAlert->Data.ConfirmedState->Value = {"", "Confirmed"};
     m_pAlert->Trigger();
     m_pAlert = nullptr;
-
-    if (!mt.Production->ProductionPlan->OrderedObjects->empty())
-    {
-      auto lastIt = --mt.Production->ProductionPlan->OrderedObjects->end();
-      mt.Production->ProductionPlan->OrderedObjects.Delete(lastIt, m_pServer, n);
-      mt.Production->ActiveProgram->JobIdentifier = mt.Production->ProductionPlan->OrderedObjects.value.front()->Identifier.value;
-      mt.Production->ActiveProgram->JobNodeId = *mt.Production->ProductionPlan->OrderedObjects.value.front().NodeId.NodeId;
-    }
   }
 
   if ((m_simStep % 10) == 8)

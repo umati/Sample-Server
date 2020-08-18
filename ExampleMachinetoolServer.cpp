@@ -15,6 +15,7 @@
 #include <csignal>
 
 #include "MachineTools/FullMachineTool.hpp"
+#include "MachineTools/FullMachineToolDynamic.hpp"
 #include "MachineTools/BasicMachineTool.hpp"
 #include "MachineTools/MRMachineTool.hpp"
 
@@ -117,6 +118,7 @@ int main(int argc, char *argv[])
 
   std::list<std::shared_ptr<SimulatedMachineTool>> machineTools;
   machineTools.push_back(std::make_shared<FullMachineTool>(pServer));
+  machineTools.push_back(std::make_shared<FullMachineToolDynamic>(pServer));
   machineTools.push_back(std::make_shared<BasicMachineTool>(pServer));
   machineTools.push_back(std::make_shared<MRMachineTool>(pServer));
 

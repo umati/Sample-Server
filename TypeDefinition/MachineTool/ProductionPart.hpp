@@ -11,8 +11,8 @@ struct ProductionPart_t
   BindableMemberValue<std::string> CustomerOrderIdentifier;
   BindableMemberValue<std::string> Identifier;
   BindableMemberValue<std::string> Name;
-  //BindableMemberValue<> PartQuality;
-  //BindableMemberValue<> ProcessIrregularity;
+  BindableMemberValue<UA_PartQuality> PartQuality;
+  BindableMemberValue<UA_ProcessIrregularity> ProcessIrregularity;
 };
 
 } // namespace machineTool
@@ -29,6 +29,6 @@ REFL_FIELD(Identifier,
             UmatiServerLib::attribute::MemberInTypeNodeId{
                .NodeId = UmatiServerLib::constexp::NodeId(constants::NsMachineToolUri, UA_MACHINETOOLID_PRODUCTIONPARTTYPE_IDENTIFIER)})
 REFL_FIELD(Name)
-//REFL_FIELD(PartQuality)
-//REFL_FIELD(ProcessIrregularity)
+REFL_FIELD(PartQuality)
+REFL_FIELD(ProcessIrregularity)
 REFL_END

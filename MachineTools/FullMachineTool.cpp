@@ -65,12 +65,14 @@ void FullMachineTool::InstantiateProduction()
 
   InstantiateOptional(set1.PartsPerRun, m_pServer, n);
 
-  for (std::size_t i = 1; i <= 3; ++i)
+  for (std::size_t i = 1; i <= 5; ++i)
   {
     std::stringstream ss;
     ss << "Part " << i;
     auto &part = set1.PartsPerRun->Part.Add(m_pServer, n, {m_nsIndex, ss.str()});
     part.Name = ss.str();
+    part.PartQuality = static_cast<UA_PartQuality>(i % (UA_PartQuality::UA_PARTQUALITY_WILLNOTBEMEASURED + 1));
+    part.ProcessIrregularity = static_cast<UA_ProcessIrregularity>(i % (UA_ProcessIrregularity::UA_PROCESSIRREGULARITY_NOTYETDETERMINED + 1));
   }
 }
 

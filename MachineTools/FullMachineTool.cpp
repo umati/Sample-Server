@@ -7,14 +7,14 @@
 #include <open62541/types_generated.h>
 
 FullMachineTool::FullMachineTool(UA_Server *pServer)
-:FullMachineTool(pServer, true)
+    : FullMachineTool(pServer, true)
 {
 }
 
 FullMachineTool::FullMachineTool(UA_Server *pServer, bool initialize)
     : InstantiatedMachineTool(pServer)
 {
-  if(initialize)
+  if (initialize)
   {
     MachineName = "FullMachineTool";
     CreateObject();
@@ -29,7 +29,14 @@ void FullMachineTool::CreateObject()
   InstantiateMonitoring();
   InstantiateTools();
   InstantiatePrognosis();
+  InstantiateProduction();
 
+  InstantiateOptional(mt.Notification->Messages, m_pServer, n);
+  writeEventNotifier(m_pServer, mt.Notification->Messages.NodeId);
+}
+
+void FullMachineTool::InstantiateProduction()
+{
   InstantiateOptional(mt.Production->ActiveProgram->State, m_pServer, n);
   mt.Production->ActiveProgram->NumberInList = 0;
   mt.Production->ActiveProgram->Name = "Full Program";
@@ -48,8 +55,23 @@ void FullMachineTool::CreateObject()
   job.RunsCompleted = 0;
   job.RunsPlanned = 1;
 
-  InstantiateOptional(mt.Notification->Messages, m_pServer, n);
-  writeEventNotifier(m_pServer, mt.Notification->Messages.NodeId);
+  InstantiateOptional(job.PartSets, m_pServer, n);
+  auto &set1 = job.PartSets->PartSet.Add(m_pServer, n, {m_nsIndex, "Set 1"});
+  set1.ContainsMixedParts = false;
+  set1.Name = "Set1";
+  set1.PartsCompletedPerRun = 3;
+  //set1.PartsPerRun = 4;
+  set1.PartsPlannedPerRun = 5;
+
+  InstantiateOptional(set1.PartsPerRun, m_pServer, n);
+
+  for (std::size_t i = 1; i <= 3; ++i)
+  {
+    std::stringstream ss;
+    ss << "Part " << i;
+    auto &part = set1.PartsPerRun->Part.Add(m_pServer, n, {m_nsIndex, ss.str()});
+    part.Name = ss.str();
+  }
 }
 
 void FullMachineTool::InstantiateIdentification()
@@ -61,7 +83,6 @@ void FullMachineTool::InstantiateIdentification()
   InstantiateOptional(mt.Identification->DeviceClass, m_pServer, n);
   InstantiateOptional(mt.Identification->ComponentName, m_pServer, n);
   InstantiateOptional(mt.Identification->SoftwareIdentification, m_pServer, n);
-
 
   mt.Identification->YearOfConstruction = 2020;
   mt.Identification->MonthOfConstruction = 6;

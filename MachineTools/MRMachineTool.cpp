@@ -67,7 +67,7 @@ void MRMachineTool::InstantiateProduction()
 
     mt.Production->ActiveProgram->Name = "heart.nc";
     mt.Production->ActiveProgram->NumberInList = 0;
-    mt.Production->ActiveProgram->State->CurrentState->Value = {"","Ïnitializing"};
+    mt.Production->ActiveProgram->State->CurrentState->Value = {"","Initializing"};
     mt.Production->ActiveProgram->State->CurrentState->Number = 0;
     mt.Production->ActiveProgram->State->CurrentState->Id = UA_NODEID_NUMERIC(nsFromUri(m_pServer, constants::NsMachineToolUri), UA_MACHINETOOLID_PRODUCTIONSTATEMACHINETYPE_INITIALIZING);
 
@@ -75,7 +75,7 @@ void MRMachineTool::InstantiateProduction()
     job.Identifier = std::string("Valentines_Day");
     job.RunsCompleted = 0;
     job.RunsPlanned = 7;
-    job.State->CurrentState->Value = {"","Ïnitializing"};
+    job.State->CurrentState->Value = {"","Initializing"};
     job.State->CurrentState->Number = 0;
     job.State->CurrentState->Id = UA_NODEID_NUMERIC(nsFromUri(m_pServer, constants::NsMachineToolUri), UA_MACHINETOOLID_PRODUCTIONSTATEMACHINETYPE_INITIALIZING);
     job.NumberInList = 0;

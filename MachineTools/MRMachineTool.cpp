@@ -81,6 +81,7 @@ void MRMachineTool::InstantiateProduction()
     job.NumberInList = 0;
     auto &program = mt.Production->ProductionPlan->OrderedObjects.value.front()->ProductionPrograms->OrderedObjects.Add<machineTool::ProductionProgram_t>(m_pServer, n, {m_nsIndex, "heart.nc"});
 
+    InstantiateOptional(program.State, m_pServer, n);
     program.Name = "heart.nc";
     program.State->CurrentState->Value = {"","Initializing"};
     program.State->CurrentState->Number = 0;
@@ -119,25 +120,39 @@ void MRMachineTool::Simulate()
             mt.Production->ActiveProgram->State->CurrentState->Id = UA_NODEID_NUMERIC(nsFromUri(m_pServer, constants::NsMachineToolUri), UA_MACHINETOOLID_PRODUCTIONSTATEMACHINETYPE_INITIALIZING);
             mt.Production->ActiveProgram->State->CurrentState->Number = 0;
 
+            mt.Production->ProductionPlan->OrderedObjects.value.front()->ProductionPrograms->OrderedObjects.value.front()->State->CurrentState->Value = {"", "Initializing"};
+            mt.Production->ProductionPlan->OrderedObjects.value.front()->ProductionPrograms->OrderedObjects.value.front()->State->CurrentState->Id = UA_NODEID_NUMERIC(nsFromUri(m_pServer, constants::NsMachineToolUri), UA_MACHINETOOLID_PRODUCTIONSTATEMACHINETYPE_INITIALIZING);
+            mt.Production->ProductionPlan->OrderedObjects.value.front()->ProductionPrograms->OrderedObjects.value.front()->State->CurrentState->Number = 0;
+        }
+        else if (m_simStep == 3 and mt.Production->ActiveProgram->State->CurrentState->Number.value != 1)
+        {
             mt.Production->ActiveProgram->State->CurrentState->Value = {"", "Running"};
             mt.Production->ActiveProgram->State->CurrentState->Id = UA_NODEID_NUMERIC(nsFromUri(m_pServer, constants::NsMachineToolUri), UA_MACHINETOOLID_PRODUCTIONSTATEMACHINETYPE_RUNNING);
             mt.Production->ActiveProgram->State->CurrentState->Number = 1;
+            
+            mt.Production->ProductionPlan->OrderedObjects.value.front()->ProductionPrograms->OrderedObjects.value.front()->State->CurrentState->Value = {"", "Running"};
+            mt.Production->ProductionPlan->OrderedObjects.value.front()->ProductionPrograms->OrderedObjects.value.front()->State->CurrentState->Id = UA_NODEID_NUMERIC(nsFromUri(m_pServer, constants::NsMachineToolUri), UA_MACHINETOOLID_PRODUCTIONSTATEMACHINETYPE_RUNNING);
+            mt.Production->ProductionPlan->OrderedObjects.value.front()->ProductionPrograms->OrderedObjects.value.front()->State->CurrentState->Number = 1;
 
             mt.Monitoring->MachineTool->FeedOverride->Value = 100.0;
         }
 
         //Program is running
-        if (m_simStep == 17 and mt.Production->ActiveProgram->State->CurrentState->Number.value == 1)
+        else if (m_simStep == 17 and mt.Production->ActiveProgram->State->CurrentState->Number.value == 1)
         {
             mt.Production->ActiveProgram->State->CurrentState->Value = {"", "Ended"};
             mt.Production->ActiveProgram->State->CurrentState->Id = UA_NODEID_NUMERIC(nsFromUri(m_pServer, constants::NsMachineToolUri), UA_MACHINETOOLID_PRODUCTIONSTATEMACHINETYPE_ENDED);
             mt.Production->ActiveProgram->State->CurrentState->Number = 2;
 
+            mt.Production->ProductionPlan->OrderedObjects.value.front()->ProductionPrograms->OrderedObjects.value.front()->State->CurrentState->Value = {"", "Ended"};
+            mt.Production->ProductionPlan->OrderedObjects.value.front()->ProductionPrograms->OrderedObjects.value.front()->State->CurrentState->Id = UA_NODEID_NUMERIC(nsFromUri(m_pServer, constants::NsMachineToolUri), UA_MACHINETOOLID_PRODUCTIONSTATEMACHINETYPE_ENDED);
+            mt.Production->ProductionPlan->OrderedObjects.value.front()->ProductionPrograms->OrderedObjects.value.front()->State->CurrentState->Number = 2;
+
             mt.Monitoring->MachineTool->FeedOverride->Value = 0.0;
         }
 
         // one more run completed
-        if (m_simStep == 19 and mt.Production->ProductionPlan->OrderedObjects.value.front()->RunsCompleted.value < 7)
+        else if (m_simStep == 19 and mt.Production->ProductionPlan->OrderedObjects.value.front()->RunsCompleted.value < 7)
         {
             mt.Production->ProductionPlan->OrderedObjects.value.front()->RunsCompleted.value += 1;
 
@@ -149,7 +164,7 @@ void MRMachineTool::Simulate()
         }
 
         // all runs ended/overproduction
-        if (mt.Production->ProductionPlan->OrderedObjects.value.front()->RunsCompleted.value >= 7)
+        else if (mt.Production->ProductionPlan->OrderedObjects.value.front()->RunsCompleted.value >= 7)
         {
             mt.Monitoring->MachineTool->FeedOverride->Value = 0.0;
             SwitchOnStacklightColor(UA_SignalColor::UA_SIGNALCOLOR_YELLOW);
@@ -162,6 +177,10 @@ void MRMachineTool::Simulate()
             mt.Production->ActiveProgram->State->CurrentState->Value = {"", "Ended"};
             mt.Production->ActiveProgram->State->CurrentState->Id = UA_NODEID_NUMERIC(nsFromUri(m_pServer, constants::NsMachineToolUri), UA_MACHINETOOLID_PRODUCTIONSTATEMACHINETYPE_ENDED);
             mt.Production->ActiveProgram->State->CurrentState->Number = 2;
+
+            mt.Production->ProductionPlan->OrderedObjects.value.front()->ProductionPrograms->OrderedObjects.value.front()->State->CurrentState->Value = {"", "Ended"};
+            mt.Production->ProductionPlan->OrderedObjects.value.front()->ProductionPrograms->OrderedObjects.value.front()->State->CurrentState->Id = UA_NODEID_NUMERIC(nsFromUri(m_pServer, constants::NsMachineToolUri), UA_MACHINETOOLID_PRODUCTIONSTATEMACHINETYPE_ENDED);
+            mt.Production->ProductionPlan->OrderedObjects.value.front()->ProductionPrograms->OrderedObjects.value.front()->State->CurrentState->Number = 2;
         }
     }
 
@@ -176,6 +195,10 @@ void MRMachineTool::Simulate()
         mt.Production->ActiveProgram->State->CurrentState->Value = {"", "Initializing"};
         mt.Production->ActiveProgram->State->CurrentState->Id = UA_NODEID_NUMERIC(nsFromUri(m_pServer, constants::NsMachineToolUri), UA_MACHINETOOLID_PRODUCTIONSTATEMACHINETYPE_INITIALIZING);
         mt.Production->ActiveProgram->State->CurrentState->Number = 0;
+
+        mt.Production->ProductionPlan->OrderedObjects.value.front()->ProductionPrograms->OrderedObjects.value.front()->State->CurrentState->Value = {"", "Initializing"};
+        mt.Production->ProductionPlan->OrderedObjects.value.front()->ProductionPrograms->OrderedObjects.value.front()->State->CurrentState->Id = UA_NODEID_NUMERIC(nsFromUri(m_pServer, constants::NsMachineToolUri), UA_MACHINETOOLID_PRODUCTIONSTATEMACHINETYPE_INITIALIZING);
+        mt.Production->ProductionPlan->OrderedObjects.value.front()->ProductionPrograms->OrderedObjects.value.front()->State->CurrentState->Number = 0;
 
         mt.Production->ProductionPlan->OrderedObjects.value.front()->State->CurrentState->Value = {"", "Initializing"};
         mt.Production->ProductionPlan->OrderedObjects.value.front()->State->CurrentState->Id = UA_NODEID_NUMERIC(nsFromUri(m_pServer, constants::NsMachineToolUri), UA_MACHINETOOLID_PRODUCTIONSTATEMACHINETYPE_INITIALIZING);

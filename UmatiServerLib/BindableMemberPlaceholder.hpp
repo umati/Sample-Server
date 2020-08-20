@@ -9,6 +9,9 @@
 #include "OpcUaEvent.hpp"
 #include "../TypeDefinition/ns0/GeneralModelChangeEvent.hpp"
 #include <variant>
+#include <iomanip>
+#include <ctime>
+#include <sstream>
 
 ///\TODO enable if BINDABLEMEMBER_T is BindableMember(Value)
 template <template <typename...> class BINDABLEMEMBER_T, typename T /*, typename = std::enable_if_t<is_base_of_template<BindableMember, BINDABLEMEMBER_T<T>>::value>*/>
@@ -176,6 +179,7 @@ public:
       open62541Cpp::UA_String uaStr(reinterpret_cast<UA_String *>(outVar.data), false);
       auto str = static_cast<std::string>(uaStr);
       bool changed = false;
+      /**
       for (int i = str.size() - 1; i >= 0; --i)
       {
         if (str[i] < 'a' || str[i] > 'z')
@@ -202,6 +206,14 @@ public:
         ss << "a" << str;
         str = ss.str();
       }
+      **/
+
+      auto t = std::time(nullptr);
+      auto tm = *std::gmtime(&t);
+
+      std::ostringstream oss;
+      oss << std::put_time(&tm, "%Y-%m-%dT%H:%M:%SZ");
+      str = oss.str();
 
       open62541Cpp::UA_String newUaStr(str);
       UA_Server_writeObjectProperty_scalar(

@@ -51,12 +51,13 @@ void FullMachineTool::InstantiateProduction()
   // Can keep binding when writing is supported.
   n.Remove(mt.Production->ProductionPlan->NodeVersion.NodeId);
   auto &job = mt.Production->ProductionPlan->OrderedObjects.Add(m_pServer, n, {m_nsIndex, "MyJob 1"});
-  job.Identifier = std::string("ID 1");
+  job.Identifier = std::string("MyJob 1");
   job.RunsCompleted = 0;
-  job.RunsPlanned = 1;
+  job.RunsPlanned->Value = 1;
+  job.RunsPlanned->IsValid = true;
 
   InstantiateOptional(job.PartSets, m_pServer, n);
-  auto &set1 = job.PartSets->PartSet.Add(m_pServer, n, {m_nsIndex, "Set 1"});
+  auto &set1 = job.PartSets->PartSet.Add(m_pServer, n, {m_nsIndex, "Set1"});
   set1.ContainsMixedParts = false;
   set1.Name = "Set1";
   set1.PartsCompletedPerRun = 3;
@@ -95,7 +96,7 @@ void FullMachineTool::InstantiateIdentification()
 
   auto &swOS = mt.Identification->SoftwareIdentification->SoftwareItem.Add(m_pServer, n, {m_nsIndex, "OS"});
   swOS.Identifier = "Alpine Container";
-  swOS.SoftwareRevision = "latest";
+  swOS.SoftwareRevision = "3.12.0"; // Should be reasonably accurate as of Aug 2020 (googled it)
 }
 void FullMachineTool::InstantiateTools()
 {
@@ -178,28 +179,28 @@ void FullMachineTool::InstantiatePrognosis()
   n.Remove(mt.Notification->Prognoses->NodeVersion.NodeId);
   writeEventNotifier(m_pServer, mt.Notification->Prognoses.NodeId);
   auto &maintenancePrognosis = mt.Notification->Prognoses->Prognosis.Add<machineTool::MaintenancePrognosis_t>(m_pServer, n, {m_nsIndex, "Maintenance"});
-  maintenancePrognosis.Activity = {"", "Replace actuator."};
+  maintenancePrognosis.Activity = {"en", "Replace actuator."};
   auto &manualPrognosis = mt.Notification->Prognoses->Prognosis.Add<machineTool::ManualActivityPrognosis_t>(m_pServer, n, {m_nsIndex, "Manual"});
-  manualPrognosis.Activity = {"", "Open Window"};
+  manualPrognosis.Activity = {"en", "Open Window"};
   auto &partLoadPrognosis = mt.Notification->Prognoses->Prognosis.Add<machineTool::PartLoadPrognosis_t>(m_pServer, n, {m_nsIndex, "PartLoad"});
-  partLoadPrognosis.Location = {"", "Left"};
+  partLoadPrognosis.Location = {"en", "Workspace Left"};
   partLoadPrognosis.PartName = "Circle";
   auto &partUnLoadPrognosis = mt.Notification->Prognoses->Prognosis.Add<machineTool::PartUnLoadPrognosis_t>(m_pServer, n, {m_nsIndex, "PartUnLoad"});
-  partUnLoadPrognosis.Location = {"", "Right"};
+  partUnLoadPrognosis.Location = {"en", "Workspace Right"};
   partUnLoadPrognosis.PartName = "Smiley";
   auto &processChangeoverPrognosis = mt.Notification->Prognoses->Prognosis.Add<machineTool::ProcessChangeoverPrognosis_t>(m_pServer, n, {m_nsIndex, "ProcessChangeover"});
-  processChangeoverPrognosis.Location = {"", "Mid"};
-  processChangeoverPrognosis.Activity = {"", "Flip"};
+  processChangeoverPrognosis.Location = {"en", "Shaft Mid"};
+  processChangeoverPrognosis.Activity = {"en", "Flip Part"};
   auto &productionJobEndPrognosis = mt.Notification->Prognoses->Prognosis.Add<machineTool::ProductionJobEndPrognosis_t>(m_pServer, n, {m_nsIndex, "ProductionJobEnd"});
   productionJobEndPrognosis.SourceIdentifier = "100x Smiley Job";
   auto &toolChangePrognosis = mt.Notification->Prognoses->Prognosis.Add<machineTool::ToolChangePrognosis_t>(m_pServer, n, {m_nsIndex, "ToolChange"});
-  toolChangePrognosis.Location = {"", "Magazine 1"};
+  toolChangePrognosis.Location = {"en", "Magazine 1"};
   auto &toolLoadPrognosis = mt.Notification->Prognoses->Prognosis.Add<machineTool::ToolLoadPrognosis_t>(m_pServer, n, {m_nsIndex, "ToolLoad"});
-  toolLoadPrognosis.Location = {"", "Magazine 2"};
+  toolLoadPrognosis.Location = {"en", "Magazine 2"};
   auto &toolUnloadPrognosis = mt.Notification->Prognoses->Prognosis.Add<machineTool::ToolUnloadPrognosis_t>(m_pServer, n, {m_nsIndex, "ToolUnLoad"});
-  toolUnloadPrognosis.Location = {"", "Magazine 3"};
+  toolUnloadPrognosis.Location = {"en", "Magazine 3"};
   auto &utilityPrognosis = mt.Notification->Prognoses->Prognosis.Add<machineTool::UtilityChangePrognosis_t>(m_pServer, n, {m_nsIndex, "UtilityChange"});
-  utilityPrognosis.UtilityName = {"", "H²"};
+  utilityPrognosis.UtilityName = {"en", "H²"};
 }
 
 void FullMachineTool::Simulate()
@@ -214,35 +215,35 @@ void FullMachineTool::Simulate()
   {
   case 0:
   {
-    mt.Production->ActiveProgram->State->CurrentState->Value = {"", "Initializing"};
+    mt.Production->ActiveProgram->State->CurrentState->Value = {"en", "Initializing"};
     mt.Production->ActiveProgram->State->CurrentState->Id = UA_NODEID_NUMERIC(nsFromUri(m_pServer, constants::NsMachineToolUri), UA_MACHINETOOLID_PRODUCTIONSTATEMACHINETYPE_INITIALIZING);
     mt.Production->ActiveProgram->State->CurrentState->Number = 0;
     break;
   }
   case 2:
   {
-    mt.Production->ActiveProgram->State->CurrentState->Value = {"", "Running"};
+    mt.Production->ActiveProgram->State->CurrentState->Value = {"en", "Running"};
     mt.Production->ActiveProgram->State->CurrentState->Id = UA_NODEID_NUMERIC(nsFromUri(m_pServer, constants::NsMachineToolUri), UA_MACHINETOOLID_PRODUCTIONSTATEMACHINETYPE_RUNNING);
     mt.Production->ActiveProgram->State->CurrentState->Number = 1;
     break;
   }
   case 4:
   {
-    mt.Production->ActiveProgram->State->CurrentState->Value = {"", "Interrupted"};
+    mt.Production->ActiveProgram->State->CurrentState->Value = {"en", "Interrupted"};
     mt.Production->ActiveProgram->State->CurrentState->Id = UA_NODEID_NUMERIC(nsFromUri(m_pServer, constants::NsMachineToolUri), UA_MACHINETOOLID_PRODUCTIONSTATEMACHINETYPE_INTERRUPTED);
     mt.Production->ActiveProgram->State->CurrentState->Number = 3;
     break;
   }
   case 6:
   {
-    mt.Production->ActiveProgram->State->CurrentState->Value = {"", "Ended"};
+    mt.Production->ActiveProgram->State->CurrentState->Value = {"en", "Ended"};
     mt.Production->ActiveProgram->State->CurrentState->Id = UA_NODEID_NUMERIC(nsFromUri(m_pServer, constants::NsMachineToolUri), UA_MACHINETOOLID_PRODUCTIONSTATEMACHINETYPE_ENDED);
     mt.Production->ActiveProgram->State->CurrentState->Number = 2;
     break;
   }
   case 8:
   {
-    mt.Production->ActiveProgram->State->CurrentState->Value = {"", "Aborted"};
+    mt.Production->ActiveProgram->State->CurrentState->Value = {"en", "Aborted"};
     mt.Production->ActiveProgram->State->CurrentState->Id = UA_NODEID_NUMERIC(nsFromUri(m_pServer, constants::NsMachineToolUri), UA_MACHINETOOLID_PRODUCTIONSTATEMACHINETYPE_ABORTED);
     mt.Production->ActiveProgram->State->CurrentState->Number = 4;
     break;
@@ -256,17 +257,17 @@ void FullMachineTool::Simulate()
     {
       std::stringstream ss;
       ss << "Cond Message: " << m_simStep;
-      m_pAlert->Data.Message = {"", ss.str()};
+      m_pAlert->Data.Message = {"en", ss.str()};
     }
     m_pAlert->Data.SourceName = "SrcCond";
-    m_pAlert->Data.Severity = 123;
+    m_pAlert->Data.Severity = 523;
     m_pAlert->Data.Retain = true;
     m_pAlert->Data.EnabledState->Value = {"", "Enabled"};
     m_pAlert->Data.EnabledState->Id = true;
     m_pAlert->Data.AckedState->Id = false;
-    m_pAlert->Data.AckedState->Value = {"", "Unacknowledged"};
+    m_pAlert->Data.AckedState->Value = {"en", "Unacknowledged"};
     m_pAlert->Data.ConfirmedState->Id = false;
-    m_pAlert->Data.ConfirmedState->Value = {"", "Unconfirmed"};
+    m_pAlert->Data.ConfirmedState->Value = {"en", "Unconfirmed"};
 
     m_pAlert->Trigger();
   }
@@ -274,11 +275,11 @@ void FullMachineTool::Simulate()
   {
     m_pAlert->Data.Retain = false;
     m_pAlert->Data.EnabledState->Id = true;
-    m_pAlert->Data.EnabledState->Value = {"", "Disabled"};
+    m_pAlert->Data.EnabledState->Value = {"en", "Disabled"};
     m_pAlert->Data.AckedState->Id = true;
-    m_pAlert->Data.AckedState->Value = {"", "Acknowledged"};
+    m_pAlert->Data.AckedState->Value = {"en", "Acknowledged"};
     m_pAlert->Data.ConfirmedState->Id = true;
-    m_pAlert->Data.ConfirmedState->Value = {"", "Confirmed"};
+    m_pAlert->Data.ConfirmedState->Value = {"en", "Confirmed"};
     m_pAlert->Trigger();
     m_pAlert = nullptr;
   }
@@ -289,7 +290,7 @@ void FullMachineTool::Simulate()
     notification.Identifier = "Custom Event";
     std::stringstream ss;
     ss << "Full MT Msg " << m_simStep;
-    notification.Message = {"", ss.str()};
+    notification.Message = {"en", ss.str()};
     notification.Severity = (m_simStep - 8) % 300;
     notification.SourceName = "FullMachineTool";
     OpcUaEvent ev(notification, m_pServer, mt.Notification->Messages.NodeId);

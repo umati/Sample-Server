@@ -25,7 +25,7 @@ void FullMachineToolDynamic::Simulate()
     auto &job = mt.Production->ProductionPlan->OrderedObjects.Add(m_pServer, n, {m_nsIndex, ss.str()});
     job.Identifier = ss.str();
     job.RunsCompleted = 0;
-    job.RunsPlanned = 2;
+    job.RunsPlanned->Value = 2;
     mt.Production->ActiveProgram->JobIdentifier = mt.Production->ProductionPlan->OrderedObjects.value.back()->Identifier.value;
     mt.Production->ActiveProgram->JobNodeId = *mt.Production->ProductionPlan->OrderedObjects.value.back().NodeId.NodeId;
   }

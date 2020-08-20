@@ -72,9 +72,10 @@ void MRMachineTool::InstantiateProduction()
     mt.Production->ActiveProgram->State->CurrentState->Id = UA_NODEID_NUMERIC(nsFromUri(m_pServer, constants::NsMachineToolUri), UA_MACHINETOOLID_PRODUCTIONSTATEMACHINETYPE_INITIALIZING);
 
     auto &job = mt.Production->ProductionPlan->OrderedObjects.Add(m_pServer, n, {m_nsIndex, "VDJob"});
-    job.Identifier = std::string("Valentines_Day");
+    job.Identifier = std::string("VDJob");
     job.RunsCompleted = 0;
-    job.RunsPlanned = 7;
+    job.RunsPlanned->Value = 7;
+    job.RunsPlanned->IsValid = true;
     job.State->CurrentState->Value = {"","Initializing"};
     job.State->CurrentState->Number = 0;
     job.State->CurrentState->Id = UA_NODEID_NUMERIC(nsFromUri(m_pServer, constants::NsMachineToolUri), UA_MACHINETOOLID_PRODUCTIONSTATEMACHINETYPE_INITIALIZING);

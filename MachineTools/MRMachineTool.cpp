@@ -55,6 +55,7 @@ void MRMachineTool::InstantiateMonitoring()
             UA_SignalColor::UA_SIGNALCOLOR_YELLOW,
             UA_SignalColor::UA_SIGNALCOLOR_RED,
             });
+    n.Remove(mt.Monitoring->Stacklight->NodeVersion.NodeId);
     SwitchOnStacklightColor(UA_SignalColor::UA_SIGNALCOLOR_YELLOW);
 }
 

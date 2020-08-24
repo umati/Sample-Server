@@ -1,5 +1,5 @@
 #pragma once
-#include "../TypeDefiniton.hpp"
+#include "../TypeDefinition.hpp"
 #include "../ns0/Constants.hpp"
 #include "Constants.hpp"
 #include <string>

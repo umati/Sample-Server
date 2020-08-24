@@ -3,8 +3,9 @@
 #include "../UmatiServerLib/OpcUaCondition.hpp"
 #include "../UmatiServerLib/ServerHelper.hpp"
 #include "../TypeDefinition/MachineTool/Alert.hpp"
-#include "../TypeDefinition/MachineTool/NotificationEvent.hpp"
 #include <open62541/types_generated.h>
+#include "../TypeDefinition/MachineTool/NotificationEvent.hpp"
+#include "../TypeDefinition/MachineTool/ProductionJobTransitionEvent.hpp"
 
 MRMachineTool::MRMachineTool(UA_Server *pServer)
     : InstantiatedMachineTool(pServer)
@@ -110,6 +111,24 @@ void MRMachineTool::Simulate()
         mt.Production->ProductionPlan->OrderedObjects.value.front()->State->CurrentState->Number = 1;
 
         m_simStep = 0;
+
+        machineTool::ProductionJobTransitionEvent_t jtevent;
+        std::stringstream ss;
+        ss << "Transition to Running triggered";
+        jtevent.Message = {"en", ss.str()};
+        jtevent.Severity = 20;
+        notification.SourceName = "MRMachineTool";
+        OpcUaEvent ev(jtevent, m_pServer, mt.Notification->Messages.NodeId);
+/**
+    machineTool::NotificationEvent_t notification;
+    notification.Identifier = "Custom Event";
+    std::stringstream ss;
+    ss << "Full MT Msg " << m_simStep;
+    notification.Message = {"en", ss.str()};
+    notification.Severity = (m_simStep - 8) % 300;
+    notification.SourceName = "FullMachineTool";
+    OpcUaEvent ev(notification, m_pServer, mt.Notification->Messages.NodeId);
+    **/
     }
 
     // Job in running

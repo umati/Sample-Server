@@ -1,5 +1,5 @@
 #pragma once
-#include "../TypeDefiniton.hpp"
+#include "../TypeDefinition.hpp"
 #include "Constants.hpp"
 #include "ProductionJob.hpp"
 #include "../ns0/OrderedList.hpp"

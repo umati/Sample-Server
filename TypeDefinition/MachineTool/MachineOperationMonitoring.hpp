@@ -1,5 +1,5 @@
 #pragma once
-#include "../TypeDefiniton.hpp"
+#include "../TypeDefinition.hpp"
 #include "Constants.hpp"
 #include "../ns0/AnalogUnitRange.hpp"
 #include "../../src_generated/types_machinetool_generated.h"

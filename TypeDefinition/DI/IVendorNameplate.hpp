@@ -13,6 +13,7 @@ struct IVendorNameplate_t
   BindableMemberValue<UmatiServerLib::LocalizedText_t> Manufacturer;
   BindableMemberValue<std::string> SerialNumber;
   BindableMemberValue<std::string> DeviceClass;
+  BindableMemberValue<std::string> ProductCode;
 };
 
 } // namespace di
@@ -23,6 +24,9 @@ REFL_TYPE(di::IVendorNameplate_t,
 REFL_FIELD(ProductInstanceUri, UmatiServerLib::attribute::PlaceholderOptional(),
           UmatiServerLib::attribute::MemberInTypeNodeId{
               .NodeId = UmatiServerLib::constexp::NodeId(constants::NsDIUri, UA_DIID_IVENDORNAMEPLATETYPE_PRODUCTINSTANCEURI)})
+REFL_FIELD(ProductCode, UmatiServerLib::attribute::PlaceholderOptional(),
+          UmatiServerLib::attribute::MemberInTypeNodeId{
+              .NodeId = UmatiServerLib::constexp::NodeId(constants::NsDIUri, UA_DIID_IVENDORNAMEPLATETYPE_PRODUCTCODE)})
 REFL_FIELD(Model, UmatiServerLib::attribute::PlaceholderOptional(),
           UmatiServerLib::attribute::MemberInTypeNodeId{
               .NodeId = UmatiServerLib::constexp::NodeId(constants::NsDIUri, UA_DIID_IVENDORNAMEPLATETYPE_MODEL)})

@@ -5,7 +5,6 @@
 #include "../TypeDefinition/MachineTool/Alert.hpp"
 #include <open62541/types_generated.h>
 #include "../TypeDefinition/MachineTool/NotificationEvent.hpp"
-#include "../TypeDefinition/MachineTool/ProductionJobTransitionEvent.hpp"
 
 MRMachineTool::MRMachineTool(UA_Server *pServer)
     : InstantiatedMachineTool(pServer)
@@ -30,12 +29,19 @@ void MRMachineTool::CreateObject()
 void MRMachineTool::InstantiateIdentification()
 {
     InstantiatedMachineTool::InstantiateIdentification();
+    InstantiateOptional(mt.Identification->YearOfConstruction, m_pServer, n);
+    InstantiateOptional(mt.Identification->SoftwareRevision, m_pServer, n);
+    InstantiateOptional(mt.Identification->ProductCode, m_pServer, n);
 
     mt.Identification->Location = "HVN_7";
+    mt.Identification->Location = "AMB 0 1/N 48.781340 E 9.165731";
     mt.Identification->SerialNumber = std::string{"070-101-098-14"};
     mt.Identification->Manufacturer = {"","ISW UA4MT Team"};
     mt.Identification->Model = {"","T3IUTH"};
     mt.Identification->ProductInstanceUri = "http://isw.uni-stuttgart.de/#T3IUTH/070-101-098-14";
+    mt.Identification->ProductCode = "2684-rga-t842574-b7";
+    mt.Identification->YearOfConstruction = 2020;
+    mt.Identification->SoftwareRevision= "4.30.2";
 }
 
 void MRMachineTool::InstantiateMonitoring()
@@ -112,13 +118,6 @@ void MRMachineTool::Simulate()
 
         m_simStep = 0;
 
-        machineTool::ProductionJobTransitionEvent_t jtevent;
-        std::stringstream ss;
-        ss << "Transition to Running triggered";
-        jtevent.Message = {"en", ss.str()};
-        jtevent.Severity = 20;
-        notification.SourceName = "MRMachineTool";
-        OpcUaEvent ev(jtevent, m_pServer, mt.Notification->Messages.NodeId);
 /**
     machineTool::NotificationEvent_t notification;
     notification.Identifier = "Custom Event";

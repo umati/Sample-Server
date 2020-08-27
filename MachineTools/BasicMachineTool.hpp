@@ -14,5 +14,6 @@ class BasicMachineTool : public InstantiatedMachineTool
   void InstantiateIdentification();
   void InstantiateMonitoring();
   void InstantiateTools();
+  void InstantiateProduction();
   int m_simStep = 0;
 };

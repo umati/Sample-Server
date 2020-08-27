@@ -9,17 +9,11 @@ BasicMachineTool::BasicMachineTool(UA_Server *pServer)
 
 void BasicMachineTool::CreateObject()
 {
-  InstantiateOptional(mt.Production->ActiveProgram->State, m_pServer, n);
-  mt.Production->ActiveProgram->NumberInList = 0;
-  mt.Production->ActiveProgram->Name = "Basic Program";
-  mt.Production->ActiveProgram->State->CurrentState->Value = {"en","Running"};
-  mt.Production->ActiveProgram->State->CurrentState->Number = 1;
-  mt.Production->ActiveProgram->State->CurrentState->Id = UA_NODEID_NUMERIC(nsFromUri(m_pServer, constants::NsMachineToolUri), UA_MACHINETOOLID_PRODUCTIONSTATEMACHINETYPE_RUNNING);
-
   InstantiatedMachineTool::CreateObject();
   InstantiateIdentification();
   InstantiateMonitoring();
   InstantiateTools();
+  InstantiateProduction();
 }
 
 void BasicMachineTool::InstantiateIdentification()
@@ -72,6 +66,17 @@ void BasicMachineTool::InstantiateTools()
     InstantiateOptional(tool.Name, m_pServer, n);
   }
 }
+
+void BasicMachineTool::InstantiateProduction()
+{
+  InstantiateOptional(mt.Production->ActiveProgram->State, m_pServer, n);
+  mt.Production->ActiveProgram->NumberInList = 0;
+  mt.Production->ActiveProgram->Name = "Basic Program";
+  mt.Production->ActiveProgram->State->CurrentState->Value = {"en","Running"};
+  mt.Production->ActiveProgram->State->CurrentState->Number = 1;
+  mt.Production->ActiveProgram->State->CurrentState->Id = UA_NODEID_NUMERIC(nsFromUri(m_pServer, constants::NsMachineToolUri), UA_MACHINETOOLID_PRODUCTIONSTATEMACHINETYPE_RUNNING);
+}
+
 
 void BasicMachineTool::Simulate()
 {

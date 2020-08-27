@@ -25,7 +25,6 @@ REFL_FIELD(YearOfConstruction, UmatiServerLib::attribute::PlaceholderOptional(),
 REFL_FIELD(MonthOfConstruction, UmatiServerLib::attribute::PlaceholderOptional(),
            UmatiServerLib::attribute::MemberInTypeNodeId{
                .NodeId = UmatiServerLib::constexp::NodeId(constants::NsMachineryUri, UA_MACHINERY_ID_IMACHINEVENDORNAMEPLATETYPE_MONTHOFCONSTRUCTION)})
-REFL_FIELD(ProductCode)
 REFL_FIELD(Manufacturer)
 REFL_FIELD(ProductInstanceUri)
 REFL_FIELD(SerialNumber)

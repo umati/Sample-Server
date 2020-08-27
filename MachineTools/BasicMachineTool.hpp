@@ -11,6 +11,7 @@ class BasicMachineTool : public InstantiatedMachineTool
   protected:
   void CreateObject() override;
 
+  void InstantiateIdentification();
   void InstantiateMonitoring();
   void InstantiateTools();
   int m_simStep = 0;

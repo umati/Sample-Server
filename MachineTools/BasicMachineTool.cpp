@@ -9,13 +9,27 @@ BasicMachineTool::BasicMachineTool(UA_Server *pServer)
 
 void BasicMachineTool::CreateObject()
 {
+  InstantiateOptional(mt.Production->ActiveProgram->State, m_pServer, n);
   mt.Production->ActiveProgram->NumberInList = 0;
   mt.Production->ActiveProgram->Name = "Basic Program";
+  mt.Production->ActiveProgram->State->CurrentState->Value = {"en","Running"};
+  mt.Production->ActiveProgram->State->CurrentState->Number = 1;
+  mt.Production->ActiveProgram->State->CurrentState->Id = UA_NODEID_NUMERIC(nsFromUri(m_pServer, constants::NsMachineToolUri), UA_MACHINETOOLID_PRODUCTIONSTATEMACHINETYPE_RUNNING);
 
   InstantiatedMachineTool::CreateObject();
   InstantiateIdentification();
   InstantiateMonitoring();
   InstantiateTools();
+}
+
+void BasicMachineTool::InstantiateIdentification()
+{
+    InstantiatedMachineTool::InstantiateIdentification();
+    InstantiateOptional(mt.Identification->YearOfConstruction, m_pServer, n);
+    InstantiateOptional(mt.Identification->ProductCode, m_pServer, n);
+
+    mt.Identification->ProductCode = "2653837gafi1548";
+    mt.Identification->YearOfConstruction = 2020;
 }
 
 void BasicMachineTool::InstantiateMonitoring()

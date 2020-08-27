@@ -7,7 +7,8 @@ open62541Cpp::UA_QualifiedName readBrowseName(UA_Server *pServer, open62541Cpp::
   if (status != UA_STATUSCODE_GOOD)
   {
     std::stringstream ss;
-    ss << "Could not read BrowseName from NodeId, Error: " << UA_StatusCode_name(status);
+//    ss << "Could not read BrowseName from NodeId, Error: " << UA_StatusCode_name(status);
+    ss << "Could not read BrowseName from NodeId (" << static_cast<std::string>(nodeId) << "), Error: " << UA_StatusCode_name(status);
     throw std::runtime_error(ss.str());
   }
 

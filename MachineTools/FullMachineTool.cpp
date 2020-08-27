@@ -12,7 +12,7 @@ FullMachineTool::FullMachineTool(UA_Server *pServer)
 }
 
 FullMachineTool::FullMachineTool(UA_Server *pServer, bool initialize)
-    : InstantiatedMachineTool(pServer)
+    : InstantiatedMachineTool(pServer), JobStateMachine(open62541Cpp::UA_NodeId(UA_NODEID_NUMERIC(5, UA_MACHINETOOLID_PRODUCTIONJOBSTATEMACHINETYPE)), pServer)
 {
   if (initialize)
   {

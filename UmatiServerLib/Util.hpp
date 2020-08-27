@@ -36,3 +36,5 @@ template <typename... Ts>
 struct Bases : public refl::attr::usage::type {
     static constexpr refl::type_list<refl::type_descriptor<Ts>...> descriptors = {};
 };
+
+open62541Cpp::UA_NodeId browseForParent(open62541Cpp::UA_NodeId node, open62541Cpp::UA_NodeId referenceType, UA_Server *pServer);

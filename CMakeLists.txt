@@ -109,6 +109,7 @@ add_library(ExampleServerLib
     UmatiServerLib/Instantiation.cpp
     UmatiServerLib/OpcUaKeys.cpp
     UmatiServerLib/ServerHelper.cpp
+    UmatiServerLib/StateMachine.cpp
     OpcUaTypes/LocalizedText.cpp
     OpcUaTypes/EUInformation.cpp
     OpcUaTypes/ConstNodeId.cpp

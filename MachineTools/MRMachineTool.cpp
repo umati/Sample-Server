@@ -4,7 +4,6 @@
 #include "../UmatiServerLib/ServerHelper.hpp"
 #include "../TypeDefinition/MachineTool/Alert.hpp"
 #include <open62541/types_generated.h>
-#include "../TypeDefinition/MachineTool/NotificationEvent.hpp"
 #include "../TypeDefinition/MachineTool/ProductionJobTransitionEvent.hpp"
 
 MRMachineTool::MRMachineTool(UA_Server *pServer)
@@ -32,12 +31,14 @@ void MRMachineTool::InstantiateIdentification()
     InstantiatedMachineTool::InstantiateIdentification();
     InstantiateOptional(mt.Identification->YearOfConstruction, m_pServer, n);
     InstantiateOptional(mt.Identification->SoftwareRevision, m_pServer, n);
+    InstantiateOptional(mt.Identification->ProductCode, m_pServer, n);
 
     mt.Identification->Location = "AMB 0 1/N 48.781340 E 9.165731";
     mt.Identification->SerialNumber = std::string{"070-101-098-14"};
     mt.Identification->Manufacturer = {"","ISW UA4MT Team"};
     mt.Identification->Model = {"","T3IUTH"};
     mt.Identification->ProductInstanceUri = "http://isw.uni-stuttgart.de/#T3IUTH/070-101-098-14";
+    mt.Identification->ProductCode = "2684-rga-t842574-b7";
     mt.Identification->YearOfConstruction = 2020;
     mt.Identification->SoftwareRevision= "4.30.2";
 }
@@ -139,6 +140,16 @@ void MRMachineTool::Simulate()
         jtevent.Transition->Value = {"en", "InitializingToRunning"};
         OpcUaEvent ev(jtevent, m_pServer, vdjob->State.NodeId);
         std::cout << vdjob->State.NodeId;
+/**
+    machineTool::NotificationEvent_t notification;
+    notification.Identifier = "Custom Event";
+    std::stringstream ss;
+    ss << "Full MT Msg " << m_simStep;
+    notification.Message = {"en", ss.str()};
+    notification.Severity = (m_simStep - 8) % 300;
+    notification.SourceName = "FullMachineTool";
+    OpcUaEvent ev(notification, m_pServer, mt.Notification->Messages.NodeId);
+    **/
     }
 
     // Job in running

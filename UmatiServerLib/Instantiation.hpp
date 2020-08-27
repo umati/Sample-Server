@@ -39,7 +39,7 @@ void InstantiateOptional(BINDABLEMEMBER_T<T> &memberPar, UA_Server *pServer, Nod
     return;
   }
 
-  if (member.ParentNodeId.NodeId == nullptr || member.MemberInTypeNodeId.NodeId == nullptr)
+  if (member.ParentNodeId.NodeId == nullptr || UA_NodeId_isNull(member.MemberInTypeNodeId.NodeId))
   {
     throw std::runtime_error("Parent not bind.");
   }

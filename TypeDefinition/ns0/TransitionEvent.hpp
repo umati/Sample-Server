@@ -10,9 +10,9 @@ namespace ns0
 
 struct TransitionEvent_t : public BaseEvent_t
 {
-     BindableMemberValue<TransitionVariable_t<UmatiServerLib::LocalizedText_t>> Transition;
-     BindableMemberValue<StateVariable_t<UmatiServerLib::LocalizedText_t>> FromState;
-     BindableMemberValue<StateVariable_t<UmatiServerLib::LocalizedText_t>> ToState;
+     BindableMember<TransitionVariable_t<UA_NodeId>> Transition;
+     BindableMember<StateVariable_t<UA_NodeId>> FromState;
+     BindableMember<StateVariable_t<UA_NodeId>> ToState;
 };
 
 } // namespace ns0

@@ -135,9 +135,15 @@ void MRMachineTool::Simulate()
         jtevent.RunsPlanned->Value = vdjob->RunsPlanned->Value;
         jtevent.RunsPlanned->IsValid = vdjob->RunsPlanned->IsValid;
         jtevent.RunsCompleted = vdjob->RunsCompleted;
-        jtevent.FromState->Value = {"en", "Initializing"};
-        jtevent.ToState->Value = {"en", "Running"};
-        jtevent.Transition->Value = {"en", "InitializingToRunning"};
+        jtevent.Transition->Value = {"en","InitializingToRunning"}; 
+        jtevent.Transition->Id = UA_NODEID_NUMERIC(nsFromUri(m_pServer, constants::NsMachineToolUri), UA_MACHINETOOLID_PRODUCTIONSTATEMACHINETYPE_INITIALIZINGTORUNNING);
+        jtevent.Transition->Number =  UA_MACHINETOOLID_PRODUCTIONSTATEMACHINETYPE_INITIALIZINGTORUNNING_TRANSITIONNUMBER;
+        jtevent.FromState->Value = {"en","Initializing"};
+        jtevent.FromState->Id = UA_NODEID_NUMERIC(nsFromUri(m_pServer, constants::NsMachineToolUri), UA_MACHINETOOLID_PRODUCTIONSTATEMACHINETYPE_INITIALIZING);
+        jtevent.FromState->Number = 0;
+        jtevent.ToState->Value = {"en","Running"}; 
+        jtevent.ToState->Id = UA_NODEID_NUMERIC(nsFromUri(m_pServer, constants::NsMachineToolUri), UA_MACHINETOOLID_PRODUCTIONSTATEMACHINETYPE_RUNNING);
+        jtevent.ToState->Number = UA_MACHINETOOLID_PRODUCTIONSTATEMACHINETYPE_RUNNING_STATENUMBER; 
         OpcUaEvent ev(jtevent, m_pServer, vdjob->State.NodeId);
         std::cout << vdjob->State.NodeId;
 /**
@@ -179,6 +185,7 @@ void MRMachineTool::Simulate()
 
             mt.Monitoring->MachineTool->FeedOverride->Value = 100.0;
 
+            /**
             machineTool::ProductionJobTransitionEvent_t ptevent;
             std::stringstream ss;
             ss << "Transition to Running triggered";
@@ -193,6 +200,7 @@ void MRMachineTool::Simulate()
             ptevent.ToState->Value = {"en", "Running"};
             ptevent.Transition->Value = {"en", "InitializingToRunning"};
             OpcUaEvent ev(ptevent, m_pServer, aprog->State.NodeId);
+            **/
         }
 
         //Program is running

@@ -126,24 +126,25 @@ void MRMachineTool::Simulate()
         m_simStep = 0;
 
         machineTool::ProductionJobTransitionEvent_t jtevent;
+        /**
         std::stringstream ss;
         ss << "Transition to Running triggered";
         jtevent.Message = {"en", ss.str()};
+        **/
         jtevent.Severity = 20;
+        /**
         jtevent.SourceName = "MRMachineTool";
-        jtevent.Identifier = vdjob->Identifier;
-        jtevent.RunsPlanned->Value = vdjob->RunsPlanned->Value;
-        jtevent.RunsPlanned->IsValid = vdjob->RunsPlanned->IsValid;
-        jtevent.RunsCompleted = vdjob->RunsCompleted;
+        jtevent.Identifier = vdjob->Identifier.value;
+        jtevent.RunsPlanned->Value = vdjob->RunsPlanned->Value.value;
+        jtevent.RunsPlanned->IsValid = vdjob->RunsPlanned->IsValid.value;
+        jtevent.RunsCompleted = vdjob->RunsCompleted.value;
         jtevent.Transition->Value = {"en","InitializingToRunning"}; 
         jtevent.Transition->Id = UA_NODEID_NUMERIC(nsFromUri(m_pServer, constants::NsMachineToolUri), UA_MACHINETOOLID_PRODUCTIONSTATEMACHINETYPE_INITIALIZINGTORUNNING);
-        jtevent.Transition->Number =  UA_MACHINETOOLID_PRODUCTIONSTATEMACHINETYPE_INITIALIZINGTORUNNING_TRANSITIONNUMBER;
         jtevent.FromState->Value = {"en","Initializing"};
         jtevent.FromState->Id = UA_NODEID_NUMERIC(nsFromUri(m_pServer, constants::NsMachineToolUri), UA_MACHINETOOLID_PRODUCTIONSTATEMACHINETYPE_INITIALIZING);
-        jtevent.FromState->Number = 0;
         jtevent.ToState->Value = {"en","Running"}; 
         jtevent.ToState->Id = UA_NODEID_NUMERIC(nsFromUri(m_pServer, constants::NsMachineToolUri), UA_MACHINETOOLID_PRODUCTIONSTATEMACHINETYPE_RUNNING);
-        jtevent.ToState->Number = UA_MACHINETOOLID_PRODUCTIONSTATEMACHINETYPE_RUNNING_STATENUMBER; 
+        **/
         OpcUaEvent ev(jtevent, m_pServer, vdjob->State.NodeId);
         std::cout << vdjob->State.NodeId;
 /**

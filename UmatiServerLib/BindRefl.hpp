@@ -250,7 +250,7 @@ namespace UmatiServerLib
     auto browseResult = UA_Server_browse(pServer, UA_UINT32_MAX, &brDesc);
     if (browseResult.statusCode != UA_STATUSCODE_GOOD)
     {
-      std::cout << "Resutl not good: " << UA_StatusCode_name(browseResult.statusCode) << std::endl;
+      std::cout << "Result not good: " << UA_StatusCode_name(browseResult.statusCode) << std::endl;
       std::cout << "Could not find placeholders." << std::endl;
     }
 

@@ -4,6 +4,7 @@
 #include <type_traits>
 #include <refl.hpp>
 #include <Open62541Cpp/UA_NodeId.hpp>
+#include <list>
 
 UA_Int16 nsFromUri(UA_Server *pServer, std::string uri);
 
@@ -38,3 +39,6 @@ struct Bases : public refl::attr::usage::type {
 };
 
 open62541Cpp::UA_NodeId browseForParent(open62541Cpp::UA_NodeId node, open62541Cpp::UA_NodeId referenceType, UA_Server *pServer);
+
+// Only exact match for the object type are handled, \todo allow to include subtypes
+std::list<open62541Cpp::UA_NodeId> browseForChilds(UA_Server *pServer, open62541Cpp::UA_NodeId node, open62541Cpp::UA_NodeId referenceType, open62541Cpp::UA_NodeId typeDef);

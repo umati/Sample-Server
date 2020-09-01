@@ -76,20 +76,62 @@ open62541Cpp::UA_NodeId browseForParent(open62541Cpp::UA_NodeId node, open62541C
     std::cout << "Resutl not good for browsing parent node. " << UA_StatusCode_name(browseResult.statusCode) << std::endl;
   }
 
-  if(browseResult.referencesSize == 0)
+  if (browseResult.referencesSize == 0)
   {
     std::cout << "No parent node found." << std::endl;
   }
 
-  if(browseResult.referencesSize > 1)
+  if (browseResult.referencesSize > 1)
   {
     std::cout << "Multiple parent nodes found, choosing a random one." << std::endl;
     ///\todo Exception?
   }
 
-  if(browseResult.referencesSize > 0)
+  if (browseResult.referencesSize > 0)
   {
     UA_NodeId_copy(&browseResult.references[0].nodeId.nodeId, ret.NodeId);
+  }
+
+  UA_BrowseResult_deleteMembers(&browseResult);
+  UA_BrowseDescription_deleteMembers(&brDesc);
+  return ret;
+}
+
+std::list<open62541Cpp::UA_NodeId> browseForChilds(UA_Server *pServer, open62541Cpp::UA_NodeId node, open62541Cpp::UA_NodeId referenceType, open62541Cpp::UA_NodeId typeDef)
+{
+  std::list<open62541Cpp::UA_NodeId> ret;
+  UA_BrowseDescription brDesc;
+  UA_BrowseDescription_init(&brDesc);
+  UA_NodeId_copy(node.NodeId, &brDesc.nodeId);
+  UA_NodeId_copy(referenceType.NodeId, &brDesc.referenceTypeId);
+
+  brDesc.nodeClassMask =
+      UA_NODECLASS_OBJECTTYPE |
+      UA_NODECLASS_VARIABLETYPE |
+      UA_NODECLASS_OBJECT |
+      UA_NODECLASS_VARIABLE |
+      UA_NODECLASS_VIEW |
+      UA_NODECLASS_REFERENCETYPE |
+      UA_NODECLASS_DATATYPE;
+
+  brDesc.browseDirection = UA_BrowseDirection::UA_BROWSEDIRECTION_FORWARD;
+  brDesc.includeSubtypes = UA_TRUE;
+  brDesc.resultMask = UA_BROWSERESULTMASK_TYPEDEFINITION;
+
+  auto browseResult = UA_Server_browse(pServer, UA_UINT32_MAX, &brDesc);
+  if (browseResult.statusCode != UA_STATUSCODE_GOOD)
+  {
+    std::cout << "Resutl not good for browsing childs. " << UA_StatusCode_name(browseResult.statusCode) << std::endl;
+  }
+  else
+  {
+    for (std::size_t i = 0; i < browseResult.referencesSize; ++i)
+    {
+      if (UA_NodeId_equal(&browseResult.references[i].typeDefinition.nodeId, typeDef.NodeId))
+      {
+        ret.push_back(open62541Cpp::UA_NodeId(browseResult.references[i].nodeId.nodeId));
+      }
+    }
   }
 
   UA_BrowseResult_deleteMembers(&browseResult);

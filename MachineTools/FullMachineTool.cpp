@@ -5,6 +5,8 @@
 #include "../TypeDefinition/MachineTool/Alert.hpp"
 #include "../TypeDefinition/MachineTool/NotificationEvent.hpp"
 #include <open62541/types_generated.h>
+#include <ctime>
+#include <sstream>
 
 FullMachineTool::FullMachineTool(UA_Server *pServer)
     : FullMachineTool(pServer, true)
@@ -55,6 +57,23 @@ void FullMachineTool::InstantiateProduction()
   job.RunsCompleted = 0;
   job.RunsPlanned->Value = 1;
   job.RunsPlanned->IsValid = true;
+
+  auto t = std::time(nullptr);
+  auto tm = *std::gmtime(&t);
+
+  std::ostringstream oss;
+  oss << std::put_time(&tm, "%Y-%m-%dT%H:%M:%SZ");
+
+  open62541Cpp::UA_String newUaStr(oss.str());
+  UA_Server_writeObjectProperty_scalar(
+          m_pServer,
+          *mt.Production->ProductionPlan.NodeId.NodeId,
+          *open62541Cpp::UA_QualifiedName(0, "NodeVersion").QualifiedName,
+          newUaStr.String,
+          &UA_TYPES[UA_TYPES_STRING]);
+
+  mt.Production->ActiveProgram->JobIdentifier = job.Identifier;
+  mt.Production->ActiveProgram->JobNodeId = *mt.Production->ProductionPlan->OrderedObjects.value.front().NodeId.NodeId;
 
   InstantiateOptional(job.PartSets, m_pServer, n);
   auto &set1 = job.PartSets->PartSet.Add(m_pServer, n, {m_nsIndex, "Set1"});

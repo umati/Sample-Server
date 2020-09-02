@@ -80,7 +80,7 @@ namespace UmatiServerLib
       auto statusCode = UA_Server_readDataType(pServer, *nodeId.NodeId, &typeNodeId);
       if (statusCode != UA_STATUSCODE_GOOD)
       {
-        std::cout << "UA_Server_readDataType: Resutl not good: " << UA_StatusCode_name(statusCode) << std::endl;
+        std::cout << "UA_Server_readDataType: Result not good: " << UA_StatusCode_name(statusCode) << std::endl;
         throw std::runtime_error("Type could not be be fetched, no variable node?");
       }
 
@@ -115,7 +115,7 @@ namespace UmatiServerLib
       auto statusCode = UA_Server_readDataType(pServer, *nodeId.NodeId, &typeNodeId);
       if (statusCode != UA_STATUSCODE_GOOD)
       {
-        std::cout << "UA_Server_readDataType: Resutl not good: " << UA_StatusCode_name(statusCode) << std::endl;
+        std::cout << "UA_Server_readDataType: Result not good: " << UA_StatusCode_name(statusCode) << std::endl;
         throw std::runtime_error("Type could not be be fetched, no variable node?");
       }
 

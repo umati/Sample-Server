@@ -74,7 +74,7 @@ open62541Cpp::UA_NodeId readTypeDefinition(UA_Server *pServer, open62541Cpp::UA_
   std::stringstream ss;
   if (browseResult.statusCode != UA_STATUSCODE_GOOD)
   {
-    ss << "Resutl not good: " << UA_StatusCode_name(browseResult.statusCode) << std::endl;
+    ss << "Result not good: " << UA_StatusCode_name(browseResult.statusCode) << std::endl;
   }
 
   if (browseResult.referencesSize > 1)
@@ -132,7 +132,7 @@ open62541Cpp::UA_NodeId getReferenceTypeFromMemberNode(UA_Server *pServer, open6
   std::stringstream ss;
   if (browseResult.statusCode != UA_STATUSCODE_GOOD)
   {
-    ss << "Resutl not good: " << UA_StatusCode_name(browseResult.statusCode) << std::endl;
+    ss << "Result not good: " << UA_StatusCode_name(browseResult.statusCode) << std::endl;
   }
 
   if (browseResult.referencesSize > 1)

@@ -12,7 +12,7 @@ FullMachineTool::FullMachineTool(UA_Server *pServer)
 }
 
 FullMachineTool::FullMachineTool(UA_Server *pServer, bool initialize)
-    : InstantiatedMachineTool(pServer), JobStateMachine(open62541Cpp::UA_NodeId(UA_NODEID_NUMERIC(5, UA_MACHINETOOLID_PRODUCTIONJOBSTATEMACHINETYPE)), pServer)
+    : InstantiatedMachineTool(pServer), JobStateMachine(mt.Production->ActiveProgram->State.value, pServer)
 {
   if (initialize)
   {
@@ -215,37 +215,27 @@ void FullMachineTool::Simulate()
   {
   case 0:
   {
-    mt.Production->ActiveProgram->State->CurrentState->Value = {"en", "Initializing"};
-    mt.Production->ActiveProgram->State->CurrentState->Id = UA_NODEID_NUMERIC(nsFromUri(m_pServer, constants::NsMachineToolUri), UA_MACHINETOOLID_PRODUCTIONSTATEMACHINETYPE_INITIALIZING);
-    mt.Production->ActiveProgram->State->CurrentState->Number = 0;
+    JobStateMachine.SetState(0); //Initializing
     break;
   }
   case 2:
   {
-    mt.Production->ActiveProgram->State->CurrentState->Value = {"en", "Running"};
-    mt.Production->ActiveProgram->State->CurrentState->Id = UA_NODEID_NUMERIC(nsFromUri(m_pServer, constants::NsMachineToolUri), UA_MACHINETOOLID_PRODUCTIONSTATEMACHINETYPE_RUNNING);
-    mt.Production->ActiveProgram->State->CurrentState->Number = 1;
+    JobStateMachine.SetState(1); //Running
     break;
   }
   case 4:
   {
-    mt.Production->ActiveProgram->State->CurrentState->Value = {"en", "Interrupted"};
-    mt.Production->ActiveProgram->State->CurrentState->Id = UA_NODEID_NUMERIC(nsFromUri(m_pServer, constants::NsMachineToolUri), UA_MACHINETOOLID_PRODUCTIONSTATEMACHINETYPE_INTERRUPTED);
-    mt.Production->ActiveProgram->State->CurrentState->Number = 3;
+    JobStateMachine.SetState(3); //Interrupted
     break;
   }
   case 6:
   {
-    mt.Production->ActiveProgram->State->CurrentState->Value = {"en", "Ended"};
-    mt.Production->ActiveProgram->State->CurrentState->Id = UA_NODEID_NUMERIC(nsFromUri(m_pServer, constants::NsMachineToolUri), UA_MACHINETOOLID_PRODUCTIONSTATEMACHINETYPE_ENDED);
-    mt.Production->ActiveProgram->State->CurrentState->Number = 2;
+    JobStateMachine.SetState(2); //Ended
     break;
   }
   case 8:
   {
-    mt.Production->ActiveProgram->State->CurrentState->Value = {"en", "Aborted"};
-    mt.Production->ActiveProgram->State->CurrentState->Id = UA_NODEID_NUMERIC(nsFromUri(m_pServer, constants::NsMachineToolUri), UA_MACHINETOOLID_PRODUCTIONSTATEMACHINETYPE_ABORTED);
-    mt.Production->ActiveProgram->State->CurrentState->Number = 4;
+    JobStateMachine.SetState(4); //Aborted
     break;
   }
   }

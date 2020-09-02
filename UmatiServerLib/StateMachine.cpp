@@ -57,7 +57,9 @@ namespace UmatiServerLib
 
     for (std::size_t i = 0; i < browseResult.referencesSize; ++i)
     {
-      if (UA_NodeId_equal(&browseResult.references[i].typeDefinition.nodeId, typeNodeId.NodeId))
+      if (isTypeOrSubtype(m_pServer,
+                          typeNodeId,
+                          open62541Cpp::UA_NodeId(browseResult.references[i].typeDefinition.nodeId)))
       {
         m_states.push_back(readStateValues(open62541Cpp::UA_NodeId(browseResult.references[i].nodeId.nodeId)));
       }
@@ -93,10 +95,12 @@ namespace UmatiServerLib
     {
       std::cout << "Could not read display name from state." << std::endl;
     }
-    ret.Name.locale = std::string(dispName.locale.data, dispName.locale.data + dispName.locale.length);
-    ret.Name.text = std::string(dispName.text.data, dispName.text.data + dispName.text.length);
-    UA_LocalizedText_clear(&dispName);
 
+    ret.DispName.locale = dispName.locale.length != 0 ? std::string(dispName.locale.data, dispName.locale.data + dispName.locale.length) : "en";
+    ret.DispName.text = std::string(dispName.text.data, dispName.text.data + dispName.text.length);
+    ret.Id = stateObj;
+    UA_LocalizedText_clear(&dispName);
+    std::cout << "State: " << ret.DispName.text << std::endl;
     return ret;
   }
 
@@ -123,7 +127,9 @@ namespace UmatiServerLib
 
     for (std::size_t i = 0; i < browseResult.referencesSize; ++i)
     {
-      if (UA_NodeId_equal(&browseResult.references[i].typeDefinition.nodeId, typeNodeId.NodeId))
+      if (isTypeOrSubtype(m_pServer,
+                          typeNodeId,
+                          open62541Cpp::UA_NodeId(browseResult.references[i].typeDefinition.nodeId)))
       {
         m_transitions.push_back(readTransitionValues(open62541Cpp::UA_NodeId(browseResult.references[i].nodeId.nodeId)));
       }
@@ -159,8 +165,9 @@ namespace UmatiServerLib
     {
       std::cout << "Could not read display name from state." << std::endl;
     }
-    ret.Name.locale = std::string(dispName.locale.data, dispName.locale.data + dispName.locale.length);
-    ret.Name.text = std::string(dispName.text.data, dispName.text.data + dispName.text.length);
+
+    ret.DispName.locale = dispName.locale.length != 0 ? std::string(dispName.locale.data, dispName.locale.data + dispName.locale.length) : "en";
+    ret.DispName.text = std::string(dispName.text.data, dispName.text.data + dispName.text.length);
     UA_LocalizedText_clear(&dispName);
 
     auto fromStates = browseForChilds(m_pServer, transition, open62541Cpp::UA_NodeId(UA_NODEID_NUMERIC(0, UA_NS0ID_FROMSTATE)), open62541Cpp::UA_NodeId(UA_NODEID_NUMERIC(0, UA_NS0ID_STATETYPE)));
@@ -208,9 +215,9 @@ namespace UmatiServerLib
         trans.To = transition.To;
       }
 
-      if (transition.Name.text.size() != 0)
+      if (transition.DispName.text.size() != 0)
       {
-        trans.Name = transition.Name;
+        trans.DispName = transition.DispName;
       }
     }
 

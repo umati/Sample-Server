@@ -12,13 +12,13 @@ namespace UmatiServerLib {
 
     protected:
     struct State_t{
-      LocalizedText_t Name;
+      LocalizedText_t DispName;
       std::uint32_t Number;
       open62541Cpp::UA_NodeId Id;
     };
 
     struct Transition_t {
-      LocalizedText_t Name;
+      LocalizedText_t DispName;
       open62541Cpp::UA_NodeId From;
       open62541Cpp::UA_NodeId To;
       std::uint32_t Number = UA_UINT32_MAX;

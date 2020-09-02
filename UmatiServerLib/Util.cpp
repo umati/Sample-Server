@@ -78,7 +78,7 @@ open62541Cpp::UA_NodeId browseForParent(open62541Cpp::UA_NodeId node, open62541C
 
   if (browseResult.referencesSize == 0)
   {
-    std::cout << "No parent node found." << std::endl;
+    throw std::runtime_error("No parent node found.");
   }
 
   if (browseResult.referencesSize > 1)
@@ -137,4 +137,24 @@ std::list<open62541Cpp::UA_NodeId> browseForChilds(UA_Server *pServer, open62541
   UA_BrowseResult_deleteMembers(&browseResult);
   UA_BrowseDescription_deleteMembers(&brDesc);
   return ret;
+}
+
+bool isTypeOrSubtype(UA_Server *pServer, const open62541Cpp::UA_NodeId &baseType, const open62541Cpp::UA_NodeId &checkType)
+{
+  try
+  {
+    open62541Cpp::UA_NodeId typeNodeId(checkType);
+    while (true)
+    {
+      if (UA_NodeId_equal(baseType.NodeId, typeNodeId.NodeId))
+      {
+        return true;
+      }
+      typeNodeId = browseForParent(typeNodeId, open62541Cpp::UA_NodeId(UA_NODEID_NUMERIC(0, UA_NS0ID_HASSUBTYPE)), pServer);
+    }
+  }
+  catch (std::runtime_error &)
+  {
+    return false;
+  }
 }

@@ -4,7 +4,7 @@
 #include <memory>
 #include "../UmatiServerLib/OpcUaCondition.hpp"
 #include "../TypeDefinition/MachineTool/Alert.hpp"
-#include "../UmatiServerLib/StateMachine.hpp"
+#include "../UmatiServerLib/StateMachineInstance.hpp"
 
 class FullMachineTool : public InstantiatedMachineTool
 {
@@ -25,5 +25,5 @@ class FullMachineTool : public InstantiatedMachineTool
   void InstantiateProduction();
   int m_simStep = 0;
   std::shared_ptr<OpcUaCondition<machineTool::Alert_t>> m_pAlert;
-  UmatiServerLib::StateMachine JobStateMachine;
+  UmatiServerLib::StateMachineInstance<machineTool::ProductionStateMachine_t> JobStateMachine;
 };

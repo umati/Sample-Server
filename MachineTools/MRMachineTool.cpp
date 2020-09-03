@@ -112,7 +112,7 @@ void MRMachineTool::Simulate()
     auto &aprog = mt.Production->ActiveProgram;
 
     // Job in initializing
-    if (m_simStep == 30 and vdjob->State->CurrentState->Number.value == 0)
+    if (m_simStep == 30 && vdjob->State->CurrentState->Number.value == 0)
     {
         mt.Monitoring->MachineTool->FeedOverride->Value = 0.0;
         mt.Monitoring->MachineTool->IsWarmUp = false;
@@ -126,44 +126,32 @@ void MRMachineTool::Simulate()
         m_simStep = 0;
 
         machineTool::ProductionJobTransitionEvent_t jtevent;
-        /**
         std::stringstream ss;
         ss << "Transition to Running triggered";
         jtevent.Message = {"en", ss.str()};
-        **/
+
         jtevent.Severity = 20;
-        /**
+
         jtevent.SourceName = "MRMachineTool";
         jtevent.Identifier = vdjob->Identifier.value;
         jtevent.RunsPlanned->Value = vdjob->RunsPlanned->Value.value;
         jtevent.RunsPlanned->IsValid = vdjob->RunsPlanned->IsValid.value;
         jtevent.RunsCompleted = vdjob->RunsCompleted.value;
-        jtevent.Transition->Value = {"en","InitializingToRunning"}; 
+        jtevent.Transition->Value = {"en","InitializingToRunning"};
         jtevent.Transition->Id = UA_NODEID_NUMERIC(nsFromUri(m_pServer, constants::NsMachineToolUri), UA_MACHINETOOLID_PRODUCTIONSTATEMACHINETYPE_INITIALIZINGTORUNNING);
         jtevent.FromState->Value = {"en","Initializing"};
         jtevent.FromState->Id = UA_NODEID_NUMERIC(nsFromUri(m_pServer, constants::NsMachineToolUri), UA_MACHINETOOLID_PRODUCTIONSTATEMACHINETYPE_INITIALIZING);
-        jtevent.ToState->Value = {"en","Running"}; 
+        jtevent.ToState->Value = {"en","Running"};
         jtevent.ToState->Id = UA_NODEID_NUMERIC(nsFromUri(m_pServer, constants::NsMachineToolUri), UA_MACHINETOOLID_PRODUCTIONSTATEMACHINETYPE_RUNNING);
-        **/
-        OpcUaEvent ev(jtevent, m_pServer, vdjob->State.NodeId);
-        std::cout << vdjob->State.NodeId;
-/**
-    machineTool::NotificationEvent_t notification;
-    notification.Identifier = "Custom Event";
-    std::stringstream ss;
-    ss << "Full MT Msg " << m_simStep;
-    notification.Message = {"en", ss.str()};
-    notification.Severity = (m_simStep - 8) % 300;
-    notification.SourceName = "FullMachineTool";
-    OpcUaEvent ev(notification, m_pServer, mt.Notification->Messages.NodeId);
-    **/
+
+        OpcUaEvent ev(jtevent, m_pServer, open62541Cpp::UA_NodeId(UA_NODEID_NUMERIC(0,UA_NS0ID_SERVER)));
     }
 
     // Job in running
     else if (vdjob->State->CurrentState->Number.value == 1)
     {
         //Program is not running
-        if (m_simStep == 2 and aprog->State->CurrentState->Number.value != 1)
+        if (m_simStep == 2 && aprog->State->CurrentState->Number.value != 1)
         {
             aprog->State->CurrentState->Value = {"en", "Initializing"};
             aprog->State->CurrentState->Id = UA_NODEID_NUMERIC(nsFromUri(m_pServer, constants::NsMachineToolUri), UA_MACHINETOOLID_PRODUCTIONSTATEMACHINETYPE_INITIALIZING);
@@ -174,12 +162,12 @@ void MRMachineTool::Simulate()
             vdprog->State->CurrentState->Number = 0;
 
         }
-        else if (m_simStep == 3 and aprog->State->CurrentState->Number.value != 1)
+        else if (m_simStep == 3 && aprog->State->CurrentState->Number.value != 1)
         {
             aprog->State->CurrentState->Value = {"en", "Running"};
             aprog->State->CurrentState->Id = UA_NODEID_NUMERIC(nsFromUri(m_pServer, constants::NsMachineToolUri), UA_MACHINETOOLID_PRODUCTIONSTATEMACHINETYPE_RUNNING);
             aprog->State->CurrentState->Number = 1;
-            
+
             vdprog->State->CurrentState->Value = {"en", "Running"};
             vdprog->State->CurrentState->Id = UA_NODEID_NUMERIC(nsFromUri(m_pServer, constants::NsMachineToolUri), UA_MACHINETOOLID_PRODUCTIONSTATEMACHINETYPE_RUNNING);
             vdprog->State->CurrentState->Number = 1;
@@ -205,7 +193,7 @@ void MRMachineTool::Simulate()
         }
 
         //Program is running
-        else if (m_simStep == 17 and aprog->State->CurrentState->Number.value == 1)
+        else if (m_simStep == 17 && aprog->State->CurrentState->Number.value == 1)
         {
             aprog->State->CurrentState->Value = {"en", "Ended"};
             aprog->State->CurrentState->Id = UA_NODEID_NUMERIC(nsFromUri(m_pServer, constants::NsMachineToolUri), UA_MACHINETOOLID_PRODUCTIONSTATEMACHINETYPE_ENDED);
@@ -219,7 +207,7 @@ void MRMachineTool::Simulate()
         }
 
         // one more run completed
-        else if (m_simStep == 19 and vdjob->RunsCompleted.value < 7)
+        else if (m_simStep == 19 && vdjob->RunsCompleted.value < 7)
         {
             vdjob->RunsCompleted.value += 1;
 
@@ -252,7 +240,7 @@ void MRMachineTool::Simulate()
     }
 
     // Job ended and 5 steps passed (re-initialize)
-    else if (m_simStep == 5 and vdjob->State->CurrentState->Number.value == 2)
+    else if (m_simStep == 5 && vdjob->State->CurrentState->Number.value == 2)
     {
         mt.Monitoring->MachineTool->FeedOverride->Value = 0.0;
         mt.Monitoring->MachineTool->IsWarmUp = true;
@@ -283,7 +271,7 @@ void MRMachineTool::SwitchOnStacklightColor(UA_SignalColor color)
         if (light->SignalColor.value == color)
         {
             light->SignalOn = 1;
-        } 
+        }
         else
         {
             light->SignalOn = 0;

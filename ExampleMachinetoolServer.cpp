@@ -108,7 +108,7 @@ int main(int argc, char *argv[])
   }
   pConfig->nodeLifecycle.generateChildNodeId = generateChildNodeIdInParentNs;
 
-  // Create namespacs
+  // Create namespaces
   namespace_di_generated(pServer);
   namespace_industrial_automation_generated(pServer);
   namespace_machinery_generated(pServer);

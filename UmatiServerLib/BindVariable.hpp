@@ -12,6 +12,7 @@
 #include <Open62541Cpp/UA_RelativPathElement.hpp>
 #include <list>
 #include <Open62541Cpp/UA_BrowsePath.hpp>
+#include <Open62541Cpp/UA_NodeId.hpp>
 #include "../OpcUaTypes/DateTime.hpp"
 #include "../OpcUaTypes/StatusCode.hpp"
 #include <exception>
@@ -20,6 +21,8 @@
 #include "ConvertStructValue.hpp"
 #include "BindableMemberValue.hpp"
 #include "Util.hpp"
+#include "NodesMaster.hpp"
+#include "TypeToUaDatatype.hpp"
 
 namespace UmatiServerLib
 {
@@ -75,20 +78,23 @@ namespace UmatiServerLib
         const open62541Cpp::UA_NodeId &nodeId,
         T &value)
     {
-      UA_NodeId typeNodeId;
-      UA_NodeId_init(&typeNodeId);
-      auto statusCode = UA_Server_readDataType(pServer, *nodeId.NodeId, &typeNodeId);
-      if (statusCode != UA_STATUSCODE_GOOD)
-      {
-        std::cout << "UA_Server_readDataType: Result not good: " << UA_StatusCode_name(statusCode) << std::endl;
-        throw std::runtime_error("Type could not be be fetched, no variable node?");
-      }
+      const UA_DataType *pDataType = UmatiServerLib::TypeToUaDatatype::GetType<std::remove_reference_t<T>>();
 
-      const UA_DataType *pDataType = UA_findDataType(&typeNodeId);
+      if(pDataType == nullptr)
+      {
+        UA_NodeId typeNodeId;
+        UA_NodeId_init(&typeNodeId);
+        auto statusCode = UA_Server_readDataType(pServer, *nodeId.NodeId, &typeNodeId);
+        if (statusCode != UA_STATUSCODE_GOOD)
+        {
+          std::cout << "UA_Server_readDataType: Result not good: " << UA_StatusCode_name(statusCode) << std::endl;
+          throw std::runtime_error("Type could not be be fetched, no variable node?");
+        }
+        pDataType = UA_findDataType(&typeNodeId);
+      }
       if (pDataType == nullptr)
       {
-        std::cout << "NodeId to Datatype failed." << std::endl;
-        throw std::runtime_error("NodeId to Datatype failed.");
+        throw std::runtime_error("Fetching Datatype failed.");
       }
       ///\todo check attribute and make sure this is a datatype!
       if constexpr (refl::trait::is_reflectable<T>::value)

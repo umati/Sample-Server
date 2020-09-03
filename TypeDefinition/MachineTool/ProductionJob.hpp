@@ -2,6 +2,7 @@
 #include "../TypeDefinition.hpp"
 #include "Constants.hpp"
 #include "../ns0/IOrderedObject.hpp"
+#include "../ns0/OrderedList.hpp"
 #include "ProductionProgram.hpp"
 #include "ProductionPartSet.hpp"
 

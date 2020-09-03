@@ -1,6 +1,7 @@
 #pragma once
 #include "../TypeDefinition.hpp"
 #include "Constants.hpp"
+#include "../../UmatiServerLib/BindableMemberPlaceholder.hpp"
 
 namespace ns0
 {

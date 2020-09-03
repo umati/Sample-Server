@@ -2,8 +2,8 @@
 #include "../TypeDefinition.hpp"
 #include "Constants.hpp"
 #include "BaseEvent.hpp"
-#include "Transitionvariable.hpp"
-#include "Statevariable.hpp"
+#include "TransitionVariable.hpp"
+#include "StateVariable.hpp"
 
 namespace ns0
 {
@@ -18,8 +18,8 @@ struct TransitionEvent_t : public BaseEvent_t
 } // namespace ns0
 
 REFL_TYPE(ns0::TransitionEvent_t,
-        UmatiServerLib::attribute::UaObjectType{
           Bases<ns0::BaseEvent_t>(),
+          UmatiServerLib::attribute::UaObjectType{
             .NodeId = UmatiServerLib::constexp::NodeId(constants::Ns0Uri, UA_NS0ID_TRANSITIONEVENTTYPE)})
 REFL_FIELD(Transition)
 REFL_FIELD(FromState)

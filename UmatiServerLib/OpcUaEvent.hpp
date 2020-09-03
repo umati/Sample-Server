@@ -25,7 +25,11 @@ public:
     void Trigger()
     {
         /// \todo ask for source node
-        UA_Server_triggerEvent(pServer, *EventNodeId.NodeId, *Origin.NodeId, NULL, UA_FALSE);
+        auto retValEvTrigger = UA_Server_triggerEvent(pServer, *EventNodeId.NodeId, *Origin.NodeId, NULL, UA_FALSE);
+        if(retValEvTrigger != UA_STATUSCODE_GOOD)
+        {
+          std::cout << "Trigger of event failed. Reason: " << UA_StatusCode_name(retValEvTrigger) << std::endl;
+        }
     }
 
     virtual ~OpcUaEvent()

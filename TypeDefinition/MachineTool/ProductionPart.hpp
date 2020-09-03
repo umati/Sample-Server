@@ -1,5 +1,6 @@
 #pragma once
 #include "../TypeDefinition.hpp"
+#include "../../src_generated/types_machinetool_generated.h"
 #include "Constants.hpp"
 #include <string>
 

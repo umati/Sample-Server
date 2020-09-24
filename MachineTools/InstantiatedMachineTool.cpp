@@ -39,12 +39,8 @@ void InstantiatedMachineTool::InstantiateIdentification()
     ss << "http://isw.uni-stuttgart.de/#" << MachineName;
     mt.Identification->ProductInstanceUri = ss.str();
   }
-  InstantiateOptional(mt.Identification->Location, m_pServer, n);
-  InstantiateOptional(mt.Identification->Model, m_pServer, n);
 
   mt.Identification->Manufacturer = {"", "ISW Christian von Arnim"};
-  mt.Identification->Location = "AMB 0 0/N 48.781340 E 9.165731";
-  mt.Identification->Model = {"", MachineName};
 
   {
     std::hash<std::string> hasher;
@@ -112,4 +108,6 @@ void InstantiatedMachineTool::SimulateStacklight()
 void InstantiatedMachineTool::InstantiateMonitoringMT()
 {
   mt.Monitoring->MachineTool->OperationMode = UA_MachineOperationMode::UA_MACHINEOPERATIONMODE_AUTOMATIC;
+  InstantiateOptional(mt.Monitoring->MachineTool->PowerOnDuration, m_pServer, n);
+  mt.Monitoring->MachineTool->PowerOnDuration = 10;
 }

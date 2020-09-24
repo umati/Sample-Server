@@ -11,6 +11,7 @@ MRMachineTool::MRMachineTool(UA_Server *pServer)
 {
     MachineName = "MRMachineTool";
     CreateObject();
+    isOnFor = m_simStep;
 }
 
 void MRMachineTool::CreateObject()
@@ -32,6 +33,8 @@ void MRMachineTool::InstantiateIdentification()
     InstantiateOptional(mt.Identification->YearOfConstruction, m_pServer, n);
     InstantiateOptional(mt.Identification->SoftwareRevision, m_pServer, n);
     InstantiateOptional(mt.Identification->ProductCode, m_pServer, n);
+    InstantiateOptional(mt.Identification->Location, m_pServer, n);
+    InstantiateOptional(mt.Identification->Model, m_pServer, n);
 
     mt.Identification->Location = "AMB 0 1/N 48.781340 E 9.165731";
     mt.Identification->SerialNumber = std::string{"070-101-098-14"};
@@ -106,7 +109,10 @@ void MRMachineTool::InstantiateProduction()
 void MRMachineTool::Simulate()
 {
     ++m_simStep;
-
+    ++isOnFor;
+    
+    mt.Monitoring->MachineTool->PowerOnDuration = isOnFor /3600;
+    
     auto &vdjob = mt.Production->ProductionPlan->OrderedObjects.value.front();
     auto &vdprog = vdjob->ProductionPrograms->OrderedObjects.value.front();
     auto &aprog = mt.Production->ActiveProgram;

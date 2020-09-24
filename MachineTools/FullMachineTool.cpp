@@ -105,13 +105,19 @@ void FullMachineTool::InstantiateIdentification()
   InstantiateOptional(mt.Identification->DeviceClass, m_pServer, n);
   InstantiateOptional(mt.Identification->ComponentName, m_pServer, n);
   InstantiateOptional(mt.Identification->SoftwareIdentification, m_pServer, n);
+  InstantiateOptional(mt.Identification->ProductCode, m_pServer, n);
+  InstantiateOptional(mt.Identification->SoftwareRevision, m_pServer, n);
+  InstantiateOptional(mt.Identification->Location, m_pServer, n);
+  InstantiateOptional(mt.Identification->Model, m_pServer, n);
 
   mt.Identification->YearOfConstruction = 2020;
   mt.Identification->MonthOfConstruction = 6;
-  mt.Identification->Location = "AMB 0 1/N 48.781340 E 9.165731";
-  mt.Identification->SerialNumber = "3-1415926535-8979323846";
-  mt.Identification->DeviceClass = "MachineTool";
+  mt.Identification->DeviceClass = "Machining centre (other)";
   mt.Identification->ComponentName = {"", MachineName};
+  mt.Identification->ProductCode = "2020-47110815";
+  mt.Identification->SoftwareRevision= "1.00.1";
+  mt.Identification->Location = "AMB 1 A1/VIRTUAL 0 0/N 48.781340 E 9.165731";
+  mt.Identification->Model = {"", MachineName};
 
   auto &swOS = mt.Identification->SoftwareIdentification->SoftwareItem.Add(m_pServer, n, {m_nsIndex, "OS"});
   swOS.Identifier = "Alpine Container";
@@ -304,4 +310,5 @@ void FullMachineTool::Simulate()
     notification.SourceName = "FullMachineTool";
     OpcUaEvent ev(notification, m_pServer, mt.Notification->Messages.NodeId);
   }
+    mt.Monitoring->MachineTool->PowerOnDuration = m_simStep / 3600;
 }

@@ -129,6 +129,7 @@ add_executable(
     MachineTools/FullMachineToolDynamic.cpp
     MachineTools/BasicMachineTool.cpp
     MachineTools/MRMachineTool.cpp
+    MachineTools/ShowcaseMachineTool.cpp
 )
 
 set_target_properties(${PROJECT_NAME} PROPERTIES LINKER_LANGUAGE CXX)

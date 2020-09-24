@@ -19,6 +19,7 @@ class MRMachineTool : public InstantiatedMachineTool
   void InstantiateMonitoring();
   void InstantiateProduction();
   int m_simStep = 0;
+  int isOnFor;
   void SwitchOnStacklightColor(UA_SignalColor color);
   std::shared_ptr<OpcUaCondition<machineTool::Alert_t>> m_pAlert;
 };

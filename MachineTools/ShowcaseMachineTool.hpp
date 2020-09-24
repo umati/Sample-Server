@@ -1,18 +1,19 @@
 #pragma once
 #include "InstantiatedMachineTool.hpp"
 
-class BasicMachineTool : public InstantiatedMachineTool
+class ShowcaseMachineTool : public InstantiatedMachineTool
 {
   public:
-  BasicMachineTool(UA_Server *pServer);
+  ShowcaseMachineTool(UA_Server *pServer);
 
   void Simulate() override;
-  virtual ~BasicMachineTool() = default;
+  virtual ~ShowcaseMachineTool() = default;
   protected:
   void CreateObject() override;
 
   void InstantiateIdentification();
   void InstantiateMonitoring();
+  void InstantiateTools();
   void InstantiateProduction();
   int m_simStep = 0;
 };

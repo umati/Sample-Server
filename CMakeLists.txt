@@ -82,6 +82,18 @@ ua_generate_nodeset_and_datatypes(
     #DEPENDS_NS    "${UA_FILE_NS0}"
 )
 
+ua_generate_nodeset_and_datatypes(
+    NAME "robotics"
+    FILE_NS "${PROJECT_SOURCE_DIR}/model/Opc.Ua.Robotics.Nodeset2.xml"
+    FILE_CSV "${PROJECT_SOURCE_DIR}/model/Opc.Ua.Robotics.Nodeset2.csv"
+    FILE_BSD "${PROJECT_SOURCE_DIR}/model/Opc.Ua.Robotics.Nodeset2.bsd"
+    OUTPUT_DIR "${PROJECT_SOURCE_DIR}/src_generated"
+    NAMESPACE_IDX 5
+    DEPENDS_TYPES "UA_TYPES;UA_TYPES_DI"
+    DEPENDS di
+    #DEPENDS_NS    "${UA_FILE_NS0}"
+)
+
 add_library(machinetool_generated
     # Add dependend files to trigger the generation!
     src_generated/namespace_di_generated.c
@@ -95,6 +107,10 @@ add_library(machinetool_generated
     src_generated/types_machinetool_generated.h
     src_generated/machinetool_nodeids.h
     src_generated/industrial_automation_nodeids.h
+    src_generated/namespace_robotics_generated.c
+    src_generated/types_robotics_generated.h
+    src_generated/namespace_robotics_generated.c
+    src_generated/robotics_nodeids.h
     )
 target_link_libraries(machinetool_generated PUBLIC open62541::open62541)
 set_target_properties(machinetool_generated PROPERTIES DEBUG_POSTFIX "d")
@@ -123,13 +139,15 @@ target_link_libraries(ExampleServerLib PUBLIC reflCpp::reflCpp)
 add_executable(
     ${PROJECT_NAME}
     ExampleMachinetoolServer.cpp
-    MachineTools/SimulatedMachineTool.cpp
+    MachineTools/SimulatedInstance.cpp
     MachineTools/InstantiatedMachineTool.cpp
     MachineTools/FullMachineTool.cpp
     MachineTools/FullMachineToolDynamic.cpp
     MachineTools/BasicMachineTool.cpp
     MachineTools/MRMachineTool.cpp
     MachineTools/ShowcaseMachineTool.cpp
+    Robotics/InstantiatedRobot.cpp
+    Robotics/BasicRobot.cpp
 )
 
 set_target_properties(${PROJECT_NAME} PROPERTIES LINKER_LANGUAGE CXX)

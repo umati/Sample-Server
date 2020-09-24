@@ -2,6 +2,7 @@
 #include "src_generated/namespace_machinery_generated.h"
 #include "src_generated/namespace_di_generated.h"
 #include "src_generated/namespace_industrial_automation_generated.h"
+#include "src_generated/namespace_robotics_generated.h"
 
 #include "UmatiServerLib/OpcUaKeys.hpp"
 
@@ -19,6 +20,7 @@
 #include "MachineTools/BasicMachineTool.hpp"
 #include "MachineTools/MRMachineTool.hpp"
 #include "MachineTools/ShowcaseMachineTool.hpp"
+#include "Robotics/BasicRobot.hpp"
 
 std::atomic_bool running{true};
 void sigHandler(int sig)
@@ -30,7 +32,7 @@ void sigHandler(int sig)
 void simulate(
     std::mutex &accessDataMutex,
     UA_Server *pServer,
-    std::list<std::shared_ptr<SimulatedMachineTool>> &machineTools)
+    std::list<std::shared_ptr<SimulatedInstance>> &machineTools)
 {
   std::unique_lock<std::remove_reference<decltype(accessDataMutex)>::type> ul(accessDataMutex);
   ul.unlock();
@@ -114,16 +116,17 @@ int main(int argc, char *argv[])
   namespace_industrial_automation_generated(pServer);
   namespace_machinery_generated(pServer);
   namespace_machinetool_generated(pServer);
+  namespace_robotics_generated(pServer);
 
   std::mutex accessDataMutex;
 
-  std::list<std::shared_ptr<SimulatedMachineTool>> machineTools;
+  std::list<std::shared_ptr<SimulatedInstance>> machineTools;
   machineTools.push_back(std::make_shared<FullMachineTool>(pServer));
   machineTools.push_back(std::make_shared<FullMachineToolDynamic>(pServer));
   machineTools.push_back(std::make_shared<BasicMachineTool>(pServer));
   machineTools.push_back(std::make_shared<MRMachineTool>(pServer));
   machineTools.push_back(std::make_shared<ShowcaseMachineTool>(pServer));
-
+  machineTools.push_back(std::make_shared<BasicRobot>(pServer));
 
   UA_Server_run_startup(pServer);
   std::unique_lock<decltype(accessDataMutex)> ul(accessDataMutex);

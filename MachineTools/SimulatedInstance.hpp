@@ -1,13 +1,13 @@
 #pragma once
 #include <random>
 
-class SimulatedMachineTool
+class SimulatedInstance
 {
   public:
-  SimulatedMachineTool();
+  SimulatedInstance();
   // Should be called every second
   virtual void Simulate() = 0;
-  virtual ~SimulatedMachineTool() = 0;
+  virtual ~SimulatedInstance() = 0;
 
   protected:
   // Seeded random generator

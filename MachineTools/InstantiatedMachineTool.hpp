@@ -1,6 +1,6 @@
 
 #pragma once
-#include "SimulatedMachineTool.hpp"
+#include "SimulatedInstance.hpp"
 #include "../TypeDefinition/MachineTool/MachineTool.hpp"
 #include "../UmatiServerLib/NodesMaster.hpp"
 
@@ -8,7 +8,7 @@
 #include <Open62541Cpp/UA_NodeId.hpp>
 #include <cstdint>
 
-class InstantiatedMachineTool : public SimulatedMachineTool
+class InstantiatedMachineTool : public SimulatedInstance
 {
   public:
   InstantiatedMachineTool(UA_Server *pServer);

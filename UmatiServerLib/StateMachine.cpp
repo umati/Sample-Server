@@ -65,8 +65,8 @@ namespace UmatiServerLib
       }
     }
 
-    UA_BrowseResult_deleteMembers(&browseResult);
-    UA_BrowseDescription_deleteMembers(&brDesc);
+    UA_BrowseResult_clear(&browseResult);
+    UA_BrowseDescription_clear(&brDesc);
   }
 
   StateMachine::State_t StateMachine::readStateValues(open62541Cpp::UA_NodeId stateObj)
@@ -135,8 +135,8 @@ namespace UmatiServerLib
       }
     }
 
-    UA_BrowseResult_deleteMembers(&browseResult);
-    UA_BrowseDescription_deleteMembers(&brDesc);
+    UA_BrowseResult_clear(&browseResult);
+    UA_BrowseDescription_clear(&brDesc);
   }
 
   StateMachine::Transition_t StateMachine::readTransitionValues(open62541Cpp::UA_NodeId transition)

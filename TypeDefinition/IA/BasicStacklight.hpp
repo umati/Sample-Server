@@ -3,7 +3,6 @@
 #include "Constants.hpp"
 #include "../ns0/OrderedList.hpp"
 #include "StackElementLight.hpp"
-#include "../../src_generated/types_industrial_automation_generated.h"
 
 namespace ia
 {
@@ -18,6 +17,6 @@ namespace ia
 REFL_TYPE(ia::BasicStacklight_t,
           Bases<ns0::OrderedList_t<ia::StackElementLight_t>>(),
           UmatiServerLib::attribute::UaObjectType{
-              .NodeId = UmatiServerLib::constexp::NodeId(constants::NsIAUri, UA_INDUSTRIAL_AUTOMATIONID_BASICSTACKLIGHTTYPE)})
+              .NodeId = UmatiServerLib::constexp::NodeId(constants::NsIAUri, UA_IAID_BASICSTACKLIGHTTYPE)})
 REFL_FIELD(StacklightMode)
 REFL_END

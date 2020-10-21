@@ -29,6 +29,6 @@ open62541Cpp::UA_NodeId resolveBrowsePath(
     throw std::invalid_argument("Unexpected number of results.");
   }
   open62541Cpp::UA_NodeId ret(trResult.targets[0].targetId.nodeId);
-  UA_BrowsePathResult_deleteMembers(&trResult);
+  UA_BrowsePathResult_clear(&trResult);
   return ret;
 }

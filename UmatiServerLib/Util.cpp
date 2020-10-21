@@ -92,8 +92,8 @@ open62541Cpp::UA_NodeId browseForParent(open62541Cpp::UA_NodeId node, open62541C
     UA_NodeId_copy(&browseResult.references[0].nodeId.nodeId, ret.NodeId);
   }
 
-  UA_BrowseResult_deleteMembers(&browseResult);
-  UA_BrowseDescription_deleteMembers(&brDesc);
+  UA_BrowseResult_clear(&browseResult);
+  UA_BrowseDescription_clear(&brDesc);
   return ret;
 }
 
@@ -134,8 +134,8 @@ std::list<open62541Cpp::UA_NodeId> browseForChilds(UA_Server *pServer, open62541
     }
   }
 
-  UA_BrowseResult_deleteMembers(&browseResult);
-  UA_BrowseDescription_deleteMembers(&brDesc);
+  UA_BrowseResult_clear(&browseResult);
+  UA_BrowseDescription_clear(&brDesc);
   return ret;
 }
 

@@ -2,6 +2,7 @@ cmake_minimum_required(VERSION 3.15)
 project(ExampleMachinetoolServer VERSION 0.1)
 
 set(CMAKE_CXX_STANDARD 17)
+set_property(GLOBAL PROPERTY DEBUG_POSTFIX "d")
 
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake)
 
@@ -19,101 +20,94 @@ endif ()
 
 # Generate types and namespace for DI
 ua_generate_nodeset_and_datatypes(
-    NAME "di"
-    FILE_CSV "${open62541_NODESET_DIR}/DI/OpcUaDiModel.csv"
-    FILE_BSD "${open62541_NODESET_DIR}/DI/Opc.Ua.Di.Types.bsd"
-    NAMESPACE_IDX 2
+  NAME "di"
   FILE_NS "${open62541_NODESET_DIR}/DI/Opc.Ua.Di.NodeSet2.xml"
+  FILE_CSV "${open62541_NODESET_DIR}/DI/OpcUaDiModel.csv"
+  FILE_BSD "${open62541_NODESET_DIR}/DI/Opc.Ua.Di.Types.bsd"
+  NAMESPACE_MAP "2:http://opcfoundation.org/UA/DI/"
   OUTPUT_DIR "${PROJECT_SOURCE_DIR}/src_generated"
 )
 
+# Add also heder files to trigger the generation!
+add_library(ua_gen_di
+  src_generated/namespace_di_generated.c
+  src_generated/types_di_generated.h
+  src_generated/di_nodeids.h
+)
+target_link_libraries(ua_gen_di PUBLIC open62541::open62541)
+
 # See https://github.com/open62541/open62541/issues/3747
-ua_generate_nodeid_header(
-    NAME "machinery"
-    FILE_CSV "${PROJECT_SOURCE_DIR}/model/Opc.Ua.Machinery.NodeSet2.csv"
-    OUTPUT_DIR "${PROJECT_SOURCE_DIR}/src_generated"
-    TARGET_SUFFIX "ids-machinery"
-    ID_PREFIX "MACHINERY_"
-)
-
-ua_generate_nodeset(
-    NAME "machinery"
-    FILE "${PROJECT_SOURCE_DIR}/model/Opc.Ua.Machinery.NodeSet2.xml"
-    OUTPUT_DIR "${PROJECT_SOURCE_DIR}/src_generated"
-    # First NS0 Types, then other dependent namespaces
-    DEPENDS_TYPES "UA_TYPES;UA_TYPES_DI"
-    DEPENDS_NS "${open62541_NODESET_DIR}/Schema/Opc.Ua.NodeSet2.xml;${open62541_NODESET_DIR}/DI/Opc.Ua.Di.NodeSet2.xml"
-)
-# Workaround, as ua_generate_nodeset_and_datatypes expects a types-File.
-file(TOUCH "${PROJECT_SOURCE_DIR}/src_generated/types_machinery_generated.h")
-
-# ua_generate_nodeset_and_datatypes(
-#     NAME "machinery"
-#     FILE_NS "${PROJECT_SOURCE_DIR}/model/Opc.Ua.Machinery.NodeSet2.xml"
-#     FILE_CSV "${PROJECT_SOURCE_DIR}/model/Opc.Ua.Machinery.NodeSet2.csv"
-#     FILE_BSD "${PROJECT_SOURCE_DIR}/model/Opc.Ua.Machinery.NodeSet2.bsd"
-#     OUTPUT_DIR "${PROJECT_SOURCE_DIR}/src_generated"
-#     NAMESPACE_IDX 3
-#     DEPENDS_TYPES "UA_TYPES_DI"
-#     #DEPENDS_NS    "${UA_FILE_NS0}"
-# )
+set(TMP_NSURI "http://opcfoundation.org/UA/Machinery/")
+configure_file(model/empty.bsd.template "${CMAKE_BINARY_DIR}/model/Opc.Ua.Machinery.Types.bsd")
 
 ua_generate_nodeset_and_datatypes(
-    NAME "industrial_automation"
-    FILE_NS "${PROJECT_SOURCE_DIR}/model/Opc.Ua.Ia.NodeSet2.xml"
-    FILE_CSV "${PROJECT_SOURCE_DIR}/model/Opc.Ua.Ia.NodeSet2.csv"
-    FILE_BSD "${PROJECT_SOURCE_DIR}/model/Opc.Ua.Ia.NodeSet2.bsd"
-    OUTPUT_DIR "${PROJECT_SOURCE_DIR}/src_generated"
-    NAMESPACE_IDX 4
-    DEPENDS_TYPES "UA_TYPES_IA;UA_TYPES_DI"
-    DEPENDS di
-    #DEPENDS_NS    "${UA_FILE_NS0}"
+  NAME "machinery"
+  FILE_NS "${open62541_NODESET_DIR}/Machinery/Opc.Ua.Machinery.NodeSet2.xml"
+  FILE_CSV "${open62541_NODESET_DIR}/Machinery/NodeIds.csv"
+  FILE_BSD "${CMAKE_BINARY_DIR}/model/Opc.Ua.Machinery.Types.bsd"
+  OUTPUT_DIR "${PROJECT_SOURCE_DIR}/src_generated"
+  NAMESPACE_MAP "3:http://opcfoundation.org/UA/Machinery/"
+  DEPENDS di
+  )
+
+add_library(ua_gen_machinery
+  src_generated/namespace_machinery_generated.c
+  src_generated/types_machinery_generated.h
+  src_generated/machinery_nodeids.h
 )
+target_link_libraries(ua_gen_machinery PUBLIC ua_gen_di)
 
 ua_generate_nodeset_and_datatypes(
-    NAME "machinetool"
-    FILE_NS "${PROJECT_SOURCE_DIR}/model/Opc.Ua.MachineTool.Nodeset2.xml"
-    FILE_CSV "${PROJECT_SOURCE_DIR}/model/Opc.Ua.MachineTool.Nodeset2.csv"
-    FILE_BSD "${PROJECT_SOURCE_DIR}/model/Opc.Ua.MachineTool.Nodeset2.bsd"
-    OUTPUT_DIR "${PROJECT_SOURCE_DIR}/src_generated"
-    NAMESPACE_IDX 5
-    DEPENDS_TYPES "UA_TYPES;UA_TYPES_DI;UA_TYPES_MACHINERY;UA_TYPES_IA"
-    DEPENDS di machinery industrial_automation
-    #DEPENDS_NS    "${UA_FILE_NS0}"
+  NAME "ia"
+  FILE_NS "${open62541_NODESET_DIR}/IA/Opc.Ua.IA.NodeSet2.xml"
+  FILE_CSV "${open62541_NODESET_DIR}/IA/Opc.Ua.IA.NodeIds.csv"
+  FILE_BSD "${PROJECT_SOURCE_DIR}/model/Opc.Ua.IA.fixed.bsd"
+  OUTPUT_DIR "${PROJECT_SOURCE_DIR}/src_generated"
+  NAMESPACE_MAP "4:http://opcfoundation.org/UA/IA/"
+  DEPENDS di
 )
+
+add_library(ua_gen_ia
+  src_generated/ia_nodeids.h
+  src_generated/types_ia_generated.h
+  src_generated/namespace_ia_generated.c
+)
+target_link_libraries(ua_gen_ia PUBLIC ua_gen_di)
 
 ua_generate_nodeset_and_datatypes(
-    NAME "robotics"
-    FILE_NS "${PROJECT_SOURCE_DIR}/model/Opc.Ua.Robotics.Nodeset2.xml"
-    FILE_CSV "${PROJECT_SOURCE_DIR}/model/Opc.Ua.Robotics.Nodeset2.csv"
-    FILE_BSD "${PROJECT_SOURCE_DIR}/model/Opc.Ua.Robotics.Nodeset2.bsd"
-    OUTPUT_DIR "${PROJECT_SOURCE_DIR}/src_generated"
-    NAMESPACE_IDX 5
-    DEPENDS_TYPES "UA_TYPES;UA_TYPES_DI"
-    DEPENDS di
-    #DEPENDS_NS    "${UA_FILE_NS0}"
+  NAME "machinetool"
+  FILE_NS "${PROJECT_SOURCE_DIR}/model/Opc.Ua.MachineTool.Nodeset2.xml"
+  FILE_CSV "${PROJECT_SOURCE_DIR}/model/Opc.Ua.MachineTool.Nodeset2.csv"
+  FILE_BSD "${PROJECT_SOURCE_DIR}/model/Opc.Ua.MachineTool.Nodeset2.bsd"
+  OUTPUT_DIR "${PROJECT_SOURCE_DIR}/src_generated"
+  NAMESPACE_MAP "5:http://opcfoundation.org/UA/MachineTool/"
+  DEPENDS di machinery ia
 )
 
-add_library(machinetool_generated
-    # Add dependend files to trigger the generation!
-    src_generated/namespace_di_generated.c
-    src_generated/types_di_generated.h
-    src_generated/di_nodeids.h
-    src_generated/namespace_machinery_generated.c
-    src_generated/machinery.h
-    src_generated/types_industrial_automation_generated.h
-    src_generated/namespace_industrial_automation_generated.c
-    src_generated/namespace_machinetool_generated.c
-    src_generated/types_machinetool_generated.h
-    src_generated/machinetool_nodeids.h
-    src_generated/industrial_automation_nodeids.h
-    src_generated/namespace_robotics_generated.c
-    src_generated/types_robotics_generated.h
-    src_generated/namespace_robotics_generated.c
-    src_generated/robotics_nodeids.h
-    )
-target_link_libraries(machinetool_generated PUBLIC open62541::open62541)
-set_target_properties(machinetool_generated PROPERTIES DEBUG_POSTFIX "d")
+add_library(ua_gen_mt
+  src_generated/namespace_machinetool_generated.c
+  src_generated/types_machinetool_generated.h
+  src_generated/machinetool_nodeids.h
+)
+target_link_libraries(ua_gen_mt PUBLIC ua_gen_ia)
+target_link_libraries(ua_gen_mt PUBLIC ua_gen_machinery)
+
+ua_generate_nodeset_and_datatypes(
+  NAME "robotics"
+  FILE_NS "${PROJECT_SOURCE_DIR}/model/Opc.Ua.Robotics.Nodeset2.xml"
+  FILE_CSV "${PROJECT_SOURCE_DIR}/model/Opc.Ua.Robotics.Nodeset2.csv"
+  FILE_BSD "${PROJECT_SOURCE_DIR}/model/Opc.Ua.Robotics.Nodeset2.bsd"
+  OUTPUT_DIR "${PROJECT_SOURCE_DIR}/src_generated"
+  NAMESPACE_MAP "6:http://opcfoundation.org/UA/Robotics/"
+  DEPENDS di
+)
+
+add_library(ua_gen_robotic
+  src_generated/namespace_robotics_generated.c
+  src_generated/types_robotics_generated.h
+  src_generated/robotics_nodeids.h
+)
+target_link_libraries(ua_gen_robotic PUBLIC ua_gen_di)
 
 add_library(ExampleServerLib
     UmatiServerLib/ConvertSimpleValue.cpp
@@ -153,7 +147,8 @@ add_executable(
 set_target_properties(${PROJECT_NAME} PROPERTIES LINKER_LANGUAGE CXX)
 set_target_properties(${PROJECT_NAME} PROPERTIES DEBUG_POSTFIX "d")
 target_link_libraries(${PROJECT_NAME} PUBLIC ExampleServerLib)
-target_link_libraries(${PROJECT_NAME} PUBLIC machinetool_generated)
+target_link_libraries(${PROJECT_NAME} PUBLIC ua_gen_mt)
+target_link_libraries(${PROJECT_NAME} PUBLIC ua_gen_robotic)
 
 add_subdirectory(tests)
 include(CTest)

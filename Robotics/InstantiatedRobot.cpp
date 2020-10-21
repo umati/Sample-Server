@@ -62,7 +62,7 @@ void InstantiatedRobot::AddIdentificationAddin()
       *m_nodeId.NodeId,
       UA_NODEID_NUMERIC(0, UA_NS0ID_HASADDIN),
       *open62541Cpp::UA_QualifiedName(nsFromUri(m_pServer, constants::NsDIUri), Name).QualifiedName,
-      UA_NODEID_NUMERIC(nsFromUri(m_pServer, constants::NsMachineryUri), UA_MACHINERY_ID_MACHINEIDENTIFICATIONTYPE),
+      UA_NODEID_NUMERIC(nsFromUri(m_pServer, constants::NsMachineryUri), UA_MACHINERYID_MACHINEIDENTIFICATIONTYPE),
       &objAttr,
       &UA_TYPES[UA_TYPES_OBJECTATTRIBUTES],
       NULL,

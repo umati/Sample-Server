@@ -47,7 +47,7 @@ void NodesMaster::callback(UA_Server *pServer,
   {
     auto val = it->second.Value();
     UA_Server_writeDataValue(pServer, *nodeid, val);
-    UA_DataValue_deleteMembers(&val);
+    UA_DataValue_clear(&val);
   }
 }
 

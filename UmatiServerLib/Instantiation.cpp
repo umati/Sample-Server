@@ -103,8 +103,8 @@ open62541Cpp::UA_NodeId readTypeDefinition(UA_Server *pServer, open62541Cpp::UA_
     ret = open62541Cpp::UA_NodeId(browseResult.references[0].nodeId.nodeId);
   }
 
-  UA_BrowseResult_deleteMembers(&browseResult);
-  UA_BrowseDescription_deleteMembers(&brDesc);
+  UA_BrowseResult_clear(&browseResult);
+  UA_BrowseDescription_clear(&brDesc);
   if (ss.str().length() != 0)
   {
     throw std::runtime_error(ss.str());
@@ -150,8 +150,8 @@ open62541Cpp::UA_NodeId getReferenceTypeFromMemberNode(UA_Server *pServer, open6
     ret = open62541Cpp::UA_NodeId(browseResult.references[0].referenceTypeId);
   }
 
-  UA_BrowseResult_deleteMembers(&browseResult);
-  UA_BrowseDescription_deleteMembers(&brDesc);
+  UA_BrowseResult_clear(&browseResult);
+  UA_BrowseDescription_clear(&brDesc);
   if (ss.str().length() != 0)
   {
     throw std::runtime_error(ss.str());

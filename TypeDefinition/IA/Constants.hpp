@@ -1,5 +1,5 @@
 #pragma once
-#include "../../src_generated/industrial_automation_nodeids.h"
+#include "../../src_generated/ia_nodeids.h"
 
 namespace constants
 {

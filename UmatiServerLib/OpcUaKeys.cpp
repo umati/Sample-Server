@@ -54,8 +54,8 @@ void OpcUaKeys::Load()
 
 OpcUaKeys::~OpcUaKeys()
 {
-  UA_ByteString_deleteMembers(&PrivateKey);
-  UA_ByteString_deleteMembers(&PublicCert);
+  UA_ByteString_clear(&PrivateKey);
+  UA_ByteString_clear(&PublicCert);
 }
 
 UA_ByteString OpcUaKeys::readFile(std::string filename)

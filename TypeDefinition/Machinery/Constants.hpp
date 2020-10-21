@@ -1,5 +1,5 @@
 #pragma once
-#include "../../src_generated/machinery.h"
+#include "../../src_generated/machinery_nodeids.h"
 
 namespace constants
 {

@@ -268,8 +268,8 @@ namespace UmatiServerLib
       }
     }
 
-    UA_BrowseResult_deleteMembers(&browseResult);
-    UA_BrowseDescription_deleteMembers(&brDesc);
+    UA_BrowseResult_clear(&browseResult);
+    UA_BrowseDescription_clear(&brDesc);
   }
 
 } // namespace UmatiServerLib

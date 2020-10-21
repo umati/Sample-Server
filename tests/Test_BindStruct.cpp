@@ -29,7 +29,7 @@ TEST(ExampleServerLib, BindStructure_Basic)
   UA_LocalizedText *pLocalizedText = reinterpret_cast<UA_LocalizedText *>(variant.data);
   ASSERT_TRUE(pLocalizedText);
   auto lTxt = UA_LOCALIZEDTEXT_ALLOC("test", "content");
-  UA_LocalizedText_deleteMembers(&lTxt);
+  UA_LocalizedText_clear(&lTxt);
 
   open62541Cpp::UA_String variant_local(&pLocalizedText->locale);
   open62541Cpp::UA_String variant_text(&pLocalizedText->text);
@@ -37,7 +37,7 @@ TEST(ExampleServerLib, BindStructure_Basic)
   EXPECT_EQ(static_cast<std::string>(variant_local), oriLocalText.locale);
   EXPECT_EQ(static_cast<std::string>(variant_text), oriLocalText.text);
 
-  UA_Variant_deleteMembers(&variant);
+  UA_Variant_clear(&variant);
 }
 
 TEST(ExampleServerLib, BindStructure_Recursive)

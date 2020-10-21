@@ -1,7 +1,7 @@
 #pragma once
 #include "../TypeDefinition.hpp"
 #include "Constants.hpp"
-#include "../Machinery/IMachineVendorNameplate.hpp"
+#include "../Machinery/IMachineryItemVendorNameplateType.hpp"
 #include "../Machinery/IMachineTagNameplate.hpp"
 #include "../../UmatiServerLib/BindableMemberPlaceholder.hpp"
 #include "../ns0/Constants.hpp"
@@ -15,7 +15,7 @@ struct MachineToolIdentification_SoftwareIdentification_t
   BindableMemberPlaceholder<BindableMember, SoftwareIdentification_t> SoftwareItem;
 };
 
-struct MachineToolIdentification_t : public machinery::IMachineVendorNameplate_t, public machinery::IMachineTagNameplate_t
+struct MachineToolIdentification_t : public machinery::IMachineryItemVendorNameplateType_t, public machinery::IMachineTagNameplate_t
 {
   BindableMember<MachineToolIdentification_SoftwareIdentification_t> SoftwareIdentification;
 
@@ -24,7 +24,7 @@ struct MachineToolIdentification_t : public machinery::IMachineVendorNameplate_t
 } // namespace machineTool
 
 REFL_TYPE(machineTool::MachineToolIdentification_t,
-          Bases<machinery::IMachineVendorNameplate_t, machinery::IMachineTagNameplate_t>(),
+          Bases<machinery::IMachineryItemVendorNameplateType_t, machinery::IMachineTagNameplate_t>(),
           UmatiServerLib::attribute::UaObjectType{
               .NodeId = UmatiServerLib::constexp::NodeId(constants::NsMachineToolUri, UA_MACHINETOOLID_MACHINETOOLIDENTIFICATIONTYPE)})
 REFL_FIELD(SoftwareIdentification, UmatiServerLib::attribute::PlaceholderOptional(),

@@ -20,7 +20,7 @@ void InstantiatedMachineTool::CreateObject()
   auto status = UA_Server_addObjectNode(
       m_pServer,
       UA_NODEID_NUMERIC(m_nsIndex, 0),
-      UA_NODEID_NUMERIC(nsFromUri(m_pServer, constants::NsMachineryUri), UA_MACHINERY_ID_MACHINES),
+      UA_NODEID_NUMERIC(nsFromUri(m_pServer, constants::NsMachineryUri), UA_MACHINERYID_MACHINES),
       UA_NODEID_NUMERIC(0, UA_NS0ID_ORGANIZES),
       *open62541Cpp::UA_QualifiedName(m_nsIndex, MachineName).QualifiedName,
       UA_NODEID_NUMERIC(nsFromUri(m_pServer, constants::NsMachineToolUri), UA_MACHINETOOLID_MACHINETOOLTYPE),

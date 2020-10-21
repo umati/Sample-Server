@@ -19,6 +19,6 @@ add_test(NAME BindNodeId COMMAND Test_BindNodeId)
 set_tests_properties(BindNodeId PROPERTIES TIMEOUT 20)
 
 add_executable(Test_MTEvent Test_MTEvent.cpp)
-target_link_libraries(Test_MTEvent ExampleServerLib machinetool_generated GTest::gtest_main)
+target_link_libraries(Test_MTEvent ExampleServerLib ua_gen_mt GTest::gtest_main)
 add_test(NAME MTEvent COMMAND Test_MTEvent)
 set_tests_properties(MTEvent PROPERTIES TIMEOUT 20)

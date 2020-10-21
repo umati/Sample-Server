@@ -6,7 +6,7 @@
 namespace machinery
 {
 
-struct IMachineVendorNameplate_t : public di::IVendorNameplate_t
+struct IMachineryItemVendorNameplateType_t : public di::IVendorNameplate_t
 {
   BindableMemberValue<std::uint16_t> YearOfConstruction;
   BindableMemberValue<std::uint8_t> MonthOfConstruction;
@@ -15,16 +15,16 @@ struct IMachineVendorNameplate_t : public di::IVendorNameplate_t
 
 } // namespace machinery
 
-REFL_TYPE(machinery::IMachineVendorNameplate_t,
+REFL_TYPE(machinery::IMachineryItemVendorNameplateType_t,
           Bases<di::IVendorNameplate_t>(),
           UmatiServerLib::attribute::UaObjectType{
-              .NodeId = UmatiServerLib::constexp::NodeId(constants::NsMachineryUri, UA_MACHINERY_ID_IMACHINEVENDORNAMEPLATETYPE)})
+              .NodeId = UmatiServerLib::constexp::NodeId(constants::NsMachineryUri, UA_MACHINERYID_IMACHINERYITEMVENDORNAMEPLATETYPE)})
 REFL_FIELD(YearOfConstruction, UmatiServerLib::attribute::PlaceholderOptional(),
            UmatiServerLib::attribute::MemberInTypeNodeId{
-               .NodeId = UmatiServerLib::constexp::NodeId(constants::NsMachineryUri, UA_MACHINERY_ID_IMACHINEVENDORNAMEPLATETYPE_YEAROFCONSTRUCTION)})
+               .NodeId = UmatiServerLib::constexp::NodeId(constants::NsMachineryUri, UA_MACHINERYID_IMACHINERYITEMVENDORNAMEPLATETYPE_YEAROFCONSTRUCTION)})
 REFL_FIELD(MonthOfConstruction, UmatiServerLib::attribute::PlaceholderOptional(),
            UmatiServerLib::attribute::MemberInTypeNodeId{
-               .NodeId = UmatiServerLib::constexp::NodeId(constants::NsMachineryUri, UA_MACHINERY_ID_IMACHINEVENDORNAMEPLATETYPE_MONTHOFCONSTRUCTION)})
+               .NodeId = UmatiServerLib::constexp::NodeId(constants::NsMachineryUri, UA_MACHINERYID_IMACHINERYITEMVENDORNAMEPLATETYPE_MONTHOFCONSTRUCTION)})
 REFL_FIELD(Manufacturer)
 REFL_FIELD(ProductInstanceUri)
 REFL_FIELD(SerialNumber)

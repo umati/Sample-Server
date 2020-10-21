@@ -15,8 +15,8 @@ struct IMachineTagNameplate_t : public di::ITagNameplate_t
 REFL_TYPE(machinery::IMachineTagNameplate_t,
           Bases<di::ITagNameplate_t>(),
           UmatiServerLib::attribute::UaObjectType{
-              .NodeId = UmatiServerLib::constexp::NodeId(constants::NsMachineryUri, UA_MACHINERY_ID_IMACHINETAGNAMEPLATETYPE)})
+              .NodeId = UmatiServerLib::constexp::NodeId(constants::NsMachineryUri, UA_MACHINERYID_IMACHINETAGNAMEPLATETYPE)})
 REFL_FIELD(Location, UmatiServerLib::attribute::PlaceholderOptional(),
           UmatiServerLib::attribute::MemberInTypeNodeId{
-              .NodeId = UmatiServerLib::constexp::NodeId(constants::NsMachineryUri, UA_MACHINERY_ID_IMACHINETAGNAMEPLATETYPE_LOCATION)})
+              .NodeId = UmatiServerLib::constexp::NodeId(constants::NsMachineryUri, UA_MACHINERYID_IMACHINETAGNAMEPLATETYPE_LOCATION)})
 REFL_END

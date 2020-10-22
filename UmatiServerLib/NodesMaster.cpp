@@ -5,6 +5,7 @@
 ///
 
 #include "NodesMaster.hpp"
+#include <iostream>
 
 NodesMaster::NodesMaster(UA_Server *pServer) : m_pServer(pServer)
 {
@@ -46,7 +47,10 @@ void NodesMaster::callback(UA_Server *pServer,
   if (it != pThis->m_Nodes.end())
   {
     auto val = it->second.Value();
-    UA_Server_writeDataValue(pServer, *nodeid, val);
+    if(auto ret = UA_Server_writeDataValue(pServer, *nodeid, val); ret != UA_STATUSCODE_GOOD)
+    {
+      std::cerr << "Writing value failed: " << UA_StatusCode_name(ret) << std::endl;
+    }
     UA_DataValue_clear(&val);
   }
 }

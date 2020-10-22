@@ -7,6 +7,7 @@ class UAServer_Test : public ::testing::Test
 {
 public:
   UA_Server *pServer = nullptr;
+  static constexpr const char *NsTestNs = "TestNs";
 
 protected:
   static UA_StatusCode generateChildNodeIdInParentNs(
@@ -30,6 +31,7 @@ protected:
     auto pConfig = UA_Server_getConfig(pServer);
     UA_ServerConfig_setDefault(pConfig);
     pConfig->nodeLifecycle.generateChildNodeId = generateChildNodeIdInParentNs;
+    m_testNs = UA_Server_addNamespace(pServer, NsTestNs);
   }
 
   void TearDown() override
@@ -37,4 +39,6 @@ protected:
     UA_Server_run_shutdown(pServer);
     UA_Server_delete(pServer);
   }
+
+  std::uint16_t m_testNs;
 };

@@ -8,7 +8,7 @@ namespace machineTool
 
 struct UtilityChangePrognosis_t : public Prognosis_t
 {
-  BindableMemberValue<UmatiServerLib::LocalizedText_t> UtilityName;
+  BindableMemberValue<std::string> UtilityName;
 };
 
 } // namespace machineTool

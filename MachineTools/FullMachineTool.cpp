@@ -190,7 +190,7 @@ void FullMachineTool::InstantiateMonitoring()
   edm.EDMGeneratorState = UA_EDMGeneratorState::UA_EDMGENERATORSTATE_ACTIVE_HIGH_VOLTAGE;
 
   auto &lsr = mt.Monitoring->MonitoredElement.Add<machineTool::LaserMonitoring_t>(m_pServer, n, {m_nsIndex, "Laser"});
-  lsr.IsOn = false;
+  lsr.ControllerIsOn = false;
   lsr.Name = "Laser";
   lsr.LaserState = UA_LaserState::UA_LASERSTATE_READY;
 }
@@ -225,7 +225,7 @@ void FullMachineTool::InstantiatePrognosis()
   auto &toolUnloadPrognosis = mt.Notification->Prognoses->Prognosis.Add<machineTool::ToolUnloadPrognosis_t>(m_pServer, n, {m_nsIndex, "ToolUnLoad"});
   toolUnloadPrognosis.Location = {"en", "Magazine 3"};
   auto &utilityPrognosis = mt.Notification->Prognoses->Prognosis.Add<machineTool::UtilityChangePrognosis_t>(m_pServer, n, {m_nsIndex, "UtilityChange"});
-  utilityPrognosis.UtilityName = {"en", "H²"};
+  utilityPrognosis.UtilityName = "H²";
 }
 
 void FullMachineTool::Simulate()

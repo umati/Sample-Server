@@ -72,7 +72,7 @@ void ShowcaseMachineTool::InstantiateTools()
     tool.ControlIdentifierInterpretation = UA_ToolManagement::UA_TOOLMANAGEMENT_NUMBERBASED;
     tool.Locked->Value = false;
     tool.Locked->ReasonForLocking = UA_ToolLocked::UA_TOOLLOCKED_OTHER;
-    tool.Name = {"", ss.str()};
+    tool.Name = ss.str();
     InstantiateOptional(tool.Name, m_pServer, n);
   }
 }

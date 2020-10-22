@@ -9,7 +9,7 @@ namespace machineTool
   struct LaserMonitoring_t : public WorkingUnitMonitoring_t
   {
     BindableMemberValue<UA_LaserState> LaserState;
-    BindableMemberValue<bool> IsOn;
+    BindableMemberValue<bool> ControllerIsOn;
   };
 } // namespace machineTool
 
@@ -18,5 +18,5 @@ REFL_TYPE(machineTool::LaserMonitoring_t,
           UmatiServerLib::attribute::UaObjectType{
               .NodeId = UmatiServerLib::constexp::NodeId(constants::NsMachineToolUri, UA_MACHINETOOLID_LASERMONITORINGTYPE)})
 REFL_FIELD(LaserState)
-REFL_FIELD(IsOn)
+REFL_FIELD(ControllerIsOn)
 REFL_END

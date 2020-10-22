@@ -46,8 +46,8 @@ namespace UmatiServerLib
         }};
 
     static const UA_DataType UA_LocalizedText = {
-        {1, UA_NODEIDTYPE_NUMERIC, {21}}, /* .typeId */
-        {1, UA_NODEIDTYPE_NUMERIC, {0}}, /* .binaryEncodingId, the numericidentifier used on the wire (thenamespaceindex is from .typeId) */
+        {0, UA_NODEIDTYPE_NUMERIC, {21}}, /* .typeId */
+        {0, UA_NODEIDTYPE_NUMERIC, {0}}, /* .binaryEncodingId, the numericidentifier used on the wire (thenamespaceindex is from .typeId) */
         sizeof(::UA_LocalizedText),       /* .memSize */
         UA_TYPES_LOCALIZEDTEXT,           /* .typeIndex, in the array of custom types */
         UA_DATATYPEKIND_LOCALIZEDTEXT,    /* .typeKind */

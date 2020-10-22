@@ -76,9 +76,9 @@ target_link_libraries(ua_gen_ia PUBLIC ua_gen_di)
 
 ua_generate_nodeset_and_datatypes(
   NAME "machinetool"
-  FILE_NS "${PROJECT_SOURCE_DIR}/model/Opc.Ua.MachineTool.Nodeset2.xml"
-  FILE_CSV "${PROJECT_SOURCE_DIR}/model/Opc.Ua.MachineTool.Nodeset2.csv"
-  FILE_BSD "${PROJECT_SOURCE_DIR}/model/Opc.Ua.MachineTool.Nodeset2.bsd"
+  FILE_NS "${open62541_NODESET_DIR}/MachineTool/Opc.Ua.MachineTool.Nodeset2.xml"
+  FILE_CSV "${open62541_NODESET_DIR}/MachineTool/NodeIds.csv"
+  FILE_BSD "${PROJECT_SOURCE_DIR}/model/Opc.Ua.MachineTool.bsd"
   OUTPUT_DIR "${PROJECT_SOURCE_DIR}/src_generated"
   NAMESPACE_MAP "5:http://opcfoundation.org/UA/MachineTool/"
   DEPENDS di machinery ia

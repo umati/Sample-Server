@@ -8,7 +8,7 @@ namespace machineTool
 struct BaseTool_t
 {
   BindableMemberValue<std::string> Identifier;
-  BindableMemberValue<UmatiServerLib::LocalizedText_t> Name;
+  BindableMemberValue<std::string> Name;
 };
 
 } // namespace machineTool

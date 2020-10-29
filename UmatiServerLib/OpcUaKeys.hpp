@@ -3,6 +3,11 @@
 #include <string>
 #include <open62541/types.h>
 
+/**
+ * @brief Helper for OPC UA connection encryption
+ * 
+ * Generating a Public/Private-Key-Pair is not fully implemented.
+ */
 class OpcUaKeys
 {
 public:

@@ -1,6 +1,10 @@
 
 #include <open62541/types.h>
 
+/**
+ * @brief Extendable namespace, which allows using custom UA_DataTypes* for C++ types.
+ * 
+ */
 namespace UmatiServerLib::TypeToUaDatatype
 {
   template <typename T>

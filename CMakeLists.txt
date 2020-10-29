@@ -38,7 +38,7 @@ target_link_libraries(ua_gen_di PUBLIC open62541::open62541)
 
 # See https://github.com/open62541/open62541/issues/3747
 set(TMP_NSURI "http://opcfoundation.org/UA/Machinery/")
-configure_file(model/empty.bsd.template "${CMAKE_BINARY_DIR}/model/Opc.Ua.Machinery.Types.bsd")
+configure_file(cmake/empty.bsd.template "${CMAKE_BINARY_DIR}/model/Opc.Ua.Machinery.Types.bsd")
 
 ua_generate_nodeset_and_datatypes(
   NAME "machinery"

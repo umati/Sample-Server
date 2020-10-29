@@ -7,6 +7,13 @@
 
 namespace UmatiServerLib
 {
+  /**
+   * @brief Enable helper functions for an instance of a state machine
+   * 
+   * Using the SetState-Method will set all associated valriables
+   * 
+   * @tparam STATEMACHINE_T 
+   */
   template <typename STATEMACHINE_T>
   class StateMachineInstance : public StateMachine
   {
@@ -18,6 +25,11 @@ namespace UmatiServerLib
       static_assert(std::is_base_of<ns0::FiniteStateMachine_t, STATEMACHINE_T>::value, "STATEMACHINE_T must inherit from ns0::FiniteStateMachine_t");
     }
 
+    /**
+     * @brief Set the State by it's id
+     * 
+     * @param id Id of the state
+     */
     void SetState(std::uint32_t id)
     {
       auto it = std::find_if(m_states.begin(), m_states.end(), [&id](const State_t &x) { return x.Number == id; });

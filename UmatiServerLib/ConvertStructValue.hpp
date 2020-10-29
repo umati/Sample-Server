@@ -17,7 +17,12 @@
 
 namespace UmatiServerLib
 {
-
+  //**
+   * @brief (static) Function set which allows copy from an C++ structural Value to OPC UA value
+   * 
+   * Compares names of OPC UA DataType members to C++ structure names and then write them to a UA_Variant
+   * Internally raw memory is copied
+   */
   class ConvertStructValue
   {
   public:

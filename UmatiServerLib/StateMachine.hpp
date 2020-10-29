@@ -6,6 +6,11 @@
 #include <list>
 
 namespace UmatiServerLib {
+  /**
+   * @brief Read a state machine from the address space
+   * 
+   * This class reads all states and transitions from a state machine type with all information needed for setting them later on.
+   */
   class StateMachine{
     public:
     StateMachine(open62541Cpp::UA_NodeId stateMachineType, UA_Server *pServer);

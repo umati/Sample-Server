@@ -26,6 +26,15 @@ UA_StatusCode InstantiateVariable(
   open62541Cpp::UA_NodeId &outNodeId
   );
 
+//**
+ * @brief Instantiate an optional member, which parent is already bind.
+ * 
+ * Checks the node in the type definition and create a variabe/object
+ * 
+ * @param memberPar The member that should be instantiated
+ * @param pServer Pointer to UA_Server
+ * @param nodesMaster A nodesmaster to manage the binding
+ */
 template <template <typename> class BINDABLEMEMBER_T, typename T, typename = std::enable_if_t<is_base_of_template<BindableMember, BINDABLEMEMBER_T<T>>::value>>
 void InstantiateOptional(BINDABLEMEMBER_T<T> &memberPar, UA_Server *pServer, NodesMaster &nodesMaster)
 {

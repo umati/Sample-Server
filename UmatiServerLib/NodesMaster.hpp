@@ -11,6 +11,10 @@
 #include <map>
 #include <Open62541Cpp/UA_NodeId.hpp>
 
+/**
+ * @brief Stores a list of NodeId <-> Member and handle read value calls
+ * 
+ */
 class NodesMaster
 {
 protected:
@@ -27,6 +31,7 @@ public:
 
   void Remove(const open62541Cpp::UA_NodeId &nodeId);
 
+  // Read callback, which will be resolved to the member internally
   static void callback(
       UA_Server *pServer,
       const UA_NodeId *sessionId,

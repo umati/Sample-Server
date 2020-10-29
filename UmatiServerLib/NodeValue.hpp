@@ -10,6 +10,12 @@
 #include <functional>
 #include <Open62541Cpp/UA_NodeId.hpp>
 
+/**
+ * @brief Class for accessting the value of a single node.
+ * 
+ * Allow setting an callback function, which is called, when the value is needed.
+ * @todo Use new External DataValue concept of open62541
+ */
 class NodeValue {
   typedef std::function<UA_DataValue()> GetValue_t;
   GetValue_t fCallback = nullptr;

@@ -2,7 +2,6 @@ cmake_minimum_required(VERSION 3.15)
 project(ExampleMachinetoolServer VERSION 0.1)
 
 set(CMAKE_CXX_STANDARD 17)
-set_property(GLOBAL PROPERTY DEBUG_POSTFIX "d")
 
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake)
 
@@ -76,7 +75,7 @@ target_link_libraries(ua_gen_ia PUBLIC ua_gen_di)
 
 ua_generate_nodeset_and_datatypes(
   NAME "machinetool"
-  FILE_NS "${open62541_NODESET_DIR}/MachineTool/Opc.Ua.MachineTool.Nodeset2.xml"
+  FILE_NS "${open62541_NODESET_DIR}/MachineTool/Opc.Ua.MachineTool.NodeSet2.xml"
   FILE_CSV "${open62541_NODESET_DIR}/MachineTool/NodeIds.csv"
   FILE_BSD "${PROJECT_SOURCE_DIR}/model/Opc.Ua.MachineTool.bsd"
   OUTPUT_DIR "${PROJECT_SOURCE_DIR}/src_generated"
@@ -94,9 +93,9 @@ target_link_libraries(ua_gen_mt PUBLIC ua_gen_machinery)
 
 ua_generate_nodeset_and_datatypes(
   NAME "robotics"
-  FILE_NS "${PROJECT_SOURCE_DIR}/model/Opc.Ua.Robotics.Nodeset2.xml"
-  FILE_CSV "${PROJECT_SOURCE_DIR}/model/Opc.Ua.Robotics.Nodeset2.csv"
-  FILE_BSD "${PROJECT_SOURCE_DIR}/model/Opc.Ua.Robotics.Nodeset2.bsd"
+  FILE_NS "${PROJECT_SOURCE_DIR}/model/Opc.Ua.Robotics.NodeSet2.xml"
+  FILE_CSV "${PROJECT_SOURCE_DIR}/model/Opc.Ua.Robotics.NodeSet2.csv"
+  FILE_BSD "${PROJECT_SOURCE_DIR}/model/Opc.Ua.Robotics.NodeSet2.bsd"
   OUTPUT_DIR "${PROJECT_SOURCE_DIR}/src_generated"
   NAMESPACE_MAP "6:http://opcfoundation.org/UA/Robotics/"
   DEPENDS di
@@ -125,7 +124,6 @@ add_library(ExampleServerLib
     OpcUaTypes/ConstNodeId.cpp
 )
 set_target_properties(ExampleServerLib PROPERTIES LINKER_LANGUAGE CXX)
-set_target_properties(ExampleServerLib PROPERTIES DEBUG_POSTFIX "d")
 target_link_libraries(ExampleServerLib PUBLIC open62541::open62541)
 target_link_libraries(ExampleServerLib PUBLIC Open62541Cpp::Open62541Cpp)
 target_link_libraries(ExampleServerLib PUBLIC reflCpp::reflCpp)
@@ -145,7 +143,6 @@ add_executable(
 )
 
 set_target_properties(${PROJECT_NAME} PROPERTIES LINKER_LANGUAGE CXX)
-set_target_properties(${PROJECT_NAME} PROPERTIES DEBUG_POSTFIX "d")
 target_link_libraries(${PROJECT_NAME} PUBLIC ExampleServerLib)
 target_link_libraries(${PROJECT_NAME} PUBLIC ua_gen_mt)
 target_link_libraries(${PROJECT_NAME} PUBLIC ua_gen_robotic)

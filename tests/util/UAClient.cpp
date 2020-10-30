@@ -13,7 +13,7 @@ UAClient::~UAClient(){
 
 UA_StatusCode UAClient::Connect(std::string url)
 {
-  UA_Client_connect(m_pClient, url.c_str());
+  return UA_Client_connect(m_pClient, url.c_str());
 }
 
 UA_StatusCode UAClient::ReadValue(open62541Cpp::UA_NodeId nodeId)

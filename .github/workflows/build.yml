@@ -1,0 +1,213 @@
+name: Build
+
+on: [push, pull_request]
+
+jobs:
+
+  # getDeps:
+  #   runs-on: ubuntu-20.04
+  #   steps:
+  #   - name: Checkout Sample-Server
+  #     uses: actions/checkout@v2
+  #     with:
+  #       path: Sample-Server
+  #   - name: Checkout mbedTLS
+  #     uses: actions/checkout@v2
+  #     with:
+  #       path: mbedTLS
+  #       ref: bfafadb45daf8d2114e3109e2f9021fc72ee36bb
+  #       repository: ARMmbed/mbedtls
+  #   - name: Checkout open62541
+  #     uses: actions/checkout@v2
+  #     with:
+  #       path: open62541
+  #       submodules: 'true'
+  #       repository: open62541/open62541
+  #       # master with MachineTool specification included
+  #       ref: '488a417d15e70bea7564b41e685501d7b26949ac'
+  #   - name: Checkout googletest
+  #     uses: actions/checkout@v2
+  #     with:
+  #       path: googletest
+  #       submodules: 'true'
+  #       repository: google/googletest
+  #       ref: ae8d1fc81b1469905b3d0fa6f8a077f58fc4b250
+  #   - name: Checkout Open62541Cpp
+  #     uses: actions/checkout@v2
+  #     with:
+  #       path: Open62541Cpp
+  #       repository: ccvca/open62541Cpp
+  #       ref: '2a44e15d41d302ce1214b2985a33d3c8971f5eb4'
+  #   - name: Checkout refl-cpp
+  #     uses: actions/checkout@v2
+  #     with:
+  #       path: refl-cpp
+  #       repository: veselink1/refl-cpp
+  #       ref: 'ff7912a20baf9fd0aa456153a5bd51e7dfaeba62'
+  #   - name: Upload SrcArtefacts
+  #     uses: actions/upload-artifact@v2
+  #     with:
+  #       name: SourceAndDeps
+  #       path: .
+
+  build:
+    runs-on: ubuntu-20.04
+#    needs: getDeps
+    env:
+      CMAKE_INSTALL_PREFIX: ${{ github.workspace }}/install
+    steps:
+    - name: Checkout Sample-Server
+      uses: actions/checkout@v2
+      with:
+        path: Sample-Server
+    - name: Checkout mbedTLS
+      uses: actions/checkout@v2
+      with:
+        path: mbedTLS
+        ref: bfafadb45daf8d2114e3109e2f9021fc72ee36bb
+        repository: ARMmbed/mbedtls
+    - name: Checkout open62541
+      uses: actions/checkout@v2
+      with:
+        path: open62541
+        submodules: 'true'
+        repository: open62541/open62541
+        # master with MachineTool specification included
+        ref: '488a417d15e70bea7564b41e685501d7b26949ac'
+    - name: Checkout googletest
+      uses: actions/checkout@v2
+      with:
+        path: googletest
+        submodules: 'true'
+        repository: google/googletest
+        ref: ae8d1fc81b1469905b3d0fa6f8a077f58fc4b250
+    - name: Checkout Open62541Cpp
+      uses: actions/checkout@v2
+      with:
+        path: Open62541Cpp
+        repository: ccvca/open62541Cpp
+        ref: '2a44e15d41d302ce1214b2985a33d3c8971f5eb4'
+    - name: Checkout refl-cpp
+      uses: actions/checkout@v2
+      with:
+        path: refl-cpp
+        repository: veselink1/refl-cpp
+        ref: 'ff7912a20baf9fd0aa456153a5bd51e7dfaeba62'
+    # - name: Download SrcArtefacts
+    #   uses: actions/download-artifact@v2
+    #   with:
+    #     name: SourceAndDeps
+    #     path: .
+    - name:   Build mbedTLS
+      run: |
+        mkdir -p build/mbedTLS
+        cd build/mbedTLS
+        cmake ../../mbedTLS -DENABLE_PROGRAMS:BOOL=0 -DENABLE_TESTING:BOOL=0 -DCMAKE_INSTALL_PREFIX:PATH=${{ env.CMAKE_INSTALL_PREFIX }}
+        cmake --build . --target install
+    - name:   Build open62541
+      run: |
+        mkdir -p build/open62541
+        cd build/open62541
+        cmake ../../open62541 -DUA_ENABLE_SUBSCRIPTIONS_ALARMS_CONDITIONS:BOOL=ON -DUA_ENABLE_SUBSCRIPTIONS_EVENTS:BOOL=ON -DUA_NAMESPACE_ZERO:STRING=FULL -DUA_ENABLE_ENCRYPTION:BOOL=1 -DUA_ENABLE_ENCRYPTION_MBEDTLS:BOOL=1 -DCMAKE_INSTALL_PREFIX:PATH=${{ env.CMAKE_INSTALL_PREFIX }}
+        cmake --build . --target install
+    - name:   Build googletest
+      run: |
+        mkdir -p build/googletest
+        cd build/googletest
+        cmake ../../googletest -DCMAKE_INSTALL_PREFIX:PATH=${{ env.CMAKE_INSTALL_PREFIX }}
+        cmake --build . --target install
+    - name:   Build Open62541Cpp
+      run: |
+        mkdir -p build/Open62541Cpp
+        cd build/Open62541Cpp
+        cmake ../../Open62541Cpp -DCMAKE_INSTALL_PREFIX:PATH=${{ env.CMAKE_INSTALL_PREFIX }}
+        cmake --build . --target install
+    - name:   Build Sample-Server
+      run: |
+        mkdir -p build/Sample-Server
+        cd build/Sample-Server
+        cmake ../../Sample-Server -DCMAKE_INSTALL_PREFIX:PATH=${{ env.CMAKE_INSTALL_PREFIX }}
+        cmake --build . --target install
+    - name: Upload Artefacts
+      uses: actions/upload-artifact@v2
+      with:
+        name: Sample-Server
+        path: ${{ env.CMAKE_INSTALL_PREFIX }}/bin
+    - name: Test Sample-Server
+      run: |
+        cd build/Sample-Server
+        ctest
+
+  dockerRelease:
+#    needs: getDeps
+    
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout Sample-Server
+      uses: actions/checkout@v2
+      with:
+        path: Sample-Server
+    - name: Checkout mbedTLS
+      uses: actions/checkout@v2
+      with:
+        path: mbedTLS
+        ref: bfafadb45daf8d2114e3109e2f9021fc72ee36bb
+        repository: ARMmbed/mbedtls
+    - name: Checkout open62541
+      uses: actions/checkout@v2
+      with:
+        path: open62541
+        submodules: 'true'
+        repository: open62541/open62541
+        # master with MachineTool specification included
+        ref: '488a417d15e70bea7564b41e685501d7b26949ac'
+    - name: Checkout googletest
+      uses: actions/checkout@v2
+      with:
+        path: googletest
+        submodules: 'true'
+        repository: google/googletest
+        ref: ae8d1fc81b1469905b3d0fa6f8a077f58fc4b250
+    - name: Checkout Open62541Cpp
+      uses: actions/checkout@v2
+      with:
+        path: Open62541Cpp
+        repository: ccvca/open62541Cpp
+        ref: '2a44e15d41d302ce1214b2985a33d3c8971f5eb4'
+    - name: Checkout refl-cpp
+      uses: actions/checkout@v2
+      with:
+        path: refl-cpp
+        repository: veselink1/refl-cpp
+        ref: 'ff7912a20baf9fd0aa456153a5bd51e7dfaeba62'
+    # - name: Download SrcArtefacts
+    #   uses: actions/download-artifact@v2
+    #   with:
+    #     name: SourceAndDeps
+    #     path: .
+    - name: Set up QEMU
+      uses: docker/setup-qemu-action@v1
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v1
+    - name: Login to GitHub Container Registry
+      uses: docker/login-action@v1 
+      with:
+        registry: ghcr.io
+        username: ${{ github.repository_owner }}
+        password: ${{ secrets.SAMPLESERVER_GHCR_PAT }}
+    - name: PrepareReg Names
+      run: |
+        echo IMAGE_REPOSITORY=$(echo ${{ github.repository }} | tr '[:upper:]' '[:lower:]') >> $GITHUB_ENV
+        echo IMAGE_TAG=$(echo ${{ github.ref }} | tr '[:upper:]' '[:lower:]' | awk '{split($0,a,"/"); print a[3]}') >> $GITHUB_ENV
+    - name: Build Docker Release
+      uses: 'docker/build-push-action@v2'
+      with:
+          file: './Sample-Server/.github/Dockerfile'
+          context: .
+          platforms: linux/amd64
+          push: true
+          tags: |
+            ghcr.io/${{ env.IMAGE_REPOSITORY }}:${{ env.IMAGE_TAG }}
+
+    
+  

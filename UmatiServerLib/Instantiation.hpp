@@ -26,7 +26,7 @@ UA_StatusCode InstantiateVariable(
   open62541Cpp::UA_NodeId &outNodeId
   );
 
-//**
+/**
  * @brief Instantiate an optional member, which parent is already bind.
  * 
  * Checks the node in the type definition and create a variabe/object

@@ -11,3 +11,4 @@ endif()
 
 add_library(reflCpp::reflCpp INTERFACE IMPORTED)
 target_include_directories(reflCpp::reflCpp INTERFACE ${REFL_CPP_INCLUDE})
+target_compile_definitions(reflCpp::reflCpp INTERFACE NOMINMAX)

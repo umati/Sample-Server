@@ -5,13 +5,13 @@
 ///
 
 #pragma once
+#include <refl.hpp>
 #include "NodeValue.hpp"
 #include <open62541/types.h>
 #include "UaTypeHelper.hpp"
 #include "ConvertSimpleValue.hpp"
 #include <open62541/types_generated_handling.h>
 #include <Open62541Cpp/UA_String.hpp>
-#include <refl.hpp>
 #include <iostream>
 #include "../OpcUaTypes/ReflectionHelper.hpp"
 

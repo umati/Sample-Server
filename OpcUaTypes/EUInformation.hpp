@@ -5,8 +5,8 @@
 ///
 
 #pragma once
-#include <open62541/types_generated.h>
 #include "LocalizedText.hpp"
+#include <open62541/types_generated.h>
 
 namespace UmatiServerLib
 {

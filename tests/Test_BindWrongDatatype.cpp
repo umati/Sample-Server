@@ -20,10 +20,8 @@ struct Test_t
 }
 
 REFL_TYPE(TestTypes::Test_t,
-          UmatiServerLib::attribute::UaObjectType{
-              .NodeId = UmatiServerLib::constexp::NodeId(UAServer_Test::NsTestNs, 1234)})
-REFL_FIELD(TestVar, UmatiServerLib::attribute::MemberInTypeNodeId{
-               .NodeId = UmatiServerLib::constexp::NodeId(UAServer_Test::NsTestNs, 1235)})
+          UmatiServerLib::attribute::UaObjectType(UmatiServerLib::constexp::NodeId(UAServer_Test::NsTestNs, 1234)))
+REFL_FIELD(TestVar, UmatiServerLib::attribute::MemberInTypeNodeId(UmatiServerLib::constexp::NodeId(UAServer_Test::NsTestNs, 1235)))
 REFL_END
 
 

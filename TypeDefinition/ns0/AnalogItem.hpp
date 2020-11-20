@@ -16,8 +16,7 @@ struct AnalogItem_t
 } // namespace ns0
 
 REFL_TEMPLATE((typename T), (ns0::AnalogItem_t<T>),
-              UmatiServerLib::attribute::UaVariableType{
-                  .NodeId = UmatiServerLib::constexp::NodeId(constants::Ns0Uri, UA_NS0ID_ANALOGITEMTYPE)})
+              UmatiServerLib::attribute::UaVariableType(UmatiServerLib::constexp::NodeId(constants::Ns0Uri, UA_NS0ID_ANALOGITEMTYPE)))
 REFL_FIELD(Value, UmatiServerLib::attribute::UaVariableTypeValue())
 REFL_FIELD(EURange)
 REFL_FIELD(EngineeringUnits, UmatiServerLib::attribute::PlaceholderOptional())

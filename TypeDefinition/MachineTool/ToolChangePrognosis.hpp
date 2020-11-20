@@ -19,19 +19,15 @@ namespace machineTool
 REFL_TYPE(
     machineTool::ToolChangePrognosis_t,
     Bases<machineTool::Prognosis_t>(),
-    UmatiServerLib::attribute::UaObjectType{
-        .NodeId = UmatiServerLib::constexp::NodeId(constants::NsMachineToolUri, UA_MACHINETOOLID_TOOLCHANGEPROGNOSISTYPE)})
+    UmatiServerLib::attribute::UaObjectType(UmatiServerLib::constexp::NodeId(constants::NsMachineToolUri, UA_MACHINETOOLID_TOOLCHANGEPROGNOSISTYPE)))
 REFL_FIELD(Location)
 REFL_FIELD(ToolName,
            UmatiServerLib::attribute::PlaceholderOptional(),
-           UmatiServerLib::attribute::MemberInTypeNodeId{
-               .NodeId = UmatiServerLib::constexp::NodeId(constants::NsMachineToolUri, UA_MACHINETOOLID_TOOLCHANGEPROGNOSISTYPE_TOOLNAME)})
+           UmatiServerLib::attribute::MemberInTypeNodeId(UmatiServerLib::constexp::NodeId(constants::NsMachineToolUri, UA_MACHINETOOLID_TOOLCHANGEPROGNOSISTYPE_TOOLNAME)))
 REFL_FIELD(ToolIdentifier,
            UmatiServerLib::attribute::PlaceholderOptional(),
-           UmatiServerLib::attribute::MemberInTypeNodeId{
-               .NodeId = UmatiServerLib::constexp::NodeId(constants::NsMachineToolUri, UA_MACHINETOOLID_TOOLCHANGEPROGNOSISTYPE_TOOLIDENTIFIER)})
+           UmatiServerLib::attribute::MemberInTypeNodeId(UmatiServerLib::constexp::NodeId(constants::NsMachineToolUri, UA_MACHINETOOLID_TOOLCHANGEPROGNOSISTYPE_TOOLIDENTIFIER)))
 REFL_FIELD(ToolNodeId,
            UmatiServerLib::attribute::PlaceholderOptional(),
-           UmatiServerLib::attribute::MemberInTypeNodeId{
-               .NodeId = UmatiServerLib::constexp::NodeId(constants::NsMachineToolUri, UA_MACHINETOOLID_TOOLCHANGEPROGNOSISTYPE_TOOLNODEID)})
+           UmatiServerLib::attribute::MemberInTypeNodeId(UmatiServerLib::constexp::NodeId(constants::NsMachineToolUri, UA_MACHINETOOLID_TOOLCHANGEPROGNOSISTYPE_TOOLNODEID)))
 REFL_END

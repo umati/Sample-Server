@@ -13,6 +13,8 @@ namespace UmatiServerLib::attribute
 {
   struct UaBrowseName : refl::attr::usage::field
   {
+    UaBrowseName() = default;
+    constexpr UaBrowseName(const char *nsURI, const char* name = nullptr): NsURI(nsURI), Name(name){}
     const char *NsURI = nullptr;
     const char *Name = nullptr;
   };

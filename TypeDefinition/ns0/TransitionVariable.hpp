@@ -17,7 +17,7 @@ struct TransitionVariable_t
 
 }
 
-REFL_TEMPLATE((typename T), (ns0::TransitionVariable_t<T>), UmatiServerLib::attribute::UaVariableType{.NodeId = UmatiServerLib::constexp::NodeId(constants::Ns0Uri, UA_NS0ID_TRANSITIONVARIABLETYPE)})
+REFL_TEMPLATE((typename T), (ns0::TransitionVariable_t<T>), UmatiServerLib::attribute::UaVariableType(UmatiServerLib::constexp::NodeId(constants::Ns0Uri, UA_NS0ID_TRANSITIONVARIABLETYPE)))
 REFL_FIELD(Id)
 REFL_FIELD(Value, UmatiServerLib::attribute::UaVariableTypeValue())
 REFL_FIELD(Number, UmatiServerLib::attribute::PlaceholderOptional())

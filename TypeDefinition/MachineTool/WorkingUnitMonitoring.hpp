@@ -12,6 +12,5 @@ namespace machineTool
 
 REFL_TYPE(machineTool::WorkingUnitMonitoring_t,
           Bases<machineTool::ElementMonitoring_t>(),
-          UmatiServerLib::attribute::UaObjectType{
-              .NodeId = UmatiServerLib::constexp::NodeId(constants::NsMachineToolUri, UA_MACHINETOOLID_WORKINGUNITMONITORINGTYPE)})
+          UmatiServerLib::attribute::UaObjectType(UmatiServerLib::constexp::NodeId(constants::NsMachineToolUri, UA_MACHINETOOLID_WORKINGUNITMONITORINGTYPE)))
 REFL_END

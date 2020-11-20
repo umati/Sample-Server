@@ -16,7 +16,6 @@ struct ManualActivityPrognosis_t : public Prognosis_t
 REFL_TYPE(
     machineTool::ManualActivityPrognosis_t,
     Bases<machineTool::Prognosis_t>(),
-    UmatiServerLib::attribute::UaObjectType{
-        .NodeId = UmatiServerLib::constexp::NodeId(constants::NsMachineToolUri, UA_MACHINETOOLID_MANUALACTIVITYPROGNOSISTYPE)})
+    UmatiServerLib::attribute::UaObjectType(UmatiServerLib::constexp::NodeId(constants::NsMachineToolUri, UA_MACHINETOOLID_MANUALACTIVITYPROGNOSISTYPE)))
 REFL_FIELD(Activity)
 REFL_END

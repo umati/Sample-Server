@@ -38,36 +38,29 @@ namespace machineTool
 
 REFL_TYPE(machineTool::ProductionJob_ProductionPrograms_t,
           Bases<ns0::OrderedList_t<machineTool::ProductionProgram_t>>(),
-          UmatiServerLib::attribute::UaObjectType{
-              .NodeId = UmatiServerLib::constexp::NodeId(constants::Ns0Uri, UA_NS0ID_ORDEREDLISTTYPE)})
+          UmatiServerLib::attribute::UaObjectType(UmatiServerLib::constexp::NodeId(constants::Ns0Uri, UA_NS0ID_ORDEREDLISTTYPE)))
 REFL_END
 
 REFL_TYPE(machineTool::ProductionJob_PartSets_t,
-          UmatiServerLib::attribute::UaObjectType{
-              .NodeId = UmatiServerLib::constexp::NodeId(constants::Ns0Uri, UA_NS0ID_BASEOBJECTTYPE)})
+          UmatiServerLib::attribute::UaObjectType(UmatiServerLib::constexp::NodeId(constants::Ns0Uri, UA_NS0ID_BASEOBJECTTYPE)))
 REFL_FIELD(PartSet,
-            UmatiServerLib::attribute::MemberInTypeNodeId{
-               .NodeId = UmatiServerLib::constexp::NodeId(constants::NsMachineToolUri, UA_MACHINETOOLID_PRODUCTIONJOBTYPE_PARTSETS_PARTSET)},
+            UmatiServerLib::attribute::MemberInTypeNodeId(UmatiServerLib::constexp::NodeId(constants::NsMachineToolUri, UA_MACHINETOOLID_PRODUCTIONJOBTYPE_PARTSETS_PARTSET)),
            UmatiServerLib::attribute::PlaceholderOptional())
 REFL_END
 
 REFL_TYPE(machineTool::ProductionJob_RunsPlanned_t,
-          UmatiServerLib::attribute::UaVariableType{
-              .NodeId = UmatiServerLib::constexp::NodeId(constants::Ns0Uri, UA_NS0ID_BASEVARIABLETYPE)})
+          UmatiServerLib::attribute::UaVariableType(UmatiServerLib::constexp::NodeId(constants::Ns0Uri, UA_NS0ID_BASEVARIABLETYPE)))
 REFL_FIELD(Value,
-           UmatiServerLib::attribute::MemberInTypeNodeId{
-               .NodeId = UmatiServerLib::constexp::NodeId(constants::NsMachineToolUri, UA_MACHINETOOLID_PRODUCTIONJOBTYPE_RUNSPLANNED)},
+           UmatiServerLib::attribute::MemberInTypeNodeId(UmatiServerLib::constexp::NodeId(constants::NsMachineToolUri, UA_MACHINETOOLID_PRODUCTIONJOBTYPE_RUNSPLANNED)),
            UmatiServerLib::attribute::UaVariableTypeValue())
 REFL_FIELD(IsValid,
-           UmatiServerLib::attribute::UaBrowseName{.NsURI = constants::NsMachineToolUri},
-           UmatiServerLib::attribute::MemberInTypeNodeId{
-               .NodeId = UmatiServerLib::constexp::NodeId(constants::NsMachineToolUri, UA_MACHINETOOLID_PRODUCTIONJOBTYPE_RUNSPLANNED_ISVALID)})
+           UmatiServerLib::attribute::UaBrowseName(constants::NsMachineToolUri),
+           UmatiServerLib::attribute::MemberInTypeNodeId(UmatiServerLib::constexp::NodeId(constants::NsMachineToolUri, UA_MACHINETOOLID_PRODUCTIONJOBTYPE_RUNSPLANNED_ISVALID)))
 REFL_END
 
 REFL_TYPE(machineTool::ProductionJob_t,
           Bases<ns0::IOrderedObject_t<std::uint16_t>>(),
-          UmatiServerLib::attribute::UaObjectType{
-              .NodeId = UmatiServerLib::constexp::NodeId(constants::NsMachineToolUri, UA_MACHINETOOLID_PRODUCTIONJOBTYPE)})
+          UmatiServerLib::attribute::UaObjectType(UmatiServerLib::constexp::NodeId(constants::NsMachineToolUri, UA_MACHINETOOLID_PRODUCTIONJOBTYPE)))
 REFL_FIELD(Identifier)
 REFL_FIELD(RunsCompleted)
 REFL_FIELD(RunsPlanned)
@@ -75,6 +68,5 @@ REFL_FIELD(State)
 REFL_FIELD(ProductionPrograms)
 REFL_FIELD(PartSets,
            UmatiServerLib::attribute::PlaceholderOptional(),
-           UmatiServerLib::attribute::MemberInTypeNodeId{
-               .NodeId = UmatiServerLib::constexp::NodeId(constants::NsMachineToolUri, UA_MACHINETOOLID_PRODUCTIONJOBTYPE_PARTSETS)})
+           UmatiServerLib::attribute::MemberInTypeNodeId(UmatiServerLib::constexp::NodeId(constants::NsMachineToolUri, UA_MACHINETOOLID_PRODUCTIONJOBTYPE_PARTSETS)))
 REFL_END

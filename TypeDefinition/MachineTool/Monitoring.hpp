@@ -23,19 +23,15 @@ namespace machineTool
 } // namespace machineTool
 
 REFL_TYPE(machineTool::Monitoring_t,
-          UmatiServerLib::attribute::UaObjectType{
-              .NodeId = UmatiServerLib::constexp::NodeId(constants::NsMachineToolUri, UA_MACHINETOOLID_MONITORINGTYPE)})
+          UmatiServerLib::attribute::UaObjectType(UmatiServerLib::constexp::NodeId(constants::NsMachineToolUri, UA_MACHINETOOLID_MONITORINGTYPE)))
 REFL_FIELD(MachineTool)
 REFL_FIELD(Channels,
-           UmatiServerLib::attribute::MemberInTypeNodeId{
-               .NodeId = UmatiServerLib::constexp::NodeId(constants::NsMachineToolUri, UA_MACHINETOOLID_MONITORINGTYPE_MONITOREDELEMENT)},
+           UmatiServerLib::attribute::MemberInTypeNodeId(UmatiServerLib::constexp::NodeId(constants::NsMachineToolUri, UA_MACHINETOOLID_MONITORINGTYPE_MONITOREDELEMENT)),
            UmatiServerLib::attribute::PlaceholderOptional())
 REFL_FIELD(MonitoredElement,
-           UmatiServerLib::attribute::MemberInTypeNodeId{
-               .NodeId = UmatiServerLib::constexp::NodeId(constants::NsMachineToolUri, UA_MACHINETOOLID_MONITORINGTYPE_MONITOREDELEMENT)},
+           UmatiServerLib::attribute::MemberInTypeNodeId(UmatiServerLib::constexp::NodeId(constants::NsMachineToolUri, UA_MACHINETOOLID_MONITORINGTYPE_MONITOREDELEMENT)),
            UmatiServerLib::attribute::PlaceholderOptional())
 REFL_FIELD(Stacklight,
-            UmatiServerLib::attribute::MemberInTypeNodeId{
-               .NodeId = UmatiServerLib::constexp::NodeId(constants::NsMachineToolUri, UA_MACHINETOOLID_MONITORINGTYPE_STACKLIGHT)},
+            UmatiServerLib::attribute::MemberInTypeNodeId(UmatiServerLib::constexp::NodeId(constants::NsMachineToolUri, UA_MACHINETOOLID_MONITORINGTYPE_STACKLIGHT)),
            UmatiServerLib::attribute::PlaceholderOptional())
 REFL_END

@@ -36,14 +36,11 @@ namespace machineTool
 } // namespace machineTool
 
 REFL_TYPE(machineTool::PrognosisList_t,
-          UmatiServerLib::attribute::UaObjectType{
-              .NodeId = UmatiServerLib::constexp::NodeId(constants::NsMachineToolUri, UA_MACHINETOOLID_PROGNOSISLISTTYPE)})
+          UmatiServerLib::attribute::UaObjectType(UmatiServerLib::constexp::NodeId(constants::NsMachineToolUri, UA_MACHINETOOLID_PROGNOSISLISTTYPE)))
 REFL_FIELD(Prognosis,
-           UmatiServerLib::attribute::MemberInTypeNodeId{
-               .NodeId = UmatiServerLib::constexp::NodeId(constants::NsMachineToolUri, UA_MACHINETOOLID_PROGNOSISLISTTYPE_PROGNOSIS)},
+           UmatiServerLib::attribute::MemberInTypeNodeId(UmatiServerLib::constexp::NodeId(constants::NsMachineToolUri, UA_MACHINETOOLID_PROGNOSISLISTTYPE_PROGNOSIS)),
            UmatiServerLib::attribute::PlaceholderOptional())
 REFL_FIELD(NodeVersion,
-           UmatiServerLib::attribute::MemberInTypeNodeId{
-               .NodeId = UmatiServerLib::constexp::NodeId(constants::NsMachineToolUri, UA_MACHINETOOLID_PROGNOSISLISTTYPE_NODEVERSION)},
+           UmatiServerLib::attribute::MemberInTypeNodeId(UmatiServerLib::constexp::NodeId(constants::NsMachineToolUri, UA_MACHINETOOLID_PROGNOSISLISTTYPE_NODEVERSION)),
            UmatiServerLib::attribute::PlaceholderOptional())
 REFL_END

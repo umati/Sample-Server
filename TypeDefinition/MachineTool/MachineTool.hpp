@@ -20,9 +20,8 @@ struct MachineTool_t
 } // namespace machineTool
 
 REFL_TYPE(machineTool::MachineTool_t,
-          UmatiServerLib::attribute::UaObjectType{
-              .NodeId = UmatiServerLib::constexp::NodeId(constants::NsMachineToolUri, UA_MACHINETOOLID_MACHINETOOLTYPE)})
-REFL_FIELD(Identification, UmatiServerLib::attribute::UaBrowseName{.NsURI = constants::NsDIUri})
+          UmatiServerLib::attribute::UaObjectType(UmatiServerLib::constexp::NodeId(constants::NsMachineToolUri, UA_MACHINETOOLID_MACHINETOOLTYPE)))
+REFL_FIELD(Identification, UmatiServerLib::attribute::UaBrowseName(constants::NsDIUri))
 REFL_FIELD(Equipment)
 REFL_FIELD(Monitoring)
 REFL_FIELD(Production)

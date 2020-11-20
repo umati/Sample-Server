@@ -18,8 +18,7 @@ struct TwoStateVariable_t : public StateVariable_t<bool>
 
 REFL_TYPE(ns0::TwoStateVariable_t,
           Bases<ns0::StateVariable_t<bool>>(),
-          UmatiServerLib::attribute::UaVariableType{
-              .NodeId = UmatiServerLib::constexp::NodeId(constants::Ns0Uri, UA_NS0ID_TWOSTATEVARIABLETYPE)})
+          UmatiServerLib::attribute::UaVariableType(UmatiServerLib::constexp::NodeId(constants::Ns0Uri, UA_NS0ID_TWOSTATEVARIABLETYPE)))
 REFL_FIELD(Id)
 REFL_FIELD(EffectiveTransitionTime, UmatiServerLib::attribute::PlaceholderOptional())
 REFL_FIELD(TransitionTime, UmatiServerLib::attribute::PlaceholderOptional())

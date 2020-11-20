@@ -17,12 +17,10 @@ struct SoftwareIdentification_t
 } // namespace machineTool
 
 REFL_TYPE(machineTool::SoftwareIdentification_t,
-  UmatiServerLib::attribute::UaObjectType{
-  .NodeId = UmatiServerLib::constexp::NodeId(constants::NsMachineToolUri, UA_MACHINETOOLID_SOFTWAREIDENTIFICATIONTYPE)}
+  UmatiServerLib::attribute::UaObjectType(UmatiServerLib::constexp::NodeId(constants::NsMachineToolUri, UA_MACHINETOOLID_SOFTWAREIDENTIFICATIONTYPE))
 )
-REFL_FIELD(SoftwareRevision, UmatiServerLib::attribute::UaBrowseName{.NsURI = constants::NsDIUri})
+REFL_FIELD(SoftwareRevision, UmatiServerLib::attribute::UaBrowseName(constants::NsDIUri))
 REFL_FIELD(Identifier)
 REFL_FIELD(Manufacturer, UmatiServerLib::attribute::PlaceholderOptional(),
-           UmatiServerLib::attribute::MemberInTypeNodeId{
-               .NodeId = UmatiServerLib::constexp::NodeId(constants::NsMachineToolUri, UA_MACHINETOOLID_SOFTWAREIDENTIFICATIONTYPE_MANUFACTURER)})
+           UmatiServerLib::attribute::MemberInTypeNodeId(UmatiServerLib::constexp::NodeId(constants::NsMachineToolUri, UA_MACHINETOOLID_SOFTWAREIDENTIFICATIONTYPE_MANUFACTURER)))
 REFL_END

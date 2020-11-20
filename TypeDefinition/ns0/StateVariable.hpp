@@ -18,8 +18,7 @@ struct StateVariable_t
 } // namespace ns0
 
 REFL_TEMPLATE((typename T), (ns0::StateVariable_t<T>),
-              UmatiServerLib::attribute::UaVariableType{
-                  .NodeId = UmatiServerLib::constexp::NodeId(constants::Ns0Uri, UA_NS0ID_STATEVARIABLETYPE)})
+              UmatiServerLib::attribute::UaVariableType(UmatiServerLib::constexp::NodeId(constants::Ns0Uri, UA_NS0ID_STATEVARIABLETYPE)))
 REFL_FIELD(Id)
 REFL_FIELD(Value, UmatiServerLib::attribute::UaVariableTypeValue())
 REFL_FIELD(Number, UmatiServerLib::attribute::PlaceholderOptional())

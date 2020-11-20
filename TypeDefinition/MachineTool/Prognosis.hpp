@@ -13,7 +13,6 @@ struct Prognosis_t
 } // namespace machineTool
 
 REFL_TYPE(machineTool::Prognosis_t,
-          UmatiServerLib::attribute::UaObjectType{
-              .NodeId = UmatiServerLib::constexp::NodeId(constants::NsMachineToolUri, UA_MACHINETOOLID_PROGNOSISTYPE)})
+          UmatiServerLib::attribute::UaObjectType(UmatiServerLib::constexp::NodeId(constants::NsMachineToolUri, UA_MACHINETOOLID_PROGNOSISTYPE)))
 REFL_FIELD(PredictedTime)
 REFL_END

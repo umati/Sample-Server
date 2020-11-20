@@ -17,13 +17,10 @@ namespace ia
 
 REFL_TYPE(ia::StackElement_t,
           Bases<ns0::IOrderedObject_t<std::uint16_t>>(),
-          UmatiServerLib::attribute::UaObjectType{
-              .NodeId = UmatiServerLib::constexp::NodeId(constants::NsIAUri, UA_IAID_STACKELEMENTTYPE)})
+          UmatiServerLib::attribute::UaObjectType(UmatiServerLib::constexp::NodeId(constants::NsIAUri, UA_IAID_STACKELEMENTTYPE)))
 
-REFL_FIELD(IsPartOfBase, UmatiServerLib::attribute::MemberInTypeNodeId{
-               .NodeId = UmatiServerLib::constexp::NodeId(constants::NsIAUri, UA_IAID_STACKELEMENTTYPE_ISPARTOFBASE)},
+REFL_FIELD(IsPartOfBase, UmatiServerLib::attribute::MemberInTypeNodeId(UmatiServerLib::constexp::NodeId(constants::NsIAUri, UA_IAID_STACKELEMENTTYPE_ISPARTOFBASE)),
            UmatiServerLib::attribute::PlaceholderOptional())
-REFL_FIELD(SignalOn, UmatiServerLib::attribute::MemberInTypeNodeId{
-               .NodeId = UmatiServerLib::constexp::NodeId(constants::NsIAUri, UA_IAID_STACKELEMENTTYPE_SIGNALON)},
+REFL_FIELD(SignalOn, UmatiServerLib::attribute::MemberInTypeNodeId(UmatiServerLib::constexp::NodeId(constants::NsIAUri, UA_IAID_STACKELEMENTTYPE_SIGNALON)),
            UmatiServerLib::attribute::PlaceholderOptional())
 REFL_END

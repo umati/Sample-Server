@@ -17,8 +17,7 @@ struct ProcessChangeoverPrognosis_t : public Prognosis_t
 REFL_TYPE(
     machineTool::ProcessChangeoverPrognosis_t,
     Bases<machineTool::Prognosis_t>(),
-    UmatiServerLib::attribute::UaObjectType{
-        .NodeId = UmatiServerLib::constexp::NodeId(constants::NsMachineToolUri, UA_MACHINETOOLID_PROCESSCHANGEOVERPROGNOSISTYPE)})
+    UmatiServerLib::attribute::UaObjectType(UmatiServerLib::constexp::NodeId(constants::NsMachineToolUri, UA_MACHINETOOLID_PROCESSCHANGEOVERPROGNOSISTYPE)))
 REFL_FIELD(Activity)
 REFL_FIELD(Location)
 REFL_END

@@ -16,8 +16,7 @@ struct BaseEvent_t
 } // namespace ns0
 
 REFL_TYPE(ns0::BaseEvent_t,
-          UmatiServerLib::attribute::UaObjectType{
-              .NodeId = UmatiServerLib::constexp::NodeId(constants::Ns0Uri, UA_NS0ID_BASEEVENTTYPE)})
+          UmatiServerLib::attribute::UaObjectType(UmatiServerLib::constexp::NodeId(constants::Ns0Uri, UA_NS0ID_BASEEVENTTYPE)))
 REFL_FIELD(Time)
 REFL_FIELD(SourceName)
 REFL_FIELD(Severity)

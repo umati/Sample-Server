@@ -16,7 +16,6 @@ namespace ia
 
 REFL_TYPE(ia::BasicStacklight_t,
           Bases<ns0::OrderedList_t<ia::StackElementLight_t>>(),
-          UmatiServerLib::attribute::UaObjectType{
-              .NodeId = UmatiServerLib::constexp::NodeId(constants::NsIAUri, UA_IAID_BASICSTACKLIGHTTYPE)})
+          UmatiServerLib::attribute::UaObjectType(UmatiServerLib::constexp::NodeId(constants::NsIAUri, UA_IAID_BASICSTACKLIGHTTYPE)))
 REFL_FIELD(StacklightMode)
 REFL_END

@@ -21,8 +21,7 @@ struct ProductionJobTransitionEvent_t: public ns0::TransitionEvent_t
 
 REFL_TYPE(machineTool::ProductionJobTransitionEvent_t,
           Bases<ns0::TransitionEvent_t>(),
-          UmatiServerLib::attribute::UaObjectType{
-              .NodeId = UmatiServerLib::constexp::NodeId(constants::NsMachineToolUri, UA_MACHINETOOLID_PRODUCTIONJOBTRANSITIONEVENTTYPE)})
+          UmatiServerLib::attribute::UaObjectType(UmatiServerLib::constexp::NodeId(constants::NsMachineToolUri, UA_MACHINETOOLID_PRODUCTIONJOBTRANSITIONEVENTTYPE)))
 REFL_FIELD(Identifier)
 REFL_FIELD(RunsCompleted)
 REFL_FIELD(RunsPlanned)

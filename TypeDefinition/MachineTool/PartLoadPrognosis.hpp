@@ -19,16 +19,13 @@ namespace machineTool
 REFL_TYPE(
     machineTool::PartLoadPrognosis_t,
     Bases<machineTool::Prognosis_t>(),
-    UmatiServerLib::attribute::UaObjectType{
-        .NodeId = UmatiServerLib::constexp::NodeId(constants::NsMachineToolUri, UA_MACHINETOOLID_PARTLOADPROGNOSISTYPE)})
+    UmatiServerLib::attribute::UaObjectType(UmatiServerLib::constexp::NodeId(constants::NsMachineToolUri, UA_MACHINETOOLID_PARTLOADPROGNOSISTYPE)))
 REFL_FIELD(Location)
 REFL_FIELD(PartName)
 REFL_FIELD(PartIdentifier,
            UmatiServerLib::attribute::PlaceholderOptional(),
-           UmatiServerLib::attribute::MemberInTypeNodeId{
-               .NodeId = UmatiServerLib::constexp::NodeId(constants::NsMachineToolUri, UA_MACHINETOOLID_PARTLOADPROGNOSISTYPE_PARTIDENTIFIER)})
+           UmatiServerLib::attribute::MemberInTypeNodeId(UmatiServerLib::constexp::NodeId(constants::NsMachineToolUri, UA_MACHINETOOLID_PARTLOADPROGNOSISTYPE_PARTIDENTIFIER)))
 REFL_FIELD(PartNodeId,
            UmatiServerLib::attribute::PlaceholderOptional(),
-           UmatiServerLib::attribute::MemberInTypeNodeId{
-               .NodeId = UmatiServerLib::constexp::NodeId(constants::NsMachineToolUri, UA_MACHINETOOLID_PARTLOADPROGNOSISTYPE_PARTNODEID)})
+           UmatiServerLib::attribute::MemberInTypeNodeId(UmatiServerLib::constexp::NodeId(constants::NsMachineToolUri, UA_MACHINETOOLID_PARTLOADPROGNOSISTYPE_PARTNODEID)))
 REFL_END

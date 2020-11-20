@@ -15,8 +15,7 @@ namespace machineTool
 
 REFL_TYPE(machineTool::LaserMonitoring_t,
           Bases<machineTool::WorkingUnitMonitoring_t>(),
-          UmatiServerLib::attribute::UaObjectType{
-              .NodeId = UmatiServerLib::constexp::NodeId(constants::NsMachineToolUri, UA_MACHINETOOLID_LASERMONITORINGTYPE)})
+          UmatiServerLib::attribute::UaObjectType(UmatiServerLib::constexp::NodeId(constants::NsMachineToolUri, UA_MACHINETOOLID_LASERMONITORINGTYPE)))
 REFL_FIELD(LaserState)
 REFL_FIELD(ControllerIsOn)
 REFL_END

@@ -77,7 +77,7 @@ namespace UmatiServerLib
     if constexpr (refl::descriptor::has_attribute<Bases>(refl::reflect<T>()))
     {
       constexpr auto bases = refl::descriptor::get_attribute<Bases>(refl::reflect<T>());
-      if constexpr (bases.descriptors.size)
+      if constexpr (bases.descriptors.size > 0)
       {
         refl::util::for_each(bases.descriptors, [&](auto t) {
           MembersRefl(static_cast<typename decltype(t)::type &>(instance), pServer, nodeId, nodesMaster);
@@ -177,8 +177,8 @@ namespace UmatiServerLib
         is_same_template<T, BindableMember>::value)
     {
       if constexpr (
-          hasAttributeIfReflectable<UmatiServerLib::attribute::UaObjectType>(member.value) ||
-          hasAttributeIfReflectable<UmatiServerLib::attribute::UaVariableType>(member.value))
+          hasAttributeIfReflectable<UmatiServerLib::attribute::UaObjectType, decltype(member.value)>() ||
+          hasAttributeIfReflectable<UmatiServerLib::attribute::UaVariableType,  decltype(member.value)>())
       {
         MembersRefl(member.value, pServer, nodeId, nodesMaster);
       }

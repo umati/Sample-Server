@@ -19,15 +19,11 @@ namespace ia
 
 REFL_TYPE(ia::StackElementLight_t,
           Bases<ia::StackElement_t>(),
-          UmatiServerLib::attribute::UaObjectType{
-              .NodeId = UmatiServerLib::constexp::NodeId(constants::NsIAUri, UA_IAID_STACKELEMENTLIGHTTYPE)})
-REFL_FIELD(Intensity, UmatiServerLib::attribute::MemberInTypeNodeId{
-               .NodeId = UmatiServerLib::constexp::NodeId(constants::NsIAUri, UA_IAID_STACKELEMENTLIGHTTYPE_INTENSITY)},
+          UmatiServerLib::attribute::UaObjectType(UmatiServerLib::constexp::NodeId(constants::NsIAUri, UA_IAID_STACKELEMENTLIGHTTYPE)))
+REFL_FIELD(Intensity, UmatiServerLib::attribute::MemberInTypeNodeId(UmatiServerLib::constexp::NodeId(constants::NsIAUri, UA_IAID_STACKELEMENTLIGHTTYPE_INTENSITY)),
            UmatiServerLib::attribute::PlaceholderOptional())
-REFL_FIELD(SignalColor, UmatiServerLib::attribute::MemberInTypeNodeId{
-               .NodeId = UmatiServerLib::constexp::NodeId(constants::NsIAUri, UA_IAID_STACKELEMENTLIGHTTYPE_SIGNALCOLOR)},
+REFL_FIELD(SignalColor, UmatiServerLib::attribute::MemberInTypeNodeId(UmatiServerLib::constexp::NodeId(constants::NsIAUri, UA_IAID_STACKELEMENTLIGHTTYPE_SIGNALCOLOR)),
            UmatiServerLib::attribute::PlaceholderOptional())
-REFL_FIELD(StacklightMode, UmatiServerLib::attribute::MemberInTypeNodeId{
-               .NodeId = UmatiServerLib::constexp::NodeId(constants::NsIAUri, UA_IAID_STACKELEMENTLIGHTTYPE_STACKLIGHTMODE)},
+REFL_FIELD(StacklightMode, UmatiServerLib::attribute::MemberInTypeNodeId(UmatiServerLib::constexp::NodeId(constants::NsIAUri, UA_IAID_STACKELEMENTLIGHTTYPE_STACKLIGHTMODE)),
            UmatiServerLib::attribute::PlaceholderOptional())
 REFL_END

@@ -14,12 +14,9 @@ struct BaseTool_t
 } // namespace machineTool
 
 REFL_TYPE(machineTool::BaseTool_t,
-          UmatiServerLib::attribute::UaObjectType{
-              .NodeId = UmatiServerLib::constexp::NodeId(constants::NsMachineToolUri, UA_MACHINETOOLID_BASETOOLTYPE)})
-REFL_FIELD(Identifier, UmatiServerLib::attribute::MemberInTypeNodeId{
-               .NodeId = UmatiServerLib::constexp::NodeId(constants::NsMachineToolUri, UA_MACHINETOOLID_BASETOOLTYPE_IDENTIFIER)},
+          UmatiServerLib::attribute::UaObjectType(UmatiServerLib::constexp::NodeId(constants::NsMachineToolUri, UA_MACHINETOOLID_BASETOOLTYPE)))
+REFL_FIELD(Identifier, UmatiServerLib::attribute::MemberInTypeNodeId(UmatiServerLib::constexp::NodeId(constants::NsMachineToolUri, UA_MACHINETOOLID_BASETOOLTYPE_IDENTIFIER)),
            UmatiServerLib::attribute::PlaceholderOptional())
-REFL_FIELD(Name, UmatiServerLib::attribute::MemberInTypeNodeId{
-               .NodeId = UmatiServerLib::constexp::NodeId(constants::NsMachineToolUri, UA_MACHINETOOLID_BASETOOLTYPE_NAME)},
+REFL_FIELD(Name, UmatiServerLib::attribute::MemberInTypeNodeId(UmatiServerLib::constexp::NodeId(constants::NsMachineToolUri, UA_MACHINETOOLID_BASETOOLTYPE_NAME)),
            UmatiServerLib::attribute::PlaceholderOptional())
 REFL_END

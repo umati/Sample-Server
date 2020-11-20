@@ -11,7 +11,6 @@ struct ElementMonitoring_t
 } // namespace machineTool
 
 REFL_TYPE(machineTool::ElementMonitoring_t,
-          UmatiServerLib::attribute::UaObjectType{
-              .NodeId = UmatiServerLib::constexp::NodeId(constants::NsMachineToolUri, UA_MACHINETOOLID_ELEMENTMONITORINGTYPE)})
+          UmatiServerLib::attribute::UaObjectType(UmatiServerLib::constexp::NodeId(constants::NsMachineToolUri, UA_MACHINETOOLID_ELEMENTMONITORINGTYPE)))
 REFL_FIELD(Name)
 REFL_END

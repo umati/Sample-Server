@@ -16,8 +16,7 @@ struct MotionDevice_t : public di::Component_t
 
 REFL_TYPE(robotics::MotionDevice_t,
           Bases<di::Component_t>(),
-          UmatiServerLib::attribute::UaObjectType{
-              .NodeId = UmatiServerLib::constexp::NodeId(constants::NsRoboticsUri, UA_ROBOTICSID_MOTIONDEVICETYPE)})
+          UmatiServerLib::attribute::UaObjectType(UmatiServerLib::constexp::NodeId(constants::NsRoboticsUri, UA_ROBOTICSID_MOTIONDEVICETYPE)))
 REFL_FIELD(Manufacturer)
 REFL_FIELD(Model)
 REFL_FIELD(MotionDeviceCategory)

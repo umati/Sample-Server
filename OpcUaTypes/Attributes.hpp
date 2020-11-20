@@ -20,12 +20,14 @@ namespace UmatiServerLib::attribute
   struct UaVariableType : refl::attr::usage::type
   {
     UaVariableType() = default;
+    constexpr UaVariableType(UmatiServerLib::constexp::NodeId nodeId) : NodeId(nodeId) {}
     UmatiServerLib::constexp::NodeId NodeId;
   };
 
   struct UaObjectType : refl::attr::usage::type
   {
     UaObjectType() = default;
+    constexpr UaObjectType(UmatiServerLib::constexp::NodeId nodeId) : NodeId(nodeId) {}
     UmatiServerLib::constexp::NodeId NodeId;
   };
 
@@ -44,6 +46,7 @@ namespace UmatiServerLib::attribute
   struct MemberInTypeNodeId : refl::attr::usage::field
   {
     MemberInTypeNodeId() = default;
+    constexpr MemberInTypeNodeId(UmatiServerLib::constexp::NodeId nodeId) : NodeId(nodeId) {}
     UmatiServerLib::constexp::NodeId NodeId;
   };
 

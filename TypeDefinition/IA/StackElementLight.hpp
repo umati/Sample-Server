@@ -10,7 +10,7 @@ namespace ia
 
   struct StackElementLight_t : public StackElement_t
   {
-    BindableMemberValue<ns0::AnalogItem_t<float>> Intensity;
+    BindableMember<ns0::AnalogItem_t<float>> Intensity;
     BindableMemberValue<UA_SignalColor> SignalColor;
     BindableMemberValue<UA_SignalModeLight> StacklightMode;
   };

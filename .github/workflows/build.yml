@@ -36,7 +36,7 @@ jobs:
   #     uses: actions/checkout@v2
   #     with:
   #       path: Open62541Cpp
-  #       repository: ccvca/open62541Cpp
+  #       repository: umati/open62541Cpp
   #       ref: '2a44e15d41d302ce1214b2985a33d3c8971f5eb4'
   #   - name: Checkout refl-cpp
   #     uses: actions/checkout@v2
@@ -85,7 +85,7 @@ jobs:
       uses: actions/checkout@v2
       with:
         path: Open62541Cpp
-        repository: ccvca/open62541Cpp
+        repository: umati/open62541Cpp
         ref: '2a44e15d41d302ce1214b2985a33d3c8971f5eb4'
     - name: Checkout refl-cpp
       uses: actions/checkout@v2
@@ -172,7 +172,7 @@ jobs:
       uses: actions/checkout@v2
       with:
         path: Open62541Cpp
-        repository: ccvca/open62541Cpp
+        repository: umati/open62541Cpp
         ref: '2a44e15d41d302ce1214b2985a33d3c8971f5eb4'
     - name: Checkout refl-cpp
       uses: actions/checkout@v2

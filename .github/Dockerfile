@@ -17,18 +17,18 @@ RUN mkdir /install
 
 ARG BUILD_TYPE=Debug
 
-COPY googletest /src/googletest
+COPY Sample-Server /src/Sample-Server
+
 RUN mkdir -p /build/googletest && \
     cd /build/googletest && \
-    cmake /src/googletest \
+    cmake /src/Sample-Server/deps/googletest \
       -DCMAKE_BUILD_TYPE=${BUILD_TYPE} \
       -DCMAKE_INSTALL_PREFIX:PATH=/install &&\
     cmake --build . --target install
 
-COPY mbedTLS /src/mbedTLS
-RUN mkdir -p /build/mbedTLS && \
-    cd /build/mbedTLS && \
-    cmake /src/mbedTLS \
+RUN mkdir -p /build/mbedtls && \
+    cd /build/mbedtls && \
+    cmake /src/Sample-Server/deps/mbedtls \
       -DCMAKE_BUILD_TYPE=${BUILD_TYPE} \
       -DCMAKE_INSTALL_PREFIX:PATH=/install \
       -DENABLE_PROGRAMS:BOOL=0 \
@@ -36,10 +36,9 @@ RUN mkdir -p /build/mbedTLS && \
 		&&\
     cmake --build . --target install
 
-COPY open62541 /src/open62541
 RUN mkdir -p /build/open62541 && \
     cd /build/open62541 && \
-    cmake /src/open62541 \
+    cmake /src/Sample-Server/deps/open62541 \
       -DCMAKE_BUILD_TYPE=${BUILD_TYPE} \
       -DUA_LOGLEVEL=400 \
       -DUA_ENABLE_SUBSCRIPTIONS_ALARMS_CONDITIONS:BOOL=ON \
@@ -50,17 +49,13 @@ RUN mkdir -p /build/open62541 && \
         -DCMAKE_INSTALL_PREFIX:PATH=/install && \
     cmake --build . --target install
 
-
-COPY Open62541Cpp /src/Open62541Cpp
-RUN mkdir -p /build/Open62541Cpp && \
-    cd /build/Open62541Cpp && \
-    cmake /src/Open62541Cpp \
+RUN mkdir -p /build/open62541Cpp && \
+    cd /build/open62541Cpp && \
+    cmake /src/Sample-Server/deps/open62541Cpp \
       -DCMAKE_BUILD_TYPE=${BUILD_TYPE} \
       -DCMAKE_INSTALL_PREFIX:PATH=/install && \
     cmake --build . --target install
 
-COPY Sample-Server /src/Sample-Server
-COPY refl-cpp /src/refl-cpp
 RUN mkdir -p /build/Sample-Server && \
     cd /build/Sample-Server && \
     cmake /src/Sample-Server \

@@ -45,8 +45,6 @@ void simulate(
       mt->Simulate();
     }
 
-    //std::cout << i << std::endl;
-    //running = i < 10;
     ++i;
     ul.unlock();
     std::this_thread::yield();

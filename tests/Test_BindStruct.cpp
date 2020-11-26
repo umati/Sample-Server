@@ -16,7 +16,7 @@ class Test_Exposure : public UmatiServerLib::ConvertStructValue
   using ConvertStructValue::convertToVariantRefl;
 };
 
-TEST(ExampleServerLib, BindStructure_Basic)
+TEST(SampleServerLib, BindStructure_Basic)
 {
 
   UmatiServerLib::LocalizedText_t oriLocalText {
@@ -40,7 +40,7 @@ TEST(ExampleServerLib, BindStructure_Basic)
   UA_Variant_clear(&variant);
 }
 
-TEST(ExampleServerLib, BindStructure_Recursive)
+TEST(SampleServerLib, BindStructure_Recursive)
 {
   UmatiServerLib::EUInformation_t oriEuInformation {
     .NamespaceUri ="eu://meter",

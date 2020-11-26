@@ -74,4 +74,4 @@ COPY --from=build-env /install/bin /app
 
 EXPOSE 4840
 
-ENTRYPOINT ["/app/ExampleMachinetoolServer"]
+ENTRYPOINT ["/app/SampleServer"]

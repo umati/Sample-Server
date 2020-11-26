@@ -73,7 +73,7 @@ int main(int argc, char *argv[])
   signal(SIGABRT, sigHandler);
   signal(SIGTERM, sigHandler);
 
-  std::cout << "ExampleMTServer, exit with Ctrl+C" << std::endl;
+  std::cout << "SampleServer, exit with Ctrl+C" << std::endl;
   OpcUaKeys keys("server_key.der", "server_cert.der");
   UA_Server *pServer = UA_Server_new();
   auto pConfig = UA_Server_getConfig(pServer);

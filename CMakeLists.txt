@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.15)
-project(ExampleMachinetoolServer VERSION 0.1)
+project(SampleServer VERSION 0.1)
 
 set(CMAKE_CXX_STANDARD 20)
 
@@ -108,7 +108,7 @@ add_library(ua_gen_robotic
 )
 target_link_libraries(ua_gen_robotic PUBLIC ua_gen_di)
 
-add_library(ExampleServerLib
+add_library(SampleServerLib
     UmatiServerLib/ConvertSimpleValue.cpp
     UmatiServerLib/ConvertStructValue.cpp
     UmatiServerLib/BindHelper.cpp
@@ -123,14 +123,14 @@ add_library(ExampleServerLib
     OpcUaTypes/EUInformation.cpp
     OpcUaTypes/ConstNodeId.cpp
 )
-set_target_properties(ExampleServerLib PROPERTIES LINKER_LANGUAGE CXX)
-target_link_libraries(ExampleServerLib PUBLIC open62541::open62541)
-target_link_libraries(ExampleServerLib PUBLIC Open62541Cpp::Open62541Cpp)
-target_link_libraries(ExampleServerLib PUBLIC reflCpp::reflCpp)
+set_target_properties(SampleServerLib PROPERTIES LINKER_LANGUAGE CXX)
+target_link_libraries(SampleServerLib PUBLIC open62541::open62541)
+target_link_libraries(SampleServerLib PUBLIC Open62541Cpp::Open62541Cpp)
+target_link_libraries(SampleServerLib PUBLIC reflCpp::reflCpp)
 
 add_executable(
     ${PROJECT_NAME}
-    ExampleMachinetoolServer.cpp
+    SampleServer.cpp
     MachineTools/SimulatedInstance.cpp
     MachineTools/InstantiatedMachineTool.cpp
     MachineTools/FullMachineTool.cpp
@@ -143,7 +143,7 @@ add_executable(
 )
 
 set_target_properties(${PROJECT_NAME} PROPERTIES LINKER_LANGUAGE CXX)
-target_link_libraries(${PROJECT_NAME} PUBLIC ExampleServerLib)
+target_link_libraries(${PROJECT_NAME} PUBLIC SampleServerLib)
 target_link_libraries(${PROJECT_NAME} PUBLIC ua_gen_mt)
 target_link_libraries(${PROJECT_NAME} PUBLIC ua_gen_robotic)
 

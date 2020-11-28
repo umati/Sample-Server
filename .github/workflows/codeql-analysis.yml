@@ -24,6 +24,8 @@ jobs:
   analyze:
     name: Analyze
     runs-on: ubuntu-latest
+    env:
+      CMAKE_INSTALL_PREFIX: ${{ github.workspace }}/install
 
     strategy:
       fail-fast: false
@@ -34,8 +36,11 @@ jobs:
         # https://docs.github.com/en/free-pro-team@latest/github/finding-security-vulnerabilities-and-errors-in-your-code/configuring-code-scanning#changing-the-languages-that-are-analyzed
 
     steps:
-    - name: Checkout repository
+    - name: Checkout Sample-Server
       uses: actions/checkout@v2
+      with:
+        path: Sample-Server
+        submodules: recursive
 
     # Initializes the CodeQL tools for scanning.
     - name: Initialize CodeQL
@@ -46,22 +51,35 @@ jobs:
         # By default, queries listed here will override any specified in a config file.
         # Prefix the list here with "+" to use these queries and those in the config file.
         # queries: ./path/to/local/query, your-org/your-repo/queries@main
-
-    # Autobuild attempts to build any compiled languages  (C/C++, C#, or Java).
-    # If this step fails, then you should remove it and run the build manually (see below)
-    - name: Autobuild
-      uses: github/codeql-action/autobuild@v1
-
-    # ℹ️ Command-line programs to run using the OS shell.
-    # 📚 https://git.io/JvXDl
-
-    # ✏️ If the Autobuild fails above, remove it and uncomment the following three lines
-    #    and modify them (or add more) to build your code if your project
-    #    uses a compiled language
-
-    #- run: |
-    #   make bootstrap
-    #   make release
-
+    - name: Build mbedTLS
+      run: |
+        mkdir -p build/mbedtls
+        cd build/mbedtls
+        cmake ../../Sample-Server/deps/mbedtls -DENABLE_PROGRAMS:BOOL=0 -DENABLE_TESTING:BOOL=0 -DCMAKE_INSTALL_PREFIX:PATH=${{ env.CMAKE_INSTALL_PREFIX }}
+        cmake --build . --target install
+    - name: Build open62541
+      run: |
+        mkdir -p build/open62541
+        cd build/open62541
+        cmake ../../Sample-Server/deps/open62541 -DUA_ENABLE_SUBSCRIPTIONS_ALARMS_CONDITIONS:BOOL=ON -DUA_ENABLE_SUBSCRIPTIONS_EVENTS:BOOL=ON -DUA_NAMESPACE_ZERO:STRING=FULL -DUA_ENABLE_ENCRYPTION:BOOL=1 -DUA_ENABLE_ENCRYPTION_MBEDTLS:BOOL=1 -DCMAKE_INSTALL_PREFIX:PATH=${{ env.CMAKE_INSTALL_PREFIX }}
+        cmake --build . --target install
+    - name: Build googletest
+      run: |
+        mkdir -p build/googletest
+        cd build/googletest
+        cmake ../../Sample-Server/deps/googletest -DCMAKE_INSTALL_PREFIX:PATH=${{ env.CMAKE_INSTALL_PREFIX }} -Dgtest_force_shared_crt:BOOL=ON
+        cmake --build . --target install
+    - name: Build Open62541Cpp
+      run: |
+        mkdir -p build/Open62541Cpp
+        cd build/Open62541Cpp
+        cmake ../../Sample-Server/deps/open62541Cpp -DCMAKE_INSTALL_PREFIX:PATH=${{ env.CMAKE_INSTALL_PREFIX }}
+        cmake --build . --target install
+    - name: Build Sample-Server
+      run: |
+        mkdir -p build/Sample-Server
+        cd build/Sample-Server
+        cmake ../../Sample-Server -DCMAKE_INSTALL_PREFIX:PATH=${{ env.CMAKE_INSTALL_PREFIX }}
+        cmake --build . --target install
     - name: Perform CodeQL Analysis
       uses: github/codeql-action/analyze@v1

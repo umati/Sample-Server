@@ -1,0 +1,85 @@
+# For most projects, this workflow file will not need changing; you simply need
+# to commit it to your repository.
+#
+# You may wish to alter this file to override the set of languages analyzed,
+# or to provide custom queries or build logic.
+#
+# ******** NOTE ********
+# We have attempted to detect the languages in your repository. Please check
+# the `language` matrix defined below to confirm you have the correct set of
+# supported CodeQL languages.
+#
+name: "CodeQL"
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    # The branches below must be a subset of the branches above
+    branches: [ develop ]
+  schedule:
+    - cron: '0 3 * * 1'
+
+jobs:
+  analyze:
+    name: Analyze
+    runs-on: ubuntu-20.04
+    env:
+      CMAKE_INSTALL_PREFIX: ${{ github.workspace }}/install
+
+    strategy:
+      fail-fast: false
+      matrix:
+        language: [ 'cpp' ]
+        # CodeQL supports [ 'cpp', 'csharp', 'go', 'java', 'javascript', 'python' ]
+        # Learn more:
+        # https://docs.github.com/en/free-pro-team@latest/github/finding-security-vulnerabilities-and-errors-in-your-code/configuring-code-scanning#changing-the-languages-that-are-analyzed
+
+    steps:
+    - name: Checkout Sample-Server
+      uses: actions/checkout@v2
+      with:
+        path: Sample-Server
+        submodules: recursive
+
+    # Initializes the CodeQL tools for scanning.
+    - name: Initialize CodeQL
+      uses: github/codeql-action/init@v1
+      with:
+        languages: ${{ matrix.language }}
+        # If you wish to specify custom queries, you can do so here or in a config file.
+        # By default, queries listed here will override any specified in a config file.
+        # Prefix the list here with "+" to use these queries and those in the config file.
+        # queries: ./path/to/local/query, your-org/your-repo/queries@main
+    - name: Build mbedTLS
+      run: |
+        mkdir -p build/mbedtls
+        cd build/mbedtls
+        cmake ../../Sample-Server/deps/mbedtls -DENABLE_PROGRAMS:BOOL=0 -DENABLE_TESTING:BOOL=0 -DCMAKE_INSTALL_PREFIX:PATH=${{ env.CMAKE_INSTALL_PREFIX }}
+        cmake --build . --target install
+    - name: Build open62541
+      run: |
+        mkdir -p build/open62541
+        cd build/open62541
+        cmake ../../Sample-Server/deps/open62541 -DUA_ENABLE_SUBSCRIPTIONS_ALARMS_CONDITIONS:BOOL=ON -DUA_ENABLE_SUBSCRIPTIONS_EVENTS:BOOL=ON -DUA_NAMESPACE_ZERO:STRING=FULL -DUA_ENABLE_ENCRYPTION:BOOL=1 -DUA_ENABLE_ENCRYPTION_MBEDTLS:BOOL=1 -DCMAKE_INSTALL_PREFIX:PATH=${{ env.CMAKE_INSTALL_PREFIX }}
+        cmake --build . --target install
+    - name: Build googletest
+      run: |
+        mkdir -p build/googletest
+        cd build/googletest
+        cmake ../../Sample-Server/deps/googletest -DCMAKE_INSTALL_PREFIX:PATH=${{ env.CMAKE_INSTALL_PREFIX }} -Dgtest_force_shared_crt:BOOL=ON
+        cmake --build . --target install
+    - name: Build Open62541Cpp
+      run: |
+        mkdir -p build/Open62541Cpp
+        cd build/Open62541Cpp
+        cmake ../../Sample-Server/deps/open62541Cpp -DCMAKE_INSTALL_PREFIX:PATH=${{ env.CMAKE_INSTALL_PREFIX }}
+        cmake --build . --target install
+    - name: Build Sample-Server
+      run: |
+        mkdir -p build/Sample-Server
+        cd build/Sample-Server
+        cmake ../../Sample-Server -DCMAKE_INSTALL_PREFIX:PATH=${{ env.CMAKE_INSTALL_PREFIX }}
+        cmake --build . --target install
+    - name: Perform CodeQL Analysis
+      uses: github/codeql-action/analyze@v1

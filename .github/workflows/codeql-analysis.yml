@@ -51,35 +51,11 @@ jobs:
         # By default, queries listed here will override any specified in a config file.
         # Prefix the list here with "+" to use these queries and those in the config file.
         # queries: ./path/to/local/query, your-org/your-repo/queries@main
-    - name: Build mbedTLS
+    - name: Build server with dependencies
       run: |
-        mkdir -p build/mbedtls
-        cd build/mbedtls
-        cmake ../../Sample-Server/deps/mbedtls -DENABLE_PROGRAMS:BOOL=0 -DENABLE_TESTING:BOOL=0 -DCMAKE_INSTALL_PREFIX:PATH=${{ env.CMAKE_INSTALL_PREFIX }}
-        cmake --build . --target install
-    - name: Build open62541
-      run: |
-        mkdir -p build/open62541
-        cd build/open62541
-        cmake ../../Sample-Server/deps/open62541 -DUA_ENABLE_SUBSCRIPTIONS_ALARMS_CONDITIONS:BOOL=ON -DUA_ENABLE_SUBSCRIPTIONS_EVENTS:BOOL=ON -DUA_NAMESPACE_ZERO:STRING=FULL -DUA_ENABLE_ENCRYPTION:BOOL=1 -DUA_ENABLE_ENCRYPTION_MBEDTLS:BOOL=1 -DCMAKE_INSTALL_PREFIX:PATH=${{ env.CMAKE_INSTALL_PREFIX }}
-        cmake --build . --target install
-    - name: Build googletest
-      run: |
-        mkdir -p build/googletest
-        cd build/googletest
-        cmake ../../Sample-Server/deps/googletest -DCMAKE_INSTALL_PREFIX:PATH=${{ env.CMAKE_INSTALL_PREFIX }} -Dgtest_force_shared_crt:BOOL=ON
-        cmake --build . --target install
-    - name: Build Open62541Cpp
-      run: |
-        mkdir -p build/Open62541Cpp
-        cd build/Open62541Cpp
-        cmake ../../Sample-Server/deps/open62541Cpp -DCMAKE_INSTALL_PREFIX:PATH=${{ env.CMAKE_INSTALL_PREFIX }}
-        cmake --build . --target install
-    - name: Build Sample-Server
-      run: |
-        mkdir -p build/Sample-Server
-        cd build/Sample-Server
-        cmake ../../Sample-Server -DCMAKE_INSTALL_PREFIX:PATH=${{ env.CMAKE_INSTALL_PREFIX }}
-        cmake --build . --target install
+        mkdir -p build
+        cd build
+        cmake ../Sample-Server/.github/ -DCMAKE_INSTALL_PREFIX:PATH=${{ env.CMAKE_INSTALL_PREFIX }}
+        cmake --build .
     - name: Perform CodeQL Analysis
       uses: github/codeql-action/analyze@v1

@@ -39,7 +39,6 @@ jobs:
     - name: Checkout Sample-Server
       uses: actions/checkout@v2
       with:
-        path: Sample-Server
         submodules: recursive
 
     # Initializes the CodeQL tools for scanning.
@@ -51,12 +50,12 @@ jobs:
         # By default, queries listed here will override any specified in a config file.
         # Prefix the list here with "+" to use these queries and those in the config file.
         # queries: ./path/to/local/query, your-org/your-repo/queries@main
-        path: Sample-Server
+
     - name: Build server with dependencies
       run: |
         mkdir -p build
         cd build
-        cmake ../Sample-Server/.github/ -DCMAKE_INSTALL_PREFIX:PATH=${{ env.CMAKE_INSTALL_PREFIX }}
+        cmake ../.github/ -DCMAKE_INSTALL_PREFIX:PATH=${{ env.CMAKE_INSTALL_PREFIX }}
         cmake --build .
     - name: Perform CodeQL Analysis
       uses: github/codeql-action/analyze@v1

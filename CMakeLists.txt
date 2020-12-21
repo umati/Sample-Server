@@ -30,6 +30,7 @@ ua_generate_nodeset_and_datatypes(
 # Add also heder files to trigger the generation!
 add_library(ua_gen_di
   src_generated/namespace_di_generated.c
+  src_generated/types_di_generated.c
   src_generated/types_di_generated.h
   src_generated/di_nodeids.h
 )
@@ -51,6 +52,7 @@ ua_generate_nodeset_and_datatypes(
 
 add_library(ua_gen_machinery
   src_generated/namespace_machinery_generated.c
+  src_generated/types_machinery_generated.c
   src_generated/types_machinery_generated.h
   src_generated/machinery_nodeids.h
 )
@@ -68,6 +70,7 @@ ua_generate_nodeset_and_datatypes(
 
 add_library(ua_gen_ia
   src_generated/ia_nodeids.h
+  src_generated/types_ia_generated.c
   src_generated/types_ia_generated.h
   src_generated/namespace_ia_generated.c
 )
@@ -85,6 +88,7 @@ ua_generate_nodeset_and_datatypes(
 
 add_library(ua_gen_mt
   src_generated/namespace_machinetool_generated.c
+  src_generated/types_machinetool_generated.c
   src_generated/types_machinetool_generated.h
   src_generated/machinetool_nodeids.h
 )
@@ -103,6 +107,7 @@ ua_generate_nodeset_and_datatypes(
 
 add_library(ua_gen_robotic
   src_generated/namespace_robotics_generated.c
+  src_generated/types_robotics_generated.c
   src_generated/types_robotics_generated.h
   src_generated/robotics_nodeids.h
 )

@@ -37,13 +37,26 @@ TEST_F(MTEvent, ProductionJobTransitionEvent)
 
 {
   open62541Cpp::UA_QualifiedName qnFromState(nsFromUri(pServer, constants::Ns0Uri), "FromState");
+  UA_BrowsePath p;
+  UA_RelativePathElement el;
+  p.startingNode = *ev.EventNodeId.NodeId;
+  p.relativePath.elementsSize = 1;
+  p.relativePath.elements = &el;
+  el.isInverse = UA_FALSE;
+  el.referenceTypeId = UA_NODEID_NUMERIC(0, UA_NS0ID_HASCOMPONENT);
+  el.includeSubtypes = UA_FALSE;
+  el.targetName = *qnFromState.QualifiedName;
+  UA_BrowsePathResult ret = UA_Server_translateBrowsePathToNodeIds(pServer, &p);
+  ASSERT_EQ(ret.statusCode, UA_STATUSCODE_GOOD);
+  ASSERT_EQ(ret.targetsSize, 1);
   UA_Variant fromState;
   UA_Variant_init(&fromState);
-  ASSERT_EQ(UA_Server_readObjectProperty(pServer, *ev.EventNodeId.NodeId, *qnFromState.QualifiedName, &fromState), UA_STATUSCODE_GOOD);
+  ASSERT_EQ(UA_Server_readValue(pServer, ret.targets->targetId.nodeId, &fromState), UA_STATUSCODE_GOOD);
   ASSERT_FALSE(UA_Variant_isEmpty(&fromState));
   ASSERT_TRUE(UA_Variant_isScalar(&fromState));
   ASSERT_TRUE(UA_NodeId_equal(&fromState.type->typeId, &UA_TYPES[UA_TYPES_LOCALIZEDTEXT].typeId));
   UA_Variant_clear(&fromState);
+  UA_BrowsePathResult_clear(&ret);
 }
 
 {

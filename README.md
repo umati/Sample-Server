@@ -4,6 +4,8 @@ Sample-Server implementation of various umati endorsed OPC UA companion specific
 
 ## Current Implementation
 
+[![Gitpod ready-to-code](https://img.shields.io/badge/Gitpod-ready--to--code-blue?logo=gitpod)](https://gitpod.io/#https://github.com/umati/Sample-Server)
+
 ### Machine Tool Example
 
 This is an example implementation of the OPC UA Machine Tool Companion Specification based on open62541. The server provides several simulated machine tool, which show different extension stages of the specification.

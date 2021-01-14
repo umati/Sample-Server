@@ -1,4 +1,4 @@
- FROM gitpod/workspace-full
+ FROM gitpod/workspace-full:build-branch-master
 
 # Install custom tools, runtimes, etc.
 # For example "bastet", a command-line tetris clone:

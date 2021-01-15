@@ -1,13 +1,13 @@
 FROM alpine:3 as build-env
 
 RUN apk --no-cache add \
-      bash=~5.0.17 \
-      cmake=~3.17.2 \
-      gcc=~9.3.0 \
-      g++=~9.3.0 \
-      git=~2.26.2 \
+      bash=~5.1.0 \
+      cmake=~3.18.4 \
+      gcc=~10.2.1 \
+      g++=~10.2.1 \
+      git=~2.30.0\
       make=~4.3 \
-      python3=~3.8.5
+      python3=~3.8.7
 
 RUN mkdir /install
 
@@ -23,7 +23,7 @@ RUN cmake /src/Sample-Server/.github/ \
 
 FROM alpine:3 as runtime
 RUN apk --no-cache add \
-      libstdc++=~9.3.0
+      libstdc++=~10.2.1
 COPY --from=build-env /install/bin /app
 
 EXPOSE 4840

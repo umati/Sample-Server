@@ -97,8 +97,8 @@ target_link_libraries(ua_gen_mt PUBLIC ua_gen_machinery)
 
 ua_generate_nodeset_and_datatypes(
   NAME "robotics"
-  FILE_NS "${PROJECT_SOURCE_DIR}/model/Opc.Ua.Robotics.NodeSet2.xml"
-  FILE_CSV "${PROJECT_SOURCE_DIR}/model/Opc.Ua.Robotics.NodeSet2.csv"
+  FILE_NS "${open62541_NODESET_DIR}/Robotics/Opc.Ua.Robotics.NodeSet2.xml"
+  FILE_CSV "${open62541_NODESET_DIR}/Robotics/NodeIds.csv"
   FILE_BSD "${PROJECT_SOURCE_DIR}/model/Opc.Ua.Robotics.NodeSet2.bsd"
   OUTPUT_DIR "${PROJECT_SOURCE_DIR}/src_generated"
   NAMESPACE_MAP "6:http://opcfoundation.org/UA/Robotics/"

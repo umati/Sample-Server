@@ -10,7 +10,7 @@ find_package(Open62541Cpp REQUIRED)
 find_package(GTest REQUIRED NO_CMAKE_SYSTEM_PACKAGE_REGISTRY)
 
 find_package(ReflCpp REQUIRED)
-
+find_package(Threads REQUIRED)
 
 if (NOT CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
   # needed or cmake doesn't recognize dependencies of generated files
@@ -132,6 +132,7 @@ set_target_properties(SampleServerLib PROPERTIES LINKER_LANGUAGE CXX)
 target_link_libraries(SampleServerLib PUBLIC open62541::open62541)
 target_link_libraries(SampleServerLib PUBLIC Open62541Cpp::Open62541Cpp)
 target_link_libraries(SampleServerLib PUBLIC reflCpp::reflCpp)
+target_link_libraries(SampleServerLib PUBLIC Threads::Threads)
 
 add_executable(
     ${PROJECT_NAME}

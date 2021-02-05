@@ -10,7 +10,7 @@ find_package(Open62541Cpp REQUIRED)
 find_package(GTest REQUIRED NO_CMAKE_SYSTEM_PACKAGE_REGISTRY)
 
 find_package(ReflCpp REQUIRED)
-
+find_package(Threads REQUIRED)
 
 if (NOT CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
   # needed or cmake doesn't recognize dependencies of generated files
@@ -97,9 +97,9 @@ target_link_libraries(ua_gen_mt PUBLIC ua_gen_machinery)
 
 ua_generate_nodeset_and_datatypes(
   NAME "robotics"
-  FILE_NS "${PROJECT_SOURCE_DIR}/model/Opc.Ua.Robotics.NodeSet2.xml"
-  FILE_CSV "${PROJECT_SOURCE_DIR}/model/Opc.Ua.Robotics.NodeSet2.csv"
-  FILE_BSD "${PROJECT_SOURCE_DIR}/model/Opc.Ua.Robotics.NodeSet2.bsd"
+  FILE_NS "${open62541_NODESET_DIR}/Robotics/Opc.Ua.Robotics.NodeSet2.xml"
+  FILE_CSV "${open62541_NODESET_DIR}/Robotics/NodeIds.csv"
+  FILE_BSD "${open62541_NODESET_DIR}/Robotics/Opc.Ua.Robotics.NodeSet2.bsd"
   OUTPUT_DIR "${PROJECT_SOURCE_DIR}/src_generated"
   NAMESPACE_MAP "6:http://opcfoundation.org/UA/Robotics/"
   DEPENDS di
@@ -132,6 +132,7 @@ set_target_properties(SampleServerLib PROPERTIES LINKER_LANGUAGE CXX)
 target_link_libraries(SampleServerLib PUBLIC open62541::open62541)
 target_link_libraries(SampleServerLib PUBLIC Open62541Cpp::Open62541Cpp)
 target_link_libraries(SampleServerLib PUBLIC reflCpp::reflCpp)
+target_link_libraries(SampleServerLib PUBLIC Threads::Threads)
 
 add_executable(
     ${PROJECT_NAME}

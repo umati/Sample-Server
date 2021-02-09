@@ -5,7 +5,7 @@ RUN apk --no-cache add \
       cmake=~3.18.4 \
       gcc=~10.2.1 \
       g++=~10.2.1 \
-      git=~2.30.0\
+      git=~2.30.1\
       make=~4.3 \
       python3=~3.8.7
 

@@ -12,7 +12,7 @@
 #include <cstring> // memset
 #include <stdexcept>
 #include <iomanip>
-#include <ctime>
+#include "../arch/gmtime.hpp"
 #include <sstream>
 #include <open62541/types_generated_handling.h>
 
@@ -123,7 +123,9 @@ void OpcUaKeys::generateCertificate()
 
   {
     std::time_t t = std::time(nullptr);
-    std::tm tm = *std::localtime(&t);
+    std::tm tm;
+    std::memset(&tm, 0, sizeof(tm));
+    UMATI_GMTIME(&t, &tm);
     std::stringstream ss;
     ss << std::put_time(&tm, "%Y%m%d%H%M%S");
     not_before = ss.str();
@@ -132,7 +134,9 @@ void OpcUaKeys::generateCertificate()
   {
     std::time_t t = std::time(nullptr);
     t += 5l * 365l * 24l * 60l * 60l; // Add 5 years
-    std::tm tm = *std::localtime(&t);
+    std::tm tm;
+    std::memset(&tm, 0, sizeof(tm));
+    UMATI_GMTIME(&t, &tm);
     std::stringstream ss;
     ss << std::put_time(&tm, "%Y%m%d%H%M%S");
     not_after = ss.str();

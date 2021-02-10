@@ -5,7 +5,7 @@
 #include "../TypeDefinition/MachineTool/Alert.hpp"
 #include "../TypeDefinition/MachineTool/NotificationEvent.hpp"
 #include <open62541/types_generated.h>
-#include <ctime>
+#include "../../arch/gmtime.hpp"
 #include <sstream>
 
 FullMachineTool::FullMachineTool(UA_Server *pServer)
@@ -59,7 +59,10 @@ void FullMachineTool::InstantiateProduction()
   job.RunsPlanned->IsValid = true;
 
   auto t = std::time(nullptr);
-  auto tm = *std::gmtime(&t);
+  std::tm tm;
+  std::memset(&tm, 0, sizeof(tm));
+  UMATI_GMTIME(&t, &tm);
+  
 
   std::ostringstream oss;
   oss << std::put_time(&tm, "%Y-%m-%dT%H:%M:%SZ");

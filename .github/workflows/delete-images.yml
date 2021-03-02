@@ -9,20 +9,30 @@ jobs:
 
     steps:
       - uses: actions/github-script@v3
+        env:
+          PACKAGE_NAME: sample-server
+          PER_PAGE: 100
+
         with:
           github-token: ${{ secrets.DELETE_PACKAGES_TOKEN }}
           script: |
-            const response = await github.request("GET /${{ env.OWNER }}/packages/container/${{ env.PACKAGE_NAME }}/versions",
+            const response = await github.request("GET /repos/${{ github.repository_owner }}/${{ env.PACKAGE_NAME }}/branches",
+            let branches = {latest:true};
+            for (branch of response.data) {
+              let branchName = (branch.name);
+              branchName = branchName.to.LowerCase ();
+              branchName = branchName.replace (/\/|_/g, "-");
+              console.log(branchName);
+              branches[branchName] = true;         
+            }
+            
+            const response = await github.request("GET /${{ github.repository_owner }}/packages/container/${{ env.PACKAGE_NAME }}/versions",
               { per_page: ${{ env.PER_PAGE }}
             });
             for(version of response.data) {
-                if (version.metadata.container.tags.length == 0) {
+                if (version.metadata.container.tags.length == 0 || !branches[version.metadata.container.tags]) {
                     console.log("delete " + version.id)
-                    const deleteResponse = await github.request("DELETE /${{ env.OWNER }}/packages/container/${{ env.PACKAGE_NAME }}/versions/" + version.id, { });
+                    const deleteResponse = await github.request("DELETE /orgs/${{ github.repository_owner }}/packages/container/${{ env.PACKAGE_NAME }}/versions/" + version.id, { });
                     console.log("status " + deleteResponse.status)
                 }
             }
-        env:
-          OWNER: orgs/umati
-          PACKAGE_NAME: sample-server
-          PER_PAGE: 100

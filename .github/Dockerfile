@@ -7,7 +7,7 @@ RUN apk --no-cache add \
       g++=~10.2.1 \
       git=~2.30.2\
       make=~4.3 \
-      python3=~3.8.7
+      python3=~3.8.8-r0
 
 RUN mkdir /install
 

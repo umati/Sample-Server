@@ -36,7 +36,7 @@ void InstantiatedMachineTool::InstantiateIdentification()
 {
   {
     std::stringstream ss;
-    ss << "http://isw.uni-stuttgart.de/#" << MachineName;
+    ss << "http://www.isw.uni-stuttgart.de/#" << MachineName;
     mt.Identification->ProductInstanceUri = ss.str();
   }
 
@@ -45,7 +45,7 @@ void InstantiatedMachineTool::InstantiateIdentification()
   {
     std::hash<std::string> hasher;
     std::stringstream ss;
-    ss << "2020-" << hasher(MachineName);
+    ss << "2021-" << hasher(MachineName);
     mt.Identification->SerialNumber = ss.str();
   }
 }

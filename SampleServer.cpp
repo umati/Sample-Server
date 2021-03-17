@@ -109,6 +109,9 @@ int main(int argc, char *argv[])
     pConfig->customHostname = UA_STRING_ALLOC(argv[1]);
   }
   pConfig->nodeLifecycle.generateChildNodeId = generateChildNodeIdInParentNs;
+  // Companion Specificaitons will trigger many warnings, and values in instances are set later
+  pConfig->allowEmptyVariables = UA_RuleHandling::UA_RULEHANDLING_ACCEPT;
+  pConfig->modellingRulesOnInstances = UA_FALSE;
 
   // Create namespaces
   namespace_di_generated(pServer);

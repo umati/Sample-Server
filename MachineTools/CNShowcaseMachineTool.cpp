@@ -1,13 +1,13 @@
-#include "ShowcaseMachineTool.hpp"
+#include "CNShowcaseMachineTool.hpp"
 
-ShowcaseMachineTool::ShowcaseMachineTool(UA_Server *pServer)
+CNShowcaseMachineTool::CNShowcaseMachineTool(UA_Server *pServer)
     : InstantiatedMachineTool(pServer)
 {
-  MachineName = "ShowcaseMachineTool";
+  MachineName = "CNShowcaseMachineTool";
   CreateObject();
 }
 
-void ShowcaseMachineTool::CreateObject()
+void CNShowcaseMachineTool::CreateObject()
 {
   InstantiatedMachineTool::CreateObject();
   InstantiateIdentification();
@@ -16,7 +16,7 @@ void ShowcaseMachineTool::CreateObject()
   InstantiateProduction();
 }
 
-void ShowcaseMachineTool::InstantiateIdentification()
+void CNShowcaseMachineTool::InstantiateIdentification()
 {
     InstantiatedMachineTool::InstantiateIdentification();
     InstantiateOptional(mt.Identification->YearOfConstruction, m_pServer, n);
@@ -26,17 +26,17 @@ void ShowcaseMachineTool::InstantiateIdentification()
     InstantiateOptional(mt.Identification->Location, m_pServer, n);
     InstantiateOptional(mt.Identification->Model, m_pServer, n);  
 
-    mt.Identification->Manufacturer = {"", "umati Showcase"};
+    mt.Identification->Manufacturer = {"", "umati China Showcase"};
     mt.Identification->ProductCode = "2653837gg1548";
     mt.Identification->YearOfConstruction = 2021;
-    mt.Identification->SoftwareRevision= "v1.02.1";
-    mt.Identification->DeviceClass = "Machining centre (other)";
-    mt.Identification->ProductInstanceUri = "https://showcase.umati.org/Specs/Machinetools.html";
-    mt.Identification->Location = "METAV 2 8-7/VIRTUAL 0 0/N 49.871215 E 8.654204";
+    mt.Identification->SoftwareRevision= "v1.02.3";
+    mt.Identification->DeviceClass = "Machining centre";
+    mt.Identification->ProductInstanceUri = "http://amtc.tech";
+    mt.Identification->Location = "METAV 2 8-7/VIRTUAL 0 0/N 31.282196 E 121.212046";
     mt.Identification->Model = {"", MachineName}; 
 }
 
-void ShowcaseMachineTool::InstantiateMonitoring()
+void CNShowcaseMachineTool::InstantiateMonitoring()
 {
   InstantiateMonitoringMT();
   InstantiateMonitoringStacklight(
@@ -49,16 +49,16 @@ void ShowcaseMachineTool::InstantiateMonitoring()
   auto &spindle = mt.Monitoring->MonitoredElement.Add<machineTool::SpindleMonitoring_t>(m_pServer, n, {m_nsIndex, "Spindle"});
   InstantiateOptional(spindle.Override, m_pServer, n);
   InstantiateOptional(spindle.IsUsedAsAxis, m_pServer, n);
-  spindle.Override->Value = 103.0;
+  spindle.Override->Value = 98.0;
   spindle.Override->EURange->high = 125.0;
   spindle.Override->EURange->low = 0.0;
   spindle.Override->EngineeringUnits->DisplayName = {"", "%"};
   spindle.IsRotating = true;
-  spindle.Name = "Spindle";
+  spindle.Name = "Spindle 1";
   spindle.IsUsedAsAxis = false;
 }
 
-void ShowcaseMachineTool::InstantiateTools()
+void CNShowcaseMachineTool::InstantiateTools()
 {
   InstantiateOptional(mt.Equipment->Tools, m_pServer, n);
   InstantiateOptional(mt.Equipment->Tools->NodeVersion, m_pServer, n);
@@ -77,7 +77,7 @@ void ShowcaseMachineTool::InstantiateTools()
   }
 }
 
-void ShowcaseMachineTool::InstantiateProduction()
+void CNShowcaseMachineTool::InstantiateProduction()
 {
   InstantiateOptional(mt.Production->ActiveProgram->State, m_pServer, n);
   mt.Production->ActiveProgram->NumberInList = 0;
@@ -88,7 +88,7 @@ void ShowcaseMachineTool::InstantiateProduction()
 }
 
 
-void ShowcaseMachineTool::Simulate()
+void CNShowcaseMachineTool::Simulate()
 {
   ++m_simStep;
   if ((m_simStep % 2) == 1)

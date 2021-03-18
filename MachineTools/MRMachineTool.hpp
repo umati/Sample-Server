@@ -4,6 +4,7 @@
 #include <memory>
 #include "../UmatiServerLib/OpcUaCondition.hpp"
 #include "../TypeDefinition/MachineTool/Alert.hpp"
+#include "../UmatiServerLib/StateMachineInstance.hpp"
 
 class MRMachineTool : public InstantiatedMachineTool
 {
@@ -22,4 +23,7 @@ class MRMachineTool : public InstantiatedMachineTool
   int isOnFor;
   void SwitchOnStacklightColor(UA_SignalColor color);
   std::shared_ptr<OpcUaCondition<machineTool::Alert_t>> m_pAlert;
+  std::shared_ptr<UmatiServerLib::StateMachineInstance<machineTool::ProductionStateMachine_t>> ActiveProgramStateMachine;
+  std::shared_ptr<UmatiServerLib::StateMachineInstance<machineTool::ProductionStateMachine_t>> VdJobStateMachine;
+  std::shared_ptr<UmatiServerLib::StateMachineInstance<machineTool::ProductionStateMachine_t>> VdJobProgramStateMachine;
 };

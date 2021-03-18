@@ -36,7 +36,7 @@ void MRMachineTool::InstantiateIdentification()
     InstantiateOptional(mt.Identification->Location, m_pServer, n);
     InstantiateOptional(mt.Identification->Model, m_pServer, n);
 
-    mt.Identification->Location = "AMB 0 1/N 48.781340 E 9.165731";
+    mt.Identification->Location = "METAV 2 9-1/VIRTUAL 0 0/N 48.781340 E 9.165731";
     mt.Identification->SerialNumber = std::string{"070-101-098-14"};
     mt.Identification->Manufacturer = {"","ISW UA4MT Team"};
     mt.Identification->Model = {"","T3IUTH"};
@@ -77,26 +77,31 @@ void MRMachineTool::InstantiateProduction()
 
     mt.Production->ActiveProgram->Name = "heart.nc";
     mt.Production->ActiveProgram->NumberInList = 0;
-    mt.Production->ActiveProgram->State->CurrentState->Value = {"en","Initializing"};
-    mt.Production->ActiveProgram->State->CurrentState->Number = 0;
-    mt.Production->ActiveProgram->State->CurrentState->Id = UA_NODEID_NUMERIC(nsFromUri(m_pServer, constants::NsMachineToolUri), UA_MACHINETOOLID_PRODUCTIONSTATEMACHINETYPE_INITIALIZING);
+    ActiveProgramStateMachine = std::make_shared<UmatiServerLib::StateMachineInstance<machineTool::ProductionStateMachine_t>>(
+        mt.Production->ActiveProgram->State.value,
+        m_pServer);
+    ActiveProgramStateMachine->SetState(0);
 
     auto &job = mt.Production->ProductionPlan->OrderedObjects.Add(m_pServer, n, {m_nsIndex, "VDJob"});
     job.Identifier = std::string("VDJob");
     job.RunsCompleted = 0;
     job.RunsPlanned->Value = 7;
     job.RunsPlanned->IsValid = true;
-    job.State->CurrentState->Value = {"en","Initializing"};
-    job.State->CurrentState->Number = 0;
-    job.State->CurrentState->Id = UA_NODEID_NUMERIC(nsFromUri(m_pServer, constants::NsMachineToolUri), UA_MACHINETOOLID_PRODUCTIONSTATEMACHINETYPE_INITIALIZING);
+    VdJobStateMachine = std::make_shared<UmatiServerLib::StateMachineInstance<machineTool::ProductionStateMachine_t>>(
+        job.State.value,
+        m_pServer
+    );
+    VdJobStateMachine->SetState(0);
     job.NumberInList = 0;
     auto &program = mt.Production->ProductionPlan->OrderedObjects.value.front()->ProductionPrograms->OrderedObjects.Add<machineTool::ProductionProgram_t>(m_pServer, n, {m_nsIndex, "heart.nc"});
 
     InstantiateOptional(program.State, m_pServer, n);
     program.Name = "heart.nc";
-    program.State->CurrentState->Value = {"en","Initializing"};
-    program.State->CurrentState->Number = 0;
-    program.State->CurrentState->Id = UA_NODEID_NUMERIC(nsFromUri(m_pServer, constants::NsMachineToolUri), UA_MACHINETOOLID_PRODUCTIONSTATEMACHINETYPE_INITIALIZING);
+    VdJobProgramStateMachine = std::make_shared<UmatiServerLib::StateMachineInstance<machineTool::ProductionStateMachine_t>>(
+        program.State.value,
+        m_pServer
+    );
+    VdJobProgramStateMachine->SetState(0);
 
     mt.Production->ActiveProgram->JobNodeId = *mt.Production->ProductionPlan->OrderedObjects.value.front().NodeId.NodeId;
     mt.Production->ActiveProgram->JobIdentifier = job.Identifier;
@@ -125,9 +130,7 @@ void MRMachineTool::Simulate()
         SwitchOnStacklightColor(UA_SignalColor::UA_SIGNALCOLOR_GREEN);
         mt.Monitoring->MachineTool->OperationMode = UA_MachineOperationMode::UA_MACHINEOPERATIONMODE_AUTOMATIC;
 
-        vdjob->State->CurrentState->Value = {"en", "Running"};
-        vdjob->State->CurrentState->Id = UA_NODEID_NUMERIC(nsFromUri(m_pServer, constants::NsMachineToolUri), UA_MACHINETOOLID_PRODUCTIONSTATEMACHINETYPE_RUNNING);
-        vdjob->State->CurrentState->Number = 1;
+        VdJobStateMachine->SetState(1);
 
         m_simStep = 0;
 
@@ -159,24 +162,13 @@ void MRMachineTool::Simulate()
         //Program is not running
         if (m_simStep == 2 && aprog->State->CurrentState->Number.value != 1)
         {
-            aprog->State->CurrentState->Value = {"en", "Initializing"};
-            aprog->State->CurrentState->Id = UA_NODEID_NUMERIC(nsFromUri(m_pServer, constants::NsMachineToolUri), UA_MACHINETOOLID_PRODUCTIONSTATEMACHINETYPE_INITIALIZING);
-            aprog->State->CurrentState->Number = 0;
-
-            vdprog->State->CurrentState->Value = {"en", "Initializing"};
-            vdprog->State->CurrentState->Id = UA_NODEID_NUMERIC(nsFromUri(m_pServer, constants::NsMachineToolUri), UA_MACHINETOOLID_PRODUCTIONSTATEMACHINETYPE_INITIALIZING);
-            vdprog->State->CurrentState->Number = 0;
-
+            ActiveProgramStateMachine->SetState(0);
+            VdJobProgramStateMachine->SetState(0);
         }
         else if (m_simStep == 3 && aprog->State->CurrentState->Number.value != 1)
         {
-            aprog->State->CurrentState->Value = {"en", "Running"};
-            aprog->State->CurrentState->Id = UA_NODEID_NUMERIC(nsFromUri(m_pServer, constants::NsMachineToolUri), UA_MACHINETOOLID_PRODUCTIONSTATEMACHINETYPE_RUNNING);
-            aprog->State->CurrentState->Number = 1;
-
-            vdprog->State->CurrentState->Value = {"en", "Running"};
-            vdprog->State->CurrentState->Id = UA_NODEID_NUMERIC(nsFromUri(m_pServer, constants::NsMachineToolUri), UA_MACHINETOOLID_PRODUCTIONSTATEMACHINETYPE_RUNNING);
-            vdprog->State->CurrentState->Number = 1;
+            ActiveProgramStateMachine->SetState(1);
+            VdJobProgramStateMachine->SetState(1);
 
             mt.Monitoring->MachineTool->FeedOverride->Value = 100.0;
 
@@ -201,13 +193,8 @@ void MRMachineTool::Simulate()
         //Program is running
         else if (m_simStep == 17 && aprog->State->CurrentState->Number.value == 1)
         {
-            aprog->State->CurrentState->Value = {"en", "Ended"};
-            aprog->State->CurrentState->Id = UA_NODEID_NUMERIC(nsFromUri(m_pServer, constants::NsMachineToolUri), UA_MACHINETOOLID_PRODUCTIONSTATEMACHINETYPE_ENDED);
-            aprog->State->CurrentState->Number = 2;
-
-            vdprog->State->CurrentState->Value = {"en", "Ended"};
-            vdprog->State->CurrentState->Id = UA_NODEID_NUMERIC(nsFromUri(m_pServer, constants::NsMachineToolUri), UA_MACHINETOOLID_PRODUCTIONSTATEMACHINETYPE_ENDED);
-            vdprog->State->CurrentState->Number = 2;
+            ActiveProgramStateMachine->SetState(2);
+            VdJobProgramStateMachine->SetState(2);
 
             mt.Monitoring->MachineTool->FeedOverride->Value = 0.0;
         }
@@ -216,11 +203,7 @@ void MRMachineTool::Simulate()
         else if (m_simStep == 19 && vdjob->RunsCompleted.value < 7)
         {
             vdjob->RunsCompleted.value += 1;
-
-            vdjob->State->CurrentState->Value = {"en", "Running"};
-            vdjob->State->CurrentState->Id = UA_NODEID_NUMERIC(nsFromUri(m_pServer, constants::NsMachineToolUri), UA_MACHINETOOLID_PRODUCTIONSTATEMACHINETYPE_RUNNING);
-            vdjob->State->CurrentState->Number = 1;
-
+            VdJobStateMachine->SetState(1);
             m_simStep = 0;
         }
 
@@ -231,17 +214,9 @@ void MRMachineTool::Simulate()
             SwitchOnStacklightColor(UA_SignalColor::UA_SIGNALCOLOR_YELLOW);
 
             vdjob->RunsCompleted = 0;
-            vdjob->State->CurrentState->Value = {"en", "Ended"};
-            vdjob->State->CurrentState->Id = UA_NODEID_NUMERIC(nsFromUri(m_pServer, constants::NsMachineToolUri), UA_MACHINETOOLID_PRODUCTIONSTATEMACHINETYPE_ENDED);
-            vdjob->State->CurrentState->Number = 2;
-
-            aprog->State->CurrentState->Value = {"en", "Ended"};
-            aprog->State->CurrentState->Id = UA_NODEID_NUMERIC(nsFromUri(m_pServer, constants::NsMachineToolUri), UA_MACHINETOOLID_PRODUCTIONSTATEMACHINETYPE_ENDED);
-            aprog->State->CurrentState->Number = 2;
-
-            vdprog->State->CurrentState->Value = {"en", "Ended"};
-            vdprog->State->CurrentState->Id = UA_NODEID_NUMERIC(nsFromUri(m_pServer, constants::NsMachineToolUri), UA_MACHINETOOLID_PRODUCTIONSTATEMACHINETYPE_ENDED);
-            vdprog->State->CurrentState->Number = 2;
+            ActiveProgramStateMachine->SetState(2);
+            VdJobProgramStateMachine->SetState(2);
+            VdJobStateMachine->SetState(2);
         }
     }
 
@@ -253,17 +228,9 @@ void MRMachineTool::Simulate()
         SwitchOnStacklightColor(UA_SignalColor::UA_SIGNALCOLOR_YELLOW);
         mt.Monitoring->MachineTool->OperationMode = UA_MachineOperationMode::UA_MACHINEOPERATIONMODE_SETUP;
 
-        aprog->State->CurrentState->Value = {"en", "Initializing"};
-        aprog->State->CurrentState->Id = UA_NODEID_NUMERIC(nsFromUri(m_pServer, constants::NsMachineToolUri), UA_MACHINETOOLID_PRODUCTIONSTATEMACHINETYPE_INITIALIZING);
-        aprog->State->CurrentState->Number = 0;
-
-        vdprog->State->CurrentState->Value = {"en", "Initializing"};
-        vdprog->State->CurrentState->Id = UA_NODEID_NUMERIC(nsFromUri(m_pServer, constants::NsMachineToolUri), UA_MACHINETOOLID_PRODUCTIONSTATEMACHINETYPE_INITIALIZING);
-        vdprog->State->CurrentState->Number = 0;
-
-        vdjob->State->CurrentState->Value = {"en", "Initializing"};
-        vdjob->State->CurrentState->Id = UA_NODEID_NUMERIC(nsFromUri(m_pServer, constants::NsMachineToolUri), UA_MACHINETOOLID_PRODUCTIONSTATEMACHINETYPE_INITIALIZING);
-        vdjob->State->CurrentState->Number = 0;
+        ActiveProgramStateMachine->SetState(0);
+        VdJobProgramStateMachine->SetState(0);
+        VdJobStateMachine->SetState(0);
 
         m_simStep = 0;
     }

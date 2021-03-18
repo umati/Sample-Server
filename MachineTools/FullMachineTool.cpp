@@ -117,9 +117,9 @@ void FullMachineTool::InstantiateIdentification()
   mt.Identification->MonthOfConstruction = 6;
   mt.Identification->DeviceClass = "Machining centre (other)";
   mt.Identification->ComponentName = {"", MachineName};
-  mt.Identification->ProductCode = "2020-47110815";
+  mt.Identification->ProductCode = "2021-47110815";
   mt.Identification->SoftwareRevision= "1.00.1";
-  mt.Identification->Location = "METAV 1 A1/VIRTUAL 0 0/N 48.781340 E 9.165731";
+  mt.Identification->Location = "METAV 2 9-1/VIRTUAL 0 0/N 48.781340 E 9.165731";
   mt.Identification->Model = {"", MachineName};
 
   auto &swOS = mt.Identification->SoftwareIdentification->SoftwareItem.Add(m_pServer, n, {m_nsIndex, "OS"});

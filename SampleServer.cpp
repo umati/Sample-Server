@@ -20,6 +20,7 @@
 #include "MachineTools/BasicMachineTool.hpp"
 #include "MachineTools/MRMachineTool.hpp"
 #include "MachineTools/ShowcaseMachineTool.hpp"
+#include "MachineTools/CNShowcaseMachineTool.hpp"
 #include "Robotics/BasicRobot.hpp"
 
 std::atomic_bool running{true};
@@ -124,6 +125,7 @@ int main(int argc, char *argv[])
   machineTools.push_back(std::make_shared<BasicMachineTool>(pServer));
   machineTools.push_back(std::make_shared<MRMachineTool>(pServer));
   machineTools.push_back(std::make_shared<ShowcaseMachineTool>(pServer));
+  machineTools.push_back(std::make_shared<CNShowcaseMachineTool>(pServer));
   machineTools.push_back(std::make_shared<BasicRobot>(pServer));
 
   UA_Server_run_startup(pServer);

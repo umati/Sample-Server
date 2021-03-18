@@ -145,6 +145,7 @@ add_executable(
     MachineTools/BasicMachineTool.cpp
     MachineTools/MRMachineTool.cpp
     MachineTools/ShowcaseMachineTool.cpp
+    MachineTools/CNShowcaseMachineTool.cpp
     Robotics/InstantiatedRobot.cpp
     Robotics/BasicRobot.cpp
 )

@@ -111,7 +111,7 @@ UA_StatusCode setServerConfig(UA_ServerConfig *pConfig, const Configuration::Con
   pConfig->nodeLifecycle.generateChildNodeId = generateChildNodeIdInParentNs;
   // Companion Specificaitons will trigger many warnings, and values in instances are set later
   pConfig->allowEmptyVariables = UA_RuleHandling::UA_RULEHANDLING_ACCEPT;
-  pConfig->modellingRulesOnInstances = UA_FALSE;
+  pConfig->modellingRulesOnInstances = UA_TRUE;
   UA_String_clear(&pConfig->applicationDescription.applicationUri);
   pConfig->applicationDescription.applicationUri = UA_STRING_ALLOC("urn:UmatiSampleServer");
   UA_LocalizedText_clear(&pConfig->applicationDescription.applicationName);

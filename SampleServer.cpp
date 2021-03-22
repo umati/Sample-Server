@@ -126,13 +126,13 @@ int main(int argc, char *argv[]) {
   pConfig->nodeLifecycle.generateChildNodeId = generateChildNodeIdInParentNs;
   // Companion Specificaitons will trigger many warnings, and values in instances are set later
   pConfig->allowEmptyVariables = UA_RuleHandling::UA_RULEHANDLING_ACCEPT;
-  pConfig->modellingRulesOnInstances = UA_FALSE;
   UA_String_clear(&pConfig->applicationDescription.applicationUri);
   pConfig->applicationDescription.applicationUri = UA_STRING_ALLOC("urn:UmatiSampleServer");
   UA_LocalizedText_clear(&pConfig->applicationDescription.applicationName);
   pConfig->applicationDescription.applicationName = UA_LOCALIZEDTEXT_ALLOC("en", "Umati Sample Server");
   UA_String_clear(&pConfig->applicationDescription.productUri);
   pConfig->applicationDescription.productUri = UA_STRING_ALLOC("https://github.com/umati/Sample-Server/");
+  pConfig->modellingRulesOnInstances = UA_TRUE;
 
   // Create namespaces
   namespace_di_generated(pServer);

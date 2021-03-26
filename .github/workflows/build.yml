@@ -40,9 +40,9 @@ jobs:
   docker:
     runs-on: ubuntu-latest
     env:
-      # Check if this is not a pull request and secret personal access toker is set
+      # Check if this is not a pull request and GITHUB_TOKEN is set
       # As all env variables are strings, you need to compaire against "== 'true'" (not "== true")
-      HAS_SECRET_PAT: ${{ !github.head_ref && true }}
+      IS_NOT_PR: ${{ !github.head_ref && true }}
     steps:
       - name: Checkout Sample-Server
         uses: actions/checkout@v2
@@ -69,6 +69,6 @@ jobs:
           file: "./Sample-Server/.github/Dockerfile"
           context: .
           platforms: linux/amd64
-          push:
+          push: ${{env.IS_NOT_PR == 'true'}}
           tags: |
             ghcr.io/${{ env.IMAGE_REPOSITORY }}:${{ env.IMAGE_TAG }}

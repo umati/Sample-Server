@@ -40,9 +40,9 @@ jobs:
   docker:
     runs-on: ubuntu-latest
     env:
-      # Check if this is not a pull request and secret personal access toker is set
+      # Check if this is not a pull request and GITHUB_TOKEN is set
       # As all env variables are strings, you need to compaire against "== 'true'" (not "== true")
-      HAS_SECRET_PAT: ${{ !github.head_ref && secrets.SAMPLESERVER_GHCR_PAT && true }}
+      IS_NOT_PR: ${{ !github.head_ref && true }}
     steps:
       - name: Checkout Sample-Server
         uses: actions/checkout@v2
@@ -57,20 +57,19 @@ jobs:
         run: |
           echo IMAGE_REPOSITORY=$(echo ${{ github.repository }} | tr '[:upper:]' '[:lower:]') >> $GITHUB_ENV
           echo IMAGE_TAG=$(echo ${{ github.ref }} | tr '[:upper:]' '[:lower:]' |  awk '{sub(/([^\/]*\/){2}/,""); gsub(/\/|_/, "-")}1') >> $GITHUB_ENV
-          echo HAS_SECRET_PAT=$(echo ${{ env.HAS_SECRET_PAT }})
       - name: Login to GitHub Container Registry
         uses: docker/login-action@v1
-        if: env.HAS_SECRET_PAT == 'true'
+        if: env.IS_NOT_PR == 'true'
         with:
           registry: ghcr.io
           username: ${{ github.repository_owner }}
-          password: ${{ secrets.SAMPLESERVER_GHCR_PAT }}
+          password: ${{ secrets.GITHUB_TOKEN }}
       - name: Build Docker Release
         uses: "docker/build-push-action@v2"
         with:
           file: "./Sample-Server/.github/Dockerfile"
           context: .
           platforms: linux/amd64
-          push: ${{env.HAS_SECRET_PAT == 'true'}}
+          push: ${{env.IS_NOT_PR == 'true'}}
           tags: |
             ghcr.io/${{ env.IMAGE_REPOSITORY }}:${{ env.IMAGE_TAG }}

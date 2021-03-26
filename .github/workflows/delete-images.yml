@@ -16,7 +16,7 @@ jobs:
           PER_PAGE: 100
 
         with:
-          github-token: ${{ secrets.DELETE_PACKAGES_TOKEN }}
+          github-token: ${{ secrets.GITHUB_TOKEN}}
           script: |
             const response = await github.request("GET /orgs/${{ github.repository_owner }}/packages/container/${{ env.PACKAGE_NAME }}/versions",
               { per_page: ${{ env.PER_PAGE }}

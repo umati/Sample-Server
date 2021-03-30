@@ -32,7 +32,7 @@ void CNShowcaseMachineTool::InstantiateIdentification()
     mt.Identification->SoftwareRevision= "v1.02.3";
     mt.Identification->DeviceClass = "Machining centre";
     mt.Identification->ProductInstanceUri = "http://amtc.tech";
-    mt.Identification->Location = "METAV 2 8-7/VIRTUAL 0 0/N 31.282196 E 121.212046";
+    mt.Identification->Location = "CIMT E8 B014/VIRTUAL 0 0/N 31.282196 E 121.212046";
     mt.Identification->Model = {"", MachineName}; 
 }
 

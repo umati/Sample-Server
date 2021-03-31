@@ -32,7 +32,7 @@ void ShowcaseMachineTool::InstantiateIdentification()
     mt.Identification->SoftwareRevision= "v1.02.1";
     mt.Identification->DeviceClass = "Machining centre (other)";
     mt.Identification->ProductInstanceUri = "https://showcase.umati.org/Specs/Machinetools.html";
-    mt.Identification->Location = "METAV 2 8-7/VIRTUAL 0 0/N 49.871215 E 8.654204";
+    mt.Identification->Location = "CIMT E8 B014/VIRTUAL 0 0/N 49.871215 E 8.654204";
     mt.Identification->Model = {"", MachineName}; 
 }
 

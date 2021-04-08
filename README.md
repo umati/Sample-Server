@@ -16,12 +16,13 @@ This implementation provides simulations for the machine tool specification, whi
 
 #### Docker Image
 
-This repository automatically builds a sample server docker image which is then run at `opc.tcp://opcua.machinetool.app:4840` (Security: none and higher / Authentication: anonymous)
+This repository automatically builds a sample server docker image which is then run at `opc.tcp://opcua.umati.app:4840` (Security: none and higher / Authentication: anonymous)
 
 Use this image for your development purposes. Pull this public docker image: `ghcr.io/umati/sample-server:main`
 
 To run this image you need a docker installation and than typically:
-`docker run -d -p 127.0.0.1:4840:4880 ghcr.io/umati/sample-server:main`
+`docker run -d -p 4840:4840 ghcr.io/umati/sample-server:main`
+
 Refer to the [docker documentation](https://docs.docker.com/) for details.
 
 ### Build status

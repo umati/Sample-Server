@@ -1,5 +1,5 @@
 
-set(REFL_CPP_DIR ${CMAKE_SOURCE_DIR}/deps/refl-cpp CACHE PATH "Directory of refl-cpp")
+set(REFL_CPP_DIR ${CMAKE_SOURCE_DIR}/deps/refl-cpp/include/ CACHE PATH "Directory of refl-cpp")
 
 find_path(REFL_CPP_INCLUDE refl.hpp ${REFL_CPP_DIR})
 

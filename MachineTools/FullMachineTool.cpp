@@ -5,7 +5,7 @@
 #include "../TypeDefinition/MachineTool/Alert.hpp"
 #include "../TypeDefinition/MachineTool/NotificationEvent.hpp"
 #include <open62541/types_generated.h>
-#include "../../arch/gmtime.hpp"
+#include "../arch/gmtime.hpp"
 #include <sstream>
 
 FullMachineTool::FullMachineTool(UA_Server *pServer)

@@ -13,3 +13,6 @@
 [submodule "deps/refl-cpp"]
 	path = deps/refl-cpp
 	url = https://github.com/veselink1/refl-cpp.git
+[submodule "deps/json"]
+	path = deps/json
+	url = https://github.com/nlohmann/json.git

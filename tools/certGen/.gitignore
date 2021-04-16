@@ -1,0 +1,7 @@
+*
+!openssl.cnf.jinja2
+!requirements.txt
+!settings.template.json
+!.gitignore
+!createCertificate.py
+!README.md

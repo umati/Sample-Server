@@ -5,6 +5,7 @@
 #include "src_generated/namespace_robotics_generated.h"
 
 #include "UmatiServerLib/OpcUaKeys.hpp"
+#include "Configuration/Configuration_json.hpp"
 
 #include <iostream>
 #include <open62541/server_config_default.h>
@@ -73,13 +74,38 @@ int main(int argc, char *argv[])
   signal(SIGINT, sigHandler);
   signal(SIGABRT, sigHandler);
   signal(SIGTERM, sigHandler);
-
-  std::cout << "SampleServer, exit with Ctrl+C" << std::endl;
-  OpcUaKeys keys("server_key.der", "server_cert.der");
-  UA_Server *pServer = UA_Server_new();
-  auto pConfig = UA_Server_getConfig(pServer);
+  Configuration::Configuration serverConig;
+  std::string configurationFilename = "configuration.json";
+  if (argc >= 2)
+  {
+    configurationFilename = argv[1];
+  }
   try
   {
+    serverConig = Configuration::FromJsonFile(configurationFilename);
+  }
+  catch (std::exception &e)
+  {
+    std::cout << "Could not load configuration, using an insecure default one." << std::endl;
+    std::cout << e.what() << std::endl;
+  }
+  std::cout << "SampleServer, exit with Ctrl+C" << std::endl;
+  UA_Server *pServer = UA_Server_new();
+  auto pConfig = UA_Server_getConfig(pServer);
+
+  try
+  {
+    if(!serverConig.Encryption.has_value())
+    {
+      throw std::runtime_error("Encryption not configured.");
+    }
+    OpcUaKeys keys(
+      serverConig.Encryption->ServerKey,
+      serverConig.Encryption->ServerCert,
+      serverConig.Encryption->TrustedClients,
+      serverConig.Encryption->IssuerCerts,
+      serverConig.Encryption->Revocation
+      );
     keys.Load();
     // Skip all certificate checks
     size_t issuerListSize = 0;
@@ -91,22 +117,24 @@ int main(int argc, char *argv[])
     UA_ServerConfig_setDefaultWithSecurityPolicies(
         pConfig, 4840,
         &keys.PublicCert, &keys.PrivateKey,
-        trustList, trustListSize,
-        issuerList, issuerListSize,
-        revocationList, revocationListSize);
+        &keys.Trusted[0], keys.Trusted.size(),
+        &keys.Issuer[0], keys.Issuer.size(),
+        &keys.Revoked[0], keys.Revoked.size()
+        );
   }
   catch (std::exception &ex)
   {
-    std::cout << "Could not load keys 'server_key.der' and 'server_cert.der'  for encryption." << std::endl;
+    std::cout << "Could not load keys for encryption." << std::endl;
     std::cout << ex.what();
-    std::cout << "Generate keys with create_self-signed.py in the open62541/tools directory" << std::endl;
+    std::cout << "Generate keys with tool/certGen/createCertification.py" << std::endl;
     UA_ServerConfig_setDefault(pConfig);
     std::cout << "No encryption will be available." << std::endl;
   }
 
-  if (argc >= 2)
+  if (serverConig.Hostname.has_value())
   {
-    pConfig->customHostname = UA_STRING_ALLOC(argv[1]);
+    UA_String_clear(&pConfig->customHostname);
+    pConfig->customHostname = UA_STRING_ALLOC(serverConig.Hostname->c_str());
   }
   pConfig->nodeLifecycle.generateChildNodeId = generateChildNodeIdInParentNs;
   // Companion Specificaitons will trigger many warnings, and values in instances are set later

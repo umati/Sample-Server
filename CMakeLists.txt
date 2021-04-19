@@ -8,6 +8,7 @@ list(APPEND CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake)
 find_package(open62541 REQUIRED)
 find_package(Open62541Cpp REQUIRED)
 find_package(GTest REQUIRED NO_CMAKE_SYSTEM_PACKAGE_REGISTRY)
+find_package(nlohmann_json REQUIRED)
 
 find_package(ReflCpp REQUIRED)
 find_package(Threads REQUIRED)
@@ -135,6 +136,12 @@ target_link_libraries(SampleServerLib PUBLIC reflCpp::reflCpp)
 target_link_libraries(SampleServerLib PUBLIC Threads::Threads)
 target_compile_definitions(SampleServerLib PUBLIC __STDC_WANT_LIB_EXT1__)
 
+add_library(
+  Configuration
+  Configuration/Configuration_json.cpp
+)
+target_link_libraries(Configuration PRIVATE nlohmann_json::nlohmann_json)
+
 add_executable(
     ${PROJECT_NAME}
     SampleServer.cpp
@@ -152,6 +159,7 @@ add_executable(
 
 set_target_properties(${PROJECT_NAME} PROPERTIES LINKER_LANGUAGE CXX)
 target_link_libraries(${PROJECT_NAME} PUBLIC SampleServerLib)
+target_link_libraries(${PROJECT_NAME} PUBLIC Configuration)
 target_link_libraries(${PROJECT_NAME} PUBLIC ua_gen_mt)
 target_link_libraries(${PROJECT_NAME} PUBLIC ua_gen_robotic)
 

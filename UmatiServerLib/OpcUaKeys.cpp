@@ -15,6 +15,9 @@
 #include "../arch/gmtime.hpp"
 #include <sstream>
 #include <open62541/types_generated_handling.h>
+#include <fstream>
+#include <iostream>
+#include <algorithm>
 
 template <typename T>
 class ReturnCodeWatcher
@@ -42,7 +45,13 @@ public:
   }
 };
 
-OpcUaKeys::OpcUaKeys(std::string privFile, std::string pubFile) : PrivFile(privFile), PubFile(pubFile)
+OpcUaKeys::OpcUaKeys(
+    std::string privFile,
+    std::string pubFile,
+    std::vector<std::string> trustedClients,
+      std::vector<std::string> issuerCerts,
+      std::vector<std::string> revocation)
+    : PrivFile(privFile), PubFile(pubFile), TrustedClients(trustedClients), IssuerCerts(issuerCerts), Revocation(revocation)
 {
 }
 
@@ -50,12 +59,20 @@ void OpcUaKeys::Load()
 {
   PrivateKey = readFile(PrivFile);
   PublicCert = readFile(PubFile);
+  Trusted = readFiles(TrustedClients);
+  Issuer = readFiles(IssuerCerts);
+  Revoked = readFiles(Revocation);
 }
 
 OpcUaKeys::~OpcUaKeys()
 {
   UA_ByteString_clear(&PrivateKey);
   UA_ByteString_clear(&PublicCert);
+  
+  auto clear = [](UA_ByteString & el){UA_ByteString_clear(&el);};
+  std::for_each(Trusted.begin(), Trusted.end(), clear);
+  std::for_each(Issuer.begin(), Issuer.end(), clear);
+  std::for_each(Revoked.begin(), Revoked.end(), clear);
 }
 
 UA_ByteString OpcUaKeys::readFile(std::string filename)
@@ -65,15 +82,41 @@ UA_ByteString OpcUaKeys::readFile(std::string filename)
   if (!ifs.good())
   {
     std::stringstream ss;
-    ss << "File not found: '" << filename << "'";
-    throw std::runtime_error("File not found.");
+    ss << "File not found: '" << filename << "'. ";
+    throw std::runtime_error(ss.str());
   }
 
   ifs.seekg(0, std::ios_base::end);
   std::streampos fileSize = ifs.tellg();
   UA_ByteString_allocBuffer(&ret, fileSize);
   ifs.seekg(0, std::ios_base::beg);
-  ifs.read((char*)ret.data, fileSize);
+  ifs.read((char *)ret.data, fileSize);
+  return ret;
+}
+
+std::vector<UA_ByteString> OpcUaKeys::readFiles(std::vector<std::string> filenames)
+{
+  std::vector<UA_ByteString> ret;
+  ret.reserve(filenames.size());
+  for( auto& filename : filenames)
+  {
+    ret.push_back(readFile(filename));
+  }
+  return ret;
+}
+
+std::vector<UA_ByteString> OpcUaKeys::readDir(std::string dirname)
+{
+  std::vector<UA_ByteString> ret;
+  /*
+  for (auto &p : std::filesystem::directory_iterator("sandbox"))
+  {
+    if(p.is_regular_file())
+    {
+      ret.push_back(readFile(p.path().string()));
+    }
+  }
+  */
   return ret;
 }
 

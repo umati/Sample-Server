@@ -1,0 +1,10 @@
+{
+    "Hostname": "localhost",
+    "Encryption": {
+        "ServerCert": "server_cert.der",
+        "ServerKey": "server_key.der",
+        "TrustedClients": ["trusted/trustedClient.der"],
+        "IssuerCerts": [],
+        "Revocation": []
+    }
+}

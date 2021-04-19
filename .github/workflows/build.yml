@@ -67,8 +67,8 @@ jobs:
       - name: Build Docker Release
         uses: "docker/build-push-action@v2"
         with:
-          file: "./Sample-Server/.github/Dockerfile"
-          context: .
+          file: "./Sample-Server/Dockerfile"
+          context: ./Sample-Server
           platforms: linux/amd64
           push: ${{env.IS_NOT_PR == 'true'}}
           tags: |

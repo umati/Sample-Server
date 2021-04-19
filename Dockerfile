@@ -13,7 +13,7 @@ RUN mkdir /install
 
 ARG BUILD_TYPE=Debug
 
-COPY Sample-Server /src/Sample-Server
+COPY . /src/Sample-Server
 
 WORKDIR /build
 RUN cmake /src/Sample-Server/.github/ \

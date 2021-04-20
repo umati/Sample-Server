@@ -29,6 +29,22 @@ Refer to the [docker documentation](https://docs.docker.com/) for details.
 
 ![GitHub Workflow Status](https://img.shields.io/github/workflow/status/umati/Sample-Server/Build)
 
+### Configuration
+The configuration uses a json format. By default, the server looks for a file `configuration.json`. The supported parameters are:
+```json
+{
+    "Hostname": "localhost", // Hostname of the server, should be identical to the hostname that is used by OPC UA clients to connect to the server.
+    "Encryption": { // Optional encryption, can be omitted to only support unencrypted connections
+        "ServerCert": "server_cert.der", // Server certificate
+        "ServerKey": "server_key.der", // Server private key for the certificate
+        "TrustedClients": ["trusted/test.pem"], // List of allowed clients, if empty, all client certificates are accepted
+        "IssuerCerts": [], // List of allowed issuers
+        "Revocation": [] // List of revoked certificates.
+    }
+}
+```
+
+
 ## Concept
 
 This implementation represents the OPC UA Instance with an instance of an C++ struct and connects them together. So writing an value in the C++ instance will also set this value in the corresponding OPC UA node. The binding is established by utilizing reflection (an improved version of the binding in [this publication](https://ieeexplore.ieee.org/document/8972189)).

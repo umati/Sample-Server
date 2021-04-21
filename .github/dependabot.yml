@@ -5,22 +5,27 @@
 
 version: 2
 updates:
-  - package-ecosystem: "gitsubmodule" # See documentation for possible values
-    directory: "/" # Location of package manifests
-    target-branch: "develop"
-    schedule:
-      interval: "daily"
 
-  - package-ecosystem: "github-actions" # See documentation for possible values
-    directory: "/" # Location of package manifests
-    target-branch: "develop"
-    schedule:
-      interval: "daily"
-
-    # Enable version updates for Docker
-  - package-ecosystem: "docker"
-    # Look for a `Dockerfile` in the `root` directory
+  - package-ecosystem: "gitsubmodule"
     directory: "/"
-    # Check for updates once a week
+    target-branch: "develop"
     schedule:
       interval: "daily"
+      
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    target-branch: "develop"
+    schedule:
+      interval: "daily"
+
+  - package-ecosystem: "docker"
+    directory: "/"
+    target-branch: "develop"
+    schedule:
+      interval: "weekly"
+      
+  - package-ecosystem: "pip"
+    directory: "/tools/certGen/"
+    target-branch: "develop"
+    schedule:
+      interval: "weekly"

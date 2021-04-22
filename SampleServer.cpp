@@ -74,7 +74,7 @@ int main(int argc, char *argv[])
   signal(SIGINT, sigHandler);
   signal(SIGABRT, sigHandler);
   signal(SIGTERM, sigHandler);
-  Configuration::Configuration serverConig;
+  Configuration::Configuration serverConfig;
   std::string configurationFilename = "configuration.json";
   if (argc >= 2)
   {
@@ -82,7 +82,7 @@ int main(int argc, char *argv[])
   }
   try
   {
-    serverConig = Configuration::FromJsonFile(configurationFilename);
+    serverConfig = Configuration::FromJsonFile(configurationFilename);
   }
   catch (std::exception &e)
   {
@@ -95,16 +95,16 @@ int main(int argc, char *argv[])
 
   try
   {
-    if(!serverConig.Encryption.has_value())
+    if(!serverConfig.Encryption.has_value())
     {
       throw std::runtime_error("Encryption not configured.");
     }
     OpcUaKeys keys(
-      serverConig.Encryption->ServerKey,
-      serverConig.Encryption->ServerCert,
-      serverConig.Encryption->TrustedClients,
-      serverConig.Encryption->IssuerCerts,
-      serverConig.Encryption->Revocation
+      serverConfig.Encryption->ServerKey,
+      serverConfig.Encryption->ServerCert,
+      serverConfig.Encryption->TrustedClients,
+      serverConfig.Encryption->IssuerCerts,
+      serverConfig.Encryption->Revocation
       );
     keys.Load();
     // Skip all certificate checks
@@ -131,10 +131,10 @@ int main(int argc, char *argv[])
     std::cout << "No encryption will be available." << std::endl;
   }
 
-  if (serverConig.Hostname.has_value())
+  if (serverConfig.Hostname.has_value())
   {
     UA_String_clear(&pConfig->customHostname);
-    pConfig->customHostname = UA_STRING_ALLOC(serverConig.Hostname->c_str());
+    pConfig->customHostname = UA_STRING_ALLOC(serverConfig.Hostname->c_str());
   }
   pConfig->nodeLifecycle.generateChildNodeId = generateChildNodeIdInParentNs;
   // Companion Specificaitons will trigger many warnings, and values in instances are set later

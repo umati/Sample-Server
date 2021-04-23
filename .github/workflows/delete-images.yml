@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/github-script@v3
+      - uses: actions/github-script@v4.0.1
         env:
           PACKAGE_NAME: sample-server
           PER_PAGE: 100

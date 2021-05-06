@@ -7,9 +7,8 @@ RUN apk --no-cache add \
       g++=~10.2.1 \
       git=~2.30.2\
       make=~4.3 \
-      python3=~3.8.8-r0
-
-RUN mkdir /install
+      python3=~3.8.10-r0 && \
+    mkdir /install
 
 ARG BUILD_TYPE=Debug
 

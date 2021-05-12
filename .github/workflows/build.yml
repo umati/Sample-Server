@@ -62,7 +62,7 @@ jobs:
         if: env.IS_NOT_PR == 'true'
         with:
           registry: ghcr.io
-          username: ${{ github.actor }}
+          username: ${{ github.repository_owner }}
           password: ${{ secrets.GITHUB_TOKEN }}
       - name: Build Docker Release
         uses: "docker/build-push-action@v2"

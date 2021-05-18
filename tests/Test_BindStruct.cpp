@@ -5,24 +5,20 @@
 ///
 
 #include <gtest/gtest.h>
-#include "../OpcUaTypes/LocalizedText.hpp"
-#include "../OpcUaTypes/EUInformation.hpp"
+
 #include <Open62541Cpp/UA_String.hpp>
+
+#include "../OpcUaTypes/EUInformation.hpp"
+#include "../OpcUaTypes/LocalizedText.hpp"
 #include "../UmatiServerLib/ConvertStructValue.hpp"
 
-class Test_Exposure : public UmatiServerLib::ConvertStructValue
-{
-  public:
+class Test_Exposure : public UmatiServerLib::ConvertStructValue {
+ public:
   using ConvertStructValue::convertToVariantRefl;
 };
 
-TEST(SampleServerLib, BindStructure_Basic)
-{
-
-  UmatiServerLib::LocalizedText_t oriLocalText {
-    .locale = "en-en",
-    .text = "BindStructure_Basic"
-  };
+TEST(SampleServerLib, BindStructure_Basic) {
+  UmatiServerLib::LocalizedText_t oriLocalText{.locale = "en-en", .text = "BindStructure_Basic"};
 
   UA_Variant variant;
   Test_Exposure::convertToVariantRefl(&oriLocalText, &UA_TYPES[UA_TYPES_LOCALIZEDTEXT], &variant);
@@ -40,18 +36,17 @@ TEST(SampleServerLib, BindStructure_Basic)
   UA_Variant_clear(&variant);
 }
 
-TEST(SampleServerLib, BindStructure_Recursive)
-{
-  UmatiServerLib::EUInformation_t oriEuInformation {
-    .NamespaceUri ="eu://meter",
+TEST(SampleServerLib, BindStructure_Recursive) {
+  UmatiServerLib::EUInformation_t oriEuInformation{
+    .NamespaceUri = "eu://meter",
     .UnitId = -1,
-    .DisplayName { .locale="", .text="Meter"},
-    .Description = { .locale="en", .text="100cm"},
+    .DisplayName{.locale = "", .text = "Meter"},
+    .Description = {.locale = "en", .text = "100cm"},
   };
 
   UA_Variant variant;
   Test_Exposure::convertToVariantRefl(&oriEuInformation, &UA_TYPES[UA_TYPES_EUINFORMATION], &variant);
-  UA_EUInformation * pEuInformation = reinterpret_cast<UA_EUInformation *>(variant.data);
+  UA_EUInformation *pEuInformation = reinterpret_cast<UA_EUInformation *>(variant.data);
 
   auto newEuInformation = UmatiServerLib::EUInformation_t::fromUa(*pEuInformation);
   EXPECT_EQ(oriEuInformation, newEuInformation);

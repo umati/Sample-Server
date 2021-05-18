@@ -1,24 +1,23 @@
 #pragma once
 
+#include <open62541/types.h>
+
 #include <string>
 #include <vector>
-#include <open62541/types.h>
 
 /**
  * @brief Helper for OPC UA connection encryption
- * 
+ *
  * Generating a Public/Private-Key-Pair is not fully implemented.
  */
-class OpcUaKeys
-{
-public:
+class OpcUaKeys {
+ public:
   OpcUaKeys(
-      std::string privFile,
-      std::string pubFile,
-      std::vector<std::string> trustedClients,
-      std::vector<std::string> issuerCerts,
-      std::vector<std::string> revocation
-      );
+    std::string privFile,
+    std::string pubFile,
+    std::vector<std::string> trustedClients,
+    std::vector<std::string> issuerCerts,
+    std::vector<std::string> revocation);
   void Load();
   UA_ByteString PrivateKey = UA_BYTESTRING_NULL;
   UA_ByteString PublicCert = UA_BYTESTRING_NULL;
@@ -28,7 +27,7 @@ public:
   std::vector<UA_ByteString> Revoked;
   virtual ~OpcUaKeys();
 
-protected: // Not fully implemented, so hidden
+ protected:  // Not fully implemented, so hidden
   void generatePrivateKey();
   void generateCertificate();
 
@@ -36,7 +35,7 @@ protected: // Not fully implemented, so hidden
   std::vector<UA_ByteString> readDir(std::string dirname);
   std::vector<UA_ByteString> readFiles(std::vector<std::string> filenames);
 
-protected:
+ protected:
   std::string PrivFile;
   std::string PubFile;
   std::vector<std::string> TrustedClients;

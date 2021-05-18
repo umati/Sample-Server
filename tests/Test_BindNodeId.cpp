@@ -1,17 +1,16 @@
 
 #include <gtest/gtest.h>
+
 #include <Open62541Cpp/UA_NodeId.hpp>
 #include <Open62541Cpp/UA_QualifiedName.hpp>
+
 #include "../UmatiServerLib/BindVariable.hpp"
 #include "../UmatiServerLib/NodesMaster.hpp"
 #include "util/UAServer_Test.hpp"
 
-class BindNodeId : public UAServer_Test
-{
-};
+class BindNodeId : public UAServer_Test {};
 
-TEST_F(BindNodeId, BindNodeId_Basic)
-{
+TEST_F(BindNodeId, BindNodeId_Basic) {
   auto nsIndex = UA_Server_addNamespace(pServer, "BindNodeId_Basic");
   open62541Cpp::UA_QualifiedName qn(nsIndex, "MyNodeId");
 
@@ -20,17 +19,17 @@ TEST_F(BindNodeId, BindNodeId_Basic)
   uavar.displayName = UA_LOCALIZEDTEXT_ALLOC("", "MyNodeId");
   open62541Cpp::UA_NodeId varNodeId;
   ASSERT_EQ(
-      UA_Server_addVariableNode(
-          pServer,
-          UA_NODEID_NUMERIC(nsIndex, 0),
-          UA_NODEID_NUMERIC(0, UA_NS0ID_OBJECTSFOLDER),
-          UA_NODEID_NUMERIC(0, UA_NS0ID_HASCOMPONENT),
-          *qn.QualifiedName,
-          UA_NODEID_NUMERIC(0, UA_NS0ID_BASEDATAVARIABLETYPE),
-          uavar,
-          NULL,
-          varNodeId.NodeId),
-      UA_STATUSCODE_GOOD);
+    UA_Server_addVariableNode(
+      pServer,
+      UA_NODEID_NUMERIC(nsIndex, 0),
+      UA_NODEID_NUMERIC(0, UA_NS0ID_OBJECTSFOLDER),
+      UA_NODEID_NUMERIC(0, UA_NS0ID_HASCOMPONENT),
+      *qn.QualifiedName,
+      UA_NODEID_NUMERIC(0, UA_NS0ID_BASEDATAVARIABLETYPE),
+      uavar,
+      NULL,
+      varNodeId.NodeId),
+    UA_STATUSCODE_GOOD);
   UA_VariableAttributes_clear(&uavar);
   NodesMaster n(pServer);
 

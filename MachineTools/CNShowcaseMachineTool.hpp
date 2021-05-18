@@ -1,14 +1,14 @@
 #pragma once
 #include "InstantiatedMachineTool.hpp"
 
-class CNShowcaseMachineTool : public InstantiatedMachineTool
-{
-  public:
+class CNShowcaseMachineTool : public InstantiatedMachineTool {
+ public:
   CNShowcaseMachineTool(UA_Server *pServer);
 
   void Simulate() override;
   virtual ~CNShowcaseMachineTool() = default;
-  protected:
+
+ protected:
   void CreateObject() override;
 
   void InstantiateIdentification();

@@ -7,7 +7,6 @@
 
 #include <chrono>
 
-namespace UmatiServerLib
-{
-  typedef std::chrono::time_point<std::chrono::system_clock> DateTime_t;
+namespace UmatiServerLib {
+typedef std::chrono::time_point<std::chrono::system_clock> DateTime_t;
 }

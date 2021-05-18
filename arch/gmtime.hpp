@@ -1,7 +1,7 @@
 
 #include <ctime>
 
-#if defined (__STDC_LIB_EXT1__)
+#if defined(__STDC_LIB_EXT1__)
 #define UMATI_GMTIME(pTimeT, pTm) gmtime_s(pTimeT, pTm)
 #elif defined(_WIN32)
 #define UMATI_GMTIME(pTimeT, pTm) gmtime_s(pTm, pTimeT)

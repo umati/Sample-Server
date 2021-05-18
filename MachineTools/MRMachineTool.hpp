@@ -1,19 +1,19 @@
 #pragma once
 
-#include "InstantiatedMachineTool.hpp"
 #include <memory>
-#include "../UmatiServerLib/OpcUaCondition.hpp"
-#include "../TypeDefinition/MachineTool/Alert.hpp"
-#include "../UmatiServerLib/StateMachineInstance.hpp"
 
-class MRMachineTool : public InstantiatedMachineTool
-{
-  public:
+#include "../TypeDefinition/MachineTool/Alert.hpp"
+#include "../UmatiServerLib/OpcUaCondition.hpp"
+#include "../UmatiServerLib/StateMachineInstance.hpp"
+#include "InstantiatedMachineTool.hpp"
+
+class MRMachineTool : public InstantiatedMachineTool {
+ public:
   MRMachineTool(UA_Server *pServer);
 
   void Simulate() override;
 
-  protected:
+ protected:
   void CreateObject() override;
 
   void InstantiateIdentification();

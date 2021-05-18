@@ -2,17 +2,16 @@
 #include "../TypeDefinition.hpp"
 #include "Constants.hpp"
 
-namespace machineTool
-{
+namespace machineTool {
 
-struct Prognosis_t
-{
+struct Prognosis_t {
   BindableMemberValue<UmatiServerLib::DateTime_t> PredictedTime;
 };
 
-} // namespace machineTool
+}  // namespace machineTool
 
-REFL_TYPE(machineTool::Prognosis_t,
-          UmatiServerLib::attribute::UaObjectType(UmatiServerLib::constexp::NodeId(constants::NsMachineToolUri, UA_MACHINETOOLID_PROGNOSISTYPE)))
+REFL_TYPE(
+  machineTool::Prognosis_t,
+  UmatiServerLib::attribute::UaObjectType(UmatiServerLib::constexp::NodeId(constants::NsMachineToolUri, UA_MACHINETOOLID_PROGNOSISTYPE)))
 REFL_FIELD(PredictedTime)
 REFL_END

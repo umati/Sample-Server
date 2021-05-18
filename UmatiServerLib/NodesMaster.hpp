@@ -6,23 +6,25 @@
 
 #pragma once
 
-#include "NodeValue.hpp"
 #include <open62541/server.h>
-#include <map>
+
 #include <Open62541Cpp/UA_NodeId.hpp>
+#include <map>
+
+#include "NodeValue.hpp"
 
 /**
  * @brief Stores a list of NodeId <-> Member and handle read value calls
- * 
+ *
  */
-class NodesMaster
-{
-protected:
+class NodesMaster {
+ protected:
   std::map<open62541Cpp::UA_NodeId, NodeValue> m_Nodes;
   UA_Server *m_pServer;
   NodesMaster(const NodesMaster &other);
   void setCallback(const open62541Cpp::UA_NodeId &nodeId);
-public:
+
+ public:
   NodesMaster(UA_Server *pServer);
 
   NodeValue &operator()(int nsIndex, int nsIntId);
@@ -33,11 +35,11 @@ public:
 
   // Read callback, which will be resolved to the member internally
   static void callback(
-      UA_Server *pServer,
-      const UA_NodeId *sessionId,
-      void *sessionContext,
-      const UA_NodeId *nodeid,
-      void *nodeContext,
-      const UA_NumericRange *range,
-      const UA_DataValue *oldValue);
+    UA_Server *pServer,
+    const UA_NodeId *sessionId,
+    void *sessionContext,
+    const UA_NodeId *nodeid,
+    void *nodeContext,
+    const UA_NumericRange *range,
+    const UA_DataValue *oldValue);
 };

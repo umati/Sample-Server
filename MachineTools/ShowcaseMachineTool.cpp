@@ -1,14 +1,11 @@
 #include "ShowcaseMachineTool.hpp"
 
-ShowcaseMachineTool::ShowcaseMachineTool(UA_Server *pServer)
-    : InstantiatedMachineTool(pServer)
-{
+ShowcaseMachineTool::ShowcaseMachineTool(UA_Server *pServer) : InstantiatedMachineTool(pServer) {
   MachineName = "ShowcaseMachineTool";
   CreateObject();
 }
 
-void ShowcaseMachineTool::CreateObject()
-{
+void ShowcaseMachineTool::CreateObject() {
   InstantiatedMachineTool::CreateObject();
   InstantiateIdentification();
   InstantiateMonitoring();
@@ -16,33 +13,28 @@ void ShowcaseMachineTool::CreateObject()
   InstantiateProduction();
 }
 
-void ShowcaseMachineTool::InstantiateIdentification()
-{
-    InstantiatedMachineTool::InstantiateIdentification();
-    InstantiateOptional(mt.Identification->YearOfConstruction, m_pServer, n);
-    InstantiateOptional(mt.Identification->ProductCode, m_pServer, n);
-    InstantiateOptional(mt.Identification->SoftwareRevision, m_pServer, n);
-    InstantiateOptional(mt.Identification->DeviceClass, m_pServer, n);
-    InstantiateOptional(mt.Identification->Location, m_pServer, n);
-    InstantiateOptional(mt.Identification->Model, m_pServer, n);  
+void ShowcaseMachineTool::InstantiateIdentification() {
+  InstantiatedMachineTool::InstantiateIdentification();
+  InstantiateOptional(mt.Identification->YearOfConstruction, m_pServer, n);
+  InstantiateOptional(mt.Identification->ProductCode, m_pServer, n);
+  InstantiateOptional(mt.Identification->SoftwareRevision, m_pServer, n);
+  InstantiateOptional(mt.Identification->DeviceClass, m_pServer, n);
+  InstantiateOptional(mt.Identification->Location, m_pServer, n);
+  InstantiateOptional(mt.Identification->Model, m_pServer, n);
 
-    mt.Identification->Manufacturer = {"", "umati Showcase"};
-    mt.Identification->ProductCode = "2653837gg1548";
-    mt.Identification->YearOfConstruction = 2021;
-    mt.Identification->SoftwareRevision= "v1.02.1";
-    mt.Identification->DeviceClass = "Machining centre (other)";
-    mt.Identification->ProductInstanceUri = "https://showcase.umati.org/Specs/Machinetools.html";
-    mt.Identification->Location = "CIMT E8 B014/VIRTUAL 0 0/N 49.871215 E 8.654204";
-    mt.Identification->Model = {"", MachineName}; 
+  mt.Identification->Manufacturer = {"", "umati Showcase"};
+  mt.Identification->ProductCode = "2653837gg1548";
+  mt.Identification->YearOfConstruction = 2021;
+  mt.Identification->SoftwareRevision = "v1.02.1";
+  mt.Identification->DeviceClass = "Machining centre (other)";
+  mt.Identification->ProductInstanceUri = "https://showcase.umati.org/Specs/Machinetools.html";
+  mt.Identification->Location = "CIMT E8 B014/VIRTUAL 0 0/N 49.871215 E 8.654204";
+  mt.Identification->Model = {"", MachineName};
 }
 
-void ShowcaseMachineTool::InstantiateMonitoring()
-{
+void ShowcaseMachineTool::InstantiateMonitoring() {
   InstantiateMonitoringMT();
-  InstantiateMonitoringStacklight(
-      {UA_SignalColor::UA_SIGNALCOLOR_RED,
-       UA_SignalColor::UA_SIGNALCOLOR_YELLOW,
-       UA_SignalColor::UA_SIGNALCOLOR_GREEN});
+  InstantiateMonitoringStacklight({UA_SignalColor::UA_SIGNALCOLOR_RED, UA_SignalColor::UA_SIGNALCOLOR_YELLOW, UA_SignalColor::UA_SIGNALCOLOR_GREEN});
 
   InstantiateMonitoringChannel(1);
 
@@ -58,13 +50,11 @@ void ShowcaseMachineTool::InstantiateMonitoring()
   spindle.IsUsedAsAxis = false;
 }
 
-void ShowcaseMachineTool::InstantiateTools()
-{
+void ShowcaseMachineTool::InstantiateTools() {
   InstantiateOptional(mt.Equipment->Tools, m_pServer, n);
   InstantiateOptional(mt.Equipment->Tools->NodeVersion, m_pServer, n);
   n.Remove(mt.Equipment->Tools->NodeVersion.NodeId);
-  for (size_t i = 1; i <= 1; ++i)
-  {
+  for (size_t i = 1; i <= 1; ++i) {
     std::stringstream ss;
     ss << "Tool" << i;
     auto &tool = mt.Equipment->Tools->Tool.Add<machineTool::Tool_t>(m_pServer, n, {m_nsIndex, ss.str()});
@@ -77,25 +67,21 @@ void ShowcaseMachineTool::InstantiateTools()
   }
 }
 
-void ShowcaseMachineTool::InstantiateProduction()
-{
+void ShowcaseMachineTool::InstantiateProduction() {
   InstantiateOptional(mt.Production->ActiveProgram->State, m_pServer, n);
   mt.Production->ActiveProgram->NumberInList = 0;
   mt.Production->ActiveProgram->Name = "Basic Program";
-  mt.Production->ActiveProgram->State->CurrentState->Value = {"en","Running"};
+  mt.Production->ActiveProgram->State->CurrentState->Value = {"en", "Running"};
   mt.Production->ActiveProgram->State->CurrentState->Number = 1;
-  mt.Production->ActiveProgram->State->CurrentState->Id = UA_NODEID_NUMERIC(nsFromUri(m_pServer, constants::NsMachineToolUri), UA_MACHINETOOLID_PRODUCTIONSTATEMACHINETYPE_RUNNING);
+  mt.Production->ActiveProgram->State->CurrentState->Id =
+    UA_NODEID_NUMERIC(nsFromUri(m_pServer, constants::NsMachineToolUri), UA_MACHINETOOLID_PRODUCTIONSTATEMACHINETYPE_RUNNING);
 }
 
-
-void ShowcaseMachineTool::Simulate()
-{
+void ShowcaseMachineTool::Simulate() {
   ++m_simStep;
-  if ((m_simStep % 2) == 1)
-  {
+  if ((m_simStep % 2) == 1) {
     SimulateStacklight();
   }
 
   mt.Monitoring->MachineTool->PowerOnDuration = m_simStep / 3600;
-
 }

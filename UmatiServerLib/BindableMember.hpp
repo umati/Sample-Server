@@ -1,17 +1,17 @@
 #pragma once
 
-#include "ValueDecorator.hpp"
 #include <Open62541Cpp/UA_NodeId.hpp>
 #include <Open62541Cpp/UA_RelativPathElement.hpp>
 
+#include "ValueDecorator.hpp"
+
 template <typename T>
-class BindableMember : public ValueDecorator<T>
-{
-  protected:
+class BindableMember : public ValueDecorator<T> {
+ protected:
   bool m_isOptional = true;
   bool m_isBind = false;
 
-public:
+ public:
   bool IsOptional() { return m_isOptional; }
   bool IsBind() { return m_isBind; }
 
@@ -38,5 +38,4 @@ public:
 };
 
 template <typename T>
-BindableMember<T>::BindableMember(const T &val) : ValueDecorator<T>(val)
-{}
+BindableMember<T>::BindableMember(const T &val) : ValueDecorator<T>(val) {}

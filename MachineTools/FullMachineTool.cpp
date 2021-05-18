@@ -1,30 +1,27 @@
 #include "FullMachineTool.hpp"
+
+#include <open62541/types_generated.h>
+
+#include <sstream>
+
+#include "../TypeDefinition/MachineTool/Alert.hpp"
+#include "../TypeDefinition/MachineTool/NotificationEvent.hpp"
 #include "../UmatiServerLib/BindRefl.hpp"
 #include "../UmatiServerLib/OpcUaCondition.hpp"
 #include "../UmatiServerLib/ServerHelper.hpp"
-#include "../TypeDefinition/MachineTool/Alert.hpp"
-#include "../TypeDefinition/MachineTool/NotificationEvent.hpp"
-#include <open62541/types_generated.h>
 #include "../arch/gmtime.hpp"
-#include <sstream>
 
-FullMachineTool::FullMachineTool(UA_Server *pServer)
-    : FullMachineTool(pServer, true)
-{
-}
+FullMachineTool::FullMachineTool(UA_Server *pServer) : FullMachineTool(pServer, true) {}
 
 FullMachineTool::FullMachineTool(UA_Server *pServer, bool initialize)
-    : InstantiatedMachineTool(pServer), JobStateMachine(mt.Production->ActiveProgram->State.value, pServer)
-{
-  if (initialize)
-  {
+  : InstantiatedMachineTool(pServer), JobStateMachine(mt.Production->ActiveProgram->State.value, pServer) {
+  if (initialize) {
     MachineName = "FullMachineTool";
     CreateObject();
   }
 }
 
-void FullMachineTool::CreateObject()
-{
+void FullMachineTool::CreateObject() {
   InstantiatedMachineTool::CreateObject();
 
   InstantiateIdentification();
@@ -37,8 +34,7 @@ void FullMachineTool::CreateObject()
   writeEventNotifier(m_pServer, mt.Notification->Messages.NodeId);
 }
 
-void FullMachineTool::InstantiateProduction()
-{
+void FullMachineTool::InstantiateProduction() {
   InstantiateOptional(mt.Production->ActiveProgram->State, m_pServer, n);
   mt.Production->ActiveProgram->NumberInList = 0;
   mt.Production->ActiveProgram->Name = "Full Program";
@@ -62,18 +58,17 @@ void FullMachineTool::InstantiateProduction()
   std::tm tm;
   std::memset(&tm, 0, sizeof(tm));
   UMATI_GMTIME(&t, &tm);
-  
 
   std::ostringstream oss;
   oss << std::put_time(&tm, "%Y-%m-%dT%H:%M:%SZ");
 
   open62541Cpp::UA_String newUaStr(oss.str());
   UA_Server_writeObjectProperty_scalar(
-          m_pServer,
-          *mt.Production->ProductionPlan.NodeId.NodeId,
-          *open62541Cpp::UA_QualifiedName(0, "NodeVersion").QualifiedName,
-          newUaStr.String,
-          &UA_TYPES[UA_TYPES_STRING]);
+    m_pServer,
+    *mt.Production->ProductionPlan.NodeId.NodeId,
+    *open62541Cpp::UA_QualifiedName(0, "NodeVersion").QualifiedName,
+    newUaStr.String,
+    &UA_TYPES[UA_TYPES_STRING]);
 
   mt.Production->ActiveProgram->JobIdentifier = job.Identifier;
   mt.Production->ActiveProgram->JobNodeId = *mt.Production->ProductionPlan->OrderedObjects.value.front().NodeId.NodeId;
@@ -83,13 +78,12 @@ void FullMachineTool::InstantiateProduction()
   set1.ContainsMixedParts = false;
   set1.Name = "Set1";
   set1.PartsCompletedPerRun = 3;
-  //set1.PartsPerRun = 4;
+  // set1.PartsPerRun = 4;
   set1.PartsPlannedPerRun = 5;
 
   InstantiateOptional(set1.PartsPerRun, m_pServer, n);
 
-  for (std::size_t i = 1; i <= 5; ++i)
-  {
+  for (std::size_t i = 1; i <= 5; ++i) {
     std::stringstream ss;
     ss << "Part " << i;
     auto &part = set1.PartsPerRun->Part.Add(m_pServer, n, {m_nsIndex, ss.str()});
@@ -99,8 +93,7 @@ void FullMachineTool::InstantiateProduction()
   }
 }
 
-void FullMachineTool::InstantiateIdentification()
-{
+void FullMachineTool::InstantiateIdentification() {
   InstantiatedMachineTool::InstantiateIdentification();
 
   InstantiateOptional(mt.Identification->YearOfConstruction, m_pServer, n);
@@ -118,16 +111,15 @@ void FullMachineTool::InstantiateIdentification()
   mt.Identification->DeviceClass = "Machining centre (other)";
   mt.Identification->ComponentName = {"", MachineName};
   mt.Identification->ProductCode = "2021-47110815";
-  mt.Identification->SoftwareRevision= "1.00.1";
+  mt.Identification->SoftwareRevision = "1.00.1";
   mt.Identification->Location = "METAV 2 16-3/VIRTUAL 0 0/N 48.781340 E 9.165731";
   mt.Identification->Model = {"", MachineName};
 
   auto &swOS = mt.Identification->SoftwareIdentification->SoftwareItem.Add(m_pServer, n, {m_nsIndex, "OS"});
   swOS.Identifier = "Alpine Container";
-  swOS.SoftwareRevision = "3.12.0"; // Should be reasonably accurate as of Aug 2020 (googled it)
+  swOS.SoftwareRevision = "3.12.0";  // Should be reasonably accurate as of Aug 2020 (googled it)
 }
-void FullMachineTool::InstantiateTools()
-{
+void FullMachineTool::InstantiateTools() {
   InstantiateOptional(mt.Equipment->Tools, m_pServer, n);
   InstantiateOptional(mt.Equipment->Tools->NodeVersion, m_pServer, n);
   n.Remove(mt.Equipment->Tools->NodeVersion.NodeId);
@@ -150,8 +142,7 @@ void FullMachineTool::InstantiateTools()
   auto &multiTool = mt.Equipment->Tools->Tool.Add<machineTool::MultiTool_t>(m_pServer, n, {m_nsIndex, "Multi 1"});
   multiTool.Name = {"", "Multi 1"};
   multiTool.Identifier = "Multi01-ID";
-  for (std::size_t i = 0; i < 3; ++i)
-  {
+  for (std::size_t i = 0; i < 3; ++i) {
     std::stringstream ss;
     ss << "SubTool " << i;
     auto &subTool = multiTool.Tool.Add(m_pServer, n, {m_nsIndex, ss.str()});
@@ -165,14 +156,13 @@ void FullMachineTool::InstantiateTools()
   }
 }
 
-void FullMachineTool::InstantiateMonitoring()
-{
+void FullMachineTool::InstantiateMonitoring() {
   InstantiateMonitoringMT();
   InstantiateMonitoringStacklight({
-      UA_SignalColor::UA_SIGNALCOLOR_RED,
-      UA_SignalColor::UA_SIGNALCOLOR_YELLOW,
-      UA_SignalColor::UA_SIGNALCOLOR_GREEN,
-      UA_SignalColor::UA_SIGNALCOLOR_WHITE,
+    UA_SignalColor::UA_SIGNALCOLOR_RED,
+    UA_SignalColor::UA_SIGNALCOLOR_YELLOW,
+    UA_SignalColor::UA_SIGNALCOLOR_GREEN,
+    UA_SignalColor::UA_SIGNALCOLOR_WHITE,
   });
 
   InstantiateMonitoringChannel(4);
@@ -198,8 +188,7 @@ void FullMachineTool::InstantiateMonitoring()
   lsr.LaserState = UA_LaserState::UA_LASERSTATE_READY;
 }
 
-void FullMachineTool::InstantiatePrognosis()
-{
+void FullMachineTool::InstantiatePrognosis() {
   InstantiateOptional(mt.Notification->Prognoses, m_pServer, n);
   InstantiateOptional(mt.Notification->Prognoses->NodeVersion, m_pServer, n);
   // Hack: Remove from bindings (Will be written by BindMemberPlaceholder)
@@ -216,10 +205,12 @@ void FullMachineTool::InstantiatePrognosis()
   auto &partUnLoadPrognosis = mt.Notification->Prognoses->Prognosis.Add<machineTool::PartUnLoadPrognosis_t>(m_pServer, n, {m_nsIndex, "PartUnLoad"});
   partUnLoadPrognosis.Location = {"en", "Workspace Right"};
   partUnLoadPrognosis.PartName = "Smiley";
-  auto &processChangeoverPrognosis = mt.Notification->Prognoses->Prognosis.Add<machineTool::ProcessChangeoverPrognosis_t>(m_pServer, n, {m_nsIndex, "ProcessChangeover"});
+  auto &processChangeoverPrognosis =
+    mt.Notification->Prognoses->Prognosis.Add<machineTool::ProcessChangeoverPrognosis_t>(m_pServer, n, {m_nsIndex, "ProcessChangeover"});
   processChangeoverPrognosis.Location = {"en", "Shaft Mid"};
   processChangeoverPrognosis.Activity = {"en", "Flip Part"};
-  auto &productionJobEndPrognosis = mt.Notification->Prognoses->Prognosis.Add<machineTool::ProductionJobEndPrognosis_t>(m_pServer, n, {m_nsIndex, "ProductionJobEnd"});
+  auto &productionJobEndPrognosis =
+    mt.Notification->Prognoses->Prognosis.Add<machineTool::ProductionJobEndPrognosis_t>(m_pServer, n, {m_nsIndex, "ProductionJobEnd"});
   productionJobEndPrognosis.SourceIdentifier = "100x Smiley Job";
   auto &toolChangePrognosis = mt.Notification->Prognoses->Prognosis.Add<machineTool::ToolChangePrognosis_t>(m_pServer, n, {m_nsIndex, "ToolChange"});
   toolChangePrognosis.Location = {"en", "Magazine 1"};
@@ -231,45 +222,36 @@ void FullMachineTool::InstantiatePrognosis()
   utilityPrognosis.UtilityName = "H²";
 }
 
-void FullMachineTool::Simulate()
-{
+void FullMachineTool::Simulate() {
   ++m_simStep;
-  if ((m_simStep % 2) == 1)
-  {
+  if ((m_simStep % 2) == 1) {
     SimulateStacklight();
   }
 
-  switch (m_simStep % 10)
-  {
-  case 0:
-  {
-    JobStateMachine.SetState(0); //Initializing
-    break;
-  }
-  case 2:
-  {
-    JobStateMachine.SetState(1); //Running
-    break;
-  }
-  case 4:
-  {
-    JobStateMachine.SetState(3); //Interrupted
-    break;
-  }
-  case 6:
-  {
-    JobStateMachine.SetState(2); //Ended
-    break;
-  }
-  case 8:
-  {
-    JobStateMachine.SetState(4); //Aborted
-    break;
-  }
+  switch (m_simStep % 10) {
+    case 0: {
+      JobStateMachine.SetState(0);  // Initializing
+      break;
+    }
+    case 2: {
+      JobStateMachine.SetState(1);  // Running
+      break;
+    }
+    case 4: {
+      JobStateMachine.SetState(3);  // Interrupted
+      break;
+    }
+    case 6: {
+      JobStateMachine.SetState(2);  // Ended
+      break;
+    }
+    case 8: {
+      JobStateMachine.SetState(4);  // Aborted
+      break;
+    }
   }
 
-  if ((m_simStep % 10) == 1)
-  {
+  if ((m_simStep % 10) == 1) {
     m_pAlert = std::make_shared<OpcUaCondition<machineTool::Alert_t>>(m_pServer, mt.Notification->Messages.NodeId);
     m_pAlert->Data.ErrorCode = "ERR404";
     {
@@ -288,9 +270,7 @@ void FullMachineTool::Simulate()
     m_pAlert->Data.ConfirmedState->Value = {"en", "Unconfirmed"};
 
     m_pAlert->Trigger();
-  }
-  else if ((m_simStep % 10) == 8 && m_pAlert)
-  {
+  } else if ((m_simStep % 10) == 8 && m_pAlert) {
     m_pAlert->Data.Retain = false;
     m_pAlert->Data.EnabledState->Id = true;
     m_pAlert->Data.EnabledState->Value = {"en", "Disabled"};
@@ -302,8 +282,7 @@ void FullMachineTool::Simulate()
     m_pAlert = nullptr;
   }
 
-  if ((m_simStep % 10) == 8)
-  {
+  if ((m_simStep % 10) == 8) {
     machineTool::NotificationEvent_t notification;
     notification.Identifier = "Custom Event";
     std::stringstream ss;
@@ -313,5 +292,5 @@ void FullMachineTool::Simulate()
     notification.SourceName = "FullMachineTool";
     OpcUaEvent ev(notification, m_pServer, mt.Notification->Messages.NodeId);
   }
-    mt.Monitoring->MachineTool->PowerOnDuration = m_simStep / 3600;
+  mt.Monitoring->MachineTool->PowerOnDuration = m_simStep / 3600;
 }

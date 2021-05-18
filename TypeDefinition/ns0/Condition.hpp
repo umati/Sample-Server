@@ -1,15 +1,14 @@
 #pragma once
-#include "../TypeDefinition.hpp"
-#include "Constants.hpp"
-#include "ConditionVariable.hpp"
-#include "TwoStateVariable.hpp"
 #include "../../OpcUaTypes/StatusCode.hpp"
+#include "../TypeDefinition.hpp"
+#include "BaseEvent.hpp"
+#include "ConditionVariable.hpp"
+#include "Constants.hpp"
+#include "TwoStateVariable.hpp"
 
-namespace ns0
-{
+namespace ns0 {
 
-struct Condition_t : public BaseEvent_t
-{
+struct Condition_t : public BaseEvent_t {
   UA_NodeId BranchId;
   std::string ClientUserId;
   ConditionVariable_t<UmatiServerLib::LocalizedText_t> Comment;
@@ -24,11 +23,12 @@ struct Condition_t : public BaseEvent_t
   bool Retain;
 };
 
-} // namespace ns0
+}  // namespace ns0
 
-REFL_TYPE(ns0::Condition_t,
-          Bases<ns0::BaseEvent_t>(),
-          UmatiServerLib::attribute::UaObjectType(UmatiServerLib::constexp::NodeId(constants::Ns0Uri, UA_NS0ID_CONDITIONTYPE)))
+REFL_TYPE(
+  ns0::Condition_t,
+  Bases<ns0::BaseEvent_t>(),
+  UmatiServerLib::attribute::UaObjectType(UmatiServerLib::constexp::NodeId(constants::Ns0Uri, UA_NS0ID_CONDITIONTYPE)))
 REFL_FIELD(BranchId)
 REFL_FIELD(ClientUserId)
 REFL_FIELD(Comment)

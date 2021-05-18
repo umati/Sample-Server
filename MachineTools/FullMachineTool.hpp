@@ -1,19 +1,19 @@
 #pragma once
 
-#include "InstantiatedMachineTool.hpp"
 #include <memory>
-#include "../UmatiServerLib/OpcUaCondition.hpp"
-#include "../TypeDefinition/MachineTool/Alert.hpp"
-#include "../UmatiServerLib/StateMachineInstance.hpp"
 
-class FullMachineTool : public InstantiatedMachineTool
-{
-  public:
+#include "../TypeDefinition/MachineTool/Alert.hpp"
+#include "../UmatiServerLib/OpcUaCondition.hpp"
+#include "../UmatiServerLib/StateMachineInstance.hpp"
+#include "InstantiatedMachineTool.hpp"
+
+class FullMachineTool : public InstantiatedMachineTool {
+ public:
   FullMachineTool(UA_Server *pServer);
 
   void Simulate() override;
 
-  protected:
+ protected:
   // Allow skipping initialization in subclasses
   FullMachineTool(UA_Server *pServer, bool initialize);
   void CreateObject() override;

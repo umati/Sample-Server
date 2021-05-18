@@ -1,49 +1,41 @@
-#include "src_generated/namespace_machinetool_generated.h"
-#include "src_generated/namespace_machinery_generated.h"
-#include "src_generated/namespace_di_generated.h"
-#include "src_generated/namespace_ia_generated.h"
-#include "src_generated/namespace_robotics_generated.h"
-
-#include "UmatiServerLib/OpcUaKeys.hpp"
-#include "Configuration/Configuration_json.hpp"
-
-#include <iostream>
 #include <open62541/server_config_default.h>
-#include <functional>
-#include <thread>
-#include <mutex>
-#include <atomic>
-#include <list>
-#include <csignal>
 
+#include <atomic>
+#include <csignal>
+#include <functional>
+#include <iostream>
+#include <list>
+#include <mutex>
+#include <thread>
+
+#include "Configuration/Configuration_json.hpp"
+#include "MachineTools/BasicMachineTool.hpp"
+#include "MachineTools/CNShowcaseMachineTool.hpp"
 #include "MachineTools/FullMachineTool.hpp"
 #include "MachineTools/FullMachineToolDynamic.hpp"
-#include "MachineTools/BasicMachineTool.hpp"
 #include "MachineTools/MRMachineTool.hpp"
 #include "MachineTools/ShowcaseMachineTool.hpp"
-#include "MachineTools/CNShowcaseMachineTool.hpp"
 #include "Robotics/BasicRobot.hpp"
+#include "UmatiServerLib/OpcUaKeys.hpp"
+#include "src_generated/namespace_di_generated.h"
+#include "src_generated/namespace_ia_generated.h"
+#include "src_generated/namespace_machinery_generated.h"
+#include "src_generated/namespace_machinetool_generated.h"
+#include "src_generated/namespace_robotics_generated.h"
 
 std::atomic_bool running{true};
-void sigHandler(int sig)
-{
+void sigHandler(int sig) {
   std::cout << "Caught signal " << sig << std::endl;
   std::cout << "Stop application..." << std::endl;
   running = false;
 }
-void simulate(
-    std::mutex &accessDataMutex,
-    UA_Server *pServer,
-    std::list<std::shared_ptr<SimulatedInstance>> &machineTools)
-{
+void simulate(std::mutex &accessDataMutex, UA_Server *pServer, std::list<std::shared_ptr<SimulatedInstance>> &machineTools) {
   std::unique_lock<std::remove_reference<decltype(accessDataMutex)>::type> ul(accessDataMutex);
   ul.unlock();
   int i = 0;
-  while (running)
-  {
+  while (running) {
     ul.lock();
-    for (auto &mt : machineTools)
-    {
+    for (auto &mt : machineTools) {
       mt->Simulate();
     }
 
@@ -55,37 +47,31 @@ void simulate(
 }
 
 UA_StatusCode generateChildNodeIdInParentNs(
-    UA_Server *server,
-    const UA_NodeId *sessionId, void *sessionContext,
-    const UA_NodeId *sourceNodeId,
-    const UA_NodeId *targetParentNodeId,
-    const UA_NodeId *referenceTypeId,
-    UA_NodeId *targetNodeId)
-{
-  if (UA_NodeId_equal(targetNodeId, &UA_NODEID_NULL) && !UA_NodeId_equal(targetParentNodeId, &UA_NODEID_NULL))
-  {
+  UA_Server *server,
+  const UA_NodeId *sessionId,
+  void *sessionContext,
+  const UA_NodeId *sourceNodeId,
+  const UA_NodeId *targetParentNodeId,
+  const UA_NodeId *referenceTypeId,
+  UA_NodeId *targetNodeId) {
+  if (UA_NodeId_equal(targetNodeId, &UA_NODEID_NULL) && !UA_NodeId_equal(targetParentNodeId, &UA_NODEID_NULL)) {
     targetNodeId->namespaceIndex = targetParentNodeId->namespaceIndex;
   }
   return UA_STATUSCODE_GOOD;
 }
 
-int main(int argc, char *argv[])
-{
+int main(int argc, char *argv[]) {
   signal(SIGINT, sigHandler);
   signal(SIGABRT, sigHandler);
   signal(SIGTERM, sigHandler);
   Configuration::Configuration serverConfig;
   std::string configurationFilename = "configuration.json";
-  if (argc >= 2)
-  {
+  if (argc >= 2) {
     configurationFilename = argv[1];
   }
-  try
-  {
+  try {
     serverConfig = Configuration::FromJsonFile(configurationFilename);
-  }
-  catch (std::exception &e)
-  {
+  } catch (std::exception &e) {
     std::cout << "Could not load configuration, using an insecure default one." << std::endl;
     std::cout << e.what() << std::endl;
   }
@@ -93,10 +79,8 @@ int main(int argc, char *argv[])
   UA_Server *pServer = UA_Server_new();
   auto pConfig = UA_Server_getConfig(pServer);
 
-  try
-  {
-    if(!serverConfig.Encryption.has_value())
-    {
+  try {
+    if (!serverConfig.Encryption.has_value()) {
       throw std::runtime_error("Encryption not configured.");
     }
     OpcUaKeys keys(
@@ -104,8 +88,7 @@ int main(int argc, char *argv[])
       serverConfig.Encryption->ServerCert,
       serverConfig.Encryption->TrustedClients,
       serverConfig.Encryption->IssuerCerts,
-      serverConfig.Encryption->Revocation
-      );
+      serverConfig.Encryption->Revocation);
     keys.Load();
     // Skip all certificate checks
     size_t issuerListSize = 0;
@@ -115,15 +98,17 @@ int main(int argc, char *argv[])
     size_t revocationListSize = 0;
     UA_ByteString *revocationList = NULL;
     UA_ServerConfig_setDefaultWithSecurityPolicies(
-        pConfig, 4840,
-        &keys.PublicCert, &keys.PrivateKey,
-        &keys.Trusted[0], keys.Trusted.size(),
-        &keys.Issuer[0], keys.Issuer.size(),
-        &keys.Revoked[0], keys.Revoked.size()
-        );
-  }
-  catch (std::exception &ex)
-  {
+      pConfig,
+      4840,
+      &keys.PublicCert,
+      &keys.PrivateKey,
+      &keys.Trusted[0],
+      keys.Trusted.size(),
+      &keys.Issuer[0],
+      keys.Issuer.size(),
+      &keys.Revoked[0],
+      keys.Revoked.size());
+  } catch (std::exception &ex) {
     std::cout << "Could not load keys for encryption." << std::endl;
     std::cout << ex.what();
     std::cout << "Generate keys with tool/certGen/createCertification.py" << std::endl;
@@ -131,8 +116,7 @@ int main(int argc, char *argv[])
     std::cout << "No encryption will be available." << std::endl;
   }
 
-  if (serverConfig.Hostname.has_value())
-  {
+  if (serverConfig.Hostname.has_value()) {
     UA_String_clear(&pConfig->customHostname);
     pConfig->customHostname = UA_STRING_ALLOC(serverConfig.Hostname->c_str());
   }
@@ -169,12 +153,11 @@ int main(int argc, char *argv[])
   std::unique_lock<decltype(accessDataMutex)> ul(accessDataMutex);
   std::thread t(simulate, std::ref(accessDataMutex), pServer, std::ref(machineTools));
   ul.unlock();
-  while (running)
-  {
+  while (running) {
     ul.lock();
     std::uint16_t timeout = UA_Server_run_iterate(pServer, false);
     ul.unlock();
-    //std::this_thread::yield();
+    // std::this_thread::yield();
     std::this_thread::sleep_for(std::chrono::milliseconds(timeout));
   }
 

@@ -1,30 +1,21 @@
 #include "BindHelper.hpp"
 
-open62541Cpp::UA_NodeId resolveBrowsePath(
-    UA_Server *pServer,
-    const open62541Cpp::UA_BrowsePath &brPath)
-{
+open62541Cpp::UA_NodeId resolveBrowsePath(UA_Server *pServer, const open62541Cpp::UA_BrowsePath &brPath) {
   // No Elements in browse path.
-  if (brPath.BrowsePath->relativePath.elementsSize == 0)
-  {
+  if (brPath.BrowsePath->relativePath.elementsSize == 0) {
     return open62541Cpp::UA_NodeId(brPath.BrowsePath->startingNode);
   }
 
-  auto trResult =
-      UA_Server_translateBrowsePathToNodeIds(
-          pServer,
-          brPath.BrowsePath);
+  auto trResult = UA_Server_translateBrowsePathToNodeIds(pServer, brPath.BrowsePath);
 
-  if (trResult.statusCode != UA_STATUSCODE_GOOD)
-  {
+  if (trResult.statusCode != UA_STATUSCODE_GOOD) {
     std::stringstream ss;
     ss << "Result not good: " << UA_StatusCode_name(trResult.statusCode) << ". ";
     ss << "Could not resolve Path: " << static_cast<std::string>(brPath);
     throw UmatiServerLib::Exceptions::NodeNotFound(ss.str());
   }
 
-  if (trResult.targetsSize != 1)
-  {
+  if (trResult.targetsSize != 1) {
     std::cout << "Unexpected number of results, expect 1, got: " << trResult.targetsSize << std::endl;
     throw std::invalid_argument("Unexpected number of results.");
   }

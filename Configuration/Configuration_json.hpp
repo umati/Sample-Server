@@ -1,6 +1,5 @@
 #include "Configuration.hpp"
 
-namespace Configuration
-{
-    Configuration FromJsonFile(std::string filename);
+namespace Configuration {
+Configuration FromJsonFile(std::string filename);
 }

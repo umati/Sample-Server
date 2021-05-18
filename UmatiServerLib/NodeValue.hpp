@@ -7,12 +7,13 @@
 #pragma once
 
 #include <open62541/types.h>
-#include <functional>
+
 #include <Open62541Cpp/UA_NodeId.hpp>
+#include <functional>
 
 /**
  * @brief Class for accessting the value of a single node.
- * 
+ *
  * Allow setting an callback function, which is called, when the value is needed.
  * @todo Use new External DataValue concept of open62541
  */
@@ -21,10 +22,11 @@ class NodeValue {
   GetValue_t fCallback = nullptr;
   open62541Cpp::UA_NodeId NodeId;
   NodeValue(const NodeValue&) = delete;
+
  public:
-  open62541Cpp::UA_NodeId GetNodeId() { return NodeId;}
+  open62541Cpp::UA_NodeId GetNodeId() { return NodeId; }
   NodeValue(NodeValue&& other);
-  NodeValue(const open62541Cpp::UA_NodeId &nodeId);
+  NodeValue(const open62541Cpp::UA_NodeId& nodeId);
   // Use variadict expression https://stackoverflow.com/questions/9242234/c11-variadic-stdfunction-parameter
   void operator=(GetValue_t F);
 

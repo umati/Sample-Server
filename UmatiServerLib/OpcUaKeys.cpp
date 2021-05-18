@@ -1,44 +1,38 @@
 #include "OpcUaKeys.hpp"
-#include <iostream>
-#include <fstream>
 
-#include <mbedtls/pk.h>
+#include <mbedtls/ctr_drbg.h>
 #include <mbedtls/entropy.h>
 #include <mbedtls/entropy_poll.h>
-#include <mbedtls/rsa.h>
 #include <mbedtls/error.h>
-#include <mbedtls/ctr_drbg.h>
+#include <mbedtls/pk.h>
+#include <mbedtls/rsa.h>
 #include <mbedtls/x509_crt.h>
-#include <cstring> // memset
-#include <stdexcept>
-#include <iomanip>
-#include "../arch/gmtime.hpp"
-#include <sstream>
 #include <open62541/types_generated_handling.h>
-#include <fstream>
-#include <iostream>
+
 #include <algorithm>
+#include <cstring>  // memset
+#include <fstream>
+#include <iomanip>
+#include <iostream>
+#include <sstream>
+#include <stdexcept>
+
+#include "../arch/gmtime.hpp"
 
 template <typename T>
-class ReturnCodeWatcher
-{
-public:
+class ReturnCodeWatcher {
+ public:
   T Good;
   ReturnCodeWatcher(T good) : Good(good) {}
-  ReturnCodeWatcher(const ReturnCodeWatcher &other) : Good(other.Good)
-  {
-  }
+  ReturnCodeWatcher(const ReturnCodeWatcher &other) : Good(other.Good) {}
 
-  ReturnCodeWatcher &operator=(const ReturnCodeWatcher &other)
-  {
+  ReturnCodeWatcher &operator=(const ReturnCodeWatcher &other) {
     Good = other.Good;
     return *this;
   }
 
-  T operator=(const T code)
-  {
-    if (code != Good)
-    {
+  T operator=(const T code) {
+    if (code != Good) {
       throw std::runtime_error("Bad return code.");
     }
     return code;
@@ -46,17 +40,10 @@ public:
 };
 
 OpcUaKeys::OpcUaKeys(
-    std::string privFile,
-    std::string pubFile,
-    std::vector<std::string> trustedClients,
-      std::vector<std::string> issuerCerts,
-      std::vector<std::string> revocation)
-    : PrivFile(privFile), PubFile(pubFile), TrustedClients(trustedClients), IssuerCerts(issuerCerts), Revocation(revocation)
-{
-}
+  std::string privFile, std::string pubFile, std::vector<std::string> trustedClients, std::vector<std::string> issuerCerts, std::vector<std::string> revocation)
+  : PrivFile(privFile), PubFile(pubFile), TrustedClients(trustedClients), IssuerCerts(issuerCerts), Revocation(revocation) {}
 
-void OpcUaKeys::Load()
-{
+void OpcUaKeys::Load() {
   PrivateKey = readFile(PrivFile);
   PublicCert = readFile(PubFile);
   Trusted = readFiles(TrustedClients);
@@ -64,23 +51,20 @@ void OpcUaKeys::Load()
   Revoked = readFiles(Revocation);
 }
 
-OpcUaKeys::~OpcUaKeys()
-{
+OpcUaKeys::~OpcUaKeys() {
   UA_ByteString_clear(&PrivateKey);
   UA_ByteString_clear(&PublicCert);
-  
-  auto clear = [](UA_ByteString & el){UA_ByteString_clear(&el);};
+
+  auto clear = [](UA_ByteString &el) { UA_ByteString_clear(&el); };
   std::for_each(Trusted.begin(), Trusted.end(), clear);
   std::for_each(Issuer.begin(), Issuer.end(), clear);
   std::for_each(Revoked.begin(), Revoked.end(), clear);
 }
 
-UA_ByteString OpcUaKeys::readFile(std::string filename)
-{
+UA_ByteString OpcUaKeys::readFile(std::string filename) {
   UA_ByteString ret = UA_BYTESTRING_NULL;
   std::ifstream ifs(filename, std::ios::binary);
-  if (!ifs.good())
-  {
+  if (!ifs.good()) {
     std::stringstream ss;
     ss << "File not found: '" << filename << "'. ";
     throw std::runtime_error(ss.str());
@@ -94,19 +78,16 @@ UA_ByteString OpcUaKeys::readFile(std::string filename)
   return ret;
 }
 
-std::vector<UA_ByteString> OpcUaKeys::readFiles(std::vector<std::string> filenames)
-{
+std::vector<UA_ByteString> OpcUaKeys::readFiles(std::vector<std::string> filenames) {
   std::vector<UA_ByteString> ret;
   ret.reserve(filenames.size());
-  for( auto& filename : filenames)
-  {
+  for (auto &filename : filenames) {
     ret.push_back(readFile(filename));
   }
   return ret;
 }
 
-std::vector<UA_ByteString> OpcUaKeys::readDir(std::string dirname)
-{
+std::vector<UA_ByteString> OpcUaKeys::readDir(std::string dirname) {
   std::vector<UA_ByteString> ret;
   /*
   for (auto &p : std::filesystem::directory_iterator("sandbox"))
@@ -120,8 +101,7 @@ std::vector<UA_ByteString> OpcUaKeys::readDir(std::string dirname)
   return ret;
 }
 
-void OpcUaKeys::generatePrivateKey()
-{
+void OpcUaKeys::generatePrivateKey() {
   //./gen_key  type=rsa rsa_keysize=4096 filename=priv.der format=der
   std::cout << "Generate private key, this may take a while." << std::endl;
   // See MbedTLS gen_key
@@ -142,8 +122,7 @@ void OpcUaKeys::generatePrivateKey()
   ret = mbedtls_rsa_gen_key(mbedtls_pk_rsa(key), mbedtls_ctr_drbg_random, &ctr_drbg, keyLen, 65537);
   unsigned char output_buf[16000];
   int len = mbedtls_pk_write_key_der(&key, output_buf, 16000);
-  if (len < 0)
-  {
+  if (len < 0) {
     throw std::runtime_error("Save private der-Key failed.");
   }
   // mbedtls_pk_write_key_der writes from the back of the buffer
@@ -157,8 +136,7 @@ void OpcUaKeys::generatePrivateKey()
   std::cout << "Private key generated" << std::endl;
 }
 
-void OpcUaKeys::generateCertificate()
-{
+void OpcUaKeys::generateCertificate() {
   //./cert_write issuer_key=priv.der selfsign=1 output_file=priv_der.pub issuer_name=CN=domain.example.com,O=ExampleServer,C=DE
   std::string serialStr("1");
   std::string issuer_name("CN=domain.example.com,O=ExampleServer,C=DE");
@@ -176,7 +154,7 @@ void OpcUaKeys::generateCertificate()
 
   {
     std::time_t t = std::time(nullptr);
-    t += 5l * 365l * 24l * 60l * 60l; // Add 5 years
+    t += 5l * 365l * 24l * 60l * 60l;  // Add 5 years
     std::tm tm;
     std::memset(&tm, 0, sizeof(tm));
     UMATI_GMTIME(&t, &tm);
@@ -189,8 +167,7 @@ void OpcUaKeys::generateCertificate()
   ReturnCodeWatcher<int> ret(0);
   mbedtls_x509_crt issuer_crt;
   mbedtls_pk_context loaded_issuer_key, loaded_subject_key;
-  mbedtls_pk_context *issuer_key = &loaded_issuer_key,
-                     *subject_key = &loaded_subject_key;
+  mbedtls_pk_context *issuer_key = &loaded_issuer_key, *subject_key = &loaded_subject_key;
   mbedtls_x509write_cert crt;
   mbedtls_mpi serial;
   mbedtls_entropy_context entropy;
@@ -217,12 +194,8 @@ void OpcUaKeys::generateCertificate()
 
   ret = mbedtls_x509write_crt_set_validity(&crt, not_before.c_str(), not_after.c_str());
   ret = mbedtls_x509write_crt_set_basic_constraints(&crt, 0, -1);
-  unsigned int usage =
-      MBEDTLS_X509_KU_DIGITAL_SIGNATURE |
-      MBEDTLS_X509_KU_NON_REPUDIATION |
-      MBEDTLS_X509_KU_KEY_ENCIPHERMENT |
-      MBEDTLS_X509_KU_DATA_ENCIPHERMENT |
-      MBEDTLS_X509_KU_KEY_CERT_SIGN;
+  unsigned int usage = MBEDTLS_X509_KU_DIGITAL_SIGNATURE | MBEDTLS_X509_KU_NON_REPUDIATION | MBEDTLS_X509_KU_KEY_ENCIPHERMENT |
+                       MBEDTLS_X509_KU_DATA_ENCIPHERMENT | MBEDTLS_X509_KU_KEY_CERT_SIGN;
   ret = mbedtls_x509write_crt_set_key_usage(&crt, usage);
   // TODO Require possibility for set X509v3 Subject Alternative Name
   // See https://github.com/ARMmbed/mbedtls/pull/731

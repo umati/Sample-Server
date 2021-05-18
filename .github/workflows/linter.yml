@@ -16,8 +16,7 @@ name: Lint Code Base
 #############################
 on:
   push:
-    branches-ignore: [main]
-    # Remove the line above to run when pushing to master
+    branches-ignore: []
   pull_request:
     branches: [main, develop]
 
@@ -25,9 +24,9 @@ on:
 # Set the Job #
 ###############
 jobs:
-  build:
+  super-linter:
     # Name the Job
-    name: Lint Code Base
+    name: Lint Code Base (super-linter)
     # Set the agent to run on
     runs-on: ubuntu-latest
 
@@ -50,6 +49,17 @@ jobs:
       - name: Lint Code Base
         uses: github/super-linter@v3.17.1
         env:
+          VALIDATE_CPP: false # Use clang-formt instead
           VALIDATE_ALL_CODEBASE: false
           DEFAULT_BRANCH: main
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  clang-format-linter:
+    name: Lint Code Base (clang-format-lint)
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - uses: DoozyX/clang-format-lint-action@v0.12
+      with:
+        source: '.'
+        extensions: 'hpp,cpp'
+        clangFormatVersion: 12

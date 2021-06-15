@@ -8,6 +8,7 @@ namespace machinery {
 struct IMachineryItemVendorNameplateType_t : public di::IVendorNameplate_t {
   BindableMemberValue<std::uint16_t> YearOfConstruction;
   BindableMemberValue<std::uint8_t> MonthOfConstruction;
+  BindableMemberValue<UmatiServerLib::DateTime_t> InitialOperationDate;
 };
 
 }  // namespace machinery
@@ -26,6 +27,11 @@ REFL_FIELD(
   UmatiServerLib::attribute::PlaceholderOptional(),
   UmatiServerLib::attribute::MemberInTypeNodeId(
     UmatiServerLib::constexp::NodeId(constants::NsMachineryUri, UA_MACHINERYID_IMACHINERYITEMVENDORNAMEPLATETYPE_MONTHOFCONSTRUCTION)))
+REFL_FIELD(
+  InitialOperationDate,
+  UmatiServerLib::attribute::PlaceholderOptional(),
+  UmatiServerLib::attribute::MemberInTypeNodeId(
+    UmatiServerLib::constexp::NodeId(constants::NsMachineryUri, UA_MACHINERYID_IMACHINERYITEMVENDORNAMEPLATETYPE_INITIALOPERATIONDATE)))
 REFL_FIELD(Manufacturer)
 REFL_FIELD(ProductInstanceUri)
 REFL_FIELD(SerialNumber)

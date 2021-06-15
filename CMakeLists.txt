@@ -49,7 +49,7 @@ ua_generate_nodeset_and_datatypes(
   OUTPUT_DIR "${PROJECT_SOURCE_DIR}/src_generated"
   NAMESPACE_MAP "3:http://opcfoundation.org/UA/Machinery/"
   DEPENDS di
-  )
+)
 
 add_library(ua_gen_machinery
   src_generated/namespace_machinery_generated.c
@@ -114,6 +114,24 @@ add_library(ua_gen_robotic
 )
 target_link_libraries(ua_gen_robotic PUBLIC ua_gen_di)
 
+ua_generate_nodeset_and_datatypes(
+  NAME "woodworking"
+  FILE_NS "${PROJECT_SOURCE_DIR}/model/woodworking-1.0.5/Opc.Ua.Woodworking.NodeSet2.xml"
+  FILE_CSV "${PROJECT_SOURCE_DIR}/model/woodworking-1.0.5/Opc.Ua.Woodworking.NodeIds.csv"
+  FILE_BSD "${PROJECT_SOURCE_DIR}/model/woodworking-1.0.5/Opc.Ua.Woodworking.NodeSet2.bsd"
+  OUTPUT_DIR "${PROJECT_SOURCE_DIR}/src_generated"
+  NAMESPACE_MAP "7:http://opcfoundation.org/UA/Woodworking/"
+  DEPENDS machinery
+)
+
+add_library(ua_gen_woodworking
+  src_generated/namespace_woodworking_generated.c
+  src_generated/types_woodworking_generated.c
+  src_generated/types_woodworking_generated.h
+  src_generated/woodworking_nodeids.h
+)
+target_link_libraries(ua_gen_woodworking PUBLIC ua_gen_machinery)
+
 add_library(SampleServerLib
     UmatiServerLib/ConvertSimpleValue.cpp
     UmatiServerLib/ConvertStructValue.cpp
@@ -155,6 +173,9 @@ add_executable(
     MachineTools/CNShowcaseMachineTool.cpp
     Robotics/InstantiatedRobot.cpp
     Robotics/BasicRobot.cpp
+    Woodworking/InstantiatedWoodworking.cpp
+    Woodworking/BasicWoodworking.cpp
+    Woodworking/FullWoodworking.cpp
 )
 
 set_target_properties(${PROJECT_NAME} PROPERTIES LINKER_LANGUAGE CXX)
@@ -162,6 +183,7 @@ target_link_libraries(${PROJECT_NAME} PUBLIC SampleServerLib)
 target_link_libraries(${PROJECT_NAME} PUBLIC Configuration)
 target_link_libraries(${PROJECT_NAME} PUBLIC ua_gen_mt)
 target_link_libraries(${PROJECT_NAME} PUBLIC ua_gen_robotic)
+target_link_libraries(${PROJECT_NAME} PUBLIC ua_gen_woodworking)
 
 add_subdirectory(tests)
 include(CTest)

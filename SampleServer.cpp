@@ -16,12 +16,15 @@
 #include "MachineTools/MRMachineTool.hpp"
 #include "MachineTools/ShowcaseMachineTool.hpp"
 /*#include "Robotics/BasicRobot.hpp"*/
+#include "Woodworking/BasicWoodworking.hpp"
+#include "Woodworking/FullWoodworking.hpp"
 #include "UmatiServerLib/OpcUaKeys.hpp"
 #include "src_generated/namespace_di_generated.h"
 #include "src_generated/namespace_ia_generated.h"
 #include "src_generated/namespace_machinery_generated.h"
 #include "src_generated/namespace_machinetool_generated.h"
 /*#include "src_generated/namespace_robotics_generated.h"*/
+#include "src_generated/namespace_woodworking_generated.h"
 
 std::atomic_bool running{true};
 void sigHandler(int sig) {
@@ -137,17 +140,20 @@ int main(int argc, char *argv[]) {
   namespace_machinery_generated(pServer);
   namespace_machinetool_generated(pServer);
   /*namespace_robotics_generated(pServer);*/
+  namespace_woodworking_generated(pServer);
 
   std::mutex accessDataMutex;
 
   std::list<std::shared_ptr<SimulatedInstance>> machineTools;
   machineTools.push_back(std::make_shared<FullMachineTool>(pServer));
-  machineTools.push_back(std::make_shared<FullMachineToolDynamic>(pServer));
+  //machineTools.push_back(std::make_shared<FullMachineToolDynamic>(pServer));
   machineTools.push_back(std::make_shared<BasicMachineTool>(pServer));
-  machineTools.push_back(std::make_shared<MRMachineTool>(pServer));
-  machineTools.push_back(std::make_shared<ShowcaseMachineTool>(pServer));
-  machineTools.push_back(std::make_shared<CNShowcaseMachineTool>(pServer));
+  //machineTools.push_back(std::make_shared<MRMachineTool>(pServer));
+  //machineTools.push_back(std::make_shared<ShowcaseMachineTool>(pServer));
+  //machineTools.push_back(std::make_shared<CNShowcaseMachineTool>(pServer));
   /*machineTools.push_back(std::make_shared<BasicRobot>(pServer));*/
+  machineTools.push_back(std::make_shared<BasicWoodworking>(pServer));
+  machineTools.push_back(std::make_shared<FullWoodworking>(pServer));
 
   UA_Server_run_startup(pServer);
   std::unique_lock<decltype(accessDataMutex)> ul(accessDataMutex);

@@ -68,7 +68,7 @@ class BindVariable {
       UA_NodeId_init(&typeNodeId);
       auto statusCode = UA_Server_readDataType(pServer, *nodeId.NodeId, &typeNodeId);
       if (statusCode != UA_STATUSCODE_GOOD) {
-        std::cout << "UA_Server_readDataType: Result not good: " << UA_StatusCode_name(statusCode) << std::endl;
+        std::cout << "UA_Server_readDataType(" << nodeId <<  "): Result not good: " << UA_StatusCode_name(statusCode) << std::endl;
         throw std::runtime_error("Type could not be be fetched, no variable node?");
       }
       pDataType = UA_findDataType(&typeNodeId);

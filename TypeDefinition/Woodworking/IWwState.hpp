@@ -30,4 +30,5 @@ REFL_TYPE(
   woodworking::IWwState_t,
   UmatiServerLib::attribute::UaObjectType(UmatiServerLib::constexp::NodeId(constants::NsWoodworkingUri, UA_WOODWORKINGID_IWWSTATETYPE))
 )
+REFL_FIELD(Machine)
 REFL_END

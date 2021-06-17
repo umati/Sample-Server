@@ -31,4 +31,5 @@ REFL_TYPE(
   UmatiServerLib::attribute::UaObjectType(UmatiServerLib::constexp::NodeId(constants::NsWoodworkingUri, UA_WOODWORKINGID_IWWUNITOVERVIEWTYPE))
 )
 REFL_FIELD(CurrentState)
+REFL_FIELD(CurrentMode)
 REFL_END

@@ -10,7 +10,7 @@
 namespace woodworking{
 
 struct IWwBaseState_t {
-    BindableMemberValue<WwStateMachineOverview_t> Overview;
+    BindableMember<WwStateMachineOverview_t> Overview;
     BindableMember<WwStateMachineFlags_t> Flags;
     //BindableMemberValue<BaseObject> Values;
 };
@@ -31,4 +31,5 @@ REFL_TYPE(
   woodworking::IWwBaseState_t,
   UmatiServerLib::attribute::UaObjectType(UmatiServerLib::constexp::NodeId(constants::NsWoodworkingUri, UA_WOODWORKINGID_IWWBASESTATETYPE))
 )
+REFL_FIELD(Overview)
 REFL_END

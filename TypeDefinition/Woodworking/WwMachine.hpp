@@ -24,7 +24,7 @@ REFL_FIELD(
   Identification,
   UmatiServerLib::attribute::UaBrowseName(constants::NsDIUri)
 )
-
+REFL_FIELD(State)
 
 //REFL_FIELD(
 //  ManufacturerSpecific,

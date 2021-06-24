@@ -12,7 +12,9 @@ FullWoodworking::FullWoodworking(UA_Server *pServer) : InstantiatedWoodworking(p
 void FullWoodworking::CreateObject() {
   InstantiatedWoodworking::CreateObject();
   InstantiateIdentification();
-  InstantiateMachineState();
+  InstantiateMachineFlags();
+  InstantiateMachineOverview();
+
 }
 
 void FullWoodworking::InstantiateIdentification() {
@@ -45,9 +47,14 @@ void FullWoodworking::InstantiateIdentification() {
     ww.Identification->Location = "TBB";
 }
 
-void FullWoodworking::InstantiateMachineState() {
-  ww.State->Machine->Overview->CurrentState = UA_WwUnitStateEnumeration::UA_WWUNITSTATEENUMERATION_READY;
-  ww.State->Machine->Overview->CurrentMode = UA_WwUnitModeEnumeration::UA_WWUNITMODEENUMERATION_SEMIAUTOMATIC;
+void FullWoodworking::InstantiateMachineFlags() {
+    InstantiateOptional(ww.State->Machine->Flags,m_pServer,n);
+
+    InstantiatedWoodworking::InstantiateMachineFlags();
+}
+
+void FullWoodworking::InstantiateMachineOverview() {
+  InstantiatedWoodworking::InstantiateMachineOverview();
 }
 
 void FullWoodworking::Simulate() {

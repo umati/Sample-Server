@@ -25,6 +25,7 @@ REFL_TYPE(
   Bases<woodworking::IWwBaseState_t>(),
   UmatiServerLib::attribute::UaObjectType(UmatiServerLib::constexp::NodeId(constants::NsWoodworkingUri, UA_WOODWORKINGID_WWMACHINETYPE_STATE))
 )
+
 REFL_END
 
 REFL_TYPE(
@@ -32,4 +33,9 @@ REFL_TYPE(
   UmatiServerLib::attribute::UaObjectType(UmatiServerLib::constexp::NodeId(constants::NsWoodworkingUri, UA_WOODWORKINGID_IWWBASESTATETYPE))
 )
 REFL_FIELD(Overview)
+REFL_FIELD(
+  Flags,
+  UmatiServerLib::attribute::PlaceholderOptional(),
+  UmatiServerLib::attribute::MemberInTypeNodeId(UmatiServerLib::constexp::NodeId(constants::NsWoodworkingUri, UA_WOODWORKINGID_IWWBASESTATETYPE_FLAGS))
+)
 REFL_END

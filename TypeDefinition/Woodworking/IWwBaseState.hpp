@@ -23,7 +23,7 @@ struct WwStateMachine_t : public IWwBaseState_t {
 REFL_TYPE(
   woodworking::WwStateMachine_t,
   Bases<woodworking::IWwBaseState_t>(),
-  UmatiServerLib::attribute::UaObjectType(UmatiServerLib::constexp::NodeId(constants::NsWoodworkingUri, UA_WOODWORKINGID_WWMACHINETYPE_STATE))
+  UmatiServerLib::attribute::UaObjectType(UmatiServerLib::constexp::NodeId(constants::NsWoodworkingUri, UA_WOODWORKINGID_IWWBASESTATETYPE))
 )
 
 REFL_END

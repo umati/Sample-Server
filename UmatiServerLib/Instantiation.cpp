@@ -128,3 +128,43 @@ open62541Cpp::UA_NodeId getReferenceTypeFromMemberNode(UA_Server *pServer, open6
   }
   return ret;
 }
+
+void instantiateInterfaces(UA_Server *pServer, open62541Cpp::UA_NodeId member, open62541Cpp::UA_NodeId memberInType)
+{
+  UA_BrowseDescription brDesc;
+  UA_BrowseDescription_init(&brDesc);
+  UA_NodeId_copy(memberInType.NodeId, &brDesc.nodeId);
+  brDesc.referenceTypeId = UA_NODEID_NUMERIC(0, UA_NS0ID_HASINTERFACE);
+
+  brDesc.nodeClassMask = UA_NODECLASS_OBJECTTYPE | UA_NODECLASS_VARIABLETYPE;
+  brDesc.browseDirection = UA_BrowseDirection::UA_BROWSEDIRECTION_FORWARD;
+  brDesc.includeSubtypes = UA_TRUE;
+  brDesc.resultMask = UA_BROWSERESULTMASK_NONE;
+
+  auto browseResult = UA_Server_browse(pServer, UA_UINT32_MAX, &brDesc);
+
+  std::stringstream ss;
+  if (browseResult.statusCode != UA_STATUSCODE_GOOD) {
+    ss << "Result not good: " << UA_StatusCode_name(browseResult.statusCode) << std::endl;
+  }
+
+  for (std::size_t i = 0; i < browseResult.referencesSize; ++i) {
+    UA_StatusCode status = UA_Server_addReference(
+      pServer,
+      *member.NodeId,
+      UA_NODEID_NUMERIC(0, UA_NS0ID_HASINTERFACE),
+      browseResult.references[0].nodeId,
+      UA_TRUE);
+    /// \todo Add mandatory interface childs
+    if( status != UA_STATUSCODE_GOOD) {
+      ss << "Failed to add HasInterface references. Code: " << UA_StatusCode_name(browseResult.statusCode) << std::endl;
+      break;
+    }
+  }
+
+  UA_BrowseResult_clear(&browseResult);
+  UA_BrowseDescription_clear(&brDesc);
+  if (ss.str().length() != 0) {
+    throw std::runtime_error(ss.str());
+  }
+}

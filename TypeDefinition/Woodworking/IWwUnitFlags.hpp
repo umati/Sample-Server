@@ -45,7 +45,7 @@ struct WwStateMachineFlags_t : public IWwUnitFlags_t {
 REFL_TYPE(
   woodworking::WwStateMachineFlags_t,
   Bases<woodworking::IWwUnitFlags_t>(),
-  UmatiServerLib::attribute::UaObjectType(UmatiServerLib::constexp::NodeId(constants::NsWoodworkingUri, UA_WOODWORKINGID_WWMACHINETYPE_STATE_MACHINE_FLAGS))
+  UmatiServerLib::attribute::UaObjectType(UmatiServerLib::constexp::NodeId(constants::NsWoodworkingUri, UA_WOODWORKINGID_IWWUNITFLAGSTYPE))
 )
 REFL_END
 

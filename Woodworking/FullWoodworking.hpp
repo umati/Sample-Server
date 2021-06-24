@@ -12,6 +12,8 @@ class FullWoodworking : public InstantiatedWoodworking {
   void CreateObject() override;
 
   void InstantiateIdentification();
-  void InstantiateMachineState();
+  void InstantiateMachineFlags() override;
+  void InstantiateMachineOverview() override;
+
   int m_simStep = 0;
 };

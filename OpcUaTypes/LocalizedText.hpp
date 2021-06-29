@@ -28,21 +28,21 @@ namespace internalTypes {
 //} UA_LocalizedText;
 static UA_DataTypeMember LocalizedText_members[] = {
   {
-    UA_TYPES_STRING,      /* .memberTypeIndex, points into UA_TYPES since namespaceZero is true */
+    
+    UA_TYPENAME("locale") /* .memberName */
+    &UA_TYPES[UA_TYPES_STRING],      /* .memberType, points into UA_TYPES since namespaceZero is true */
     0,                    /* .padding */
-    true,                 /* .namespaceZero, see .memberTypeIndex */
     false,                /* .isArray */
     false                 /* .isOptional */
-    UA_TYPENAME("locale") /* .memberName */
   },
   {
-    UA_TYPES_STRING,                                          /* .memberTypeIndex, points into UA_TYPES since namespaceZero is true */
+    UA_TYPENAME("text")                                       /* .memberName */
+    &UA_TYPES[UA_TYPES_STRING],                               /* .memberType, points into UA_TYPES since namespaceZero is true */
     UMATISERVERLIB_PADDING(::UA_LocalizedText, text, locale), /* .padding */
-    true,                                                     /* .namespaceZero, see .memberTypeIndex */
     false,                                                    /* .isArray */
     false                                                     /* .isOptional */
-    UA_TYPENAME("text")                                       /* .memberName */
-  }};
+  }
+  };
 
 static const UA_DataType UA_LocalizedText = {
   {0, UA_NODEIDTYPE_NUMERIC, {21}},                  /* .typeId */

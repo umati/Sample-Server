@@ -116,9 +116,9 @@ target_link_libraries(ua_gen_robotic PUBLIC ua_gen_di)
 
 ua_generate_nodeset_and_datatypes(
   NAME "woodworking"
-  FILE_NS "${PROJECT_SOURCE_DIR}/model/woodworking-1.0.5/Opc.Ua.Woodworking.NodeSet2.xml"
-  FILE_CSV "${PROJECT_SOURCE_DIR}/model/woodworking-1.0.5/Opc.Ua.Woodworking.NodeIds.csv"
-  FILE_BSD "${PROJECT_SOURCE_DIR}/model/woodworking-1.0.5/Opc.Ua.Woodworking.NodeSet2.bsd"
+  FILE_NS "${PROJECT_SOURCE_DIR}/model/woodworking-1.0.0.8/Opc.Ua.Woodworking.NodeSet2.xml"
+  FILE_CSV "${PROJECT_SOURCE_DIR}/model/woodworking-1.0.0.8/Opc.Ua.Woodworking.NodeIds.csv"
+  FILE_BSD "${PROJECT_SOURCE_DIR}/model/woodworking-1.0.0.8/Opc.Ua.Woodworking.NodeSet2.bsd"
   OUTPUT_DIR "${PROJECT_SOURCE_DIR}/src_generated"
   NAMESPACE_MAP "7:http://opcfoundation.org/UA/Woodworking/"
   DEPENDS machinery

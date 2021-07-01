@@ -35,19 +35,7 @@ struct IWwUnitFlags_t {
     BindableMemberValue<bool> MaintenanceRequired;
     BindableMemberValue<bool> FeedRuns;
 };
-
-struct WwStateMachineFlags_t : public IWwUnitFlags_t {
-};
-
 }  // namespace woodworking
-
-
-REFL_TYPE(
-  woodworking::WwStateMachineFlags_t,
-  Bases<woodworking::IWwUnitFlags_t>(),
-  UmatiServerLib::attribute::UaObjectType(UmatiServerLib::constexp::NodeId(constants::NsWoodworkingUri, UA_WOODWORKINGID_IWWUNITFLAGSTYPE))
-)
-REFL_END
 
 REFL_TYPE(
   woodworking::IWwUnitFlags_t,

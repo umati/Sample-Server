@@ -14,17 +14,7 @@ struct IWwUnitOverview_t {
     BindableMemberValue<UA_WwUnitModeEnumeration> CurrentMode;
 };
 
-
-struct WwStateMachineOverview_t : public IWwUnitOverview_t {};
-
 } // namespace woodworking
-
-REFL_TYPE(
-  woodworking::WwStateMachineOverview_t,
-  Bases<woodworking::IWwUnitOverview_t>(),
-  UmatiServerLib::attribute::UaObjectType(UmatiServerLib::constexp::NodeId(constants::NsWoodworkingUri, UA_WOODWORKINGID_WWMACHINETYPE_STATE_MACHINE_OVERVIEW))
-)
-REFL_END
 
 REFL_TYPE(
   woodworking::IWwUnitOverview_t,

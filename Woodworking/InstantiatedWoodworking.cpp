@@ -3,7 +3,8 @@
 #include <sstream>
 #include <unordered_map>
 
-InstantiatedWoodworking::InstantiatedWoodworking(UA_Server *pServer) : m_pServer(pServer), NsIndex(m_nsIndex), n(pServer) {}
+InstantiatedWoodworking::InstantiatedWoodworking(UA_Server *pServer) : m_pServer(pServer), NsIndex(m_nsIndex), n(pServer) {
+}
 
 void InstantiatedWoodworking::CreateObject() {
   std::stringstream ss;
@@ -41,7 +42,9 @@ void InstantiatedWoodworking::InstantiateIdentification() {
 }
 
 void InstantiatedWoodworking::InstantiateMachineFlags() {
+    InstantiateOptional(ww.State->Machine->Flags,m_pServer,n);
     ww.State->Machine->Flags->MachineOn = true;
+    ww.State->Machine->Flags->AirPresent = true;
     ww.State->Machine->Flags->MachineInitialized = true;
     ww.State->Machine->Flags->PowerPresent = true;
     ww.State->Machine->Flags->Emergency = false;

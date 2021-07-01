@@ -17,7 +17,6 @@ void BasicWoodworking::InstantiateIdentification() {
 }
 
 void BasicWoodworking::InstantiateMachineFlags() {
-    InstantiateOptional(ww.State->Machine->Flags,m_pServer,n);
     InstantiatedWoodworking::InstantiateMachineFlags();
 }
 

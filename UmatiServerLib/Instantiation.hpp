@@ -83,14 +83,17 @@ void InstantiateOptional(BINDABLEMEMBER_T<T> &memberPar, UA_Server *pServer, Nod
       UA_ObjectAttributes objAttr = UA_ObjectAttributes_default;
       UA_String_copy(&browseName.QualifiedName->name, &objAttr.displayName.text);
 
-      status = UA_Server_addObjectNode(
+
+      status = UA_Server_addNode_begin(
         pServer,
+        UA_NodeClass::UA_NODECLASS_OBJECT,
         UA_NODEID_NUMERIC(member.ParentNodeId.NodeId->namespaceIndex, 0),
         *member.ParentNodeId.NodeId,
         *referenceType.NodeId,
         *browseName.QualifiedName,
         *typeDef.NodeId,
-        objAttr,
+        &objAttr,
+        &UA_TYPES[UA_TYPES_OBJECTATTRIBUTES],
         nullptr,
         member.NodeId.NodeId);
 
@@ -98,6 +101,8 @@ void InstantiateOptional(BINDABLEMEMBER_T<T> &memberPar, UA_Server *pServer, Nod
       {
         instantiateInterfaces(pServer, member.NodeId, member.MemberInTypeNodeId);
       }
+
+      status = UA_Server_addNode_finish(pServer, *member.NodeId.NodeId);
 
       UA_ObjectAttributes_clear(&objAttr);
     } break;

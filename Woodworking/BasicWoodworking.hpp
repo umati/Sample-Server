@@ -1,5 +1,5 @@
 #pragma once
-#include "InstantiatedWoodWorking.hpp"
+#include "InstantiatedWoodworking.hpp"
 
 class BasicWoodworking : public InstantiatedWoodworking {
  public:

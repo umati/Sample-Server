@@ -12,18 +12,10 @@ void BasicWoodworking::CreateObject() {
   InstantiateMachineOverview();
 }
 
-void BasicWoodworking::InstantiateIdentification() {
-    InstantiatedWoodworking::InstantiateIdentification();
-}
+void BasicWoodworking::InstantiateIdentification() { InstantiatedWoodworking::InstantiateIdentification(); }
 
-void BasicWoodworking::InstantiateMachineFlags() {
-    InstantiatedWoodworking::InstantiateMachineFlags();
-}
+void BasicWoodworking::InstantiateMachineFlags() { InstantiatedWoodworking::InstantiateMachineFlags(); }
 
-void BasicWoodworking::InstantiateMachineOverview() {
-    InstantiatedWoodworking::InstantiateMachineOverview();
-}
+void BasicWoodworking::InstantiateMachineOverview() { InstantiatedWoodworking::InstantiateMachineOverview(); }
 
-void BasicWoodworking::Simulate() {
-    ++m_simStep;
-}
+void BasicWoodworking::Simulate() { ++m_simStep; }

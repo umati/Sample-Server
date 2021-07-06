@@ -5,9 +5,9 @@
 #include <Open62541Cpp/UA_NodeId.hpp>
 #include <cstdint>
 
+#include "../MachineTools/SimulatedInstance.hpp"
 #include "../TypeDefinition/Woodworking/WwMachine.hpp"
 #include "../UmatiServerLib/NodesMaster.hpp"
-#include "../MachineTools/SimulatedInstance.hpp"
 
 class InstantiatedWoodworking : public SimulatedInstance {
  public:

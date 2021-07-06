@@ -6,12 +6,12 @@
 #include "../ns0/Constants.hpp"
 #include "Constants.hpp"
 
-namespace woodworking{
+namespace woodworking {
 
 struct MachineIdentification_t : public machinery::IMachineryItemVendorNameplateType_t, public machinery::IMachineTagNameplate_t {
-    BindableMemberValue<std::string> LocationPlant;
-    BindableMemberValue<std::string> LocationGPS;
-    BindableMemberValue<UmatiServerLib::LocalizedText_t> CustomerCompanyName;
+  BindableMemberValue<std::string> LocationPlant;
+  BindableMemberValue<std::string> LocationGPS;
+  BindableMemberValue<UmatiServerLib::LocalizedText_t> CustomerCompanyName;
 };
 
 }  // namespace woodworking
@@ -23,13 +23,16 @@ REFL_TYPE(
 REFL_FIELD(
   LocationPlant,
   UmatiServerLib::attribute::PlaceholderOptional(),
-  UmatiServerLib::attribute::MemberInTypeNodeId(UmatiServerLib::constexp::NodeId(constants::NsWoodworkingUri, UA_WOODWORKINGID_WWMACHINETYPE_IDENTIFICATION_LOCATIONPLANT)))
+  UmatiServerLib::attribute::MemberInTypeNodeId(
+    UmatiServerLib::constexp::NodeId(constants::NsWoodworkingUri, UA_WOODWORKINGID_WWMACHINETYPE_IDENTIFICATION_LOCATIONPLANT)))
 REFL_FIELD(
   LocationGPS,
   UmatiServerLib::attribute::PlaceholderOptional(),
-  UmatiServerLib::attribute::MemberInTypeNodeId(UmatiServerLib::constexp::NodeId(constants::NsWoodworkingUri, UA_WOODWORKINGID_WWMACHINETYPE_IDENTIFICATION_LOCATIONGPS)))
+  UmatiServerLib::attribute::MemberInTypeNodeId(
+    UmatiServerLib::constexp::NodeId(constants::NsWoodworkingUri, UA_WOODWORKINGID_WWMACHINETYPE_IDENTIFICATION_LOCATIONGPS)))
 REFL_FIELD(
   CustomerCompanyName,
   UmatiServerLib::attribute::PlaceholderOptional(),
-  UmatiServerLib::attribute::MemberInTypeNodeId(UmatiServerLib::constexp::NodeId(constants::NsWoodworkingUri, UA_WOODWORKINGID_WWMACHINETYPE_IDENTIFICATION_CUSTOMERCOMPANYNAME)))
+  UmatiServerLib::attribute::MemberInTypeNodeId(
+    UmatiServerLib::constexp::NodeId(constants::NsWoodworkingUri, UA_WOODWORKINGID_WWMACHINETYPE_IDENTIFICATION_CUSTOMERCOMPANYNAME)))
 REFL_END

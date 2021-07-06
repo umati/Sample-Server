@@ -6,15 +6,13 @@
 #include "../ns0/Constants.hpp"
 #include "Constants.hpp"
 
-namespace woodworking{
+namespace woodworking {
 
-struct WwEventsDispatcher_t  {
-};
+struct WwEventsDispatcher_t {};
 
 }  // namespace woodworking
 
 REFL_TYPE(
   woodworking::WwEventsDispatcher_t,
-  UmatiServerLib::attribute::UaObjectType(UmatiServerLib::constexp::NodeId(constants::NsWoodworkingUri, UA_WOODWORKINGID_WWEVENTSDISPATCHERTYPE))
-)
+  UmatiServerLib::attribute::UaObjectType(UmatiServerLib::constexp::NodeId(constants::NsWoodworkingUri, UA_WOODWORKINGID_WWEVENTSDISPATCHERTYPE)))
 REFL_END

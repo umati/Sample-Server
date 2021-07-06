@@ -69,12 +69,12 @@ void InstantiateOptional(BINDABLEMEMBER_T<T> &memberPar, UA_Server *pServer, Nod
         open62541Cpp::UA_NodeId typeDefFromObjTypeAttr = objTypeAttr.NodeId.UANodeId(pServer);
         UA_Boolean isAbstract;
         status = UA_Server_readIsAbstract(pServer, *typeDefFromObjTypeAttr.NodeId, &isAbstract);
-        if(status != UA_STATUSCODE_GOOD) {
-           std::stringstream ss;
+        if (status != UA_STATUSCODE_GOOD) {
+          std::stringstream ss;
           ss << "Could not read isAbstract from node (" << static_cast<std::string>(typeDefFromObjTypeAttr) << "), Error: " << UA_StatusCode_name(status);
           throw std::runtime_error(ss.str());
         }
-        if(!isAbstract) {
+        if (!isAbstract) {
           // Might be an interface type
           typeDef = typeDefFromObjTypeAttr;
         }
@@ -82,7 +82,6 @@ void InstantiateOptional(BINDABLEMEMBER_T<T> &memberPar, UA_Server *pServer, Nod
 
       UA_ObjectAttributes objAttr = UA_ObjectAttributes_default;
       UA_String_copy(&browseName.QualifiedName->name, &objAttr.displayName.text);
-
 
       status = UA_Server_addNode_begin(
         pServer,
@@ -97,8 +96,7 @@ void InstantiateOptional(BINDABLEMEMBER_T<T> &memberPar, UA_Server *pServer, Nod
         nullptr,
         member.NodeId.NodeId);
 
-      if(status == UA_STATUSCODE_GOOD)
-      {
+      if (status == UA_STATUSCODE_GOOD) {
         instantiateInterfaces(pServer, member.NodeId, member.MemberInTypeNodeId);
       }
 

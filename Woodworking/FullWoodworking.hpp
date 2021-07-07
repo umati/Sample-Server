@@ -1,6 +1,5 @@
 #pragma once
-#include "InstantiatedWoodWorking.hpp"
-
+#include "InstantiatedWoodworking.hpp"
 class FullWoodworking : public InstantiatedWoodworking {
  public:
   FullWoodworking(UA_Server *pServer);

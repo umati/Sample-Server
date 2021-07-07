@@ -3,8 +3,7 @@
 #include <sstream>
 #include <unordered_map>
 
-InstantiatedWoodworking::InstantiatedWoodworking(UA_Server *pServer) : m_pServer(pServer), NsIndex(m_nsIndex), n(pServer) {
-}
+InstantiatedWoodworking::InstantiatedWoodworking(UA_Server *pServer) : m_pServer(pServer), NsIndex(m_nsIndex), n(pServer) {}
 
 void InstantiatedWoodworking::CreateObject() {
   std::stringstream ss;
@@ -36,26 +35,26 @@ void InstantiatedWoodworking::InstantiateIdentification() {
   ww.Identification->ProductInstanceUri = ss.str();
   ww.Identification->YearOfConstruction = 2021;
   ww.Identification->DeviceClass = "Moulder";
-  ww.Identification->Model = {"","Powermat 4000"};
+  ww.Identification->Model = {"", "Powermat 4000"};
   ww.Identification->Manufacturer = {"", "Weinig"};
   ww.Identification->SerialNumber = "123456";
 }
 
 void InstantiatedWoodworking::InstantiateMachineFlags() {
-    InstantiateOptional(ww.State->Machine->Flags,m_pServer,n);
-    ww.State->Machine->Flags->MachineOn = true;
-    ww.State->Machine->Flags->AirPresent = true;
-    ww.State->Machine->Flags->MachineInitialized = true;
-    ww.State->Machine->Flags->PowerPresent = true;
-    ww.State->Machine->Flags->Emergency = false;
-    ww.State->Machine->Flags->Calibrated = true;
-    ww.State->Machine->Flags->Error = false;
-    ww.State->Machine->Flags->Alarm = false;
-    ww.State->Machine->Flags->Warning = false;
-    ww.State->Machine->Flags->RecipeInRun = true;
+  InstantiateOptional(ww.State->Machine->Flags, m_pServer, n);
+  ww.State->Machine->Flags->MachineOn = true;
+  ww.State->Machine->Flags->AirPresent = true;
+  ww.State->Machine->Flags->MachineInitialized = true;
+  ww.State->Machine->Flags->PowerPresent = true;
+  ww.State->Machine->Flags->Emergency = false;
+  ww.State->Machine->Flags->Calibrated = true;
+  ww.State->Machine->Flags->Error = false;
+  ww.State->Machine->Flags->Alarm = false;
+  ww.State->Machine->Flags->Warning = false;
+  ww.State->Machine->Flags->RecipeInRun = true;
 }
 
 void InstantiatedWoodworking::InstantiateMachineOverview() {
-    ww.State->Machine->Overview->CurrentMode = UA_WwUnitModeEnumeration::UA_WWUNITMODEENUMERATION_MANUAL;
-    ww.State->Machine->Overview->CurrentState = UA_WwUnitStateEnumeration::UA_WWUNITSTATEENUMERATION_READY;
+  ww.State->Machine->Overview->CurrentMode = UA_WwUnitModeEnumeration::UA_WWUNITMODEENUMERATION_MANUAL;
+  ww.State->Machine->Overview->CurrentState = UA_WwUnitStateEnumeration::UA_WWUNITSTATEENUMERATION_READY;
 }

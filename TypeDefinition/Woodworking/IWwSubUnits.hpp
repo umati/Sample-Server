@@ -7,24 +7,21 @@
 #include "Constants.hpp"
 #include "IWwBaseState.hpp"
 
-namespace woodworking{
+namespace woodworking {
 
-struct IWwSubUnits_t  {
-    //BindableMemberPlaceholder<BindableMember, IWwBaseState_t> SubUnit;
-    BindableMember<IWwBaseState_t> SubUnit;
+struct IWwSubUnits_t {
+  // BindableMemberPlaceholder<BindableMember, IWwBaseState_t> SubUnit;
+  BindableMember<IWwBaseState_t> SubUnit;
 };
 
 }  // namespace woodworking
 
 REFL_TYPE(
   woodworking::IWwSubUnits_t,
-  UmatiServerLib::attribute::UaObjectType(UmatiServerLib::constexp::NodeId(constants::NsWoodworkingUri, UA_WOODWORKINGID_IWWSUBUNITSTYPE))
-)
+  UmatiServerLib::attribute::UaObjectType(UmatiServerLib::constexp::NodeId(constants::NsWoodworkingUri, UA_WOODWORKINGID_IWWSUBUNITSTYPE)))
 REFL_FIELD(
   SubUnit,
   UmatiServerLib::attribute::MemberInTypeNodeId(UmatiServerLib::constexp::NodeId(constants::NsWoodworkingUri, UA_WOODWORKINGID_IWWSUBUNITSTYPE_SUBUNIT)),
-  UmatiServerLib::attribute::PlaceholderOptional()
-)
+  UmatiServerLib::attribute::PlaceholderOptional())
 
 REFL_END
-

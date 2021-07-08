@@ -3,6 +3,7 @@
 #include <open62541/server.h>
 #include <open62541/types_generated.h>
 
+#include "../TypeDefinition/Woodworking/WwBaseEvent.hpp"
 #include "../UmatiServerLib/BindRefl.hpp"
 #include "../UmatiServerLib/OpcUaCondition.hpp"
 #include "../UmatiServerLib/ServerHelper.hpp"
@@ -171,7 +172,10 @@ void FullWoodworking::InstantiateMachineValues() {
   ww.State->Machine->Values->RelativePiecesOut = 234;
 }
 
-void FullWoodworking::InstantiateEventsDispatcher() { InstantiateOptional(ww.Events, m_pServer, n); }
+void FullWoodworking::InstantiateEventsDispatcher() {
+  InstantiateOptional(ww.Events, m_pServer, n);
+  writeEventNotifier(m_pServer, ww.Events.NodeId);
+}
 
 void FullWoodworking::InstantiateManufacturerSpecific() {
   InstantiateOptional(ww.ManufacturerSpecific, m_pServer, n);
@@ -190,4 +194,21 @@ void FullWoodworking::InstantiateSubunits() {
   ww.State->SubUnits->SubUnit->Overview->CurrentMode = UA_WwUnitModeEnumeration::UA_WWUNITMODEENUMERATION_MANUAL;
 }
 
-void FullWoodworking::Simulate() { ++m_simStep; }
+void FullWoodworking::Simulate() {
+  ++m_simStep;
+
+  if ((m_simStep % 10) == 1) {
+    woodworking::WwBaseEvent_t event;
+    event.EventCategory = UA_WwEventCategoryEnumeration::UA_WWEVENTCATEGORYENUMERATION_DIAGNOSTIC;
+    std::stringstream msgId;
+    msgId << "id" << m_simStep;
+    event.MessageId = msgId.str();
+    event.PathParts = "Machine";
+    std::stringstream msg;
+    msg << "Example Message " << m_simStep;
+    event.Message = {"", msg.str()};
+    event.SourceName = "Machine";
+    event.Severity = 1;
+    OpcUaEvent ev(event, m_pServer, ww.Events.NodeId);
+  }
+}

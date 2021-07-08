@@ -150,7 +150,6 @@ void instantiateInterfaces(UA_Server *pServer, open62541Cpp::UA_NodeId member, o
   for (std::size_t i = 0; i < browseResult.referencesSize; ++i) {
     UA_StatusCode status =
       UA_Server_addReference(pServer, *member.NodeId, UA_NODEID_NUMERIC(0, UA_NS0ID_HASINTERFACE), browseResult.references[0].nodeId, UA_TRUE);
-    /// \todo Add mandatory interface childs
     if (status != UA_STATUSCODE_GOOD) {
       ss << "Failed to add HasInterface references. Code: " << UA_StatusCode_name(browseResult.statusCode) << std::endl;
       break;

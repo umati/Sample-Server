@@ -13,8 +13,7 @@ struct ManufacturerSpecific_t {
 }  // namespace woodworking
 
 REFL_TYPE(
-  woodworking::ManufacturerSpecific_t,
-  UmatiServerLib::attribute::UaObjectType(UmatiServerLib::constexp::NodeId(constants::Ns0Uri, UA_WOODWORKINGID_WWMACHINETYPE_MANUFACTURERSPECIFIC)))
+  woodworking::ManufacturerSpecific_t, UmatiServerLib::attribute::UaObjectType(UmatiServerLib::constexp::NodeId(constants::Ns0Uri, UA_NS0ID_FOLDERTYPE)))
 REFL_FIELD(
   LastProgramName,
   UmatiServerLib::attribute::PlaceholderOptional(),

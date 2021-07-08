@@ -1,4 +1,6 @@
 #include "FullWoodworking.hpp"
+
+#include <open62541/server.h>
 #include <open62541/types_generated.h>
 
 #include "../UmatiServerLib/BindRefl.hpp"
@@ -172,9 +174,9 @@ void FullWoodworking::InstantiateMachineValues() {
 void FullWoodworking::InstantiateEventsDispatcher() { InstantiateOptional(ww.Events, m_pServer, n); }
 
 void FullWoodworking::InstantiateManufacturerSpecific() {
-  // InstantiateOptional(ww.ManufacturerSpecific, m_pServer, n);
-  // InstantiateOptional(ww.ManufacturerSpecific->LastProgramName, m_pServer, n);
-  // ww.ManufacturerSpecific->LastProgramName = "A1234";
+  InstantiateOptional(ww.ManufacturerSpecific, m_pServer, n);
+  InstantiateOptional(ww.ManufacturerSpecific->LastProgramName, m_pServer, n);
+  ww.ManufacturerSpecific->LastProgramName = "A1234";
 }
 
 void FullWoodworking::InstantiateSubunits() {

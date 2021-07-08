@@ -14,7 +14,7 @@ struct WwMachine_t {
   BindableMember<MachineIdentification_t> Identification;
   BindableMember<IWwState_t> State;
   BindableMember<WwEventsDispatcher_t> Events;
-  // BindableMember<ManufacturerSpecific_t> ManufacturerSpecific;
+  BindableMember<ManufacturerSpecific_t> ManufacturerSpecific;
 };
 }  // namespace woodworking
 
@@ -27,12 +27,9 @@ REFL_FIELD(
   Events,
   UmatiServerLib::attribute::PlaceholderOptional(),
   UmatiServerLib::attribute::MemberInTypeNodeId(UmatiServerLib::constexp::NodeId(constants::NsWoodworkingUri, UA_WOODWORKINGID_WWMACHINETYPE_EVENTS)))
-
-// Doesn't work since Manufacturerspecific isn't an objecttype
-// REFL_FIELD(
-//  ManufacturerSpecific,
-//  UmatiServerLib::attribute::PlaceholderOptional(),
-//  UmatiServerLib::attribute::MemberInTypeNodeId(UmatiServerLib::constexp::NodeId(constants::NsWoodworkingUri,
-//  UA_WOODWORKINGID_WWMACHINETYPE_MANUFACTURERSPECIFIC))
-//)
+REFL_FIELD(
+  ManufacturerSpecific,
+  UmatiServerLib::attribute::PlaceholderOptional(),
+  UmatiServerLib::attribute::MemberInTypeNodeId(
+    UmatiServerLib::constexp::NodeId(constants::NsWoodworkingUri, UA_WOODWORKINGID_WWMACHINETYPE_MANUFACTURERSPECIFIC)))
 REFL_END

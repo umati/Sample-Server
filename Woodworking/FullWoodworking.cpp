@@ -197,6 +197,120 @@ void FullWoodworking::InstantiateSubunits() {
 void FullWoodworking::Simulate() {
   ++m_simStep;
 
+  switch (m_simStep % 12) {
+    case 0: {
+      ww.State->Machine->Overview->CurrentMode = UA_WwUnitModeEnumeration::UA_WWUNITMODEENUMERATION_SLEEP;
+      break;
+    }
+    case 2: {
+      ww.State->Machine->Overview->CurrentMode = UA_WwUnitModeEnumeration::UA_WWUNITMODEENUMERATION_SETUP;
+      break;
+    }
+    case 4: {
+      ww.State->Machine->Overview->CurrentMode = UA_WwUnitModeEnumeration::UA_WWUNITMODEENUMERATION_MANUAL;
+      break;
+    }
+    case 6: {
+      ww.State->Machine->Overview->CurrentMode = UA_WwUnitModeEnumeration::UA_WWUNITMODEENUMERATION_SEMIAUTOMATIC;
+      break;
+    }
+    case 8: {
+      ww.State->Machine->Overview->CurrentMode = UA_WwUnitModeEnumeration::UA_WWUNITMODEENUMERATION_AUTOMATIC;
+      break;
+    }
+    case 10: {
+      ww.State->Machine->Overview->CurrentMode = UA_WwUnitModeEnumeration::UA_WWUNITMODEENUMERATION_OTHER;
+      break;
+    }
+  }
+
+  switch (m_simStep % 10) {
+    case 0: {
+      ww.State->Machine->Overview->CurrentState = UA_WwUnitStateEnumeration::UA_WWUNITSTATEENUMERATION_OFFLINE;
+      break;
+    }
+    case 2: {
+      ww.State->Machine->Overview->CurrentState = UA_WwUnitStateEnumeration::UA_WWUNITSTATEENUMERATION_STANDBY;
+      break;
+    }
+    case 4: {
+      ww.State->Machine->Overview->CurrentState = UA_WwUnitStateEnumeration::UA_WWUNITSTATEENUMERATION_READY;
+      break;
+    }
+    case 6: {
+      ww.State->Machine->Overview->CurrentState = UA_WwUnitStateEnumeration::UA_WWUNITSTATEENUMERATION_WORKING;
+      break;
+    }
+    case 8: {
+      ww.State->Machine->Overview->CurrentState = UA_WwUnitStateEnumeration::UA_WWUNITSTATEENUMERATION_ERROR;
+      break;
+    }
+  }
+
+  ww.State->Machine->Values->ActualCycle = m_simStep;
+  switch (ww.State->Machine->Overview->CurrentState.value) {
+    case UA_WwUnitStateEnumeration::UA_WWUNITSTATEENUMERATION_OFFLINE: {
+      ww.State->Machine->Values->AbsoluteMachineOffTime = ww.State->Machine->Values->AbsoluteMachineOffTime.value + 1;
+      ww.State->Machine->Values->FeedSpeed = 0;
+      break;
+    }
+    case UA_WwUnitStateEnumeration::UA_WWUNITSTATEENUMERATION_STANDBY: {
+      ww.State->Machine->Values->AbsoluteStandbyTime = ww.State->Machine->Values->AbsoluteStandbyTime.value + 1;
+      ww.State->Machine->Values->RelativeStandbyTime = ww.State->Machine->Values->RelativeStandbyTime.value + 1;
+      ww.State->Machine->Values->AbsoluteMachineOnTime = ww.State->Machine->Values->AbsoluteMachineOnTime.value + 1;
+      ww.State->Machine->Values->RelativeMachineOnTime = ww.State->Machine->Values->RelativeMachineOnTime.value + 1;
+      ww.State->Machine->Values->AbsolutePowerPresentTime = ww.State->Machine->Values->AbsolutePowerPresentTime.value + 1;
+      ww.State->Machine->Values->RelativePowerPresentTime = ww.State->Machine->Values->RelativePowerPresentTime.value + 1;
+      ww.State->Machine->Values->FeedSpeed = 0;
+      break;
+    }
+    case UA_WwUnitStateEnumeration::UA_WWUNITSTATEENUMERATION_READY: {
+      ww.State->Machine->Values->AbsoluteReadyTime = ww.State->Machine->Values->AbsoluteReadyTime.value + 1;
+      ww.State->Machine->Values->RelativeReadyTime = ww.State->Machine->Values->RelativeReadyTime.value + 1;
+      ww.State->Machine->Values->AbsoluteMachineOnTime = ww.State->Machine->Values->AbsoluteMachineOnTime.value + 1;
+      ww.State->Machine->Values->RelativeMachineOnTime = ww.State->Machine->Values->RelativeMachineOnTime.value + 1;
+      ww.State->Machine->Values->AbsolutePowerPresentTime = ww.State->Machine->Values->AbsolutePowerPresentTime.value + 1;
+      ww.State->Machine->Values->RelativePowerPresentTime = ww.State->Machine->Values->RelativePowerPresentTime.value + 1;
+      ww.State->Machine->Values->FeedSpeed = 0;
+      break;
+    }
+    case UA_WwUnitStateEnumeration::UA_WWUNITSTATEENUMERATION_WORKING: {
+      ww.State->Machine->Values->AbsoluteWorkingTime = ww.State->Machine->Values->AbsoluteWorkingTime.value + 1;
+      ww.State->Machine->Values->RelativeWorkingTime = ww.State->Machine->Values->RelativeWorkingTime.value + 1;
+      ww.State->Machine->Values->AbsoluteMachineOnTime = ww.State->Machine->Values->AbsoluteMachineOnTime.value + 1;
+      ww.State->Machine->Values->RelativeMachineOnTime = ww.State->Machine->Values->RelativeMachineOnTime.value + 1;
+      ww.State->Machine->Values->AbsolutePowerPresentTime = ww.State->Machine->Values->AbsolutePowerPresentTime.value + 1;
+      ww.State->Machine->Values->RelativePowerPresentTime = ww.State->Machine->Values->RelativePowerPresentTime.value + 1;
+      ww.State->Machine->Values->AbsoluteProductionTime = ww.State->Machine->Values->AbsoluteProductionTime.value + 1;
+      ww.State->Machine->Values->RelativeProductionTime = ww.State->Machine->Values->RelativeProductionTime.value + 1;
+      ww.State->Machine->Values->FeedSpeed = 200;
+      ww.State->Machine->Values->AbsoluteRunsGood = ww.State->Machine->Values->AbsoluteRunsGood.value + 1;
+      ww.State->Machine->Values->RelativeRunsGood = ww.State->Machine->Values->RelativeRunsGood.value + 1;
+      ww.State->Machine->Values->AbsoluteRunsTotal = ww.State->Machine->Values->AbsoluteRunsTotal.value + 1;
+      ww.State->Machine->Values->RelativeRunsTotal = ww.State->Machine->Values->RelativeRunsTotal.value + 1;
+      ww.State->Machine->Values->AbsoluteLength = ww.State->Machine->Values->AbsoluteLength.value + (ww.State->Machine->Values->FeedSpeed.value / 60);
+      ww.State->Machine->Values->RelativeLength = ww.State->Machine->Values->RelativeLength.value + (ww.State->Machine->Values->FeedSpeed.value / 60);
+      if (m_simStep % 5 == 0) {
+        ww.State->Machine->Values->AbsolutePiecesIn = ww.State->Machine->Values->AbsolutePiecesIn.value + 1;
+        ww.State->Machine->Values->RelativePiecesIn = ww.State->Machine->Values->RelativePiecesIn.value + 1;
+      } else if (m_simStep % 5 == 4) {
+        ww.State->Machine->Values->AbsolutePiecesOut = ww.State->Machine->Values->AbsolutePiecesOut.value + 1;
+        ww.State->Machine->Values->RelativePiecesOut = ww.State->Machine->Values->RelativePiecesOut.value + 1;
+      }
+      break;
+    }
+    case UA_WwUnitStateEnumeration::UA_WWUNITSTATEENUMERATION_ERROR: {
+      ww.State->Machine->Values->AbsoluteErrorTime = ww.State->Machine->Values->AbsoluteErrorTime.value + 1;
+      ww.State->Machine->Values->RelativeErrorTime = ww.State->Machine->Values->RelativeErrorTime.value + 1;
+      ww.State->Machine->Values->AbsoluteMachineOnTime = ww.State->Machine->Values->AbsoluteMachineOnTime.value + 1;
+      ww.State->Machine->Values->RelativeMachineOnTime = ww.State->Machine->Values->RelativeMachineOnTime.value + 1;
+      ww.State->Machine->Values->AbsolutePowerPresentTime = ww.State->Machine->Values->AbsolutePowerPresentTime.value + 1;
+      ww.State->Machine->Values->RelativePowerPresentTime = ww.State->Machine->Values->RelativePowerPresentTime.value + 1;
+      ww.State->Machine->Values->FeedSpeed = 0;
+      break;
+    }
+  }
+
   if ((m_simStep % 10) == 1) {
     woodworking::WwBaseEvent_t event;
     event.EventCategory = UA_WwEventCategoryEnumeration::UA_WWEVENTCATEGORYENUMERATION_DIAGNOSTIC;

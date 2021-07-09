@@ -81,7 +81,7 @@ void ConvertStructValue::setByRefl(const T &src, void *trg, const UA_DataType *t
         break;
       }
 
-      ptrIncrement += UA_TYPES[uaMember.memberTypeIndex].memSize;
+      ptrIncrement += uaMember.memberType->memSize;
     }
 
     if (uaMemberIndex == -1) {
@@ -91,7 +91,7 @@ void ConvertStructValue::setByRefl(const T &src, void *trg, const UA_DataType *t
 
     void *memberPtr = reinterpret_cast<std::uint8_t *>(trg) + ptrIncrement;
     auto &uaMember = pTypeDefinition->members[uaMemberIndex];
-    copyValue(reflMember(src), memberPtr, &UA_TYPES[uaMember.memberTypeIndex]);
+    copyValue(reflMember(src), memberPtr, uaMember.memberType);
   });
 }
 

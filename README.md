@@ -10,9 +10,13 @@ Sample-Server implementation of various umati endorsed OPC UA companion specific
 
 This is an example implementation of the OPC UA Machine Tool Companion Specification based on open62541. The server provides several simulated machine tool, which show different extension stages of the specification.
 
+### Woodworking Example
+
+This is an example implementation of the OPC UA Woodworking Companion Specification. The server provides two simulated woodworking machines, a basic one implementing only mandatory variables/objects and a full one implementing every optional variable/object. 
+
 #### Scope
 
-This implementation provides simulations for the machine tool specification, which changes most values in a pseudo random way. As no real machine simulation is done in the background, the values need not correlate with each other. Also only reading of values of OPC UA-clients is implemented. All write requests are ignored silently.
+This implementation provides simulations for the machine tool and woodworking specification, which changes most values in a pseudo random way. As no real machine simulation is done in the background, the values need not correlate with each other. Also only reading of values of OPC UA-clients is implemented. All write requests are ignored silently.
 
 #### Docker Image
 

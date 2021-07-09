@@ -44,17 +44,16 @@ static UA_DataTypeMember LocalizedText_members[] = {
   }};
 
 static const UA_DataType UA_LocalizedText = {
-  {0, UA_NODEIDTYPE_NUMERIC, {21}},                  /* .typeId */
-  {0, UA_NODEIDTYPE_NUMERIC, {0}},                   /* .binaryEncodingId, the numericidentifier used on the wire (thenamespaceindex is from .typeId) */
-  sizeof(::UA_LocalizedText),                        /* .memSize */
-  UA_TYPES_LOCALIZEDTEXT,                            /* .typeIndex, in the array of custom types */
-  UA_DATATYPEKIND_LOCALIZEDTEXT,                     /* .typeKind */
-  true,                                              /* .pointerFree */
-  false,                                             /* .overlayable (depends on endianness and
-                                                    the absence of padding) */
-  2,                                                 /* .membersSize */
-  LocalizedText_members UA_TYPENAME("LocalizedText") /* .typeName */
-};
+  UA_TYPENAME("LocalizedText")      /* .typeName */
+  {0, UA_NODEIDTYPE_NUMERIC, {21}}, /* .typeId */
+  {0, UA_NODEIDTYPE_NUMERIC, {0}},  /* .binaryEncodingId, the numericidentifier used on the wire (thenamespaceindex is from .typeId) */
+  sizeof(::UA_LocalizedText),       /* .memSize */
+  UA_DATATYPEKIND_LOCALIZEDTEXT,    /* .typeKind */
+  true,                             /* .pointerFree */
+  false,                            /* .overlayable (depends on endianness and
+                                   the absence of padding) */
+  2,                                /* .membersSize */
+  LocalizedText_members};
 }  // namespace internalTypes
 
 }  // namespace UmatiServerLib

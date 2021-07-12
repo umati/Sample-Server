@@ -18,6 +18,10 @@ open62541Cpp::UA_NodeId readDataType(UA_Server *pServer, open62541Cpp::UA_NodeId
 open62541Cpp::UA_NodeId readTypeDefinition(UA_Server *pServer, open62541Cpp::UA_NodeId nodeId);
 UA_Int32 readValueRank(UA_Server *pServer, open62541Cpp::UA_NodeId nodeId);
 open62541Cpp::UA_NodeId getReferenceTypeFromMemberNode(UA_Server *pServer, open62541Cpp::UA_NodeId nodeId, open62541Cpp::UA_NodeId parentNodeId);
+
+/// Look for interfaces and instantiate them
+void instantiateInterfaces(UA_Server *pServer, open62541Cpp::UA_NodeId member, open62541Cpp::UA_NodeId memberInType);
+
 template <typename T>
 UA_StatusCode InstantiateVariable(
   UA_Server pServer,
@@ -59,25 +63,45 @@ void InstantiateOptional(BINDABLEMEMBER_T<T> &memberPar, UA_Server *pServer, Nod
   switch (nodeClass) {
     case UA_NODECLASS_OBJECT: {
       auto typeDef = readTypeDefinition(pServer, member.MemberInTypeNodeId);
+      // Check for Object type, so subsequent classes are possible.
       if constexpr (hasAttributeIfReflectable<UmatiServerLib::attribute::UaObjectType, T>()) {
         auto objTypeAttr = refl::descriptor::get_attribute<UmatiServerLib::attribute::UaObjectType>(refl::reflect<T>());
-        typeDef = objTypeAttr.NodeId.UANodeId(pServer);
+        open62541Cpp::UA_NodeId typeDefFromObjTypeAttr = objTypeAttr.NodeId.UANodeId(pServer);
+        UA_Boolean isAbstract;
+        status = UA_Server_readIsAbstract(pServer, *typeDefFromObjTypeAttr.NodeId, &isAbstract);
+        if (status != UA_STATUSCODE_GOOD) {
+          std::stringstream ss;
+          ss << "Could not read isAbstract from node (" << static_cast<std::string>(typeDefFromObjTypeAttr) << "), Error: " << UA_StatusCode_name(status);
+          throw std::runtime_error(ss.str());
+        }
+        if (!isAbstract) {
+          // Might be an interface type
+          typeDef = typeDefFromObjTypeAttr;
+        }
       }
 
       UA_ObjectAttributes objAttr = UA_ObjectAttributes_default;
       UA_String_copy(&browseName.QualifiedName->name, &objAttr.displayName.text);
-      {
-        status = UA_Server_addObjectNode(
-          pServer,
-          UA_NODEID_NUMERIC(member.ParentNodeId.NodeId->namespaceIndex, 0),
-          *member.ParentNodeId.NodeId,
-          *referenceType.NodeId,
-          *browseName.QualifiedName,
-          *typeDef.NodeId,
-          objAttr,
-          nullptr,
-          member.NodeId.NodeId);
+
+      status = UA_Server_addNode_begin(
+        pServer,
+        UA_NodeClass::UA_NODECLASS_OBJECT,
+        UA_NODEID_NUMERIC(member.ParentNodeId.NodeId->namespaceIndex, 0),
+        *member.ParentNodeId.NodeId,
+        *referenceType.NodeId,
+        *browseName.QualifiedName,
+        *typeDef.NodeId,
+        &objAttr,
+        &UA_TYPES[UA_TYPES_OBJECTATTRIBUTES],
+        nullptr,
+        member.NodeId.NodeId);
+
+      if (status == UA_STATUSCODE_GOOD) {
+        instantiateInterfaces(pServer, member.NodeId, member.MemberInTypeNodeId);
       }
+
+      status = UA_Server_addNode_finish(pServer, *member.NodeId.NodeId);
+
       UA_ObjectAttributes_clear(&objAttr);
     } break;
     case UA_NODECLASS_VARIABLE: {

@@ -6,13 +6,13 @@ Sample-Server implementation of various umati endorsed OPC UA companion specific
 
 [![Gitpod ready-to-code](https://img.shields.io/badge/Gitpod-ready--to--code-blue?logo=gitpod)](https://gitpod.io/#https://github.com/umati/Sample-Server)
 
-### Machine Tool Example
+### Machine Tool Examples
 
-This is an example implementation of the OPC UA Machine Tool Companion Specification based on open62541. The server provides several simulated machine tool, which show different extension stages of the specification.
+This is an example implementation of the OPC UA Machine Tool Companion Specification based on open62541. The server provides several simulated machine tools, which show different extension stages of the specification.
 
 ### Woodworking Example
 
-This is an example implementation of the OPC UA Woodworking Companion Specification. The server provides two simulated woodworking machines, a basic one implementing only mandatory variables/objects and a full one implementing every optional variable/object. 
+This is an example implementation of the OPC UA Woodworking Companion Specification. The server provides two simulated woodworking machines, a basic one implementing only mandatory variables/objects and a full one implementing every optional variable/object.
 
 #### Scope
 
@@ -22,7 +22,7 @@ This implementation provides simulations for the machine tool and woodworking sp
 
 This repository automatically builds a sample server docker image which is then run at `opc.tcp://opcua.umati.app:4840` (Security: none and higher / Authentication: anonymous)
 
-Use this image for your development purposes. Pull this public docker image: `ghcr.io/umati/sample-server:main`
+Use this container image for your local development purposes. Pull this public image at: `docker pull ghcr.io/umati/sample-server:main`
 
 To run this image you need a docker installation and than typically:
 `docker run -d -p 4840:4840 ghcr.io/umati/sample-server:main`

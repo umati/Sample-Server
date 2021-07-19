@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.15)
-project(SampleServer VERSION 0.1)
+project(SampleServer VERSION 0.2)
 
 set(CMAKE_CXX_STANDARD 20)
 
@@ -29,7 +29,7 @@ ua_generate_nodeset_and_datatypes(
   OUTPUT_DIR "${PROJECT_SOURCE_DIR}/src_generated"
 )
 
-# Add also heder files to trigger the generation!
+# Add also header files to trigger the generation!
 add_library(ua_gen_di
   ${UA_NODESET_DI_SOURCES}
   ${UA_NODESET_DI_HEADERS}

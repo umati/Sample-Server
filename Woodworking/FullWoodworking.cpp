@@ -181,32 +181,6 @@ void FullWoodworking::InstantiateManufacturerSpecific() {
   InstantiateOptional(ww.ManufacturerSpecific, m_pServer, n);
   InstantiateOptional(ww.ManufacturerSpecific->LastProgramName, m_pServer, n);
   ww.ManufacturerSpecific->LastProgramName = "A1234";
-
-  // manually add max feed speed to manufacturer specific since it's not defined in the cs
-  UA_VariableAttributes attr = UA_VariableAttributes_default;
-  UA_Int32 maxFeedSpeed = 300;
-  UA_Variant_setScalar(&attr.value, &maxFeedSpeed, &UA_TYPES[UA_TYPES_INT32]);
-  attr.description = UA_LOCALIZEDTEXT("en-US", "maximum Feed Speed");
-  attr.displayName = UA_LOCALIZEDTEXT("en-US", "maxFeedSpeed");
-  attr.dataType = UA_TYPES[UA_TYPES_INT32].typeId;
-  attr.accessLevel = UA_ACCESSLEVELMASK_READ | UA_ACCESSLEVELMASK_WRITE;
-
-  auto status = UA_Server_addVariableNode(
-    m_pServer,
-    UA_NODEID_STRING(nsFromUri(m_pServer, constants::NsWoodworkingUri), "maxFeedSpeed"),
-    *ww.ManufacturerSpecific->LastProgramName.ParentNodeId.NodeId,
-    UA_NODEID_NUMERIC(0, UA_NS0ID_ORGANIZES),
-    UA_QUALIFIEDNAME(nsFromUri(m_pServer, constants::NsWoodworkingUri), "maxFeedSpeed"),
-    UA_NODEID_NUMERIC(0, UA_NS0ID_BASEDATAVARIABLETYPE),
-    attr,
-    NULL,
-    NULL);
-
-  if (status != UA_STATUSCODE_GOOD) {
-    std::stringstream ss;
-    ss << "Could not create node, Error: " << UA_StatusCode_name(status);
-    throw std::runtime_error(ss.str());
-  }
 }
 
 void FullWoodworking::InstantiateSubunits() {

@@ -41,7 +41,7 @@ void FullWoodworking::InstantiateIdentification() {
   InstantiateOptional(ww.Identification->Location, m_pServer, n);
 
   ww.Identification->LocationPlant = "TBB";
-  ww.Identification->LocationGPS = "158.3259 123.1525";
+  ww.Identification->LocationGPS = "49.628661 9.654903";
   ww.Identification->CustomerCompanyName = {"", "Weinig Expo Center"};
   ww.Identification->ManufacturerUri = "https://www.weinig.com";
   ww.Identification->ProductCode = "123456";
@@ -181,6 +181,32 @@ void FullWoodworking::InstantiateManufacturerSpecific() {
   InstantiateOptional(ww.ManufacturerSpecific, m_pServer, n);
   InstantiateOptional(ww.ManufacturerSpecific->LastProgramName, m_pServer, n);
   ww.ManufacturerSpecific->LastProgramName = "A1234";
+
+  // manually add max feed speed to manufacturer specific since it's not defined in the cs
+  UA_VariableAttributes attr = UA_VariableAttributes_default;
+  UA_Int32 maxFeedSpeed = 300;
+  UA_Variant_setScalar(&attr.value, &maxFeedSpeed, &UA_TYPES[UA_TYPES_INT32]);
+  attr.description = UA_LOCALIZEDTEXT("en-US", "maximum Feed Speed");
+  attr.displayName = UA_LOCALIZEDTEXT("en-US", "maxFeedSpeed");
+  attr.dataType = UA_TYPES[UA_TYPES_INT32].typeId;
+  attr.accessLevel = UA_ACCESSLEVELMASK_READ | UA_ACCESSLEVELMASK_WRITE;
+
+  auto status = UA_Server_addVariableNode(
+    m_pServer,
+    UA_NODEID_STRING(nsFromUri(m_pServer, constants::NsWoodworkingUri), "maxFeedSpeed"),
+    *ww.ManufacturerSpecific->LastProgramName.ParentNodeId.NodeId,
+    UA_NODEID_NUMERIC(0, UA_NS0ID_ORGANIZES),
+    UA_QUALIFIEDNAME(nsFromUri(m_pServer, constants::NsWoodworkingUri), "maxFeedSpeed"),
+    UA_NODEID_NUMERIC(0, UA_NS0ID_BASEDATAVARIABLETYPE),
+    attr,
+    NULL,
+    NULL);
+
+  if (status != UA_STATUSCODE_GOOD) {
+    std::stringstream ss;
+    ss << "Could not create node, Error: " << UA_StatusCode_name(status);
+    throw std::runtime_error(ss.str());
+  }
 }
 
 void FullWoodworking::InstantiateSubunits() {
@@ -239,6 +265,7 @@ void FullWoodworking::Simulate() {
     }
     case 6: {
       ww.State->Machine->Overview->CurrentState = UA_WwUnitStateEnumeration::UA_WWUNITSTATEENUMERATION_WORKING;
+
       break;
     }
     case 8: {
@@ -251,6 +278,7 @@ void FullWoodworking::Simulate() {
   switch (ww.State->Machine->Overview->CurrentState.value) {
     case UA_WwUnitStateEnumeration::UA_WWUNITSTATEENUMERATION_OFFLINE: {
       ww.State->Machine->Values->AbsoluteMachineOffTime = ww.State->Machine->Values->AbsoluteMachineOffTime.value + 1;
+      ww.State->Machine->Flags->RecipeInRun = false;
       ww.State->Machine->Values->FeedSpeed = 0;
       break;
     }
@@ -261,6 +289,7 @@ void FullWoodworking::Simulate() {
       ww.State->Machine->Values->RelativeMachineOnTime = ww.State->Machine->Values->RelativeMachineOnTime.value + 1;
       ww.State->Machine->Values->AbsolutePowerPresentTime = ww.State->Machine->Values->AbsolutePowerPresentTime.value + 1;
       ww.State->Machine->Values->RelativePowerPresentTime = ww.State->Machine->Values->RelativePowerPresentTime.value + 1;
+      ww.State->Machine->Flags->RecipeInRun = false;
       ww.State->Machine->Values->FeedSpeed = 0;
       break;
     }
@@ -271,10 +300,12 @@ void FullWoodworking::Simulate() {
       ww.State->Machine->Values->RelativeMachineOnTime = ww.State->Machine->Values->RelativeMachineOnTime.value + 1;
       ww.State->Machine->Values->AbsolutePowerPresentTime = ww.State->Machine->Values->AbsolutePowerPresentTime.value + 1;
       ww.State->Machine->Values->RelativePowerPresentTime = ww.State->Machine->Values->RelativePowerPresentTime.value + 1;
+      ww.State->Machine->Flags->RecipeInRun = false;
       ww.State->Machine->Values->FeedSpeed = 0;
       break;
     }
     case UA_WwUnitStateEnumeration::UA_WWUNITSTATEENUMERATION_WORKING: {
+      ww.State->Machine->Flags->RecipeInRun = true;
       ww.State->Machine->Values->AbsoluteWorkingTime = ww.State->Machine->Values->AbsoluteWorkingTime.value + 1;
       ww.State->Machine->Values->RelativeWorkingTime = ww.State->Machine->Values->RelativeWorkingTime.value + 1;
       ww.State->Machine->Values->AbsoluteMachineOnTime = ww.State->Machine->Values->AbsoluteMachineOnTime.value + 1;
@@ -283,7 +314,7 @@ void FullWoodworking::Simulate() {
       ww.State->Machine->Values->RelativePowerPresentTime = ww.State->Machine->Values->RelativePowerPresentTime.value + 1;
       ww.State->Machine->Values->AbsoluteProductionTime = ww.State->Machine->Values->AbsoluteProductionTime.value + 1;
       ww.State->Machine->Values->RelativeProductionTime = ww.State->Machine->Values->RelativeProductionTime.value + 1;
-      ww.State->Machine->Values->FeedSpeed = 200;
+      ww.State->Machine->Values->FeedSpeed = 250;
       ww.State->Machine->Values->AbsoluteRunsGood = ww.State->Machine->Values->AbsoluteRunsGood.value + 1;
       ww.State->Machine->Values->RelativeRunsGood = ww.State->Machine->Values->RelativeRunsGood.value + 1;
       ww.State->Machine->Values->AbsoluteRunsTotal = ww.State->Machine->Values->AbsoluteRunsTotal.value + 1;
@@ -306,6 +337,7 @@ void FullWoodworking::Simulate() {
       ww.State->Machine->Values->RelativeMachineOnTime = ww.State->Machine->Values->RelativeMachineOnTime.value + 1;
       ww.State->Machine->Values->AbsolutePowerPresentTime = ww.State->Machine->Values->AbsolutePowerPresentTime.value + 1;
       ww.State->Machine->Values->RelativePowerPresentTime = ww.State->Machine->Values->RelativePowerPresentTime.value + 1;
+      ww.State->Machine->Flags->RecipeInRun = false;
       ww.State->Machine->Values->FeedSpeed = 0;
       break;
     }

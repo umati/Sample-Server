@@ -31,12 +31,12 @@ void InstantiatedWoodworking::CreateObject() {
 
 void InstantiatedWoodworking::InstantiateIdentification() {
   std::stringstream ss;
-  ss << "https://www.weinig.com/#" << MachineName;
+  ss << "https://www.weinig.com/en/solid-wood/planing-machines-and-moulders/powermat-series/powermat-3000.html#" << MachineName;
   ww.Identification->ProductInstanceUri = ss.str();
   ww.Identification->YearOfConstruction = 2021;
-  ww.Identification->DeviceClass = "Moulder";
-  ww.Identification->Model = {"", "Powermat 4000"};
-  ww.Identification->Manufacturer = {"", "Weinig"};
+  ww.Identification->DeviceClass = "ProfilingMachine";
+  ww.Identification->Model = {"", "Powermat 3000"};
+  ww.Identification->Manufacturer = {"", "Michael Weinig AG"};
   ww.Identification->SerialNumber = "123456";
 }
 

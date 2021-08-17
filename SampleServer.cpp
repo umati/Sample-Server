@@ -67,7 +67,7 @@ int main(int argc, char *argv[]) {
   signal(SIGINT, sigHandler);
   signal(SIGABRT, sigHandler);
   signal(SIGTERM, sigHandler);
-  Configuration::Configuration serverConfig;
+  Configuration::Configuration serverConfig = Configuration::DefaultConfiguration();
   std::string configurationFilename = "configuration.json";
   if (argc >= 2) {
     configurationFilename = argv[1];
@@ -75,7 +75,7 @@ int main(int argc, char *argv[]) {
   try {
     serverConfig = Configuration::FromJsonFile(configurationFilename);
   } catch (std::exception &e) {
-    std::cout << "Could not load configuration, using an insecure default one." << std::endl;
+    std::cout << "Could not load configuration, using a possible insecure default one." << std::endl;
     std::cout << e.what() << std::endl;
   }
   std::cout << "SampleServer, exit with Ctrl+C" << std::endl;
@@ -92,7 +92,17 @@ int main(int argc, char *argv[]) {
       serverConfig.Encryption->TrustedClients,
       serverConfig.Encryption->IssuerCerts,
       serverConfig.Encryption->Revocation);
-    keys.Load();
+    try {
+      keys.Load();
+    } catch (std::exception &ex) {
+      std::cout << "Could not load keys for encryption." << std::endl;
+      std::cout << ex.what();
+      if(keys.PrivateKey.length == 0 && keys.PublicCert.length == 0) {
+        std::cout << "Generate and store new keys.";
+        keys.GenerateKeys();
+        keys.StoreKeys();
+      }
+    }
     // Skip all certificate checks
     size_t issuerListSize = 0;
     UA_ByteString *issuerList = NULL;

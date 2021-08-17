@@ -157,6 +157,7 @@ target_compile_definitions(SampleServerLib PUBLIC __STDC_WANT_LIB_EXT1__)
 add_library(
   Configuration
   Configuration/Configuration_json.cpp
+  Configuration/Configuration.cpp
 )
 target_link_libraries(Configuration PRIVATE nlohmann_json::nlohmann_json)
 

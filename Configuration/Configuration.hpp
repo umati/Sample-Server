@@ -21,4 +21,7 @@ struct Configuration {
   std::optional<std::string> Hostname;
   std::optional<Encryption_t> Encryption;
 };
+
+Configuration DefaultConfiguration();
+
 }  // namespace Configuration

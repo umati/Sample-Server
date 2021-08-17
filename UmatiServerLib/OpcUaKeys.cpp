@@ -1,5 +1,6 @@
 #include "OpcUaKeys.hpp"
 
+/*
 #include <mbedtls/ctr_drbg.h>
 #include <mbedtls/entropy.h>
 #include <mbedtls/entropy_poll.h>
@@ -7,7 +8,10 @@
 #include <mbedtls/pk.h>
 #include <mbedtls/rsa.h>
 #include <mbedtls/x509_crt.h>
+*/
 #include <open62541/types_generated_handling.h>
+#include <open62541/plugin/create_certificate.h>
+#include <open62541/plugin/log_stdout.h>
 
 #include <algorithm>
 #include <cstring>  // memset
@@ -16,6 +20,8 @@
 #include <iostream>
 #include <sstream>
 #include <stdexcept>
+#include <list>
+#include <experimental/iterator>
 
 #include "../arch/gmtime.hpp"
 
@@ -41,14 +47,41 @@ class ReturnCodeWatcher {
 
 OpcUaKeys::OpcUaKeys(
   std::string privFile, std::string pubFile, std::vector<std::string> trustedClients, std::vector<std::string> issuerCerts, std::vector<std::string> revocation)
-  : PrivFile(privFile), PubFile(pubFile), TrustedClients(trustedClients), IssuerCerts(issuerCerts), Revocation(revocation) {}
+  : PrivKeyFile(privFile), PubCertFile(pubFile), TrustedClients(trustedClients), IssuerCerts(issuerCerts), Revocation(revocation) {}
 
 void OpcUaKeys::Load() {
-  PrivateKey = readFile(PrivFile);
-  PublicCert = readFile(PubFile);
-  Trusted = readFiles(TrustedClients);
-  Issuer = readFiles(IssuerCerts);
-  Revoked = readFiles(Revocation);
+  std::list<std::string> errors;
+  try{
+    PrivateKey = readFile(PrivKeyFile);
+  }catch(std::runtime_error &e) {
+    errors.push_back(e.what());
+  }
+  try{
+    PublicCert = readFile(PubCertFile);
+  }catch(std::runtime_error &e) {
+    errors.push_back(e.what());
+  }
+  try{
+    Trusted = readFiles(TrustedClients);
+  }catch(std::runtime_error &e) {
+    errors.push_back(e.what());
+  }
+  try{
+    Issuer = readFiles(IssuerCerts);
+  }catch(std::runtime_error &e) {
+    errors.push_back(e.what());
+  }
+  try{
+    Revoked = readFiles(Revocation);
+  }catch(std::runtime_error &e) {
+    errors.push_back(e.what());
+  }
+  if(!errors.empty()) {
+    std::stringstream ss;
+    //std::copy(errors.begin(), errors.end(), std::ostream_iterator<std::string>(ss, "\n"));
+    std::copy(errors.begin(), errors.end(), std::experimental::make_ostream_joiner(ss, "\n"));
+    throw std::runtime_error(ss.str());
+  }
 }
 
 OpcUaKeys::~OpcUaKeys() {
@@ -101,6 +134,43 @@ std::vector<UA_ByteString> OpcUaKeys::readDir(std::string dirname) {
   return ret;
 }
 
+void OpcUaKeys::GenerateKeys() {
+  UA_String subject[3] = {UA_STRING_STATIC("C=DE"),
+          UA_STRING_STATIC("O=SampleOrganization"),
+          UA_STRING_STATIC("CN=UmatiSampleServer@localhost")};
+
+  UA_UInt32 lenSubject = 3;
+  UA_String subjectAltName[2]= {
+    UA_STRING_STATIC("DNS:localhost"),
+    UA_STRING_STATIC("URI:urn:UmatiSampleServer")
+  };
+  UA_UInt32 lenSubjectAltName = 2;
+  auto status = UA_CreateCertificate(
+    UA_Log_Stdout,
+    subject, lenSubject,
+    subjectAltName, lenSubjectAltName,
+    2048, UA_CertificateFormat::UA_CERTIFICATEFORMAT_PEM,
+    &PrivateKey, &PublicCert);
+  if(status != UA_STATUSCODE_GOOD) {
+    std::stringstream ss;
+    ss << "Generating OPC UA Server certificate failed: " << UA_StatusCode_name(status);
+    throw std::runtime_error(ss.str());
+  }
+}
+
+void OpcUaKeys::StoreKeys() {
+  writeFile(PrivKeyFile, PrivateKey);
+  writeFile(PubCertFile, PublicCert);
+}
+
+void OpcUaKeys::writeFile(std::string filename, const UA_ByteString& content) {
+  std::ofstream os;
+  os.open(filename, std::ios::binary | std::ios::trunc);
+  os.write((const char*)content.data, content.length);
+  os.close();
+}
+
+/*
 void OpcUaKeys::generatePrivateKey() {
   //./gen_key  type=rsa rsa_keysize=4096 filename=priv.der format=der
   std::cout << "Generate private key, this may take a while." << std::endl;
@@ -127,7 +197,7 @@ void OpcUaKeys::generatePrivateKey() {
   }
   // mbedtls_pk_write_key_der writes from the back of the buffer
   unsigned char *c = output_buf + sizeof(output_buf) - len;
-  std::ofstream derFile(PrivFile, std::ios::out | std::ios::binary);
+  std::ofstream derFile(PrivKeyFile, std::ios::out | std::ios::binary);
   derFile.write((char *)c, len);
   derFile.close();
   mbedtls_pk_free(&key);
@@ -184,7 +254,7 @@ void OpcUaKeys::generateCertificate() {
   ret = mbedtls_ctr_drbg_seed(&ctr_drbg, mbedtls_entropy_func, &entropy, NULL, 0);
   ret = mbedtls_mpi_read_string(&serial, 10, serialStr.c_str());
 
-  ret = mbedtls_pk_parse_keyfile(&loaded_issuer_key, PrivFile.c_str(), NULL);
+  ret = mbedtls_pk_parse_keyfile(&loaded_issuer_key, PrivKeyFile.c_str(), NULL);
   // Same for self sign
   mbedtls_x509write_crt_set_subject_key(&crt, issuer_key);
   mbedtls_x509write_crt_set_issuer_key(&crt, issuer_key);
@@ -202,3 +272,4 @@ void OpcUaKeys::generateCertificate() {
 
   throw std::runtime_error("Generating public key not implemented.");
 }
+*/

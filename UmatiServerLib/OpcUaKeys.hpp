@@ -27,17 +27,21 @@ class OpcUaKeys {
   std::vector<UA_ByteString> Revoked;
   virtual ~OpcUaKeys();
 
+  void GenerateKeys();
+  void StoreKeys();
+
  protected:  // Not fully implemented, so hidden
   void generatePrivateKey();
   void generateCertificate();
 
+  void writeFile(std::string filename, const UA_ByteString& content);
   UA_ByteString readFile(std::string filename);
   std::vector<UA_ByteString> readDir(std::string dirname);
   std::vector<UA_ByteString> readFiles(std::vector<std::string> filenames);
 
  protected:
-  std::string PrivFile;
-  std::string PubFile;
+  std::string PrivKeyFile;
+  std::string PubCertFile;
   std::vector<std::string> TrustedClients;
   std::vector<std::string> IssuerCerts;
   std::vector<std::string> Revocation;

@@ -9,19 +9,19 @@
 #include <mbedtls/rsa.h>
 #include <mbedtls/x509_crt.h>
 */
-#include <open62541/types_generated_handling.h>
 #include <open62541/plugin/create_certificate.h>
 #include <open62541/plugin/log_stdout.h>
+#include <open62541/types_generated_handling.h>
 
 #include <algorithm>
 #include <cstring>  // memset
 #include <fstream>
 #include <iomanip>
 #include <iostream>
+#include <iterator>
+#include <list>
 #include <sstream>
 #include <stdexcept>
-#include <list>
-#include <experimental/iterator>
 
 #include "../arch/gmtime.hpp"
 
@@ -51,35 +51,35 @@ OpcUaKeys::OpcUaKeys(
 
 void OpcUaKeys::Load() {
   std::list<std::string> errors;
-  try{
+  try {
     PrivateKey = readFile(PrivKeyFile);
-  }catch(std::runtime_error &e) {
+  } catch (std::runtime_error &e) {
     errors.push_back(e.what());
   }
-  try{
+  try {
     PublicCert = readFile(PubCertFile);
-  }catch(std::runtime_error &e) {
+  } catch (std::runtime_error &e) {
     errors.push_back(e.what());
   }
-  try{
+  try {
     Trusted = readFiles(TrustedClients);
-  }catch(std::runtime_error &e) {
+  } catch (std::runtime_error &e) {
     errors.push_back(e.what());
   }
-  try{
+  try {
     Issuer = readFiles(IssuerCerts);
-  }catch(std::runtime_error &e) {
+  } catch (std::runtime_error &e) {
     errors.push_back(e.what());
   }
-  try{
+  try {
     Revoked = readFiles(Revocation);
-  }catch(std::runtime_error &e) {
+  } catch (std::runtime_error &e) {
     errors.push_back(e.what());
   }
-  if(!errors.empty()) {
+  if (!errors.empty()) {
     std::stringstream ss;
-    //std::copy(errors.begin(), errors.end(), std::ostream_iterator<std::string>(ss, "\n"));
-    std::copy(errors.begin(), errors.end(), std::experimental::make_ostream_joiner(ss, "\n"));
+    std::copy(errors.begin(), errors.end(), std::ostream_iterator<std::string>(ss, "\n"));
+    // std::copy(errors.begin(), errors.end(), std::experimental::make_ostream_joiner(ss, "\n"));
     throw std::runtime_error(ss.str());
   }
 }
@@ -135,23 +135,14 @@ std::vector<UA_ByteString> OpcUaKeys::readDir(std::string dirname) {
 }
 
 void OpcUaKeys::GenerateKeys() {
-  UA_String subject[3] = {UA_STRING_STATIC("C=DE"),
-          UA_STRING_STATIC("O=SampleOrganization"),
-          UA_STRING_STATIC("CN=UmatiSampleServer@localhost")};
+  UA_String subject[3] = {UA_STRING_STATIC("C=DE"), UA_STRING_STATIC("O=SampleOrganization"), UA_STRING_STATIC("CN=UmatiSampleServer@localhost")};
 
   UA_UInt32 lenSubject = 3;
-  UA_String subjectAltName[2]= {
-    UA_STRING_STATIC("DNS:localhost"),
-    UA_STRING_STATIC("URI:urn:UmatiSampleServer")
-  };
+  UA_String subjectAltName[2] = {UA_STRING_STATIC("DNS:localhost"), UA_STRING_STATIC("URI:urn:UmatiSampleServer")};
   UA_UInt32 lenSubjectAltName = 2;
   auto status = UA_CreateCertificate(
-    UA_Log_Stdout,
-    subject, lenSubject,
-    subjectAltName, lenSubjectAltName,
-    2048, UA_CertificateFormat::UA_CERTIFICATEFORMAT_PEM,
-    &PrivateKey, &PublicCert);
-  if(status != UA_STATUSCODE_GOOD) {
+    UA_Log_Stdout, subject, lenSubject, subjectAltName, lenSubjectAltName, 2048, UA_CertificateFormat::UA_CERTIFICATEFORMAT_PEM, &PrivateKey, &PublicCert);
+  if (status != UA_STATUSCODE_GOOD) {
     std::stringstream ss;
     ss << "Generating OPC UA Server certificate failed: " << UA_StatusCode_name(status);
     throw std::runtime_error(ss.str());
@@ -163,10 +154,10 @@ void OpcUaKeys::StoreKeys() {
   writeFile(PubCertFile, PublicCert);
 }
 
-void OpcUaKeys::writeFile(std::string filename, const UA_ByteString& content) {
+void OpcUaKeys::writeFile(std::string filename, const UA_ByteString &content) {
   std::ofstream os;
   os.open(filename, std::ios::binary | std::ios::trunc);
-  os.write((const char*)content.data, content.length);
+  os.write((const char *)content.data, content.length);
   os.close();
 }
 

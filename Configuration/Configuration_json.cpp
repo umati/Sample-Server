@@ -6,16 +6,21 @@
 
 namespace Configuration {
 NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(Encryption_t, ServerCert, ServerKey, TrustedClients, IssuerCerts, Revocation);
+NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(UserPassAuthentication_t, Username, Password);
 
 void from_json(const nlohmann::json &j, Configuration &p) {
   // if we also allow "null" values, then we need to add an "is_string()"
   // check
   if (j.count("Hostname") != 0) {
-    p.Hostname = j.at("Hostname").get<std::string>();
+    p.Hostname = j.at("Hostname").get<decltype(p.Hostname)::value_type>();
   }
 
   if (j.count("Encryption") != 0) {
-    p.Encryption = j.at("Encryption").get<Encryption_t>();
+    p.Encryption = j.at("Encryption").get<decltype(p.Encryption)::value_type>();
+  }
+
+  if (j.count("UserPassAuthentication") != 0) {
+    p.UserPassAuthentication = j.at("UserPassAuthentication").get<decltype(p.UserPassAuthentication)::value_type>();
   }
 }
 

@@ -1,3 +1,5 @@
+#include <open62541/plugin/accesscontrol_default.h>
+#include <open62541/plugin/pki_default.h>
 #include <open62541/server_config_default.h>
 
 #include <atomic>
@@ -63,6 +65,51 @@ UA_StatusCode generateChildNodeIdInParentNs(
   return UA_STATUSCODE_GOOD;
 }
 
+UA_StatusCode setServerConfig(UA_ServerConfig *pConfig, const Configuration::Configuration &configFile, const OpcUaKeys &keys) {
+  auto status = UA_ServerConfig_setBasics(pConfig);
+  if (status != UA_STATUSCODE_GOOD) {
+    return status;
+  }
+  pConfig->nodeLifecycle.generateChildNodeId = generateChildNodeIdInParentNs;
+  // Companion Specificaitons will trigger many warnings, and values in instances are set later
+  pConfig->allowEmptyVariables = UA_RuleHandling::UA_RULEHANDLING_ACCEPT;
+  pConfig->modellingRulesOnInstances = UA_FALSE;
+  UA_String_clear(&pConfig->applicationDescription.applicationUri);
+  pConfig->applicationDescription.applicationUri = UA_STRING_ALLOC("urn:UmatiSampleServer");
+  UA_LocalizedText_clear(&pConfig->applicationDescription.applicationName);
+  pConfig->applicationDescription.applicationName = UA_LOCALIZEDTEXT_ALLOC("en", "Umati Sample Server");
+  UA_String_clear(&pConfig->applicationDescription.productUri);
+  pConfig->applicationDescription.productUri = UA_STRING_ALLOC("https://github.com/umati/Sample-Server/");
+
+  // Do not limit clients
+  UA_CertificateVerification_AcceptAll(&pConfig->certificateVerification);
+  // Use Default sizes
+  status = UA_ServerConfig_addNetworkLayerTCP(pConfig, 4840, 0, 0);
+  if (status != UA_STATUSCODE_GOOD) {
+    return status;
+  }
+  status = UA_ServerConfig_addAllSecurityPolicies(pConfig, &keys.PublicCert, &keys.PrivateKey);
+  if (status != UA_STATUSCODE_GOOD) {
+    return status;
+  }
+  std::vector<UA_UsernamePasswordLogin> users;
+  if (configFile.UserPassAuthentication.has_value()) {
+    users.reserve(configFile.UserPassAuthentication->size());
+    for (auto up : configFile.UserPassAuthentication.value()) {
+      users.push_back(UA_UsernamePasswordLogin{.username = UA_STRING((char *)up.Username.c_str()), .password = UA_STRING((char *)up.Password.c_str())});
+    }
+  }
+  status = UA_AccessControl_default(pConfig, true, &pConfig->securityPolicies[pConfig->securityPoliciesSize - 1].policyUri, users.size(), &users[0]);
+  if (status != UA_STATUSCODE_GOOD) {
+    return status;
+  }
+  status = UA_ServerConfig_addAllEndpoints(pConfig);
+  if (status != UA_STATUSCODE_GOOD) {
+    return status;
+  }
+  return status;
+}
+
 int main(int argc, char *argv[]) {
   signal(SIGINT, sigHandler);
   signal(SIGABRT, sigHandler);
@@ -97,30 +144,13 @@ int main(int argc, char *argv[]) {
     } catch (std::exception &ex) {
       std::cout << "Could not load keys for encryption." << std::endl;
       std::cout << ex.what();
-      if(keys.PrivateKey.length == 0 && keys.PublicCert.length == 0) {
+      if (keys.PrivateKey.length == 0 && keys.PublicCert.length == 0) {
         std::cout << "Generate and store new keys.";
         keys.GenerateKeys();
         keys.StoreKeys();
       }
     }
-    // Skip all certificate checks
-    size_t issuerListSize = 0;
-    UA_ByteString *issuerList = NULL;
-    size_t trustListSize = 0;
-    UA_ByteString *trustList = NULL;
-    size_t revocationListSize = 0;
-    UA_ByteString *revocationList = NULL;
-    UA_ServerConfig_setDefaultWithSecurityPolicies(
-      pConfig,
-      4840,
-      &keys.PublicCert,
-      &keys.PrivateKey,
-      &keys.Trusted[0],
-      keys.Trusted.size(),
-      &keys.Issuer[0],
-      keys.Issuer.size(),
-      &keys.Revoked[0],
-      keys.Revoked.size());
+    setServerConfig(pConfig, serverConfig, keys);
   } catch (std::exception &ex) {
     std::cout << "Could not load keys for encryption." << std::endl;
     std::cout << ex.what();
@@ -133,16 +163,6 @@ int main(int argc, char *argv[]) {
     UA_String_clear(&pConfig->customHostname);
     pConfig->customHostname = UA_STRING_ALLOC(serverConfig.Hostname->c_str());
   }
-  pConfig->nodeLifecycle.generateChildNodeId = generateChildNodeIdInParentNs;
-  // Companion Specificaitons will trigger many warnings, and values in instances are set later
-  pConfig->allowEmptyVariables = UA_RuleHandling::UA_RULEHANDLING_ACCEPT;
-  pConfig->modellingRulesOnInstances = UA_FALSE;
-  UA_String_clear(&pConfig->applicationDescription.applicationUri);
-  pConfig->applicationDescription.applicationUri = UA_STRING_ALLOC("urn:UmatiSampleServer");
-  UA_LocalizedText_clear(&pConfig->applicationDescription.applicationName);
-  pConfig->applicationDescription.applicationName = UA_LOCALIZEDTEXT_ALLOC("en", "Umati Sample Server");
-  UA_String_clear(&pConfig->applicationDescription.productUri);
-  pConfig->applicationDescription.productUri = UA_STRING_ALLOC("https://github.com/umati/Sample-Server/");
 
   // Create namespaces
   namespace_di_generated(pServer);

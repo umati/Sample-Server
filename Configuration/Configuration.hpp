@@ -17,8 +17,14 @@ struct Encryption_t {
   */
 };
 
+struct UserPassAuthentication_t {
+  std::string Username;
+  std::string Password;
+};
+
 struct Configuration {
   std::optional<std::string> Hostname;
+  std::optional<std::vector<UserPassAuthentication_t>> UserPassAuthentication;
   std::optional<Encryption_t> Encryption;
 };
 

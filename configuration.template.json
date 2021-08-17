@@ -1,5 +1,6 @@
 {
     "Hostname": "localhost",
+    "UserPassAuthentication": [],
     "Encryption": {
         "ServerCert": "server_cert.der",
         "ServerKey": "server_key.der",

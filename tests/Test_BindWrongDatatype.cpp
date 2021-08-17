@@ -117,6 +117,7 @@ TEST_F(WrongDatatype, BindLocalizedTextForString) {
   testObj.TestVar = {"e", "Str"};
 
   ASSERT_EQ(RunServer(), UA_STATUSCODE_GOOD);
+  std::this_thread::sleep_for(std::chrono::milliseconds(100));
   ASSERT_EQ(client.Connect("opc.tcp://localhost:4840"), UA_STATUSCODE_GOOD);
   ASSERT_EQ(client.ReadValue(testObj.TestVar.NodeId), UA_STATUSCODE_GOOD);
 }

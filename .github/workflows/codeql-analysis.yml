@@ -55,7 +55,7 @@ jobs:
       run: |
         mkdir -p build
         cd build
-        cmake ../.github/ -DCMAKE_INSTALL_PREFIX:PATH=${{ env.CMAKE_INSTALL_PREFIX }}
+        cmake ../.github/ -DCMAKE_INSTALL_PREFIX:PATH="${{ env.CMAKE_INSTALL_PREFIX }}"
         cmake --build .
     - name: Perform CodeQL Analysis
       uses: github/codeql-action/analyze@v1

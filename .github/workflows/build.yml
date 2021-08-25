@@ -9,7 +9,7 @@ jobs:
         os: [ubuntu-20.04, windows-latest]
     runs-on: ${{matrix.os}}
     env:
-      CMAKE_INSTALL_PREFIX: ${{ github.workspace }}/install
+      CMAKE_INSTALL_PREFIX: "${{ github.workspace }}/install"
     steps:
       - name: Checkout Sample-Server
         uses: actions/checkout@v2.3.4
@@ -19,8 +19,9 @@ jobs:
       - name: Set Windows CMAKE_GENERATOR
         if: matrix.os == 'windows-latest'
         run: |
-          echo "CMAKE_GENERATOR=Visual Studio 16 2019">> $env:GITHUB_ENV
-          echo "ARG_CTEST=-C Debug">> $env:GITHUB_ENV
+          #shellcheck  disable=SC2154
+          echo "CMAKE_GENERATOR=Visual Studio 16 2019">> "$env:GITHUB_ENV"
+          echo "ARG_CTEST=-C Debug">> "$env:GITHUB_ENV"
       - name: Build server with dependencies
         run: |
           mkdir -p build
@@ -42,7 +43,7 @@ jobs:
     env:
       # Check if this is not a pull request and GITHUB_TOKEN is set
       # As all env variables are strings, you need to compaire against "== 'true'" (not "== true")
-      IS_NOT_PR: ${{ !github.head_ref && true }}
+      IS_NOT_PR: "${{ !github.head_ref && true }}"
     steps:
       - name: Checkout Sample-Server
         uses: actions/checkout@v2.3.4
@@ -55,8 +56,9 @@ jobs:
         uses: docker/setup-buildx-action@v1.5.1
       - name: PrepareReg Names
         run: |
-          echo IMAGE_REPOSITORY=$(echo ${{ github.repository }} | tr '[:upper:]' '[:lower:]') >> $GITHUB_ENV
-          echo IMAGE_TAG=$(echo ${{ github.ref }} | tr '[:upper:]' '[:lower:]' |  awk '{sub(/([^\/]*\/){2}/,""); gsub(/\/|_/, "-")}1') >> $GITHUB_ENV
+          echo IMAGE_REPOSITORY="$(echo "${{ github.repository }}" | tr '[:upper:]' '[:lower:]')" >> "$GITHUB_ENV"
+          echo IMAGE_TAG="$(echo "${{ github.ref }}" | tr '[:upper:]' '[:lower:]' |  awk '{sub(/([^\/]*\/){2}/,""); gsub(/\/|_/, "-")}1')" >> "$GITHUB_ENV"
+          echo IS_NOT_PR="${{ env.IS_NOT_PR }})"
       - name: Login to GitHub Container Registry
         uses: docker/login-action@v1.10.0
         if: env.IS_NOT_PR == 'true' && ${{ github.actor }} != 'dependabot'

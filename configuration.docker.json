@@ -1,0 +1,11 @@
+{
+    "Hostname": "",
+    "UserPassAuthentication": [],
+    "Encryption": {
+        "ServerCert": "server_cert.pem",
+        "ServerKey": "server_key.pem",
+        "TrustedClients": ["trusted/trustedClient.der"],
+        "IssuerCerts": [],
+        "Revocation": []
+    }
+}

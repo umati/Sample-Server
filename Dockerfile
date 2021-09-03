@@ -25,6 +25,7 @@ FROM alpine:3 as runtime
 RUN apk --no-cache add \
       libstdc++=~10.3.1
 COPY --from=build-env /install/bin /app
+COPY ./configuration.docker.json /configuration.json
 
 EXPOSE 4840
 

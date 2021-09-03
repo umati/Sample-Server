@@ -21,6 +21,7 @@ endif ()
 # Generate types and namespace for DI
 ua_generate_nodeset_and_datatypes(
   NAME "di"
+  #TARGET_PREFIX "${PROJECT_NAME}"
   FILE_NS "${open62541_NODESET_DIR}/DI/Opc.Ua.Di.NodeSet2.xml"
   FILE_CSV "${open62541_NODESET_DIR}/DI/OpcUaDiModel.csv"
   FILE_BSD "${open62541_NODESET_DIR}/DI/Opc.Ua.Di.Types.bsd"
@@ -30,9 +31,10 @@ ua_generate_nodeset_and_datatypes(
 
 # Add also heder files to trigger the generation!
 add_library(ua_gen_di
-  src_generated/namespace_di_generated.c
-  src_generated/types_di_generated.c
-  src_generated/types_di_generated.h
+  ${UA_NODESET_DI_SOURCES}
+  ${UA_NODESET_DI_HEADERS}
+  ${UA_TYPES_DI_SOURCES}
+  ${UA_TYPES_DI_HEADERS}
   src_generated/di_nodeids.h
 )
 target_link_libraries(ua_gen_di PUBLIC open62541::open62541)
@@ -43,6 +45,7 @@ configure_file(cmake/empty.bsd.template "${CMAKE_BINARY_DIR}/model/Opc.Ua.Machin
 
 ua_generate_nodeset_and_datatypes(
   NAME "machinery"
+  #TARGET_PREFIX "${PROJECT_NAME}"
   FILE_NS "${open62541_NODESET_DIR}/Machinery/Opc.Ua.Machinery.NodeSet2.xml"
   FILE_CSV "${open62541_NODESET_DIR}/Machinery/NodeIds.csv"
   FILE_BSD "${CMAKE_BINARY_DIR}/model/Opc.Ua.Machinery.Types.bsd"
@@ -52,15 +55,17 @@ ua_generate_nodeset_and_datatypes(
 )
 
 add_library(ua_gen_machinery
-  src_generated/namespace_machinery_generated.c
-  src_generated/types_machinery_generated.c
-  src_generated/types_machinery_generated.h
+  ${UA_NODESET_MACHINERY_SOURCES}
+  ${UA_NODESET_MACHINERY_HEADERS}
+  ${UA_TYPES_MACHINERY_SOURCES}
+  ${UA_TYPES_MACHINERY_HEADERS}
   src_generated/machinery_nodeids.h
 )
 target_link_libraries(ua_gen_machinery PUBLIC ua_gen_di)
 
 ua_generate_nodeset_and_datatypes(
   NAME "ia"
+  #TARGET_PREFIX "${PROJECT_NAME}"
   FILE_NS "${open62541_NODESET_DIR}/IA/Opc.Ua.IA.NodeSet2.xml"
   FILE_CSV "${open62541_NODESET_DIR}/IA/Opc.Ua.IA.NodeIds.csv"
   FILE_BSD "${PROJECT_SOURCE_DIR}/model/Opc.Ua.IA.fixed.bsd"
@@ -70,15 +75,17 @@ ua_generate_nodeset_and_datatypes(
 )
 
 add_library(ua_gen_ia
+  ${UA_NODESET_IA_SOURCES}
+  ${UA_NODESET_IA_HEADERS}
+  ${UA_TYPES_IA_SOURCES}
+  ${UA_TYPES_IA_HEADERS}
   src_generated/ia_nodeids.h
-  src_generated/types_ia_generated.c
-  src_generated/types_ia_generated.h
-  src_generated/namespace_ia_generated.c
 )
 target_link_libraries(ua_gen_ia PUBLIC ua_gen_di)
 
 ua_generate_nodeset_and_datatypes(
   NAME "machinetool"
+  #TARGET_PREFIX "${PROJECT_NAME}"
   FILE_NS "${open62541_NODESET_DIR}/MachineTool/Opc.Ua.MachineTool.NodeSet2.xml"
   FILE_CSV "${open62541_NODESET_DIR}/MachineTool/NodeIds.csv"
   FILE_BSD "${PROJECT_SOURCE_DIR}/model/Opc.Ua.MachineTool.bsd"
@@ -87,17 +94,19 @@ ua_generate_nodeset_and_datatypes(
   DEPENDS di machinery ia
 )
 
-add_library(ua_gen_mt
-  src_generated/namespace_machinetool_generated.c
-  src_generated/types_machinetool_generated.c
-  src_generated/types_machinetool_generated.h
+add_library(ua_gen_machinetool
+  ${UA_NODESET_MACHINETOOL_SOURCES}
+  ${UA_NODESET_MACHINETOOL_HEADERS}
+  ${UA_TYPES_MACHINETOOL_SOURCES}
+  ${UA_TYPES_MACHINETOOL_HEADERS}
   src_generated/machinetool_nodeids.h
 )
-target_link_libraries(ua_gen_mt PUBLIC ua_gen_ia)
-target_link_libraries(ua_gen_mt PUBLIC ua_gen_machinery)
+target_link_libraries(ua_gen_machinetool PUBLIC ua_gen_ia)
+target_link_libraries(ua_gen_machinetool PUBLIC ua_gen_machinery)
 
 ua_generate_nodeset_and_datatypes(
   NAME "robotics"
+  #TARGET_PREFIX "${PROJECT_NAME}"
   FILE_NS "${open62541_NODESET_DIR}/Robotics/Opc.Ua.Robotics.NodeSet2.xml"
   FILE_CSV "${open62541_NODESET_DIR}/Robotics/NodeIds.csv"
   FILE_BSD "${open62541_NODESET_DIR}/Robotics/Opc.Ua.Robotics.Types.bsd"
@@ -106,16 +115,18 @@ ua_generate_nodeset_and_datatypes(
   DEPENDS di
 )
 
-add_library(ua_gen_robotic
-  src_generated/namespace_robotics_generated.c
-  src_generated/types_robotics_generated.c
-  src_generated/types_robotics_generated.h
+add_library(ua_gen_robotics
+  ${UA_NODESET_ROBOTICS_SOURCES}
+  ${UA_NODESET_ROBOTICS_HEADERS}
+  ${UA_TYPES_ROBOTICS_SOURCES}
+  ${UA_TYPES_ROBOTICS_HEADERS}
   src_generated/robotics_nodeids.h
 )
-target_link_libraries(ua_gen_robotic PUBLIC ua_gen_di)
+target_link_libraries(ua_gen_robotics PUBLIC ua_gen_di)
 
 ua_generate_nodeset_and_datatypes(
   NAME "woodworking"
+  #TARGET_PREFIX "${PROJECT_NAME}"
   FILE_NS "${PROJECT_SOURCE_DIR}/model/Woodworking/Opc.Ua.Woodworking.NodeSet2.xml"
   FILE_CSV "${PROJECT_SOURCE_DIR}/model/Woodworking/Opc.Ua.Woodworking.NodeIds.csv"
   FILE_BSD "${PROJECT_SOURCE_DIR}/model/Woodworking/Opc.Ua.Woodworking.NodeSet2.bsd"
@@ -125,9 +136,10 @@ ua_generate_nodeset_and_datatypes(
 )
 
 add_library(ua_gen_woodworking
-  src_generated/namespace_woodworking_generated.c
-  src_generated/types_woodworking_generated.c
-  src_generated/types_woodworking_generated.h
+  ${UA_NODESET_WOODWORKING_SOURCES}
+  ${UA_NODESET_WOODWORKING_HEADERS}
+  ${UA_TYPES_WOODWORKING_SOURCES}
+  ${UA_TYPES_WOODWORKING_HEADERS}
   src_generated/woodworking_nodeids.h
 )
 target_link_libraries(ua_gen_woodworking PUBLIC ua_gen_machinery)
@@ -182,9 +194,10 @@ add_executable(
 set_target_properties(${PROJECT_NAME} PROPERTIES LINKER_LANGUAGE CXX)
 target_link_libraries(${PROJECT_NAME} PUBLIC SampleServerLib)
 target_link_libraries(${PROJECT_NAME} PUBLIC Configuration)
-target_link_libraries(${PROJECT_NAME} PUBLIC ua_gen_mt)
-target_link_libraries(${PROJECT_NAME} PUBLIC ua_gen_robotic)
+target_link_libraries(${PROJECT_NAME} PUBLIC ua_gen_machinetool)
 target_link_libraries(${PROJECT_NAME} PUBLIC ua_gen_woodworking)
+target_link_libraries(${PROJECT_NAME} PUBLIC ua_gen_robotics)
+
 
 add_subdirectory(tests)
 include(CTest)

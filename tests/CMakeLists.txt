@@ -28,11 +28,11 @@ add_test(NAME BindWrongDatatype COMMAND Test_BindWrongDatatype)
 set_tests_properties(BindWrongDatatype PROPERTIES TIMEOUT 20)
 
 add_executable(Test_MTEvent Test_MTEvent.cpp)
-target_link_libraries(Test_MTEvent SampleServerLib ua_gen_mt GTest::gtest_main)
+target_link_libraries(Test_MTEvent SampleServerLib ua_gen_machinetool GTest::gtest_main)
 add_test(NAME MTEvent COMMAND Test_MTEvent)
 set_tests_properties(MTEvent PROPERTIES TIMEOUT 20)
 
 add_executable(Test_TranslateBrowse Test_TranslateBrowse.cpp)
-target_link_libraries(Test_TranslateBrowse SampleServerLib ua_gen_mt GTest::gtest_main)
+target_link_libraries(Test_TranslateBrowse SampleServerLib ua_gen_machinetool GTest::gtest_main)
 add_test(NAME TranslateBrowse COMMAND Test_TranslateBrowse)
 set_tests_properties(MTEvent PROPERTIES TIMEOUT 20)

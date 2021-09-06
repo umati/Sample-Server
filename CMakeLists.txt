@@ -223,6 +223,21 @@ target_sources(
             ${UA_NODESET_GMS_SOURCES} ${UA_TYPES_GMS_HEADERS} ${UA_TYPES_GMS_SOURCES}
 )
 target_link_libraries(ua_gen_gms PUBLIC ua_gen_machinetool ua_gen_ia ua_gen_machinery ua_gen_machinery_result)
+    NAME "cnc"
+    FILE_CSV "${open62541_NODESET_DIR}/CNC/Opc.Ua.CNC.NodeIds.csv"
+    FILE_NS "${open62541_NODESET_DIR}/CNC/Opc.Ua.CNC.NodeSet.xml"
+    FILE_BSD "${PROJECT_SOURCE_DIR}/model/Opc.Ua.CNC.NodeSet.bsd"
+    OUTPUT_DIR "${PROJECT_SOURCE_DIR}/src_generated"
+    NAMESPACE_MAP "8:http://opcfoundation.org/UA/CNC"
+    DEPENDS machinery
+)
+
+add_library(
+    ua_gen_cnc
+    src_generated/cnc_nodeids.h src_generated/namespace_cnc_generated.c src_generated/types_cnc_generated.c
+    src_generated/types_cnc_generated.h
+)
+target_link_libraries(ua_gen_cnc PUBLIC open62541::open62541)
 
 add_library(
     SampleServerLib

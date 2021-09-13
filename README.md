@@ -16,7 +16,7 @@ This is an example implementation of the OPC UA Woodworking Companion Specificat
 
 #### Scope
 
-This implementation provides simulations for the machine tool and woodworking specification, which changes most values in a pseudo random way. As no real machine simulation is done in the background, the values need not correlate with each other. Also only reading of values of OPC UA-clients is implemented. All write requests are ignored silently.
+This implementation provides simulationed instances for the machine tool and woodworking specification, which changes most values in a pseudo random way. As no real machine simulation is done in the background, the values need not correlate with each other. Also only reading of values of OPC UA-clients is implemented. All write requests are ignored silently.
 
 #### Docker Image
 
@@ -34,7 +34,9 @@ Refer to the [docker documentation](https://docs.docker.com/) for details.
 ![GitHub Workflow Status](https://img.shields.io/github/workflow/status/umati/Sample-Server/Build)
 
 ### Configuration
+
 The configuration uses a json format. By default, the server looks for a file `configuration.json`. The supported parameters are:
+
 ```json
 {
     "Hostname": "localhost", // Hostname of the server, should be identical to the hostname that is used by OPC UA clients to connect to the server.
@@ -48,7 +50,6 @@ The configuration uses a json format. By default, the server looks for a file `c
 }
 ```
 
-
 ## Concept
 
 This implementation represents the OPC UA Instance with an instance of an C++ struct and connects them together. So writing an value in the C++ instance will also set this value in the corresponding OPC UA node. The binding is established by utilizing reflection (an improved version of the binding in [this publication](https://ieeexplore.ieee.org/document/8972189)).
@@ -58,15 +59,18 @@ The binding is done by comparing the name of structure members with the browse n
 ## Folder Structure
 
 ```text
+├──arch            architecture specific files
 ├──cmake           CMake files for building the project, e.g. custom find-scripts
 ├──Exceptions      Custom exceptions
 ├──MachineTools    Simulated machine tools
 ├──model           Unpublished/Fixed NodeSet files
-├──OpcUaTypes      C++ äquivalent of some OPC UA DataTypes and helpers for their definition
+├──OpcUaTypes      C++ equivalent of some OPC UA DataTypes and helpers for their definition
 ├──Robotics        Simulated Robots
 ├──tests           Some unit tests, initially created for tracking down bugs
+├──tools/certGen   Custom certificate generator tool           
 ├──TypeDefinition  Definition of C++ Types for OPC UA Types, that can be bind later
 ├──UmatiServerLib  Library for binding the defined types to OPC UA instances
+├──Woodworkng      Simulated wood working sample machines
 ```
 
 ## License

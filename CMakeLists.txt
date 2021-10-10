@@ -21,18 +21,21 @@ endif()
 # Generate types and namespace for DI
 ua_generate_nodeset_and_datatypes(
     NAME "di"
+         # TARGET_PREFIX "${PROJECT_NAME}"
     FILE_NS "${open62541_NODESET_DIR}/DI/Opc.Ua.Di.NodeSet2.xml"
     FILE_CSV "${open62541_NODESET_DIR}/DI/OpcUaDiModel.csv"
     FILE_BSD "${open62541_NODESET_DIR}/DI/Opc.Ua.Di.Types.bsd"
     NAMESPACE_MAP "2:http://opcfoundation.org/UA/DI/"
+    TARGET_PREFIX "${PROJECT_NAME}"
     OUTPUT_DIR "${PROJECT_SOURCE_DIR}/src_generated"
 )
 
-# Add also heder files to trigger the generation!
 add_library(
     ua_gen_di
-    src_generated/di_nodeids.h src_generated/namespace_di_generated.c src_generated/types_di_generated.c
-    src_generated/types_di_generated.h
+)
+target_sources(
+    ua_gen_di
+    PRIVATE ${UA_TYPES_DI_HEADERS} ${UA_TYPES_DI_SOURCES} ${UA_NODESET_DI_HEADERS} ${UA_NODESET_DI_SOURCES}
 )
 target_link_libraries(ua_gen_di PUBLIC open62541::open62541)
 
@@ -42,87 +45,110 @@ configure_file(cmake/empty.bsd.template "${CMAKE_BINARY_DIR}/model/Opc.Ua.Machin
 
 ua_generate_nodeset_and_datatypes(
     NAME "machinery"
+         # TARGET_PREFIX "${PROJECT_NAME}"
     FILE_NS "${open62541_NODESET_DIR}/Machinery/Opc.Ua.Machinery.NodeSet2.xml"
     FILE_CSV "${open62541_NODESET_DIR}/Machinery/NodeIds.csv"
     FILE_BSD "${CMAKE_BINARY_DIR}/model/Opc.Ua.Machinery.Types.bsd"
-    OUTPUT_DIR "${PROJECT_SOURCE_DIR}/src_generated"
     NAMESPACE_MAP "3:http://opcfoundation.org/UA/Machinery/"
+    TARGET_PREFIX "${PROJECT_NAME}"
+    OUTPUT_DIR "${PROJECT_SOURCE_DIR}/src_generated"
     DEPENDS di
 )
 
 add_library(
     ua_gen_machinery
-    src_generated/machinery_nodeids.h src_generated/namespace_machinery_generated.c
-    src_generated/types_machinery_generated.c src_generated/types_machinery_generated.h
+)
+target_sources(
+    ua_gen_machinery
+    PRIVATE ${UA_TYPES_MACHINERY_HEADERS} ${UA_TYPES_MACHINERY_SOURCES} ${UA_NODESET_MACHINERY_HEADERS}
+            ${UA_NODESET_MACHINERY_SOURCES}
 )
 target_link_libraries(ua_gen_machinery PUBLIC ua_gen_di)
 
 ua_generate_nodeset_and_datatypes(
     NAME "ia"
+         # TARGET_PREFIX "${PROJECT_NAME}"
     FILE_NS "${open62541_NODESET_DIR}/IA/Opc.Ua.IA.NodeSet2.xml"
     FILE_CSV "${open62541_NODESET_DIR}/IA/Opc.Ua.IA.NodeIds.csv"
     FILE_BSD "${PROJECT_SOURCE_DIR}/model/Opc.Ua.IA.fixed.bsd"
-    OUTPUT_DIR "${PROJECT_SOURCE_DIR}/src_generated"
     NAMESPACE_MAP "4:http://opcfoundation.org/UA/IA/"
+    TARGET_PREFIX "${PROJECT_NAME}"
+    OUTPUT_DIR "${PROJECT_SOURCE_DIR}/src_generated"
     DEPENDS di
 )
 
 add_library(
     ua_gen_ia
-    src_generated/ia_nodeids.h src_generated/namespace_ia_generated.c src_generated/types_ia_generated.c
-    src_generated/types_ia_generated.h
+)
+target_sources(
+    ua_gen_ia
+    PRIVATE ${UA_TYPES_IA_HEADERS} ${UA_TYPES_IA_SOURCES} ${UA_NODESET_IA_HEADERS} ${UA_NODESET_IA_SOURCES}
 )
 target_link_libraries(ua_gen_ia PUBLIC ua_gen_di)
 
 ua_generate_nodeset_and_datatypes(
     NAME "machinetool"
+         # TARGET_PREFIX "${PROJECT_NAME}"
     FILE_NS "${open62541_NODESET_DIR}/MachineTool/Opc.Ua.MachineTool.NodeSet2.xml"
     FILE_CSV "${open62541_NODESET_DIR}/MachineTool/NodeIds.csv"
     FILE_BSD "${PROJECT_SOURCE_DIR}/model/Opc.Ua.MachineTool.bsd"
-    OUTPUT_DIR "${PROJECT_SOURCE_DIR}/src_generated"
     NAMESPACE_MAP "5:http://opcfoundation.org/UA/MachineTool/"
+    TARGET_PREFIX "${PROJECT_NAME}"
+    OUTPUT_DIR "${PROJECT_SOURCE_DIR}/src_generated"
     DEPENDS di machinery ia
 )
 
 add_library(
     ua_gen_machinetool
-    src_generated/machinetool_nodeids.h src_generated/namespace_machinetool_generated.c
-    src_generated/types_machinetool_generated.c src_generated/types_machinetool_generated.h
 )
-target_link_libraries(ua_gen_machinetool PUBLIC ua_gen_ia)
-target_link_libraries(ua_gen_machinetool PUBLIC ua_gen_machinery)
+target_sources(
+    ua_gen_machinetool
+    PRIVATE ${UA_TYPES_MACHINETOOL_HEADERS} ${UA_TYPES_MACHINETOOL_SOURCES} ${UA_NODESET_MACHINETOOL_HEADERS}
+            ${UA_NODESET_MACHINETOOL_SOURCES}
+)
+target_link_libraries(ua_gen_machinetool PUBLIC ua_gen_ia ua_gen_machinery)
 
 ua_generate_nodeset_and_datatypes(
     NAME "robotics"
+         # TARGET_PREFIX "${PROJECT_NAME}"
     FILE_NS "${open62541_NODESET_DIR}/Robotics/Opc.Ua.Robotics.NodeSet2.xml"
     FILE_CSV "${open62541_NODESET_DIR}/Robotics/NodeIds.csv"
     FILE_BSD "${open62541_NODESET_DIR}/Robotics/Opc.Ua.Robotics.Types.bsd"
-    OUTPUT_DIR "${PROJECT_SOURCE_DIR}/src_generated"
     NAMESPACE_MAP "6:http://opcfoundation.org/UA/Robotics/"
+    TARGET_PREFIX "${PROJECT_NAME}"
+    OUTPUT_DIR "${PROJECT_SOURCE_DIR}/src_generated"
     DEPENDS di
 )
 
 add_library(
     ua_gen_robotics
-    src_generated/namespace_robotics_generated.c src_generated/robotics_nodeids.h
-    src_generated/types_robotics_generated.c src_generated/types_robotics_generated.h
+)
+target_sources(
+    ua_gen_robotics
+    PRIVATE ${UA_TYPES_ROBOTICS_HEADERS} ${UA_TYPES_ROBOTICS_SOURCES} ${UA_NODESET_ROBOTICS_HEADERS}
+            ${UA_NODESET_ROBOTICS_SOURCES}
 )
 target_link_libraries(ua_gen_robotics PUBLIC ua_gen_di)
 
 ua_generate_nodeset_and_datatypes(
     NAME "woodworking"
+         # TARGET_PREFIX "${PROJECT_NAME}"
     FILE_NS "${PROJECT_SOURCE_DIR}/model/Woodworking/Opc.Ua.Woodworking.NodeSet2.xml"
     FILE_CSV "${PROJECT_SOURCE_DIR}/model/Woodworking/Opc.Ua.Woodworking.NodeIds.csv"
     FILE_BSD "${PROJECT_SOURCE_DIR}/model/Woodworking/Opc.Ua.Woodworking.NodeSet2.bsd"
-    OUTPUT_DIR "${PROJECT_SOURCE_DIR}/src_generated"
     NAMESPACE_MAP "7:http://opcfoundation.org/UA/Woodworking/"
+    TARGET_PREFIX "${PROJECT_NAME}"
+    OUTPUT_DIR "${PROJECT_SOURCE_DIR}/src_generated"
     DEPENDS machinery
 )
 
 add_library(
     ua_gen_woodworking
-    src_generated/namespace_woodworking_generated.c src_generated/types_woodworking_generated.c
-    src_generated/types_woodworking_generated.h src_generated/woodworking_nodeids.h
+)
+target_sources(
+    ua_gen_woodworking
+    PRIVATE ${UA_TYPES_WOODWORKING_HEADERS} ${UA_TYPES_WOODWORKING_SOURCES} ${UA_NODESET_WOODWORKING_HEADERS}
+            ${UA_NODESET_WOODWORKING_SOURCES}
 )
 target_link_libraries(ua_gen_woodworking PUBLIC ua_gen_machinery)
 
@@ -151,8 +177,7 @@ target_compile_definitions(SampleServerLib PUBLIC __STDC_WANT_LIB_EXT1__)
 
 add_library(
     Configuration
-    Configuration/Configuration_json.cpp
-    Configuration/Configuration.cpp
+    Configuration/Configuration.cpp Configuration/Configuration_json.cpp
 )
 target_link_libraries(Configuration PRIVATE nlohmann_json::nlohmann_json)
 
@@ -175,12 +200,9 @@ add_executable(
 )
 
 set_target_properties(${PROJECT_NAME} PROPERTIES LINKER_LANGUAGE CXX)
-target_link_libraries(${PROJECT_NAME} PUBLIC SampleServerLib)
-target_link_libraries(${PROJECT_NAME} PUBLIC Configuration)
-target_link_libraries(${PROJECT_NAME} PUBLIC ua_gen_machinetool)
-target_link_libraries(${PROJECT_NAME} PUBLIC ua_gen_woodworking)
-target_link_libraries(${PROJECT_NAME} PUBLIC ua_gen_robotics)
-
+target_link_libraries(
+    ${PROJECT_NAME} PUBLIC SampleServerLib Configuration ua_gen_machinetool ua_gen_robotics ua_gen_woodworking
+)
 
 add_subdirectory(tests)
 include(CTest)

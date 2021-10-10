@@ -2,19 +2,20 @@ cmake_minimum_required(VERSION 3.15)
 
 project(BuildWithDependencies VERSION 0.1)
 
-
 include(${CMAKE_ROOT}/Modules/ExternalProject.cmake)
 
-ExternalProject_Add(GTestExternal
-	SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/../deps/googletest
-	CMAKE_ARGS -Dgtest_force_shared_crt:BOOL=ON -DCMAKE_INSTALL_PREFIX:PATH=${CMAKE_INSTALL_PREFIX}
-	INSTALL_DIR "${CMAKE_INSTALL_PREFIX}"
+externalproject_add(
+    GTestExternal
+    SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/../deps/googletest
+    CMAKE_ARGS -Dgtest_force_shared_crt:BOOL=ON -DCMAKE_INSTALL_PREFIX:PATH=${CMAKE_INSTALL_PREFIX}
+    INSTALL_DIR "${CMAKE_INSTALL_PREFIX}"
 )
 
-ExternalProject_Add(JsonExternal
-	SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/../deps/json
-	CMAKE_ARGS -DJSON_BuildTests:BOOL=OFF -DCMAKE_INSTALL_PREFIX:PATH=${CMAKE_INSTALL_PREFIX}
-	INSTALL_DIR "${CMAKE_INSTALL_PREFIX}"
+externalproject_add(
+    JsonExternal
+    SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/../deps/json
+    CMAKE_ARGS -DJSON_BuildTests:BOOL=OFF -DCMAKE_INSTALL_PREFIX:PATH=${CMAKE_INSTALL_PREFIX}
+    INSTALL_DIR "${CMAKE_INSTALL_PREFIX}"
 )
 
 find_package(Patch REQUIRED)
@@ -36,17 +37,19 @@ ExternalProject_Add(open62541External
 	DEPENDS libreSSLExternal
 )
 
-ExternalProject_Add(open62541CppExternal
-	SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/../deps/open62541Cpp
-	CMAKE_ARGS -DCMAKE_INSTALL_PREFIX:PATH=${CMAKE_INSTALL_PREFIX}
-	INSTALL_DIR "${CMAKE_INSTALL_PREFIX}"
-	DEPENDS open62541External GTestExternal
+externalproject_add(
+    open62541CppExternal
+    SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/../deps/open62541Cpp
+    CMAKE_ARGS -DCMAKE_INSTALL_PREFIX:PATH=${CMAKE_INSTALL_PREFIX}
+    INSTALL_DIR "${CMAKE_INSTALL_PREFIX}"
+    DEPENDS open62541External GTestExternal
 )
 
-ExternalProject_Add(Sample-Server
-	SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/..
-	CMAKE_ARGS -DCMAKE_INSTALL_PREFIX:PATH=${CMAKE_INSTALL_PREFIX}
-	INSTALL_DIR "${CMAKE_INSTALL_PREFIX}"
-	DEPENDS open62541CppExternal GTestExternal JsonExternal
-	BINARY_DIR ${CMAKE_CURRENT_BINARY_DIR}/SampleServer-build
+externalproject_add(
+    Sample-Server
+    SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/..
+    CMAKE_ARGS -DCMAKE_INSTALL_PREFIX:PATH=${CMAKE_INSTALL_PREFIX}
+    INSTALL_DIR "${CMAKE_INSTALL_PREFIX}"
+    DEPENDS open62541CppExternal GTestExternal JsonExternal
+    BINARY_DIR ${CMAKE_CURRENT_BINARY_DIR}/SampleServer-build
 )

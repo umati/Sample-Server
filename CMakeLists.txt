@@ -156,7 +156,7 @@ target_sources(
     ua_gen_woodworking
     PRIVATE ${UA_TYPES_WOODWORKING_HEADERS} ${UA_TYPES_WOODWORKING_SOURCES} ${UA_NODESET_WOODWORKING_HEADERS}
             ${UA_NODESET_WOODWORKING_SOURCES}
-            "${SAMPLESERVER_GENERATED_NODESET_AND_DATATYES_OUTPUT_DIR}/machinetool_nodeids.h"
+            "${SAMPLESERVER_GENERATED_NODESET_AND_DATATYES_OUTPUT_DIR}/woodworking_nodeids.h"
 )
 target_link_libraries(ua_gen_woodworking PUBLIC ua_gen_machinery)
 

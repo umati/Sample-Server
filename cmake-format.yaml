@@ -1,0 +1,22 @@
+additional_commands:
+  foo:
+    flags:
+    - BAR
+    - BAZ
+    kwargs:
+      DEPENDS: '*'
+      HEADERS: '*'
+      SOURCES: '*'
+always_wrap: []
+command_case: lower
+dangle_parens: true
+enable_markup: true
+first_comment_is_literal: true
+keyword_case: upper
+line_ending: unix
+line_width: 120
+literal_comment_pattern: null
+separate_ctrl_name_with_space: false
+separate_fn_name_with_space: false
+tab_size: 4
+autosort: true

@@ -1,3 +1,27 @@
+# Visual Studio
+*.db
+/project/msvc/
+/tests/project/msvc/
+.vs
+CMakeSettings.json
+
+# Visual Studio Code
+.vscode
+cmake-variants.yaml
+
+# Codeblocks
+*.layout
+*.depend
+
+# QT Creator
+*.user
+*.autosave
+
+# Clion
+.idea/
+.clion.source.upload.marker
+
+# Build folders
 src_generated/
 build/
 install/

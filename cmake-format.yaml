@@ -1,13 +1,19 @@
 additional_commands:
-  foo:
+  ua_generate_nodeset_and_datatypes:
     flags:
-    - BAR
-    - BAZ
+    - INTERNAL
     kwargs:
-      DEPENDS: '*'
-      HEADERS: '*'
-      SOURCES: '*'
-always_wrap: []
+      NAME: '1'
+      FILE_NS: '1'
+      FILE_CSV: '1'
+      FILE_BSD: '1'
+      OUTPUT_DIR: '1'
+      TARGET_PREFIX: '1'
+      BLACKLIST: '1'
+      NAMESPACE_MAP: '+'
+      IMPORT_BSD: '+'
+      DEPENDS: '+'
+always_wrap: [add_library,add_executable,target_sources]
 command_case: lower
 dangle_parens: true
 enable_markup: true

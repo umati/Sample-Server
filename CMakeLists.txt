@@ -32,13 +32,12 @@ ua_generate_nodeset_and_datatypes(
     OUTPUT_DIR "${SAMPLESERVER_GENERATED_NODESET_AND_DATATYES_OUTPUT_DIR}"
 )
 
-add_library(
-    ua_gen_di
-)
+add_library(ua_gen_di)
 target_sources(
     ua_gen_di
-    PRIVATE ${UA_TYPES_DI_HEADERS} ${UA_TYPES_DI_SOURCES} ${UA_NODESET_DI_HEADERS} ${UA_NODESET_DI_SOURCES}
-            "${SAMPLESERVER_GENERATED_NODESET_AND_DATATYES_OUTPUT_DIR}/di_nodeids.h"
+    PRIVATE # cmake-format: sort
+            "${SAMPLESERVER_GENERATED_NODESET_AND_DATATYES_OUTPUT_DIR}/di_nodeids.h" ${UA_NODESET_DI_HEADERS}
+            ${UA_NODESET_DI_SOURCES} ${UA_TYPES_DI_HEADERS} ${UA_TYPES_DI_SOURCES}
 )
 target_link_libraries(ua_gen_di PUBLIC open62541::open62541)
 
@@ -58,14 +57,15 @@ ua_generate_nodeset_and_datatypes(
     DEPENDS di
 )
 
-add_library(
-    ua_gen_machinery
-)
+add_library(ua_gen_machinery)
 target_sources(
     ua_gen_machinery
-    PRIVATE ${UA_TYPES_MACHINERY_HEADERS} ${UA_TYPES_MACHINERY_SOURCES} ${UA_NODESET_MACHINERY_HEADERS}
-            ${UA_NODESET_MACHINERY_SOURCES}
+    PRIVATE # cmake-format: sort
             "${SAMPLESERVER_GENERATED_NODESET_AND_DATATYES_OUTPUT_DIR}/machinery_nodeids.h"
+            ${UA_NODESET_MACHINERY_HEADERS}
+            ${UA_NODESET_MACHINERY_SOURCES}
+            ${UA_TYPES_MACHINERY_HEADERS}
+            ${UA_TYPES_MACHINERY_SOURCES}
 )
 target_link_libraries(ua_gen_machinery PUBLIC ua_gen_di)
 
@@ -81,13 +81,12 @@ ua_generate_nodeset_and_datatypes(
     DEPENDS di
 )
 
-add_library(
-    ua_gen_ia
-)
+add_library(ua_gen_ia)
 target_sources(
     ua_gen_ia
-    PRIVATE ${UA_TYPES_IA_HEADERS} ${UA_TYPES_IA_SOURCES} ${UA_NODESET_IA_HEADERS} ${UA_NODESET_IA_SOURCES}
-            "${SAMPLESERVER_GENERATED_NODESET_AND_DATATYES_OUTPUT_DIR}/ia_nodeids.h"
+    PRIVATE # cmake-format: sort
+            "${SAMPLESERVER_GENERATED_NODESET_AND_DATATYES_OUTPUT_DIR}/ia_nodeids.h" ${UA_NODESET_IA_HEADERS}
+            ${UA_NODESET_IA_SOURCES} ${UA_TYPES_IA_HEADERS} ${UA_TYPES_IA_SOURCES}
 )
 target_link_libraries(ua_gen_ia PUBLIC ua_gen_di)
 
@@ -103,14 +102,15 @@ ua_generate_nodeset_and_datatypes(
     DEPENDS di machinery ia
 )
 
-add_library(
-    ua_gen_machinetool
-)
+add_library(ua_gen_machinetool)
 target_sources(
     ua_gen_machinetool
-    PRIVATE ${UA_TYPES_MACHINETOOL_HEADERS} ${UA_TYPES_MACHINETOOL_SOURCES} ${UA_NODESET_MACHINETOOL_HEADERS}
-            ${UA_NODESET_MACHINETOOL_SOURCES}
+    PRIVATE # cmake-format: sort
             "${SAMPLESERVER_GENERATED_NODESET_AND_DATATYES_OUTPUT_DIR}/machinetool_nodeids.h"
+            ${UA_NODESET_MACHINETOOL_HEADERS}
+            ${UA_NODESET_MACHINETOOL_SOURCES}
+            ${UA_TYPES_MACHINETOOL_HEADERS}
+            ${UA_TYPES_MACHINETOOL_SOURCES}
 )
 target_link_libraries(ua_gen_machinetool PUBLIC ua_gen_ia ua_gen_machinery)
 
@@ -126,14 +126,15 @@ ua_generate_nodeset_and_datatypes(
     DEPENDS di
 )
 
-add_library(
-    ua_gen_robotics
-)
+add_library(ua_gen_robotics)
 target_sources(
     ua_gen_robotics
-    PRIVATE ${UA_TYPES_ROBOTICS_HEADERS} ${UA_TYPES_ROBOTICS_SOURCES} ${UA_NODESET_ROBOTICS_HEADERS}
-            ${UA_NODESET_ROBOTICS_SOURCES}
+    PRIVATE # cmake-format: sort
             "${SAMPLESERVER_GENERATED_NODESET_AND_DATATYES_OUTPUT_DIR}/robotics_nodeids.h"
+            ${UA_NODESET_ROBOTICS_HEADERS}
+            ${UA_NODESET_ROBOTICS_SOURCES}
+            ${UA_TYPES_ROBOTICS_HEADERS}
+            ${UA_TYPES_ROBOTICS_SOURCES}
 )
 target_link_libraries(ua_gen_robotics PUBLIC ua_gen_di)
 
@@ -149,14 +150,15 @@ ua_generate_nodeset_and_datatypes(
     DEPENDS machinery
 )
 
-add_library(
-    ua_gen_woodworking
-)
+add_library(ua_gen_woodworking)
 target_sources(
     ua_gen_woodworking
-    PRIVATE ${UA_TYPES_WOODWORKING_HEADERS} ${UA_TYPES_WOODWORKING_SOURCES} ${UA_NODESET_WOODWORKING_HEADERS}
-            ${UA_NODESET_WOODWORKING_SOURCES}
+    PRIVATE # cmake-format: sort
             "${SAMPLESERVER_GENERATED_NODESET_AND_DATATYES_OUTPUT_DIR}/woodworking_nodeids.h"
+            ${UA_NODESET_WOODWORKING_HEADERS}
+            ${UA_NODESET_WOODWORKING_SOURCES}
+            ${UA_TYPES_WOODWORKING_HEADERS}
+            ${UA_TYPES_WOODWORKING_SOURCES}
 )
 target_link_libraries(ua_gen_woodworking PUBLIC ua_gen_machinery)
 
@@ -183,10 +185,7 @@ target_link_libraries(SampleServerLib PUBLIC reflCpp::reflCpp)
 target_link_libraries(SampleServerLib PUBLIC Threads::Threads)
 target_compile_definitions(SampleServerLib PUBLIC __STDC_WANT_LIB_EXT1__)
 
-add_library(
-    Configuration
-    Configuration/Configuration.cpp Configuration/Configuration_json.cpp
-)
+add_library(Configuration Configuration/Configuration.cpp Configuration/Configuration_json.cpp)
 target_link_libraries(Configuration PRIVATE nlohmann_json::nlohmann_json)
 
 add_executable(

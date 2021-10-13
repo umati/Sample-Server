@@ -23,7 +23,6 @@ set(SAMPLESERVER_GENERATED_NODESET_AND_DATATYES_OUTPUT_DIR "${PROJECT_SOURCE_DIR
 # Generate types and namespace for DI
 ua_generate_nodeset_and_datatypes(
     NAME "di"
-         # TARGET_PREFIX "${PROJECT_NAME}"
     FILE_NS "${open62541_NODESET_DIR}/DI/Opc.Ua.Di.NodeSet2.xml"
     FILE_CSV "${open62541_NODESET_DIR}/DI/OpcUaDiModel.csv"
     FILE_BSD "${open62541_NODESET_DIR}/DI/Opc.Ua.Di.Types.bsd"
@@ -47,7 +46,6 @@ configure_file(cmake/empty.bsd.template "${CMAKE_BINARY_DIR}/model/Opc.Ua.Machin
 
 ua_generate_nodeset_and_datatypes(
     NAME "machinery"
-         # TARGET_PREFIX "${PROJECT_NAME}"
     FILE_NS "${open62541_NODESET_DIR}/Machinery/Opc.Ua.Machinery.NodeSet2.xml"
     FILE_CSV "${open62541_NODESET_DIR}/Machinery/NodeIds.csv"
     FILE_BSD "${CMAKE_BINARY_DIR}/model/Opc.Ua.Machinery.Types.bsd"
@@ -71,7 +69,6 @@ target_link_libraries(ua_gen_machinery PUBLIC ua_gen_di)
 
 ua_generate_nodeset_and_datatypes(
     NAME "ia"
-         # TARGET_PREFIX "${PROJECT_NAME}"
     FILE_NS "${open62541_NODESET_DIR}/IA/Opc.Ua.IA.NodeSet2.xml"
     FILE_CSV "${open62541_NODESET_DIR}/IA/Opc.Ua.IA.NodeIds.csv"
     FILE_BSD "${PROJECT_SOURCE_DIR}/model/Opc.Ua.IA.fixed.bsd"
@@ -92,7 +89,6 @@ target_link_libraries(ua_gen_ia PUBLIC ua_gen_di)
 
 ua_generate_nodeset_and_datatypes(
     NAME "machinetool"
-         # TARGET_PREFIX "${PROJECT_NAME}"
     FILE_NS "${open62541_NODESET_DIR}/MachineTool/Opc.Ua.MachineTool.NodeSet2.xml"
     FILE_CSV "${open62541_NODESET_DIR}/MachineTool/NodeIds.csv"
     FILE_BSD "${PROJECT_SOURCE_DIR}/model/Opc.Ua.MachineTool.bsd"
@@ -116,7 +112,6 @@ target_link_libraries(ua_gen_machinetool PUBLIC ua_gen_ia ua_gen_machinery)
 
 ua_generate_nodeset_and_datatypes(
     NAME "robotics"
-         # TARGET_PREFIX "${PROJECT_NAME}"
     FILE_NS "${open62541_NODESET_DIR}/Robotics/Opc.Ua.Robotics.NodeSet2.xml"
     FILE_CSV "${open62541_NODESET_DIR}/Robotics/NodeIds.csv"
     FILE_BSD "${open62541_NODESET_DIR}/Robotics/Opc.Ua.Robotics.Types.bsd"
@@ -140,7 +135,6 @@ target_link_libraries(ua_gen_robotics PUBLIC ua_gen_di)
 
 ua_generate_nodeset_and_datatypes(
     NAME "woodworking"
-         # TARGET_PREFIX "${PROJECT_NAME}"
     FILE_NS "${PROJECT_SOURCE_DIR}/model/Woodworking/Opc.Ua.Woodworking.NodeSet2.xml"
     FILE_CSV "${PROJECT_SOURCE_DIR}/model/Woodworking/Opc.Ua.Woodworking.NodeIds.csv"
     FILE_BSD "${PROJECT_SOURCE_DIR}/model/Woodworking/Opc.Ua.Woodworking.NodeSet2.bsd"

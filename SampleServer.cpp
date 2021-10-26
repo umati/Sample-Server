@@ -99,7 +99,7 @@ UA_StatusCode setServerConfig(UA_ServerConfig *pConfig, const Configuration::Con
       users.push_back(UA_UsernamePasswordLogin{.username = UA_STRING((char *)up.Username.c_str()), .password = UA_STRING((char *)up.Password.c_str())});
     }
   }
-  status = UA_AccessControl_default(pConfig, true, &pConfig->securityPolicies[pConfig->securityPoliciesSize - 1].policyUri, users.size(), &users[0]);
+  status = UA_AccessControl_default(pConfig, true, NULL, &pConfig->securityPolicies[pConfig->securityPoliciesSize - 1].policyUri, users.size(), &users[0]);
   if (status != UA_STATUSCODE_GOOD) {
     return status;
   }

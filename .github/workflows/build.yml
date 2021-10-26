@@ -37,6 +37,7 @@ jobs:
           echo "ARG_CTEST=-C Debug">> "$env:GITHUB_ENV"
       - name: Build server with dependencies
         run: |
+          ./deps/libressl/portable/autogen.sh
           mkdir -p build
           cd build
           cmake ../Sample-Server/.github/ -DCMAKE_INSTALL_PREFIX:PATH=${{ env.CMAKE_INSTALL_PREFIX }}

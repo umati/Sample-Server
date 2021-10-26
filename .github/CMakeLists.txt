@@ -47,11 +47,8 @@ find_package(Patch REQUIRED)
 # Patch command might be applied already, so errors need to be ignored.
 externalproject_add(
     libreSSLExternal
-    DOWNLOAD_DIR ${CMAKE_CURRENT_BINARY_DIR}/libreSslDownload
-    SOURCE_DIR ${CMAKE_CURRENT_BINARY_DIR}/libreSslSource
-    URL "https://ftp.openbsd.org/pub/OpenBSD/LibreSSL/libressl-3.7.0.tar.gz"
-    URL_HASH SHA256=3fc1290f4007ec75f6e9acecbb25512630d1b9ab8c53ba79844e395868c3e006
-    PATCH_COMMAND "${Patch_EXECUTABLE}" -p1 --forward -d ${CMAKE_CURRENT_BINARY_DIR}/libreSslSource <
+    SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/../deps/libressl/portable
+    PATCH_COMMAND "${Patch_EXECUTABLE}" -p1 --forward -d ${CMAKE_CURRENT_BINARY_DIR}/../deps/libressl/portable <
                   ${CMAKE_CURRENT_SOURCE_DIR}/ciPatches/libressl-no_postfix.patch || echo "Patch returned non-zero"
     CMAKE_ARGS -DLIBRESSL_APPS:BOOL=0 -DCMAKE_INSTALL_PREFIX:PATH=${CMAKE_INSTALL_PREFIX}
     INSTALL_DIR "${CMAKE_INSTALL_PREFIX}"

@@ -60,7 +60,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2.3.5
-    - uses: DoozyX/clang-format-lint-action@v0.12
+    - uses: DoozyX/clang-format-lint-action@v0.13
       with:
         source: '.'
         extensions: 'hpp,cpp'

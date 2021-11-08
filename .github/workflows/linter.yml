@@ -49,22 +49,11 @@ jobs:
       - name: Lint Code Base
         uses: github/super-linter@v4.8.1
         env:
-          VALIDATE_CPP: false # Use clang-formt instead
-          VALIDATE_CLANG_FORMAT: false # disables clang-format for super-linter TODO: Switch back to super-linter as soon as configurable 
+          VALIDATE_CPP: false # Use clang-formt instead 
           VALIDATE_ALL_CODEBASE: false
           DEFAULT_BRANCH: main
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-# Clang Format
-  clang-format-linter:
-    name: Lint Code Base (clang-format-lint)
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v2.4.0
-    - uses: DoozyX/clang-format-lint-action@v0.13
-      with:
-        source: '.'
-        extensions: 'hpp,cpp'
-        clangFormatVersion: 12
+
 # CMake Format
   cmake-format-linter:
     name: Lint Code Base (cmake-format-lint)

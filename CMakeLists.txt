@@ -18,7 +18,7 @@ if(NOT CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
     set(PROJECT_BINARY_DIR ${CMAKE_BINARY_DIR})
 endif()
 
-set(SAMPLESERVER_GENERATED_NODESET_AND_DATATYES_OUTPUT_DIR "${PROJECT_SOURCE_DIR}/src_generated")
+set(SAMPLESERVER_GENERATED_NODESET_AND_DATATYPES_OUTPUT_DIR "${PROJECT_SOURCE_DIR}/src_generated")
 
 # Generate types and namespace for DI
 ua_generate_nodeset_and_datatypes(
@@ -28,14 +28,14 @@ ua_generate_nodeset_and_datatypes(
     FILE_BSD "${open62541_NODESET_DIR}/DI/Opc.Ua.Di.Types.bsd"
     NAMESPACE_MAP "2:http://opcfoundation.org/UA/DI/"
     TARGET_PREFIX "${PROJECT_NAME}"
-    OUTPUT_DIR "${SAMPLESERVER_GENERATED_NODESET_AND_DATATYES_OUTPUT_DIR}"
+    OUTPUT_DIR "${SAMPLESERVER_GENERATED_NODESET_AND_DATATYPES_OUTPUT_DIR}"
 )
 
 add_library(ua_gen_di)
 target_sources(
     ua_gen_di
     PRIVATE # cmake-format: sort
-            "${SAMPLESERVER_GENERATED_NODESET_AND_DATATYES_OUTPUT_DIR}/di_nodeids.h" ${UA_NODESET_DI_HEADERS}
+            "${SAMPLESERVER_GENERATED_NODESET_AND_DATATYPES_OUTPUT_DIR}/di_nodeids.h" ${UA_NODESET_DI_HEADERS}
             ${UA_NODESET_DI_SOURCES} ${UA_TYPES_DI_HEADERS} ${UA_TYPES_DI_SOURCES}
 )
 target_link_libraries(ua_gen_di PUBLIC open62541::open62541)
@@ -51,7 +51,7 @@ ua_generate_nodeset_and_datatypes(
     FILE_BSD "${CMAKE_BINARY_DIR}/model/Opc.Ua.Machinery.Types.bsd"
     NAMESPACE_MAP "3:http://opcfoundation.org/UA/Machinery/"
     TARGET_PREFIX "${PROJECT_NAME}"
-    OUTPUT_DIR "${SAMPLESERVER_GENERATED_NODESET_AND_DATATYES_OUTPUT_DIR}"
+    OUTPUT_DIR "${SAMPLESERVER_GENERATED_NODESET_AND_DATATYPES_OUTPUT_DIR}"
     DEPENDS di
 )
 
@@ -59,7 +59,7 @@ add_library(ua_gen_machinery)
 target_sources(
     ua_gen_machinery
     PRIVATE # cmake-format: sort
-            "${SAMPLESERVER_GENERATED_NODESET_AND_DATATYES_OUTPUT_DIR}/machinery_nodeids.h"
+            "${SAMPLESERVER_GENERATED_NODESET_AND_DATATYPES_OUTPUT_DIR}/machinery_nodeids.h"
             ${UA_NODESET_MACHINERY_HEADERS}
             ${UA_NODESET_MACHINERY_SOURCES}
             ${UA_TYPES_MACHINERY_HEADERS}
@@ -74,7 +74,7 @@ ua_generate_nodeset_and_datatypes(
     FILE_BSD "${PROJECT_SOURCE_DIR}/model/Opc.Ua.IA.fixed.bsd"
     NAMESPACE_MAP "4:http://opcfoundation.org/UA/IA/"
     TARGET_PREFIX "${PROJECT_NAME}"
-    OUTPUT_DIR "${SAMPLESERVER_GENERATED_NODESET_AND_DATATYES_OUTPUT_DIR}"
+    OUTPUT_DIR "${SAMPLESERVER_GENERATED_NODESET_AND_DATATYPES_OUTPUT_DIR}"
     DEPENDS di
 )
 
@@ -82,7 +82,7 @@ add_library(ua_gen_ia)
 target_sources(
     ua_gen_ia
     PRIVATE # cmake-format: sort
-            "${SAMPLESERVER_GENERATED_NODESET_AND_DATATYES_OUTPUT_DIR}/ia_nodeids.h" ${UA_NODESET_IA_HEADERS}
+            "${SAMPLESERVER_GENERATED_NODESET_AND_DATATYPES_OUTPUT_DIR}/ia_nodeids.h" ${UA_NODESET_IA_HEADERS}
             ${UA_NODESET_IA_SOURCES} ${UA_TYPES_IA_HEADERS} ${UA_TYPES_IA_SOURCES}
 )
 target_link_libraries(ua_gen_ia PUBLIC ua_gen_di)
@@ -94,7 +94,7 @@ ua_generate_nodeset_and_datatypes(
     FILE_BSD "${PROJECT_SOURCE_DIR}/model/Opc.Ua.MachineTool.bsd"
     NAMESPACE_MAP "5:http://opcfoundation.org/UA/MachineTool/"
     TARGET_PREFIX "${PROJECT_NAME}"
-    OUTPUT_DIR "${SAMPLESERVER_GENERATED_NODESET_AND_DATATYES_OUTPUT_DIR}"
+    OUTPUT_DIR "${SAMPLESERVER_GENERATED_NODESET_AND_DATATYPES_OUTPUT_DIR}"
     DEPENDS di machinery ia
 )
 
@@ -102,7 +102,7 @@ add_library(ua_gen_machinetool)
 target_sources(
     ua_gen_machinetool
     PRIVATE # cmake-format: sort
-            "${SAMPLESERVER_GENERATED_NODESET_AND_DATATYES_OUTPUT_DIR}/machinetool_nodeids.h"
+            "${SAMPLESERVER_GENERATED_NODESET_AND_DATATYPES_OUTPUT_DIR}/machinetool_nodeids.h"
             ${UA_NODESET_MACHINETOOL_HEADERS}
             ${UA_NODESET_MACHINETOOL_SOURCES}
             ${UA_TYPES_MACHINETOOL_HEADERS}
@@ -117,7 +117,7 @@ ua_generate_nodeset_and_datatypes(
     FILE_BSD "${open62541_NODESET_DIR}/Robotics/Opc.Ua.Robotics.Types.bsd"
     NAMESPACE_MAP "6:http://opcfoundation.org/UA/Robotics/"
     TARGET_PREFIX "${PROJECT_NAME}"
-    OUTPUT_DIR "${SAMPLESERVER_GENERATED_NODESET_AND_DATATYES_OUTPUT_DIR}"
+    OUTPUT_DIR "${SAMPLESERVER_GENERATED_NODESET_AND_DATATYPES_OUTPUT_DIR}"
     DEPENDS di
 )
 
@@ -125,7 +125,7 @@ add_library(ua_gen_robotics)
 target_sources(
     ua_gen_robotics
     PRIVATE # cmake-format: sort
-            "${SAMPLESERVER_GENERATED_NODESET_AND_DATATYES_OUTPUT_DIR}/robotics_nodeids.h"
+            "${SAMPLESERVER_GENERATED_NODESET_AND_DATATYPES_OUTPUT_DIR}/robotics_nodeids.h"
             ${UA_NODESET_ROBOTICS_HEADERS}
             ${UA_NODESET_ROBOTICS_SOURCES}
             ${UA_TYPES_ROBOTICS_HEADERS}
@@ -140,7 +140,7 @@ ua_generate_nodeset_and_datatypes(
     FILE_BSD "${PROJECT_SOURCE_DIR}/model/Woodworking/Opc.Ua.Woodworking.NodeSet2.bsd"
     NAMESPACE_MAP "7:http://opcfoundation.org/UA/Woodworking/"
     TARGET_PREFIX "${PROJECT_NAME}"
-    OUTPUT_DIR "${SAMPLESERVER_GENERATED_NODESET_AND_DATATYES_OUTPUT_DIR}"
+    OUTPUT_DIR "${SAMPLESERVER_GENERATED_NODESET_AND_DATATYPES_OUTPUT_DIR}"
     DEPENDS machinery
 )
 
@@ -148,7 +148,7 @@ add_library(ua_gen_woodworking)
 target_sources(
     ua_gen_woodworking
     PRIVATE # cmake-format: sort
-            "${SAMPLESERVER_GENERATED_NODESET_AND_DATATYES_OUTPUT_DIR}/woodworking_nodeids.h"
+            "${SAMPLESERVER_GENERATED_NODESET_AND_DATATYPES_OUTPUT_DIR}/woodworking_nodeids.h"
             ${UA_NODESET_WOODWORKING_HEADERS}
             ${UA_NODESET_WOODWORKING_SOURCES}
             ${UA_TYPES_WOODWORKING_HEADERS}

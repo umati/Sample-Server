@@ -10,7 +10,7 @@ Sample-Server implementation of various umati endorsed OPC UA companion specific
 
 This is an example implementation of the OPC UA Machine Tool Companion Specification based on open62541. The server provides several simulated machine tools, which show different extension stages of the specification.
 
-### Woodworking Example
+### Woodworking Examples
 
 This is an example implementation of the OPC UA Woodworking Companion Specification. The server provides two simulated woodworking machines, a basic one implementing only mandatory variables/objects and a full one implementing every optional variable/object.
 
@@ -77,4 +77,4 @@ The binding is done by comparing the name of structure members with the browse n
 
 ![GitHub](https://img.shields.io/github/license/umati/Sample-Server)
 
-This sample server implementation is licensed under the [Mozilla Public License v2.0 (MPLv2)](LICENSE).
+This sample server implementation is licensed under the [Mozilla Public License v2.0 (MPLv2)](LICENSE) except otherwise stated in the header of a file.

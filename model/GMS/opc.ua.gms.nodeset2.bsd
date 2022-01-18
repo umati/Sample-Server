@@ -1,0 +1,66 @@
+<opc:TypeDictionary xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:tns="http://opcfoundation.org/GMS/" DefaultByteOrder="LittleEndian" xmlns:opc="http://opcfoundation.org/BinarySchema/" xmlns:ua="http://opcfoundation.org/UA/" TargetNamespace="http://opcfoundation.org/GMS/">
+    <opc:Import Namespace="http://opcfoundation.org/UA/"/>
+    <opc:StructuredType BaseType="ua:ExtensionObject" Name="WorkspaceType">
+        <opc:Field TypeName="opc:Double" Name="EngineeringUnits"/>
+    </opc:StructuredType>
+    <opc:StructuredType BaseType="tns:WorkspaceType" Name="CartesianWorkspaceType">
+        <opc:Field SourceType="tns:WorkspaceType" TypeName="opc:Double" Name="EngineeringUnits"/>
+        <opc:Field TypeName="opc:Double" Name="Length"/>
+        <opc:Field TypeName="opc:Double" Name="Width"/>
+        <opc:Field TypeName="opc:Double" Name="Height"/>
+    </opc:StructuredType>
+    <opc:StructuredType BaseType="tns:WorkspaceType" Name="CylindricalWorkspaceType">
+        <opc:Field SourceType="tns:WorkspaceType" TypeName="opc:Double" Name="EngineeringUnits"/>
+        <opc:Field TypeName="opc:Double" Name="Length"/>
+        <opc:Field TypeName="opc:Double" Name="Radius"/>
+    </opc:StructuredType>
+    <opc:EnumeratedType LengthInBits="32" Name="LoadStatusEnum">
+        <opc:EnumeratedValue Name="Unknown" Value="0"/>
+        <opc:EnumeratedValue Name="Empty" Value="1"/>
+        <opc:EnumeratedValue Name="Filled" Value="2"/>
+        <opc:EnumeratedValue Name="InProgress" Value="3"/>
+    </opc:EnumeratedType>
+    <opc:EnumeratedType LengthInBits="32" Name="MeasReasonEnum">
+        <opc:EnumeratedValue Name="Continuous_Measurements" Value="0"/>
+        <opc:EnumeratedValue Name="Special_Measurement" Value="1"/>
+        <opc:EnumeratedValue Name="Audit_Measurement" Value="2"/>
+        <opc:EnumeratedValue Name="Min_Mastering" Value="3"/>
+        <opc:EnumeratedValue Name="Med_Mastering" Value="4"/>
+        <opc:EnumeratedValue Name="Max_Mastering" Value="5"/>
+    </opc:EnumeratedType>
+    <opc:EnumeratedType LengthInBits="32" Name="ToleranceLimitEnum">
+        <opc:EnumeratedValue Name="NoLimit" Value="0"/>
+        <opc:EnumeratedValue Name="LimitValue" Value="1"/>
+        <opc:EnumeratedValue Name="NaturalLimit" Value="2"/>
+    </opc:EnumeratedType>
+    <opc:EnumeratedType LengthInBits="32" Name="ToolAlignmentState">
+        <opc:EnumeratedValue Name="Fixed" Value="0"/>
+        <opc:EnumeratedValue Name="Indexed" Value="1"/>
+        <opc:EnumeratedValue Name="Continous" Value="2"/>
+    </opc:EnumeratedType>
+    <opc:EnumeratedType LengthInBits="32" Name="ToolCapabilities">
+        <opc:Documentation>List of tool capabilities acc. to I++ DME</opc:Documentation>
+        <opc:EnumeratedValue Name="GoTo" Value="0"/>
+        <opc:EnumeratedValue Name="PtMeas" Value="1"/>
+        <opc:EnumeratedValue Name="ScanOnPlane" Value="2"/>
+        <opc:EnumeratedValue Name="ScanOnLine" Value="3"/>
+        <opc:EnumeratedValue Name="ScanOnCircle" Value="4"/>
+        <opc:EnumeratedValue Name="ScanOnHelix" Value="5"/>
+        <opc:EnumeratedValue Name="ScanOnCurve" Value="6"/>
+        <opc:EnumeratedValue Name="PtMeasSelfCenter" Value="7"/>
+        <opc:EnumeratedValue Name="PtMeasSelfCenterLocked" Value="8"/>
+        <opc:EnumeratedValue Name="DataAcquire" Value="9"/>
+        <opc:EnumeratedValue Name="DeleteAcquisition" Value="10"/>
+        <opc:EnumeratedValue Name="DeleteAllAcquisition" Value="11"/>
+        <opc:EnumeratedValue Name="FeatureExtract" Value="12"/>
+        <opc:EnumeratedValue Name="GetRawDataBin" Value="13"/>
+        <opc:EnumeratedValue Name="GetRawDataShaMem" Value="14"/>
+        <opc:EnumeratedValue Name="ReleaseShaMem" Value="15"/>
+        <opc:EnumeratedValue Name="Other" Value="16"/>
+    </opc:EnumeratedType>
+    <opc:EnumeratedType LengthInBits="32" Name="ToolIsQualifiedStatus">
+        <opc:EnumeratedValue Name="Qualified" Value="0"/>
+        <opc:EnumeratedValue Name="Impercise" Value="1"/>
+        <opc:EnumeratedValue Name="NotQualified" Value="2"/>
+    </opc:EnumeratedType>
+</opc:TypeDictionary>

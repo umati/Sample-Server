@@ -4,6 +4,7 @@
  * Copyright 2020 (c) Tonja Heinemann, ISW University of Stuttgart (for umati and VDW e.V.)
  * Copyright 2021 (c) Götz Görisch, VDW - Verein Deutscher Werkzeugmaschinenfabriken e.V.
  * Copyright 2021 (c) Christoph Ruckstetter, Michael Weinig AG
+ * Copyright 2022 (c) Sebastian Friedl, ISW University of Stuttgart (for VDMA e.V.)
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -53,6 +54,7 @@
 #include "src_generated/namespace_ia_generated.h"
 #include "src_generated/namespace_machinery_generated.h"
 #include "src_generated/namespace_machinetool_generated.h"
+#include "src_generated/namespace_machinery_result_generated.h"
 #include "src_generated/namespace_gms_generated.h"
 
 /*#include "src_generated/namespace_robotics_generated.h"*/
@@ -194,27 +196,29 @@ int main(int argc, char *argv[]) {
     UA_String_clear(&pConfig->customHostname);
     pConfig->customHostname = UA_STRING_ALLOC(serverConfig.Hostname->c_str());
   }
-
+  
   // Create namespaces
   namespace_di_generated(pServer);
   namespace_ia_generated(pServer);
   namespace_machinery_generated(pServer);
   namespace_machinetool_generated(pServer);
+  UA_Server_addNamespace(pServer, "Need for namespace index");
   /*namespace_robotics_generated(pServer);*/
   namespace_woodworking_generated(pServer);
-
+  namespace_machinery_result_generated(pServer);
+  namespace_GMS_generated(pServer);
   std::mutex accessDataMutex;
 
   std::list<std::shared_ptr<SimulatedInstance>> machineTools;
-  machineTools.push_back(std::make_shared<FullMachineTool>(pServer));
+  /*machineTools.push_back(std::make_shared<FullMachineTool>(pServer));
   machineTools.push_back(std::make_shared<FullMachineToolDynamic>(pServer));
   machineTools.push_back(std::make_shared<BasicMachineTool>(pServer));
   machineTools.push_back(std::make_shared<MRMachineTool>(pServer));
   machineTools.push_back(std::make_shared<ShowcaseMachineTool>(pServer));
   machineTools.push_back(std::make_shared<CNShowcaseMachineTool>(pServer));
   /*machineTools.push_back(std::make_shared<BasicRobot>(pServer));*/
-  machineTools.push_back(std::make_shared<BasicWoodworking>(pServer));
-  machineTools.push_back(std::make_shared<FullWoodworking>(pServer));
+  /*machineTools.push_back(std::make_shared<BasicWoodworking>(pServer));
+  machineTools.push_back(std::make_shared<FullWoodworking>(pServer));*/
   machineTools.push_back(std::make_shared<BasicGMS>(pServer));
 
 

@@ -73,7 +73,7 @@ class BindVariable {
         std::cout << "UA_Server_readDataType(" << nodeId << "): Result not good: " << UA_StatusCode_name(statusCode) << std::endl;
         throw std::runtime_error("Type could not be be fetched, no variable node?");
       }
-      pDataType = UA_findDataType(&typeNodeId);
+      pDataType = UA_Server_findDataType(pServer, &typeNodeId);
     }
     if (pDataType == nullptr) {
       throw std::runtime_error("Fetching Datatype failed.");

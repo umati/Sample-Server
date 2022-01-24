@@ -6,7 +6,7 @@ jobs:
   build:
     strategy:
       matrix:
-        os: [ubuntu-20.04, windows-latest]
+        os: [ubuntu-20.04, windows-2019, windows-2022]
     runs-on: ${{matrix.os}}
     env:
       CMAKE_INSTALL_PREFIX: "${{ github.workspace }}/install"
@@ -16,11 +16,17 @@ jobs:
         with:
           path: Sample-Server
           submodules: recursive
-      - name: Set Windows CMAKE_GENERATOR
-        if: matrix.os == 'windows-latest'
+      - name: Set Windows CMAKE_GENERATOR 2019
+        if: matrix.os == 'windows-2019'
         run: |
           #shellcheck  disable=SC2154
           echo "CMAKE_GENERATOR=Visual Studio 16 2019">> "$env:GITHUB_ENV"
+          echo "ARG_CTEST=-C Debug">> "$env:GITHUB_ENV"
+      - name: Set Windows CMAKE_GENERATOR 2022
+        if: matrix.os == 'windows-2022'
+        run: |
+          #shellcheck  disable=SC2154
+          echo "CMAKE_GENERATOR=Visual Studio 17 2022">> "$env:GITHUB_ENV"
           echo "ARG_CTEST=-C Debug">> "$env:GITHUB_ENV"
       - name: Build server with dependencies
         run: |
@@ -39,7 +45,7 @@ jobs:
           ctest --output-on-failure ${{env.ARG_CTEST}}
 
   docker:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     env:
       # Check if this is not a pull request and GITHUB_TOKEN is set
       # As all env variables are strings, you need to compaire against "== 'true'" (not "== true")

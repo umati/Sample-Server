@@ -21,7 +21,7 @@ class BasicGMS : public InstantiatedMachineTool {
   void CreateObject() override;
 
   GMS::GMS_t mt;
-
+  UA_String m_resulturi[1];
   void InstantiateIdentification();
   void InstantiateMonitoring();
   void InstantiateProduction();

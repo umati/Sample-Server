@@ -5,6 +5,7 @@
  * Copyright 2022 (c) Sebastian Friedl, ISW University of Stuttgart (for VDMA e.V.)
  */
 
+#include <string>
 
 #include "BasicGMS.hpp"
 #include "../TypeDefinition/GMS/Constants.hpp"
@@ -39,13 +40,21 @@ void BasicGMS::CreateObject() {
     UmatiServerLib::Bind::MembersRefl(mt, m_pServer, m_nodeId, n);
     InstantiateIdentification();
     InstantiateOptional(mt.ResultManagement->Results, m_pServer, n);
-    auto &result = mt.ResultManagement->Results->ResultVariable.Add<machinery_result::ResultType_t>(m_pServer, n, {m_nsIndex, "Result1"});
+    auto &result = mt.ResultManagement->Results->ResultVariable.Add<machinery_result::ResultType_t>(m_pServer, n, {m_nsIndex, "Result"});
     UA_init(&result.Value.value,&UA_TYPES_MACHINERY_RESULT[UA_TYPES_MACHINERY_RESULT_RESULTDATATYPE]);
-    result.Value->resultMetaData.resultId = UA_String_fromChars("test");
-
+    result.Value->resultMetaData.resultId  = UA_String_fromChars("-");
+    result.Value->resultMetaData.resultUri = UA_Variant_new();
+    UA_Variant_init(result.Value->resultMetaData.resultUri);
+    UA_String_init(m_resulturi);
+    *m_resulturi = UA_String_fromChars("http://example.com/result");
+    UA_Variant_setArrayCopy(result.Value->resultMetaData.resultUri,m_resulturi,1,&UA_TYPES[UA_TYPES_STRING]);
+    result.Value->resultMetaData.resultUri->arrayDimensions = (UA_UInt32 *)UA_Array_new(1, &UA_TYPES[UA_TYPES_UINT32]);
+    result.Value->resultMetaData.resultUri->arrayDimensionsSize = 1;
+    result.Value->resultMetaData.resultUri->arrayDimensions[0] = 1;
+    result.Value->resultMetaData.resultUri->arrayLength = 1;
 
     InstantiateMonitoring();
-  InstantiateProduction();
+    InstantiateProduction();
 }
 
 void BasicGMS::InstantiateIdentification() {
@@ -96,5 +105,11 @@ void BasicGMS::Simulate() {
               UA_NODEID_NUMERIC(nsFromUri(m_pServer, constants::NsMachineToolUri), UA_MACHINETOOLID_PRODUCTIONSTATEMACHINETYPE_INTERRUPTED);
   }
 
-  mt.Monitoring->MachineTool->PowerOnDuration = m_simStep / 3600;
+    if ((m_simStep % 10) == 8) {
+        auto &result = mt.ResultManagement->Results->ResultVariable->front();
+        UA_String_clear(&result->Value->resultMetaData.resultId);
+        result->Value->resultMetaData.resultId = UA_String_fromChars(std::to_string(m_simStep % 100).c_str());
+    }
+
+    mt.Monitoring->MachineTool->PowerOnDuration = m_simStep / 3600;
 }

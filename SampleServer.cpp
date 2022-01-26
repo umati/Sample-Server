@@ -196,7 +196,7 @@ int main(int argc, char *argv[]) {
     UA_String_clear(&pConfig->customHostname);
     pConfig->customHostname = UA_STRING_ALLOC(serverConfig.Hostname->c_str());
   }
-  
+
   // Create namespaces
   namespace_di_generated(pServer);
   namespace_ia_generated(pServer);

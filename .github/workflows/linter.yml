@@ -16,7 +16,7 @@ name: Lint Code Base
 #############################
 on:
   push:
-    branches-ignore: []
+    branches-ignore: [ ]
   pull_request:
     branches: [main, develop]
 
@@ -40,7 +40,8 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v2.4.0
         with:
-          # Full git history is needed to get a proper list of changed files within `super-linter`
+          # Full git history is needed to get a proper list of changed files
+          # within `super-linter`
           fetch-depth: 0
 
       ################################
@@ -59,9 +60,9 @@ jobs:
     name: Lint Code Base (cmake-format-lint)
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2.4.0
-    - name: Format CMake files
-      id: cmake-format
-      uses: PuneetMatharu/cmake-format-lint-action@v1.0.0
-      with:
-        args: --config-files cmake-format.yaml
+      - uses: actions/checkout@v2.4.0
+      - name: Format CMake files
+        id: cmake-format
+        uses: PuneetMatharu/cmake-format-lint-action@v1.0.0
+        with:
+          args: --config-files cmake-format.yaml

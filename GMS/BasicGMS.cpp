@@ -39,6 +39,9 @@ void BasicGMS::CreateObject() {
     UA_ObjectAttributes_clear(&objAttr);
     UmatiServerLib::Bind::MembersRefl(mt, m_pServer, m_nodeId, n);
     InstantiateIdentification();
+    InstantiateMonitoring();
+    InstantiateProduction();
+
     InstantiateOptional(mt.ResultManagement->Results, m_pServer, n);
     auto &result = mt.ResultManagement->Results->ResultVariable.Add<machinery_result::ResultType_t>(m_pServer, n, {m_nsIndex, "Result"});
     UA_init(&result.Value.value,&UA_TYPES_MACHINERY_RESULT[UA_TYPES_MACHINERY_RESULT_RESULTDATATYPE]);
@@ -53,8 +56,39 @@ void BasicGMS::CreateObject() {
     result.Value->resultMetaData.resultUri->arrayDimensions[0] = 1;
     result.Value->resultMetaData.resultUri->arrayLength = 1;
 
-    InstantiateMonitoring();
-    InstantiateProduction();
+    InstantiateOptional(mt.ResultManagement->CorrectionsFolder, m_pServer, n);
+    auto &corr1 = mt.ResultManagement->CorrectionsFolder->Corrections.Add<GMS::CorrectionType_t>(m_pServer, n, {m_nsIndex, "Corr1"});
+    initCorrection(corr1,"corr1","c_123",1.0);
+
+    auto &corr2 = mt.ResultManagement->CorrectionsFolder->Corrections.Add<GMS::CorrectionType_t>(m_pServer, n, {m_nsIndex, "Corr2"});
+    initCorrection(corr2,"corr2","c_123",0.5);
+
+    auto &corr3 = mt.ResultManagement->CorrectionsFolder->Corrections.Add<GMS::CorrectionType_t>(m_pServer, n, {m_nsIndex, "Corr3"});
+    initCorrection(corr3,"corr3","c_456",
+                   0.75);
+}
+
+void BasicGMS::initCorrection(GMS::CorrectionType_t &corr, std::string Identifier, std::string CharacteristicIdentfier, double value ) {
+    corr.Identifier = Identifier;
+    corr.CharacteristicIdentfier = CharacteristicIdentfier;
+    InstantiateOptional(corr.CorrectionValueAbsolute, m_pServer, n);
+    corr.CorrectionValueAbsolute->Value = value;
+    corr.CorrectionValueAbsolute->EngineeringUnits.value.DisplayName.text = "µm";
+    corr.CorrectionValueAbsolute->EngineeringUnits.value.Description.text = "micrometre (micron)";
+    corr.CorrectionValueAbsolute->EngineeringUnits.value.UnitId = 13384;
+    corr.CorrectionValueAbsolute->EngineeringUnits.value.NamespaceUri = "http://www.opcfoundation.org/UA/units/un/cefact";
+    InstantiateOptional(corr.LowerControlLimit, m_pServer, n);
+    corr.LowerControlLimit->Value = -1.0;
+    corr.LowerControlLimit->EngineeringUnits.value.DisplayName.text = "µm";
+    corr.LowerControlLimit->EngineeringUnits.value.Description.text = "micrometre (micron)";
+    corr.LowerControlLimit->EngineeringUnits.value.UnitId = 13384;
+    corr.LowerControlLimit->EngineeringUnits.value.NamespaceUri = "http://www.opcfoundation.org/UA/units/un/cefact";
+    InstantiateOptional(corr.UpperControlLimit, m_pServer, n);
+    corr.UpperControlLimit->Value = 1.0;
+    corr.UpperControlLimit->EngineeringUnits.value.DisplayName.text = "µm";
+    corr.UpperControlLimit->EngineeringUnits.value.Description.text = "micrometre (micron)";
+    corr.UpperControlLimit->EngineeringUnits.value.UnitId = 13384;
+    corr.UpperControlLimit->EngineeringUnits.value.NamespaceUri = "http://www.opcfoundation.org/UA/units/un/cefact";
 }
 
 void BasicGMS::InstantiateIdentification() {
@@ -90,6 +124,7 @@ void BasicGMS::InstantiateProduction() {
 
 void BasicGMS::Simulate() {
   ++m_simStep;
+  int i = m_simStep;
   if ((m_simStep % 2) == 1) {
     SimulateStacklight();
   }
@@ -98,6 +133,7 @@ void BasicGMS::Simulate() {
       mt.Production->ActiveProgram->State->CurrentState->Number = 1;
       mt.Production->ActiveProgram->State->CurrentState->Id =
               UA_NODEID_NUMERIC(nsFromUri(m_pServer, constants::NsMachineToolUri), UA_MACHINETOOLID_PRODUCTIONSTATEMACHINETYPE_RUNNING);
+
   } else {
       mt.Production->ActiveProgram->State->CurrentState->Value = {"en", "Interrupted"};
       mt.Production->ActiveProgram->State->CurrentState->Number = 3;
@@ -106,9 +142,14 @@ void BasicGMS::Simulate() {
   }
 
     if ((m_simStep % 10) == 8) {
+        int i = m_simStep;
+        for (auto &corr : mt.ResultManagement->CorrectionsFolder->Corrections.value){
+            corr->CorrectionValueAbsolute->Value = 1.3 * (sin(i));
+            i = i + ( m_simStep + (int)corr->CorrectionValueAbsolute->Value.value * 452) % 18;
+        }
         auto &result = mt.ResultManagement->Results->ResultVariable->front();
         UA_String_clear(&result->Value->resultMetaData.resultId);
-        result->Value->resultMetaData.resultId = UA_String_fromChars(std::to_string(m_simStep % 100).c_str());
+        result->Value->resultMetaData.resultId = UA_String_fromChars(std::to_string(i * 123 % 100).c_str());
     }
 
     mt.Monitoring->MachineTool->PowerOnDuration = m_simStep / 3600;

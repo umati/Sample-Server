@@ -207,7 +207,7 @@ target_sources(
 target_link_libraries(ua_gen_machinery_result PUBLIC open62541::open62541)
 
 ua_generate_nodeset_and_datatypes(
-        NAME "GMS"
+        NAME "gms"
         FILE_NS "${PROJECT_SOURCE_DIR}/model/GMS/opc.ua.gms.nodeset2.xml"
         FILE_CSV "${PROJECT_SOURCE_DIR}/model/GMS/opc.ua.gms.nodeset2.csv"
         FILE_BSD "${PROJECT_SOURCE_DIR}/model/GMS/opc.ua.gms.nodeset2.bsd"

@@ -6,7 +6,7 @@
  */
 
 #pragma once
-#include "../../src_generated/GMS_nodeids.h"
+#include "../../src_generated/gms_nodeids.h"
 
 namespace constants {
 constexpr const char *NsGMSUri = "http://opcfoundation.org/GMS/";

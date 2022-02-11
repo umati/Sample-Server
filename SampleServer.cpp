@@ -206,7 +206,7 @@ int main(int argc, char *argv[]) {
   /*namespace_robotics_generated(pServer);*/
   namespace_woodworking_generated(pServer);
   namespace_machinery_result_generated(pServer);
-  namespace_GMS_generated(pServer);
+  namespace_gms_generated(pServer);
   std::mutex accessDataMutex;
 
   std::list<std::shared_ptr<SimulatedInstance>> machineTools;

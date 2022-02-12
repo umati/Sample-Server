@@ -45,8 +45,7 @@ class BindVariable {
 
   template <typename T>
   static copyToVariantFunc getToVariantFuncArray(std::vector<T> &value) {
-    // return ConvertSimpleValue::asVariantFuncArray(&value);
-    static_assert(always_false<T>::value, "Not implemented");
+    return ConvertSimpleValue::asVariantFuncArray(&value);
     return nullptr;
   }
 

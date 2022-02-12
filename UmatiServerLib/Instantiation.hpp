@@ -151,6 +151,15 @@ UA_StatusCode InstantiateVariable(
   UA_VariableAttributes varAttr = UA_VariableAttributes_default;
   varAttr.valueRank = readValueRank(pServer, memberInTypeNodeId);
 
+  // Add Array Dimensions for Arrays
+  if (varAttr.valueRank == 1 ){
+      varAttr.arrayDimensionsSize = 1;
+      UA_UInt32 arrayDims[1] = {1};
+      varAttr.arrayDimensions = arrayDims;
+      varAttr.value.arrayDimensionsSize = 1;
+      varAttr.value.arrayDimensions = arrayDims;
+  }
+
   auto dataType = readDataType(pServer, memberInTypeNodeId);
   UA_String_copy(&browseName.QualifiedName->name, &varAttr.displayName.text);
   UA_NodeId_copy(dataType.NodeId, &varAttr.dataType);

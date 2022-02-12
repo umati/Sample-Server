@@ -15,10 +15,12 @@
 #include "../MachineTool/Production.hpp"
 #include "../MachineTool/MachineTool.hpp"
 #include "GMSResultManagementType.hpp"
+#include "GMSNotification.hpp"
 
 namespace GMS {
     struct GMS_t : public machineTool::MachineTool_t {
         BindableMember<GMSResultManagementType_t> ResultManagement;
+        BindableMember<GMSNotification_t> Notification;
     };
 }  // namespace GMS
 
@@ -27,4 +29,5 @@ REFL_TYPE(
         Bases<machineTool::MachineTool_t>(),
         UmatiServerLib::attribute::UaObjectType(UmatiServerLib::constexp::NodeId(constants::NsGMSUri, UA_GMSID_GMSTYPE)))
         REFL_FIELD(ResultManagement)
+        REFL_FIELD(Notification,UmatiServerLib::attribute::UaBrowseName(constants::NsMachineToolUri))
 REFL_END

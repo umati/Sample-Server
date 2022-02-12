@@ -15,23 +15,23 @@
         </xs:sequence>
     </xs:complexType>
     <xs:element type="tns:ListOfLoadStatusEnum" name="ListOfLoadStatusEnum" nillable="true"/>
-    <xs:simpleType name="MeasReasonEnum">
+    <xs:simpleType name="MeasurementReasonEnum">
         <xs:restriction base="xs:string">
-            <xs:enumeration value="Continuous_Measurements_0"/>
-            <xs:enumeration value="Special_Measurement_1"/>
-            <xs:enumeration value="Audit_Measurement_2"/>
-            <xs:enumeration value="Min_Mastering_3"/>
-            <xs:enumeration value="Med_Mastering_4"/>
-            <xs:enumeration value="Max_Mastering_5"/>
+            <xs:enumeration value="ContinuousMeasurements_0"/>
+            <xs:enumeration value="SpecialMeasurement_1"/>
+            <xs:enumeration value="AuditMeasurement_2"/>
+            <xs:enumeration value="MinMastering_3"/>
+            <xs:enumeration value="MedMastering_4"/>
+            <xs:enumeration value="MaxMastering_5"/>
         </xs:restriction>
     </xs:simpleType>
-    <xs:element type="tns:MeasReasonEnum" name="MeasReasonEnum"/>
-    <xs:complexType name="ListOfMeasReasonEnum">
+    <xs:element type="tns:MeasurementReasonEnum" name="MeasurementReasonEnum"/>
+    <xs:complexType name="ListOfMeasurementReasonEnum">
         <xs:sequence>
-            <xs:element minOccurs="0" maxOccurs="unbounded" type="tns:MeasReasonEnum" name="MeasReasonEnum" nillable="true"/>
+            <xs:element minOccurs="0" maxOccurs="unbounded" type="tns:MeasurementReasonEnum" name="MeasurementReasonEnum" nillable="true"/>
         </xs:sequence>
     </xs:complexType>
-    <xs:element type="tns:ListOfMeasReasonEnum" name="ListOfMeasReasonEnum" nillable="true"/>
+    <xs:element type="tns:ListOfMeasurementReasonEnum" name="ListOfMeasurementReasonEnum" nillable="true"/>
     <xs:simpleType name="ToleranceLimitEnum">
         <xs:restriction base="xs:string">
             <xs:enumeration value="NoLimit_0"/>
@@ -94,7 +94,7 @@
     <xs:simpleType name="ToolIsQualifiedStatus">
         <xs:restriction base="xs:string">
             <xs:enumeration value="Qualified_0"/>
-            <xs:enumeration value="Impercise_1"/>
+            <xs:enumeration value="Imprecise_1"/>
             <xs:enumeration value="NotQualified_2"/>
         </xs:restriction>
     </xs:simpleType>

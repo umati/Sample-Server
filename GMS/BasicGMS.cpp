@@ -41,30 +41,56 @@ void BasicGMS::CreateObject() {
     InstantiateIdentification();
     InstantiateMonitoring();
     InstantiateProduction();
+    InstantiateResultManagement();
 
+    InstantiateOptional(mt.Notification->Prognoses, m_pServer, n);
+    InstantiateOptional(mt.Notification->Prognoses->Calibration, m_pServer, n);
+    mt.Notification->Prognoses->Calibration.value.Calibrated = true;
+    InstantiateOptional(mt.Notification->Prognoses->Calibration->CalibrationCertificate, m_pServer, n);
+    {
+        std::stringstream ss;
+        ss << "http://www.isw.uni-stuttgart.de/CalibrationCertificate#" << MachineName;
+        mt.Notification->Prognoses->Calibration.value.CalibrationCertificate->push_back(ss.str());
+    }
+
+    InstantiateOptional(mt.Notification->Prognoses->Calibration->CalibrationInterval, m_pServer, n);
+    mt.Notification->Prognoses->Calibration.value.CalibrationInterval = 1000.0 * 60 * 60 * 24 *356;
+    InstantiateOptional(mt.Notification->Prognoses->Calibration->CalibrationPreptime, m_pServer, n);
+    mt.Notification->Prognoses->Calibration.value.CalibrationPreptime = 1000.0 * 60 * 60 * 24 *30;
+    mt.Notification->Prognoses->Calibration.value.DateOfCalibration =  std::chrono::system_clock::now() - std::chrono::hours(24 *7);
+    mt.Notification->Prognoses->Calibration.value.PredictedTime =  std::chrono::system_clock::now() + std::chrono::hours(24 * 356);
+
+
+}
+
+void BasicGMS::InstantiateResultManagement() {
     InstantiateOptional(mt.ResultManagement->Results, m_pServer, n);
-    auto &result = mt.ResultManagement->Results->ResultVariable.Add<machinery_result::ResultType_t>(m_pServer, n, {m_nsIndex, "Result"});
+    auto &result = mt.ResultManagement->Results->ResultVariable.Add<machinery_result::ResultType_t>(m_pServer, n, {
+            m_nsIndex, "Result"});
     UA_init(&result.Value.value,&UA_TYPES_MACHINERY_RESULT[UA_TYPES_MACHINERY_RESULT_RESULTDATATYPE]);
     result.Value->resultMetaData.resultId  = UA_String_fromChars("-");
     result.Value->resultMetaData.resultUri = UA_Variant_new();
     UA_Variant_init(result.Value->resultMetaData.resultUri);
     UA_String_init(m_resulturi);
     *m_resulturi = UA_String_fromChars("http://example.com/result");
-    UA_Variant_setArrayCopy(result.Value->resultMetaData.resultUri,m_resulturi,1,&UA_TYPES[UA_TYPES_STRING]);
+    UA_Variant_setArrayCopy(result.Value->resultMetaData.resultUri, m_resulturi, 1, &UA_TYPES[UA_TYPES_STRING]);
     result.Value->resultMetaData.resultUri->arrayDimensions = (UA_UInt32 *)UA_Array_new(1, &UA_TYPES[UA_TYPES_UINT32]);
     result.Value->resultMetaData.resultUri->arrayDimensionsSize = 1;
     result.Value->resultMetaData.resultUri->arrayDimensions[0] = 1;
     result.Value->resultMetaData.resultUri->arrayLength = 1;
 
     InstantiateOptional(mt.ResultManagement->CorrectionsFolder, m_pServer, n);
-    auto &corr1 = mt.ResultManagement->CorrectionsFolder->Corrections.Add<GMS::CorrectionType_t>(m_pServer, n, {m_nsIndex, "Corr1"});
-    initCorrection(corr1,"corr1","c_123",1.0);
+    auto &corr1 = mt.ResultManagement->CorrectionsFolder->Corrections.Add<GMS::CorrectionType_t>(m_pServer, n, {
+            m_nsIndex, "Corr1"});
+    initCorrection(corr1, "corr1", "c_123", 1.0);
 
-    auto &corr2 = mt.ResultManagement->CorrectionsFolder->Corrections.Add<GMS::CorrectionType_t>(m_pServer, n, {m_nsIndex, "Corr2"});
-    initCorrection(corr2,"corr2","c_123",0.5);
+    auto &corr2 = mt.ResultManagement->CorrectionsFolder->Corrections.Add<GMS::CorrectionType_t>(m_pServer, n, {
+            m_nsIndex, "Corr2"});
+    initCorrection(corr2, "corr2", "c_123", 0.5);
 
-    auto &corr3 = mt.ResultManagement->CorrectionsFolder->Corrections.Add<GMS::CorrectionType_t>(m_pServer, n, {m_nsIndex, "Corr3"});
-    initCorrection(corr3,"corr3","c_456",
+    auto &corr3 = mt.ResultManagement->CorrectionsFolder->Corrections.Add<GMS::CorrectionType_t>(m_pServer, n, {
+            m_nsIndex, "Corr3"});
+    initCorrection(corr3, "corr3", "c_456",
                    0.75);
 }
 

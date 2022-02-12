@@ -14,11 +14,11 @@
 namespace GMS {
 
 struct CalibrationPrognosisType_t : public machineTool::Prognosis_t {
-  //BindableMemberValue<bool> Calibrated;
-  //BindableMemberValue<std::string> CalibrationCertificate;
-  //BindableMemberValue<double> CalibrationInterval;
-  //BindableMemberValue<double> CalibrationPreptime;
-  //BindableMemberValue<UmatiServerLib::DateTime_t> DateOfCalibration;
+    BindableMemberValue<bool> Calibrated;
+    BindableMemberValue<std::vector<std::string>> CalibrationCertificate;
+    BindableMemberValue<double> CalibrationInterval;
+    BindableMemberValue<double> CalibrationPreptime;
+    BindableMemberValue<UmatiServerLib::DateTime_t> DateOfCalibration;
 };
 
 }  // namespace gms
@@ -27,10 +27,10 @@ REFL_TYPE(
   GMS::CalibrationPrognosisType_t,
   Bases<machineTool::Prognosis_t>(),
   UmatiServerLib::attribute::UaObjectType(UmatiServerLib::constexp::NodeId(constants::NsGMSUri, UA_GMSID_CALIBRATIONPROGNOSISTYPE)))
-/*REFL_FIELD(
+REFL_FIELD(
     Calibrated,
-    UmatiServerLib::attribute::MemberInTypeNodeId(UmatiServerLib::constexp::NodeId(constants::NsGMSUri, UA_GMSID_CALIBRATIONPROGNOSISTYPE_CALIBRATED)))*/
-/*REFL_FIELD(
+    UmatiServerLib::attribute::MemberInTypeNodeId(UmatiServerLib::constexp::NodeId(constants::NsGMSUri, UA_GMSID_CALIBRATIONPROGNOSISTYPE_CALIBRATED)))
+REFL_FIELD(
   CalibrationCertificate,
   UmatiServerLib::attribute::PlaceholderOptional(),
   UmatiServerLib::attribute::MemberInTypeNodeId(
@@ -49,5 +49,5 @@ REFL_FIELD(
     DateOfCalibration,
     UmatiServerLib::attribute::PlaceholderOptional(),
     UmatiServerLib::attribute::MemberInTypeNodeId(
-    UmatiServerLib::constexp::NodeId(constants::NsGMSUri, UA_GMSID_CALIBRATIONPROGNOSISTYPE_DATEOFCALIBRATION)))*/
+    UmatiServerLib::constexp::NodeId(constants::NsGMSUri, UA_GMSID_CALIBRATIONPROGNOSISTYPE_DATEOFCALIBRATION)))
 REFL_END

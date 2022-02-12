@@ -31,6 +31,15 @@ copyToVariantFunc ConvertSimpleValue::asVariantFunc(std::string *variable) {
   };
 }
 
+copyToVariantFunc ConvertSimpleValue::asVariantFuncArray(std::vector<std::string> *variable) {
+    std::string tmp[variable->size()];
+    std::copy(variable->begin(),variable->end(),tmp);
+    return [&tmp](UA_Variant *dst) {
+        open62541Cpp::UA_String str(*tmp);
+        UA_Variant_setArrayCopy(dst, str.String,1, &UA_TYPES[UA_TYPES_STRING]);
+    };
+}
+
 typedef std::ratio<1, 10000000> nano_100;
 typedef std::chrono::duration<std::int64_t, nano_100> nanoseconds_100;
 

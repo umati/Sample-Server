@@ -20,13 +20,13 @@
         <opc:EnumeratedValue Name="Filled" Value="2"/>
         <opc:EnumeratedValue Name="InProgress" Value="3"/>
     </opc:EnumeratedType>
-    <opc:EnumeratedType LengthInBits="32" Name="MeasReasonEnum">
-        <opc:EnumeratedValue Name="Continuous_Measurements" Value="0"/>
-        <opc:EnumeratedValue Name="Special_Measurement" Value="1"/>
-        <opc:EnumeratedValue Name="Audit_Measurement" Value="2"/>
-        <opc:EnumeratedValue Name="Min_Mastering" Value="3"/>
-        <opc:EnumeratedValue Name="Med_Mastering" Value="4"/>
-        <opc:EnumeratedValue Name="Max_Mastering" Value="5"/>
+    <opc:EnumeratedType LengthInBits="32" Name="MeasurementReasonEnum">
+        <opc:EnumeratedValue Name="ContinuousMeasurements" Value="0"/>
+        <opc:EnumeratedValue Name="SpecialMeasurement" Value="1"/>
+        <opc:EnumeratedValue Name="AuditMeasurement" Value="2"/>
+        <opc:EnumeratedValue Name="MinMastering" Value="3"/>
+        <opc:EnumeratedValue Name="MedMastering" Value="4"/>
+        <opc:EnumeratedValue Name="MaxMastering" Value="5"/>
     </opc:EnumeratedType>
     <opc:EnumeratedType LengthInBits="32" Name="ToleranceLimitEnum">
         <opc:EnumeratedValue Name="NoLimit" Value="0"/>
@@ -60,7 +60,7 @@
     </opc:EnumeratedType>
     <opc:EnumeratedType LengthInBits="32" Name="ToolIsQualifiedStatus">
         <opc:EnumeratedValue Name="Qualified" Value="0"/>
-        <opc:EnumeratedValue Name="Impercise" Value="1"/>
+        <opc:EnumeratedValue Name="Imprecise" Value="1"/>
         <opc:EnumeratedValue Name="NotQualified" Value="2"/>
     </opc:EnumeratedType>
 </opc:TypeDictionary>

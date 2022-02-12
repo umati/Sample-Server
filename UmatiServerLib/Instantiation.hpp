@@ -59,9 +59,12 @@ void InstantiateOptional(BINDABLEMEMBER_T<T> &memberPar, UA_Server *pServer, Nod
     return;
   }
 
-  if (member.ParentNodeId.NodeId == nullptr || UA_NodeId_isNull(member.MemberInTypeNodeId.NodeId)) {
-    throw std::runtime_error("Parent not bind.");
+  if (member.ParentNodeId.NodeId == nullptr ) {
+    throw std::runtime_error("Parent not bind. ParentNodeId is null");
   }
+  if ( UA_NodeId_isNull(member.MemberInTypeNodeId.NodeId)) {
+        throw std::runtime_error("Parent not bind. MemberInTypeNodeId is null");
+    }
 
   // Initialize nodeid, so memory is allocated and the resulting nodeid can be written into it.
   member.NodeId = open62541Cpp::UA_NodeId((UA_UInt16)0, 0);

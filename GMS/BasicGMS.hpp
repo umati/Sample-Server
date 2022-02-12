@@ -28,4 +28,6 @@ class BasicGMS : public InstantiatedMachineTool {
   int m_simStep = 0;
 
     void initCorrection(GMS::CorrectionType_t &corr, std::string Identifier, std::string CharacteristicIdentfier, double value );
+
+    void InstantiateResultManagement();
 };

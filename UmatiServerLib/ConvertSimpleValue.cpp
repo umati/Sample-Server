@@ -8,7 +8,7 @@
 #include "ConvertSimpleValue.hpp"
 
 #include <open62541/types_generated.h>
-
+#include <iostream>
 #include <Open62541Cpp/UA_String.hpp>
 
 #include "NodeValue.hpp"
@@ -32,11 +32,13 @@ copyToVariantFunc ConvertSimpleValue::asVariantFunc(std::string *variable) {
 }
 
 copyToVariantFunc ConvertSimpleValue::asVariantFuncArray(std::vector<std::string> *variable) {
-    std::string tmp[variable->size()];
-    std::copy(variable->begin(),variable->end(),tmp);
-    return [&tmp](UA_Variant *dst) {
-        open62541Cpp::UA_String str(*tmp);
-        UA_Variant_setArrayCopy(dst, str.String,1, &UA_TYPES[UA_TYPES_STRING]);
+    auto pVariable = variable;
+    return [pVariable](UA_Variant *dst) {
+        UA_String* tmp = new UA_String[pVariable->size()];
+        for (size_t i = 0; i < pVariable->size();++i ){
+            tmp[i] = UA_String_fromChars(pVariable->at(i).c_str());
+        }
+        UA_Variant_setArray(dst, tmp,pVariable->size(), &UA_TYPES[UA_TYPES_STRING]);
     };
 }
 

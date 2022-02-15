@@ -39,23 +39,23 @@
 #include <thread>
 
 #include "Configuration/Configuration_json.hpp"
+#include "GMS/BasicGMS.hpp"
 #include "MachineTools/BasicMachineTool.hpp"
 #include "MachineTools/CNShowcaseMachineTool.hpp"
 #include "MachineTools/FullMachineTool.hpp"
 #include "MachineTools/FullMachineToolDynamic.hpp"
 #include "MachineTools/MRMachineTool.hpp"
 #include "MachineTools/ShowcaseMachineTool.hpp"
-#include "GMS/BasicGMS.hpp"
 /*#include "Robotics/BasicRobot.hpp"*/
 #include "UmatiServerLib/OpcUaKeys.hpp"
 #include "Woodworking/BasicWoodworking.hpp"
 #include "Woodworking/FullWoodworking.hpp"
 #include "src_generated/namespace_di_generated.h"
+#include "src_generated/namespace_gms_generated.h"
 #include "src_generated/namespace_ia_generated.h"
 #include "src_generated/namespace_machinery_generated.h"
-#include "src_generated/namespace_machinetool_generated.h"
 #include "src_generated/namespace_machinery_result_generated.h"
-#include "src_generated/namespace_gms_generated.h"
+#include "src_generated/namespace_machinetool_generated.h"
 
 /*#include "src_generated/namespace_robotics_generated.h"*/
 #include "src_generated/namespace_woodworking_generated.h"
@@ -221,8 +221,7 @@ int main(int argc, char *argv[]) {
   machineTools.push_back(std::make_shared<FullWoodworking>(pServer));*/
   machineTools.push_back(std::make_shared<BasicGMS>(pServer));
 
-
-    UA_Server_run_startup(pServer);
+  UA_Server_run_startup(pServer);
   std::unique_lock<decltype(accessDataMutex)> ul(accessDataMutex);
   std::thread t(simulate, std::ref(accessDataMutex), pServer, std::ref(machineTools));
   ul.unlock();

@@ -3,13 +3,15 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
  * Copyright 2019-2021 (c) Christian von Arnim, ISW University of Stuttgart (for umati and VDW e.V.)
+ * Copyright 2022 (c) Sebastian Friedl, ISW University of Stuttgart (for VDMA e.V.)
  */
 
 #include "ConvertSimpleValue.hpp"
 
 #include <open62541/types_generated.h>
-#include <iostream>
+
 #include <Open62541Cpp/UA_String.hpp>
+#include <iostream>
 
 #include "NodeValue.hpp"
 #include "UaTypeHelper.hpp"
@@ -32,14 +34,14 @@ copyToVariantFunc ConvertSimpleValue::asVariantFunc(std::string *variable) {
 }
 
 copyToVariantFunc ConvertSimpleValue::asVariantFuncArray(std::vector<std::string> *variable) {
-    auto pVariable = variable;
-    return [pVariable](UA_Variant *dst) {
-        UA_String* tmp = new UA_String[pVariable->size()];
-        for (size_t i = 0; i < pVariable->size();++i ){
-            tmp[i] = UA_String_fromChars(pVariable->at(i).c_str());
-        }
-        UA_Variant_setArray(dst, tmp,pVariable->size(), &UA_TYPES[UA_TYPES_STRING]);
-    };
+  auto pVariable = variable;
+  return [pVariable](UA_Variant *dst) {
+    UA_String *tmp = new UA_String[pVariable->size()];
+    for (size_t i = 0; i < pVariable->size(); ++i) {
+      tmp[i] = UA_String_fromChars(pVariable->at(i).c_str());
+    }
+    UA_Variant_setArray(dst, tmp, pVariable->size(), &UA_TYPES[UA_TYPES_STRING]);
+  };
 }
 
 typedef std::ratio<1, 10000000> nano_100;

@@ -4,6 +4,7 @@
  *
  * Copyright 2020-2021 (c) Christian von Arnim, ISW University of Stuttgart (for umati and VDW e.V.)
  * Copyright 2021 (c) Christoph Ruckstetter, Michael Weinig AG
+ * Copyright 2022 (c) Sebastian Friedl, ISW University of Stuttgart (for VDMA e.V.)
  */
 
 #pragma once
@@ -59,12 +60,12 @@ void InstantiateOptional(BINDABLEMEMBER_T<T> &memberPar, UA_Server *pServer, Nod
     return;
   }
 
-  if (member.ParentNodeId.NodeId == nullptr ) {
+  if (member.ParentNodeId.NodeId == nullptr) {
     throw std::runtime_error("Parent not bind. ParentNodeId is null");
   }
-  if ( UA_NodeId_isNull(member.MemberInTypeNodeId.NodeId)) {
-        throw std::runtime_error("Parent not bind. MemberInTypeNodeId is null");
-    }
+  if (UA_NodeId_isNull(member.MemberInTypeNodeId.NodeId)) {
+    throw std::runtime_error("Parent not bind. MemberInTypeNodeId is null");
+  }
 
   // Initialize nodeid, so memory is allocated and the resulting nodeid can be written into it.
   member.NodeId = open62541Cpp::UA_NodeId((UA_UInt16)0, 0);
@@ -152,12 +153,12 @@ UA_StatusCode InstantiateVariable(
   varAttr.valueRank = readValueRank(pServer, memberInTypeNodeId);
 
   // Add Array Dimensions for Arrays
-  if (varAttr.valueRank == 1 ){
-      varAttr.arrayDimensionsSize = 1;
-      UA_UInt32 arrayDims[1] = {1};
-      varAttr.arrayDimensions = arrayDims;
-      varAttr.value.arrayDimensionsSize = 1;
-      varAttr.value.arrayDimensions = arrayDims;
+  if (varAttr.valueRank == 1) {
+    varAttr.arrayDimensionsSize = 1;
+    UA_UInt32 arrayDims[1] = {1};
+    varAttr.arrayDimensions = arrayDims;
+    varAttr.value.arrayDimensionsSize = 1;
+    varAttr.value.arrayDimensions = arrayDims;
   }
 
   auto dataType = readDataType(pServer, memberInTypeNodeId);

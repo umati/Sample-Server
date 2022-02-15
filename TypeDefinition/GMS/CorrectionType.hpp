@@ -11,55 +11,40 @@
 #include "Constants.hpp"
 
 namespace GMS {
-    struct CorrectionType_t  {
-        BindableMemberValue<std::string> CharacteristicIdentfier;
-        BindableMember<ns0::AnalogUnitType_t<double>>CorrectionValueAbsolute;
-        BindableMember<ns0::AnalogUnitType_t<double>>CorrectionValueRelative;
-        BindableMemberValue<std::string> Description;
-        BindableMemberValue<std::string> Identifier;
-        BindableMember<ns0::AnalogUnitType_t<double>> LowerControlLimit;
-        BindableMember<ns0::AnalogUnitType_t<double>> UpperControlLimit;
-
-    };
+struct CorrectionType_t {
+  BindableMemberValue<std::string> CharacteristicIdentfier;
+  BindableMember<ns0::AnalogUnitType_t<double>> CorrectionValueAbsolute;
+  BindableMember<ns0::AnalogUnitType_t<double>> CorrectionValueRelative;
+  BindableMemberValue<std::string> Description;
+  BindableMemberValue<std::string> Identifier;
+  BindableMember<ns0::AnalogUnitType_t<double>> LowerControlLimit;
+  BindableMember<ns0::AnalogUnitType_t<double>> UpperControlLimit;
+};
 }  // namespace GMS
 
-REFL_TYPE(
-        GMS::CorrectionType_t,
-        UmatiServerLib::attribute::UaObjectType(UmatiServerLib::constexp::NodeId(constants::NsGMSUri, UA_GMSID_CORRECTIONTYPE))
-        )
-        REFL_FIELD(
-                CharacteristicIdentfier,
-                UmatiServerLib::attribute::MemberInTypeNodeId(UmatiServerLib::constexp::NodeId(constants::NsGMSUri, UA_GMSID_CORRECTIONTYPE_CHARACTERISTICIDENTFIER))
-                )
-        REFL_FIELD(
-                CorrectionValueAbsolute,
-                UmatiServerLib::attribute::MemberInTypeNodeId(UmatiServerLib::constexp::NodeId(constants::NsGMSUri, UA_GMSID_CORRECTIONTYPE_CORRECTIONVALUEABSOLUTE)),
-                UmatiServerLib::attribute::PlaceholderOptional()
-        )
-        REFL_FIELD(
-                CorrectionValueRelative,
-                UmatiServerLib::attribute::MemberInTypeNodeId(UmatiServerLib::constexp::NodeId(constants::NsGMSUri, UA_GMSID_CORRECTIONTYPE_CORRECTIONVALUERELATIVE)),
-                UmatiServerLib::attribute::PlaceholderOptional()
-        )
-        REFL_FIELD(
-                Description,
-                UmatiServerLib::attribute::MemberInTypeNodeId(UmatiServerLib::constexp::NodeId(constants::NsGMSUri, UA_GMSID_CORRECTIONTYPE_DESCRIPTION)),
-                UmatiServerLib::attribute::PlaceholderOptional()
-        )
-        REFL_FIELD(
-                Identifier,
-                UmatiServerLib::attribute::MemberInTypeNodeId(UmatiServerLib::constexp::NodeId(constants::NsGMSUri, UA_GMSID_CORRECTIONTYPE_IDENTIFIER))
-        )
-        REFL_FIELD(
-                LowerControlLimit,
-                UmatiServerLib::attribute::MemberInTypeNodeId(UmatiServerLib::constexp::NodeId(constants::NsGMSUri, UA_GMSID_CORRECTIONTYPE_LOWERCONTROLLIMIT)),
-                UmatiServerLib::attribute::PlaceholderOptional()
-        )
-        REFL_FIELD(
-                UpperControlLimit,
-                UmatiServerLib::attribute::MemberInTypeNodeId(UmatiServerLib::constexp::NodeId(constants::NsGMSUri, UA_GMSID_CORRECTIONTYPE_UPPERCONTROLLIMIT)),
-                UmatiServerLib::attribute::PlaceholderOptional()
-        )
+REFL_TYPE(GMS::CorrectionType_t, UmatiServerLib::attribute::UaObjectType(UmatiServerLib::constexp::NodeId(constants::NsGMSUri, UA_GMSID_CORRECTIONTYPE)))
+REFL_FIELD(
+  CharacteristicIdentfier,
+  UmatiServerLib::attribute::MemberInTypeNodeId(UmatiServerLib::constexp::NodeId(constants::NsGMSUri, UA_GMSID_CORRECTIONTYPE_CHARACTERISTICIDENTFIER)))
+REFL_FIELD(
+  CorrectionValueAbsolute,
+  UmatiServerLib::attribute::MemberInTypeNodeId(UmatiServerLib::constexp::NodeId(constants::NsGMSUri, UA_GMSID_CORRECTIONTYPE_CORRECTIONVALUEABSOLUTE)),
+  UmatiServerLib::attribute::PlaceholderOptional())
+REFL_FIELD(
+  CorrectionValueRelative,
+  UmatiServerLib::attribute::MemberInTypeNodeId(UmatiServerLib::constexp::NodeId(constants::NsGMSUri, UA_GMSID_CORRECTIONTYPE_CORRECTIONVALUERELATIVE)),
+  UmatiServerLib::attribute::PlaceholderOptional())
+REFL_FIELD(
+  Description,
+  UmatiServerLib::attribute::MemberInTypeNodeId(UmatiServerLib::constexp::NodeId(constants::NsGMSUri, UA_GMSID_CORRECTIONTYPE_DESCRIPTION)),
+  UmatiServerLib::attribute::PlaceholderOptional())
+REFL_FIELD(Identifier, UmatiServerLib::attribute::MemberInTypeNodeId(UmatiServerLib::constexp::NodeId(constants::NsGMSUri, UA_GMSID_CORRECTIONTYPE_IDENTIFIER)))
+REFL_FIELD(
+  LowerControlLimit,
+  UmatiServerLib::attribute::MemberInTypeNodeId(UmatiServerLib::constexp::NodeId(constants::NsGMSUri, UA_GMSID_CORRECTIONTYPE_LOWERCONTROLLIMIT)),
+  UmatiServerLib::attribute::PlaceholderOptional())
+REFL_FIELD(
+  UpperControlLimit,
+  UmatiServerLib::attribute::MemberInTypeNodeId(UmatiServerLib::constexp::NodeId(constants::NsGMSUri, UA_GMSID_CORRECTIONTYPE_UPPERCONTROLLIMIT)),
+  UmatiServerLib::attribute::PlaceholderOptional())
 REFL_END
-
-

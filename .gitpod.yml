@@ -1,3 +1,4 @@
+---
 # MIT License
 # 
 # Copyright 2018 (c) TypeFox GmbH
@@ -26,7 +27,8 @@ image:
 
 tasks:
   - init: bash ./initialbuild.sh
-
+    command: npm install opcua-commander -g
+    
 github:
   prebuilds:
     # enable for the master/default branch (defaults to true)
@@ -39,9 +41,12 @@ github:
     pullRequestsFromForks: true
     # add a check to pull requests (defaults to true)
     addCheck: true
-    # add a "Review in Gitpod" button as a comment to pull requests (defaults to false)
+    # add a "Review in Gitpod" button as a comment to pull requests
+    # (defaults to false)
     addComment: true
-    # add a "Review in Gitpod" button to the pull request's description (defaults to false)
+    # add a "Review in Gitpod" button to the pull request's description
+    # (defaults to false)
     addBadge: false
-    # add a label once the prebuild is ready to pull requests (defaults to false)
+    # add a label once the prebuild is ready to pull requests
+    # (defaults to false)
     addLabel: false

@@ -1,6 +1,12 @@
-name: Build
+---
+# Automatic building in CI
 
-on: [push, pull_request]
+name: "Matrix Build"
+
+on:
+  push:
+  pull_request:
+    branches: [main, develop]
 
 jobs:
   build:
@@ -43,13 +49,14 @@ jobs:
       - name: Test Sample-Server
         run: |
           cd build/SampleServer-build/
-          ctest --output-on-failure ${{env.ARG_CTEST}}
+          ctest --output-on-failure ${{ env.ARG_CTEST }}
 
   docker:
     runs-on: ubuntu-20.04
     env:
-      # Check if this is not a pull request and GITHUB_TOKEN is set
-      # As all env variables are strings, you need to compaire against "== 'true'" (not "== true")
+      # Check if this is not a pull request andGITHUB_TOKEN is set
+      # As all env variables are strings, you need to compare
+      # against "== 'true'" (not "== true")
       IS_NOT_PR: "${{ !github.head_ref && true }}"
     steps:
       - name: Checkout Sample-Server
@@ -62,7 +69,7 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v1.6.0
       - name: PrepareReg Names
-        run: |
+        run: | 
           echo IMAGE_REPOSITORY="$(echo "${{ github.repository }}" | tr '[:upper:]' '[:lower:]')" >> "$GITHUB_ENV"
           echo IMAGE_TAG="$(echo "${{ github.ref }}" | tr '[:upper:]' '[:lower:]' |  awk '{sub(/([^\/]*\/){2}/,""); gsub(/\/|_/, "-")}1')" >> "$GITHUB_ENV"
           echo IS_NOT_PR="${{ env.IS_NOT_PR }})"

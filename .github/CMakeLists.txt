@@ -1,16 +1,16 @@
 # MIT License
-# 
+#
 # Copyright 2020-2021 (c) Christian von Arnim, ISW University of Stuttgart (for umati and VDW e.V.)
 # Copyright 2021 (c) Götz Görisch, VDW - Verein Deutscher Werkzeugmaschinenfabriken e.V.
 # Copyright 2021 (c) Dennis Hezel, 3Yourmind GmbH
-# 
+#
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
 # in the Software without restriction, including without limitation the rights
 # to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 # copies of the Software, and to permit persons to whom the Software is
 # furnished to do so, subject to the following conditions:
-# 
+#
 # The above copyright notice and this permission notice shall be included in all
 # copies or substantial portions of the Software.
 #
@@ -61,8 +61,8 @@ externalproject_add(
     open62541External
     SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/../deps/open62541
     CMAKE_ARGS -DUA_ENABLE_SUBSCRIPTIONS_ALARMS_CONDITIONS:BOOL=ON -DUA_ENABLE_SUBSCRIPTIONS_EVENTS:BOOL=ON
-               -DUA_NAMESPACE_ZERO:STRING=FULL -DUA_ENABLE_ENCRYPTION:STRING=LIBRESSL -DLIBRESSL_ROOT_DIR:PATH=${CMAKE_INSTALL_PREFIX}
-               -DCMAKE_INSTALL_PREFIX:PATH=${CMAKE_INSTALL_PREFIX}
+               -DUA_NAMESPACE_ZERO:STRING=FULL -DUA_ENABLE_ENCRYPTION:STRING=LIBRESSL
+               -DLIBRESSL_ROOT_DIR:PATH=${CMAKE_INSTALL_PREFIX} -DCMAKE_INSTALL_PREFIX:PATH=${CMAKE_INSTALL_PREFIX}
     INSTALL_DIR "${CMAKE_INSTALL_PREFIX}"
     DEPENDS libreSSLExternal
 )

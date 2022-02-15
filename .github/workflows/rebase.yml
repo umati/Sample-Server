@@ -1,3 +1,4 @@
+---
 name: Automatic Rebase
 on:
   issue_comment:
@@ -5,7 +6,9 @@ on:
 jobs:
   rebase:
     name: Rebase
-    if: github.event.issue.pull_request != '' && contains(github.event.comment.body, '/rebase') && github.event.comment.author_association == 'MEMBER'
+    if: github.event.issue.pull_request != '' &&
+        contains(github.event.comment.body, '/rebase') &&
+        github.event.comment.author_association == 'MEMBER'
     runs-on: ubuntu-latest
     steps:
       - name: Checkout the latest code

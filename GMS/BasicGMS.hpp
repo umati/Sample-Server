@@ -5,14 +5,13 @@
  * Copyright 2022 (c) Sebastian Friedl, ISW University of Stuttgart (for VDMA e.V.)
  */
 
-
 #pragma once
 #include "../MachineTools/InstantiatedMachineTool.hpp"
 #include "../TypeDefinition/GMS/GMSType.hpp"
 
 class BasicGMS : public InstantiatedMachineTool {
  public:
-    BasicGMS(UA_Server *pServer);
+  BasicGMS(UA_Server *pServer);
 
   void Simulate() override;
   virtual ~BasicGMS() = default;
@@ -27,7 +26,7 @@ class BasicGMS : public InstantiatedMachineTool {
   void InstantiateProduction();
   int m_simStep = 0;
 
-    void initCorrection(GMS::CorrectionType_t &corr, std::string Identifier, std::string CharacteristicIdentfier, double value );
+  void initCorrection(GMS::CorrectionType_t &corr, std::string Identifier, std::string CharacteristicIdentfier, double value);
 
-    void InstantiateResultManagement();
+  void InstantiateResultManagement();
 };

@@ -135,9 +135,6 @@ target_sources(
 )
 target_link_libraries(ua_gen_machinetool PUBLIC ua_gen_ia ua_gen_machinery)
 
-
-
-
 ua_generate_nodeset_and_datatypes(
     NAME "robotics"
     FILE_NS "${open62541_NODESET_DIR}/Robotics/Opc.Ua.Robotics.NodeSet2.xml"
@@ -185,49 +182,46 @@ target_sources(
 target_link_libraries(ua_gen_woodworking PUBLIC ua_gen_machinery)
 
 ua_generate_nodeset_and_datatypes(
-        NAME "machinery_result"
-        FILE_NS "${PROJECT_SOURCE_DIR}/model/GMS/opc.ua.machinery.result.nodeset2.xml"
-        FILE_CSV "${PROJECT_SOURCE_DIR}/model/GMS/opc.ua.machinery.result.nodeset2.csv"
-        FILE_BSD "${PROJECT_SOURCE_DIR}/model/GMS/opc.ua.machinery.result.nodeset2.bsd"
-        NAMESPACE_MAP "8:http://opcfoundation.org/UA/Machinery_Result/"
-        TARGET_PREFIX "${PROJECT_NAME}"
-        OUTPUT_DIR "${SAMPLESERVER_GENERATED_NODESET_AND_DATATYPES_OUTPUT_DIR}"
+    NAME "machinery_result"
+    FILE_NS "${PROJECT_SOURCE_DIR}/model/GMS/opc.ua.machinery.result.nodeset2.xml"
+    FILE_CSV "${PROJECT_SOURCE_DIR}/model/GMS/opc.ua.machinery.result.nodeset2.csv"
+    FILE_BSD "${PROJECT_SOURCE_DIR}/model/GMS/opc.ua.machinery.result.nodeset2.bsd"
+    NAMESPACE_MAP "8:http://opcfoundation.org/UA/Machinery_Result/"
+    TARGET_PREFIX "${PROJECT_NAME}"
+    OUTPUT_DIR "${SAMPLESERVER_GENERATED_NODESET_AND_DATATYPES_OUTPUT_DIR}"
 )
 
 add_library(ua_gen_machinery_result)
 target_sources(
-        ua_gen_machinery_result
-        PRIVATE # cmake-format: sort
-        "${SAMPLESERVER_GENERATED_NODESET_AND_DATATYPES_OUTPUT_DIR}/machinery_result_nodeids.h"
-        ${UA_NODESET_MACHINERY_RESULT_HEADERS}
-        ${UA_NODESET_MACHINERY_RESULT_SOURCES}
-        ${UA_TYPES_MACHINERY_RESULT_HEADERS}
-        ${UA_TYPES_MACHINERY_RESULT_SOURCES}
+    ua_gen_machinery_result
+    PRIVATE # cmake-format: sort
+            "${SAMPLESERVER_GENERATED_NODESET_AND_DATATYPES_OUTPUT_DIR}/machinery_result_nodeids.h"
+            ${UA_NODESET_MACHINERY_RESULT_HEADERS}
+            ${UA_NODESET_MACHINERY_RESULT_SOURCES}
+            ${UA_TYPES_MACHINERY_RESULT_HEADERS}
+            ${UA_TYPES_MACHINERY_RESULT_SOURCES}
 )
 target_link_libraries(ua_gen_machinery_result PUBLIC open62541::open62541)
 
 ua_generate_nodeset_and_datatypes(
-        NAME "gms"
-        FILE_NS "${PROJECT_SOURCE_DIR}/model/GMS/opc.ua.gms.nodeset2.xml"
-        FILE_CSV "${PROJECT_SOURCE_DIR}/model/GMS/opc.ua.gms.nodeset2.csv"
-        FILE_BSD "${PROJECT_SOURCE_DIR}/model/GMS/opc.ua.gms.nodeset2.bsd"
-        NAMESPACE_MAP "9:http://opcfoundation.org/GMS/"
-        TARGET_PREFIX "${PROJECT_NAME}"
-        OUTPUT_DIR "${SAMPLESERVER_GENERATED_NODESET_AND_DATATYPES_OUTPUT_DIR}"
-        DEPENDS di ia machinery machinery_result machinetool
+    NAME "gms"
+    FILE_NS "${PROJECT_SOURCE_DIR}/model/GMS/opc.ua.gms.nodeset2.xml"
+    FILE_CSV "${PROJECT_SOURCE_DIR}/model/GMS/opc.ua.gms.nodeset2.csv"
+    FILE_BSD "${PROJECT_SOURCE_DIR}/model/GMS/opc.ua.gms.nodeset2.bsd"
+    NAMESPACE_MAP "9:http://opcfoundation.org/GMS/"
+    TARGET_PREFIX "${PROJECT_NAME}"
+    OUTPUT_DIR "${SAMPLESERVER_GENERATED_NODESET_AND_DATATYPES_OUTPUT_DIR}"
+    DEPENDS di ia machinery machinery_result machinetool
 )
 
 add_library(ua_gen_gms)
 target_sources(
-        ua_gen_gms
-        PRIVATE # cmake-format: sort
-        "${SAMPLESERVER_GENERATED_NODESET_AND_DATATYPES_OUTPUT_DIR}/gms_nodeids.h"
-        ${UA_NODESET_GMS_HEADERS}
-        ${UA_NODESET_GMS_SOURCES}
-        ${UA_TYPES_GMS_HEADERS}
-        ${UA_TYPES_GMS_SOURCES}
+    ua_gen_gms
+    PRIVATE # cmake-format: sort
+            "${SAMPLESERVER_GENERATED_NODESET_AND_DATATYPES_OUTPUT_DIR}/gms_nodeids.h" ${UA_NODESET_GMS_HEADERS}
+            ${UA_NODESET_GMS_SOURCES} ${UA_TYPES_GMS_HEADERS} ${UA_TYPES_GMS_SOURCES}
 )
-target_link_libraries(ua_gen_gms PUBLIC ua_gen_machinetool  ua_gen_ia ua_gen_machinery ua_gen_machinery_result)
+target_link_libraries(ua_gen_gms PUBLIC ua_gen_machinetool ua_gen_ia ua_gen_machinery ua_gen_machinery_result)
 
 add_library(
     SampleServerLib
@@ -257,6 +251,7 @@ target_link_libraries(Configuration PRIVATE nlohmann_json::nlohmann_json)
 
 add_executable(
     ${PROJECT_NAME}
+    GMS/BasicGMS.cpp
     MachineTools/BasicMachineTool.cpp
     MachineTools/CNShowcaseMachineTool.cpp
     MachineTools/FullMachineTool.cpp
@@ -271,12 +266,12 @@ add_executable(
     Woodworking/BasicWoodworking.cpp
     Woodworking/FullWoodworking.cpp
     Woodworking/InstantiatedWoodworking.cpp
-    GMS/BasicGMS.cpp
 )
 
 set_target_properties(${PROJECT_NAME} PROPERTIES LINKER_LANGUAGE CXX)
 target_link_libraries(
-    ${PROJECT_NAME} PUBLIC SampleServerLib Configuration ua_gen_machinetool ua_gen_robotics ua_gen_woodworking ua_gen_gms
+    ${PROJECT_NAME} PUBLIC SampleServerLib Configuration ua_gen_machinetool ua_gen_robotics ua_gen_woodworking
+                           ua_gen_gms
 )
 
 add_subdirectory(tests)

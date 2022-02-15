@@ -7,16 +7,14 @@
  */
 
 #pragma once
+#include "../MachineTool/Equipment.hpp"
 #include "../TypeDefinition.hpp"
 #include "Constants.hpp"
 #include "ToolList.hpp"
-#include "../MachineTool/Equipment.hpp"
 
 namespace GMS {
 
-struct GMSEquipment_t {
-
-};
+struct GMSEquipment_t {};
 
 }  // namespace GMS
 

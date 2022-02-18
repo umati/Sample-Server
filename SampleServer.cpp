@@ -28,6 +28,7 @@
 #include <open62541/plugin/pki_default.h>
 #include <open62541/server_config_default.h>
 
+#include <algorithm>
 #include <atomic>
 #include <csignal>
 #include <functional>
@@ -125,7 +126,8 @@ UA_StatusCode setServerConfig(UA_ServerConfig *pConfig, const Configuration::Con
       users.push_back(UA_UsernamePasswordLogin{.username = UA_STRING((char *)up.Username.c_str()), .password = UA_STRING((char *)up.Password.c_str())});
     }
   }
-  status = UA_AccessControl_default(pConfig, true, NULL, &pConfig->securityPolicies[pConfig->securityPoliciesSize - 1].policyUri, users.size(), &users[0]);
+  status = UA_AccessControl_default(
+    pConfig, true, NULL, &pConfig->securityPolicies[pConfig->securityPoliciesSize - 1].policyUri, users.size(), users.size() == 0 ? nullptr : &users[0]);
   if (status != UA_STATUSCODE_GOOD) {
     return status;
   }
@@ -218,6 +220,8 @@ int main(int argc, char *argv[]) {
   while (running) {
     ul.lock();
     std::uint16_t timeout = UA_Server_run_iterate(pServer, false);
+    // Limit wait time, as UA_Server_run_iterate may return large numbers, when no clients are connected.
+    timeout = std::min(timeout, (std::uint16_t)30);
     ul.unlock();
     // std::this_thread::yield();
     std::this_thread::sleep_for(std::chrono::milliseconds(timeout));

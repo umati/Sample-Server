@@ -1,7 +1,7 @@
 # MIT License
 # 
 # Copyright (c) 2019-2021  Christian von Arnim, ISW University of Stuttgart (for umati and VDW e.V.)
-# Copyright 2021 (c) Götz Görisch, VDW - Verein Deutscher Werkzeugmaschinenfabriken e.V.
+# Copyright (c) 2021-2022  Götz Görisch, VDW - Verein Deutscher Werkzeugmaschinenfabriken e.V.
 # 
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -24,7 +24,7 @@
 FROM alpine:3.15.0 as build-env
 
 RUN apk --no-cache add \
-      bash=5.1.8-r0\
+      bash=5.1.16-r0\
       cmake=3.21.3-r0 \
       gcc=10.3.1_git20211027-r0 \
       g++=10.3.1_git20211027-r0 \

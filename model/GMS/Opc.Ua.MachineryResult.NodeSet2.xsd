@@ -1,4 +1,4 @@
-<xs:schema elementFormDefault="qualified" targetNamespace="http://opcfoundation.org/UA/Machinery_Result/Types.xsd" xmlns:tns="http://opcfoundation.org/UA/Machinery_Result/Types.xsd" xmlns:ua="http://opcfoundation.org/UA/2008/02/Types.xsd" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+<xs:schema elementFormDefault="qualified" targetNamespace="http://opcfoundation.org/UA/Machinery/Result/Types.xsd" xmlns:tns="http://opcfoundation.org/UA/Machinery/Result/Types.xsd" xmlns:ua="http://opcfoundation.org/UA/2008/02/Types.xsd" xmlns:xs="http://www.w3.org/2001/XMLSchema">
     <xs:import namespace="http://opcfoundation.org/UA/2008/02/Types.xsd"/>
     <xs:simpleType name="ResultEvaluationEnum">
         <xs:annotation>
@@ -65,7 +65,7 @@
             <xs:element minOccurs="0" maxOccurs="1" type="xs:boolean" name="IsPartial"/>
             <xs:element minOccurs="0" maxOccurs="1" type="xs:boolean" name="IsSimulated"/>
             <xs:element minOccurs="0" maxOccurs="1" type="xs:int" name="ResultState"/>
-            <xs:element minOccurs="0" maxOccurs="1" type="xs:string" name="TaskId"/>
+            <xs:element minOccurs="0" maxOccurs="1" type="xs:string" name="StepId"/>
             <xs:element minOccurs="0" maxOccurs="1" type="xs:string" name="PartId"/>
             <xs:element minOccurs="0" maxOccurs="1" type="xs:string" name="ExternalRecipeId"/>
             <xs:element minOccurs="0" maxOccurs="1" type="xs:string" name="InternalRecipeId"/>
@@ -75,7 +75,7 @@
             <xs:element minOccurs="0" maxOccurs="1" type="xs:string" name="JobId"/>
             <xs:element minOccurs="0" maxOccurs="1" type="xs:dateTime" name="CreationTime"/>
             <xs:element minOccurs="0" maxOccurs="1" type="tns:ProcessingTimesDataType" name="ProcessingTimes"/>
-            <xs:element minOccurs="0" maxOccurs="1" type="ua:ListOfVariant" name="ResultUri"/>
+            <xs:element minOccurs="0" maxOccurs="1" type="ua:ListOfString" name="ResultUri"/>
             <xs:element minOccurs="0" maxOccurs="1" type="tns:ResultEvaluationEnum" name="ResultEvaluation"/>
             <xs:element minOccurs="0" maxOccurs="1" type="xs:int" name="ResultEvaluationCode"/>
             <xs:element minOccurs="0" maxOccurs="1" type="ua:LocalizedText" name="ResultEvaluationDetails"/>

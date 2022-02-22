@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<UANodeSet xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd" xmlns="http://opcfoundation.org/UA/2011/03/UANodeSet.xsd" xmlns:s1="http://opcfoundation.org/GMS/Types.xsd" xmlns:s2="http://opcfoundation.org/UA/Machinery_Result/Types.xsd" xmlns:s3="http://opcfoundation.org/UA/MachineTool/Types.xsd" xmlns:ua="http://unifiedautomation.com/Configuration/NodeSet.xsd" xmlns:s4="http://opcfoundation.org/UA/DI/Types.xsd" xmlns:s5="http://opcfoundation.org/UA/Machinery/Types.xsd" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+<UANodeSet xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd" xmlns="http://opcfoundation.org/UA/2011/03/UANodeSet.xsd" xmlns:s1="http://opcfoundation.org/GMS/Types.xsd" xmlns:s2="http://opcfoundation.org/UA/Machinery/Result/Types.xsd" xmlns:s3="http://opcfoundation.org/UA/MachineTool/Types.xsd" xmlns:ua="http://unifiedautomation.com/Configuration/NodeSet.xsd" xmlns:s4="http://opcfoundation.org/UA/DI/Types.xsd" xmlns:s5="http://opcfoundation.org/UA/Machinery/Types.xsd" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
     <NamespaceUris>
         <Uri>http://opcfoundation.org/GMS/</Uri>
-        <Uri>http://opcfoundation.org/UA/Machinery_Result/</Uri>
+        <Uri>http://opcfoundation.org/UA/Machinery/Result/</Uri>
         <Uri>http://opcfoundation.org/UA/MachineTool/</Uri>
         <Uri>http://opcfoundation.org/UA/DI/</Uri>
         <Uri>http://opcfoundation.org/UA/Machinery/</Uri>
@@ -11,10 +11,10 @@
         <Model ModelUri="http://opcfoundation.org/GMS/" PublicationDate="2022-04-01T00:00:00Z" Version="1.0.0">
             <RequiredModel ModelUri="http://opcfoundation.org/UA/" PublicationDate="2020-07-15T00:00:00Z" Version="1.04.7"/>
             <RequiredModel ModelUri="http://opcfoundation.org/UA/DI/" PublicationDate="2020-06-02T00:00:00Z" Version="1.02.2"/>
-            <RequiredModel ModelUri="http://opcfoundation.org/UA/Machinery/" PublicationDate="2021-12-01T00:00:00Z" Version="1.02.0"/>
             <RequiredModel ModelUri="http://opcfoundation.org/UA/IA/" PublicationDate="2021-07-31T00:00:00Z" Version="1.01.0"/>
-            <RequiredModel ModelUri="http://opcfoundation.org/UA/MachineTool/" PublicationDate="2021-12-07T14:43:08Z" Version="1.01.0-DRAFT3"/>
-            <RequiredModel ModelUri="http://opcfoundation.org/UA/Machinery_Result/" PublicationDate="2021-12-02T00:00:00Z" Version="1.0.0"/>
+            <RequiredModel ModelUri="http://opcfoundation.org/UA/Machinery/" PublicationDate="2021-12-01T00:00:00Z" Version="1.02.0"/>
+            <RequiredModel ModelUri="http://opcfoundation.org/UA/MachineTool/" PublicationDate="2022-01-10T00:00:00Z" Version="RC 1.01.0"/>
+            <RequiredModel ModelUri="http://opcfoundation.org/UA/Machinery/Result/" PublicationDate="2021-12-02T00:00:00Z" Version="1.00.0"/>
         </Model>
     </Models>
     <Aliases>
@@ -61,7 +61,7 @@
     </Aliases>
     <Extensions>
         <Extension>
-            <ua:ModelInfo Tool="UaModeler" Hash="SXLBeEHA2sZZpvxXwnro2g==" Version="1.6.5"/>
+            <ua:ModelInfo Tool="UaModeler" Hash="mGaiejare8yF/yVMooN2tg==" Version="1.6.5"/>
         </Extension>
     </Extensions>
     <UADataType NodeId="ns=1;i=3005" BrowseName="1:LoadStatusEnum">

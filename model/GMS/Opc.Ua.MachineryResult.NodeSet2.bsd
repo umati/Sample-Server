@@ -1,4 +1,4 @@
-<opc:TypeDictionary xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:tns="http://opcfoundation.org/UA/Machinery_Result/" DefaultByteOrder="LittleEndian" xmlns:opc="http://opcfoundation.org/BinarySchema/" xmlns:ua="http://opcfoundation.org/UA/" TargetNamespace="http://opcfoundation.org/UA/Machinery_Result/">
+<opc:TypeDictionary xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:tns="http://opcfoundation.org/UA/Machinery/Result/" DefaultByteOrder="LittleEndian" xmlns:opc="http://opcfoundation.org/BinarySchema/" xmlns:ua="http://opcfoundation.org/UA/" TargetNamespace="http://opcfoundation.org/UA/Machinery/Result/">
     <opc:Import Namespace="http://opcfoundation.org/UA/"/>
     <opc:StructuredType BaseType="ua:ExtensionObject" Name="ProcessingTimesDataType">
         <opc:Documentation>contains measured times that were generated during the execution of a recipe</opc:Documentation>
@@ -24,7 +24,7 @@
         <opc:Field TypeName="opc:Bit" Name="IsPartialSpecified"/>
         <opc:Field TypeName="opc:Bit" Name="IsSimulatedSpecified"/>
         <opc:Field TypeName="opc:Bit" Name="ResultStateSpecified"/>
-        <opc:Field TypeName="opc:Bit" Name="TaskIdSpecified"/>
+        <opc:Field TypeName="opc:Bit" Name="StepIdSpecified"/>
         <opc:Field TypeName="opc:Bit" Name="PartIdSpecified"/>
         <opc:Field TypeName="opc:Bit" Name="ExternalRecipeIdSpecified"/>
         <opc:Field TypeName="opc:Bit" Name="InternalRecipeIdSpecified"/>
@@ -45,7 +45,7 @@
         <opc:Field SwitchField="IsPartialSpecified" TypeName="opc:Boolean" Name="IsPartial"/>
         <opc:Field SwitchField="IsSimulatedSpecified" TypeName="opc:Boolean" Name="IsSimulated"/>
         <opc:Field SwitchField="ResultStateSpecified" TypeName="opc:Int32" Name="ResultState"/>
-        <opc:Field SwitchField="TaskIdSpecified" TypeName="opc:CharArray" Name="TaskId"/>
+        <opc:Field SwitchField="StepIdSpecified" TypeName="opc:CharArray" Name="StepId"/>
         <opc:Field SwitchField="PartIdSpecified" TypeName="opc:CharArray" Name="PartId"/>
         <opc:Field SwitchField="ExternalRecipeIdSpecified" TypeName="opc:CharArray" Name="ExternalRecipeId"/>
         <opc:Field SwitchField="InternalRecipeIdSpecified" TypeName="opc:CharArray" Name="InternalRecipeId"/>
@@ -56,7 +56,7 @@
         <opc:Field SwitchField="CreationTimeSpecified" TypeName="opc:DateTime" Name="CreationTime"/>
         <opc:Field SwitchField="ProcessingTimesSpecified" TypeName="tns:ProcessingTimesDataType" Name="ProcessingTimes"/>
         <opc:Field SwitchField="ResultUriSpecified" TypeName="opc:Int32" Name="NoOfResultUri"/>
-        <opc:Field LengthField="NoOfResultUri" SwitchField="ResultUriSpecified" TypeName="ua:Variant" Name="ResultUri"/>
+        <opc:Field LengthField="NoOfResultUri" SwitchField="ResultUriSpecified" TypeName="opc:CharArray" Name="ResultUri"/>
         <opc:Field SwitchField="ResultEvaluationSpecified" TypeName="tns:ResultEvaluationEnum" Name="ResultEvaluation"/>
         <opc:Field SwitchField="ResultEvaluationCodeSpecified" TypeName="opc:Int32" Name="ResultEvaluationCode"/>
         <opc:Field SwitchField="ResultEvaluationDetailsSpecified" TypeName="ua:LocalizedText" Name="ResultEvaluationDetails"/>

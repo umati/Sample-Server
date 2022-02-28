@@ -66,7 +66,7 @@ jobs:
           echo IMAGE_TAG="$(echo "${{ github.ref }}" | tr '[:upper:]' '[:lower:]' |  awk '{sub(/([^\/]*\/){2}/,""); gsub(/\/|_/, "-")}1')" >> "$GITHUB_ENV"
           echo IS_NOT_PR="${{ env.IS_NOT_PR }})"
       - name: Login to GitHub Container Registry
-        uses: docker/login-action@v1.13.0
+        uses: docker/login-action@v1.14.0
         if: env.IS_NOT_PR == 'true' && ${{ github.actor }} != 'dependabot'
         with:
           registry: ghcr.io

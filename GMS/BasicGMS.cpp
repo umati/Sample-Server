@@ -75,6 +75,7 @@ void BasicGMS::InstantiateResultManagement() {
     //UA_Variant_init(result.Value->resultMetaData.resultUri);
     UA_String_init(result.Value->resultMetaData.resultUri);
     *result.Value->resultMetaData.resultUri = UA_String_fromChars("http://example.com/result");
+    result.Value->resultMetaData.resultUriSize = 1;
 
     InstantiateOptional(mt.ResultManagement->CorrectionsFolder, m_pServer, n);
     auto &corr1 = mt.ResultManagement->CorrectionsFolder->Corrections.Add<GMS::CorrectionType_t>(m_pServer, n,

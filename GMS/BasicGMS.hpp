@@ -24,6 +24,7 @@ class BasicGMS : public InstantiatedMachineTool {
   void InstantiateIdentification();
   void InstantiateMonitoring();
   void InstantiateProduction();
+  void InstantiateTools();
   int m_simStep = 0;
 
   void initCorrection(GMS::CorrectionType_t &corr, std::string Identifier, std::string CharacteristicIdentfier, double value);

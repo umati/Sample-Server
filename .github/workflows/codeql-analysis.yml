@@ -37,7 +37,7 @@ jobs:
 
     steps:
     - name: Checkout Sample-Server
-      uses: actions/checkout@v2.4.0
+      uses: actions/checkout@v3
       with:
         submodules: recursive
 

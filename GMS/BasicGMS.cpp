@@ -42,6 +42,7 @@ void BasicGMS::CreateObject() {
   InstantiateIdentification();
   InstantiateMonitoring();
   InstantiateProduction();
+  InstantiateTools();
   InstantiateResultManagement();
 
   InstantiateOptional(mt.Notification->Prognoses, m_pServer, n);
@@ -123,10 +124,10 @@ void BasicGMS::InstantiateIdentification() {
 
   mt.Identification->Manufacturer = {"", "ISW Sebastian Friedl"};
   mt.Identification->ProductCode = "CMM_123";
-  mt.Identification->YearOfConstruction = 2021;
+  mt.Identification->YearOfConstruction = 2022;
   mt.Identification->SoftwareRevision = "v1.04";
   mt.Identification->DeviceClass = "CoordinateMeasuringMachine";
-  mt.Identification->Location = "VIRTUAL 0 0/N 49.871215 E 8.654204";
+  mt.Identification->Location = "CTRL 5 5/VIRTUAL 0 0/N 48.7685303 E 9.1653923";
   mt.Identification->Model = {"", MachineName};
 
   {
@@ -151,6 +152,24 @@ void BasicGMS::InstantiateProduction() {
   mt.Production->ActiveProgram->State->CurrentState->Number = 1;
   mt.Production->ActiveProgram->State->CurrentState->Id =
     UA_NODEID_NUMERIC(nsFromUri(m_pServer, constants::NsMachineToolUri), UA_MACHINETOOLID_PRODUCTIONSTATEMACHINETYPE_RUNNING);
+}
+
+void BasicGMS::InstantiateTools() {
+  InstantiateOptional(mt.Equipment->Tools, m_pServer, n);
+  InstantiateOptional(mt.Equipment->Tools->NodeVersion, m_pServer, n);
+  n.Remove(mt.Equipment->Tools->NodeVersion.NodeId);
+  //TODO Warning: This is only the Machine Tool tool not a sensor of the GMS
+  for (size_t i = 1; i <= 1; ++i) {
+    std::stringstream ss;
+    ss << "Sensor" << i;
+    auto &tool = mt.Equipment->Tools->Tool.Add<machineTool::Tool_t>(m_pServer, n, {m_nsIndex, ss.str()});
+    tool.ControlIdentifier1 = i * 10 + 2;
+    tool.ControlIdentifierInterpretation = UA_ToolManagement::UA_TOOLMANAGEMENT_NUMBERBASED;
+    tool.Locked->Value = false;
+    tool.Locked->ReasonForLocking = UA_ToolLocked::UA_TOOLLOCKED_OTHER;
+    tool.Name = ss.str();
+    InstantiateOptional(tool.Name, m_pServer, n);
+  }
 }
 
 void BasicGMS::Simulate() {

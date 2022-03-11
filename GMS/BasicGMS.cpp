@@ -73,6 +73,13 @@ void BasicGMS::InstantiateResultManagement() {
   UA_String_init(result.Value->resultMetaData.resultUri);
   *result.Value->resultMetaData.resultUri = UA_String_fromChars("http://example.com/result");
   result.Value->resultMetaData.resultUriSize = 1;
+  result.Value->resultMetaData.fileFormat = UA_String_new();
+  UA_String_init(result.Value->resultMetaData.fileFormat);
+  *result.Value->resultMetaData.fileFormat = UA_String_fromChars("Portable Document Format");
+  result.Value->resultMetaData.fileFormatSize = 1;
+  result.Value->resultMetaData.resultState = UA_Int32_new();
+  UA_Int32_init(result.Value->resultMetaData.resultState);
+  *result.Value->resultMetaData.resultState = 1;
 
   InstantiateOptional(mt.ResultManagement->CorrectionsFolder, m_pServer, n);
   auto &corr1 = mt.ResultManagement->CorrectionsFolder->Corrections.Add<GMS::CorrectionType_t>(m_pServer, n, {m_nsIndex, "Corr1"});
@@ -158,7 +165,7 @@ void BasicGMS::InstantiateTools() {
   InstantiateOptional(mt.Equipment->Tools, m_pServer, n);
   InstantiateOptional(mt.Equipment->Tools->NodeVersion, m_pServer, n);
   n.Remove(mt.Equipment->Tools->NodeVersion.NodeId);
-  //TODO Warning: This is only the Machine Tool tool not a sensor of the GMS
+  // TODO Warning: This is only the Machine Tool tool not a sensor of the GMS
   for (size_t i = 1; i <= 1; ++i) {
     std::stringstream ss;
     ss << "Sensor" << i;

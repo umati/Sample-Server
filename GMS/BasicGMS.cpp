@@ -51,7 +51,7 @@ void BasicGMS::CreateObject() {
   InstantiateOptional(mt.Notification->Prognoses->Calibration->CalibrationCertificate, m_pServer, n);
   {
     std::stringstream ss;
-    ss << "http://www.isw.uni-stuttgart.de/CalibrationCertificate#" << MachineName;
+    ss << "https://www.ptb.de/dcc/#" << MachineName;
     mt.Notification->Prognoses->Calibration.value.CalibrationCertificate->push_back(ss.str());
   }
 
@@ -132,9 +132,9 @@ void BasicGMS::InstantiateIdentification() {
   mt.Identification->Manufacturer = {"", "ISW Sebastian Friedl"};
   mt.Identification->ProductCode = "CMM_123";
   mt.Identification->YearOfConstruction = 2022;
-  mt.Identification->SoftwareRevision = "v1.04";
+  mt.Identification->SoftwareRevision = "v1.05";
   mt.Identification->DeviceClass = "CoordinateMeasuringMachine";
-  mt.Identification->Location = "CTRL 5 5/VIRTUAL 0 0/N 48.7685303 E 9.1653923";
+  mt.Identification->Location = "CTRL 5 5318/VIRTUAL 0 0/N 48.7685303 E 9.1653923";
   mt.Identification->Model = {"", MachineName};
 
   {
@@ -172,7 +172,7 @@ void BasicGMS::InstantiateTools() {
     auto &tool = mt.Equipment->Tools->Tool.Add<machineTool::Tool_t>(m_pServer, n, {m_nsIndex, ss.str()});
     tool.ControlIdentifier1 = i * 10 + 2;
     tool.ControlIdentifierInterpretation = UA_ToolManagement::UA_TOOLMANAGEMENT_NUMBERBASED;
-    tool.Locked->Value = false;
+    tool.Locked->Value = true;
     tool.Locked->ReasonForLocking = UA_ToolLocked::UA_TOOLLOCKED_OTHER;
     tool.Name = ss.str();
     InstantiateOptional(tool.Name, m_pServer, n);

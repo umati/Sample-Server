@@ -210,15 +210,15 @@ int main(int argc, char *argv[]) {
   std::mutex accessDataMutex;
 
   std::list<std::shared_ptr<SimulatedInstance>> machineTools;
-  /*machineTools.push_back(std::make_shared<FullMachineTool>(pServer));
+  machineTools.push_back(std::make_shared<FullMachineTool>(pServer));
   machineTools.push_back(std::make_shared<FullMachineToolDynamic>(pServer));
   machineTools.push_back(std::make_shared<BasicMachineTool>(pServer));
   machineTools.push_back(std::make_shared<MRMachineTool>(pServer));
   machineTools.push_back(std::make_shared<ShowcaseMachineTool>(pServer));
   machineTools.push_back(std::make_shared<CNShowcaseMachineTool>(pServer));
   /*machineTools.push_back(std::make_shared<BasicRobot>(pServer));*/
-  /*machineTools.push_back(std::make_shared<BasicWoodworking>(pServer));
-  machineTools.push_back(std::make_shared<FullWoodworking>(pServer));*/
+  machineTools.push_back(std::make_shared<BasicWoodworking>(pServer));
+  machineTools.push_back(std::make_shared<FullWoodworking>(pServer));
   machineTools.push_back(std::make_shared<BasicGMS>(pServer));
 
   UA_Server_run_startup(pServer);

@@ -52,6 +52,7 @@
 #include "MachineTools/FullMachineToolDynamic.hpp"
 #include "MachineTools/MRMachineTool.hpp"
 #include "MachineTools/ShowcaseMachineTool.hpp"
+#include "MachineTools/InstantiatedMachineTool.hpp"
 /*#include "Robotics/BasicRobot.hpp"*/
 #include "UmatiServerLib/OpcUaKeys.hpp"
 #include "Woodworking/BasicWoodworking.hpp"
@@ -65,6 +66,9 @@
 
 /*#include "src_generated/namespace_robotics_generated.h"*/
 #include "src_generated/namespace_woodworking_generated.h"
+
+#include "deps/open62541/plugins/ua_network_pubsub_mqtt.h"
+#include "UmatiServerLib/Publication.hpp"
 
 std::atomic_bool running{true};
 void sigHandler(int sig) {
@@ -101,6 +105,36 @@ UA_StatusCode generateChildNodeIdInParentNs(
     targetNodeId->namespaceIndex = targetParentNodeId->namespaceIndex;
   }
   return UA_STATUSCODE_GOOD;
+}
+
+UA_StatusCode addMQTTPubSubConnection(UA_Server *pServer, UA_ServerConfig *pConfig, 
+                                  const Configuration::Configuration &configFile, 
+                                  UA_NodeId &connectionIdent) {
+  UA_StatusCode status = UA_STATUSCODE_GOOD;
+  UA_PubSubConnectionConfig cConfig;
+  
+  if(!configFile.MQTTPubSub.has_value()) {
+    return status;
+  }
+
+  status = UA_ServerConfig_addPubSubTransportLayer(pConfig, UA_PubSubTransportLayerMQTT());
+  if(status != UA_STATUSCODE_GOOD) {
+    return status;
+  }
+
+  MqttConnectionConfig mqttConnectionConfig{};
+  mqttConnectionConfig.setBrokerUrl(configFile.MQTTPubSub.value().BrokerUrl);
+  mqttConnectionConfig.setClientId(configFile.MQTTPubSub.value().PublisherId);
+  mqttConnectionConfig.setSendBufferSize(1000000);
+  if(configFile.MQTTPubSub.value().Username.has_value()) {
+    mqttConnectionConfig.setUsername(configFile.MQTTPubSub.value().Username.value()); }
+  if(configFile.MQTTPubSub.value().Password.has_value()) {
+    mqttConnectionConfig.setPassword(configFile.MQTTPubSub.value().Password.value()); }
+  if(configFile.MQTTPubSub.value().MqttCaFile.has_value()) {
+    mqttConnectionConfig.setMqttCaFilePath(configFile.MQTTPubSub.value().MqttCaFile.value()); }
+
+  connectionIdent = mqttConnectionConfig.buildAndApplyConnectionOptions(pServer).getConnectionIdent();
+  return status;
 }
 
 UA_StatusCode setServerConfig(UA_ServerConfig *pConfig, const Configuration::Configuration &configFile, const OpcUaKeys &keys) {
@@ -225,9 +259,22 @@ int main(int argc, char *argv[]) {
   namespace_gms_generated(pServer);
   std::mutex accessDataMutex;
 
+
+  UA_NodeId connectionIdent{};
+  serverConfig.MQTTPubSub->PublisherId = "FullMachineTool";
+  addMQTTPubSubConnection(pServer, pConfig, serverConfig, connectionIdent);
+  
   std::list<std::shared_ptr<SimulatedInstance>> machineTools;
   machineTools.push_back(std::make_shared<FullMachineTool>(pServer));
-  machineTools.push_back(std::make_shared<FullMachineToolDynamic>(pServer));
+  if (serverConfig.MQTTPubSub.has_value()) {
+  
+    machineTools.push_back(std::make_shared<FullMachineToolDynamic>(pServer, true,
+      InstantiatedMachineTool::MqttSettings{&connectionIdent, serverConfig.MQTTPubSub->Prefix, 
+                                            "FullMachineTool", 
+                                            UA_NODEID_NULL}));
+  } else {
+    machineTools.push_back(std::make_shared<FullMachineToolDynamic>(pServer));
+  }
   machineTools.push_back(std::make_shared<BasicMachineTool>(pServer));
   machineTools.push_back(std::make_shared<MRMachineTool>(pServer));
   machineTools.push_back(std::make_shared<ShowcaseMachineTool>(pServer));
@@ -247,7 +294,7 @@ int main(int argc, char *argv[]) {
   ul.unlock();
   while (running) {
     ul.lock();
-    std::uint16_t timeout = UA_Server_run_iterate(pServer, false);
+    std::uint16_t timeout = UA_Server_run_iterate(pServer, true);
     // Limit wait time, as UA_Server_run_iterate may return large numbers, when no clients are connected.
     timeout = std::min(timeout, (std::uint16_t)30);
     ul.unlock();

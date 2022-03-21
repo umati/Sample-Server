@@ -250,6 +250,11 @@ target_compile_definitions(SampleServerLib PUBLIC __STDC_WANT_LIB_EXT1__)
 add_library(Configuration Configuration/Configuration.cpp Configuration/Configuration_json.cpp)
 target_link_libraries(Configuration PRIVATE nlohmann_json::nlohmann_json)
 
+set(UA_ENABLE_PUBSUB)
+set(UA_ENABLE_PUBSUB_MQTT)
+set(UA_ENABLE_JSON_ENCODING)
+set(UA_ENABLE_PUBSUB_INFORMATIONMODEL)
+
 add_executable(
     ${PROJECT_NAME}
     GMS/InstantiatedGMS.cpp
@@ -279,6 +284,7 @@ target_link_libraries(
     ${PROJECT_NAME} PUBLIC SampleServerLib Configuration ua_gen_machinetool ua_gen_robotics ua_gen_woodworking
                            ua_gen_gms
 )
+target_compile_definitions(${PROJECT_NAME} PRIVATE UA_ENABLE_PUBSUB=ON UA_ENABLE_PUBSUB_MQTT=ON UA_ENABLE_MQTT_TLS=ON)
 
 add_subdirectory(tests)
 include(CTest)

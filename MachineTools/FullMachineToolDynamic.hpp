@@ -12,10 +12,10 @@
 class FullMachineToolDynamic : public FullMachineTool {
  public:
   FullMachineToolDynamic(UA_Server *pServer);
+  FullMachineToolDynamic(UA_Server *pServer, bool initialize, MqttSettings mqttSettings);
 
   void Simulate() override;
 
  protected:
   // Allow skipping initialization in subclasses
-  FullMachineToolDynamic(UA_Server *pServer, bool initialize);
 };

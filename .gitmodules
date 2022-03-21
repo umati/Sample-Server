@@ -1,6 +1,7 @@
 [submodule "deps/open62541"]
 	path = deps/open62541
-	url = https://github.com/open62541/open62541.git
+	url = https://github.com/wlkrm/open62541.git
+	branch = mqtt-metadata
 [submodule "deps/googletest"]
 	path = deps/googletest
 	url = https://github.com/google/googletest.git

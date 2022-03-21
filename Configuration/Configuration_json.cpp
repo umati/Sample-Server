@@ -29,6 +29,24 @@ void from_json(const nlohmann::json &j, Configuration &p) {
   if (j.count("UserPassAuthentication") != 0) {
     p.UserPassAuthentication = j.at("UserPassAuthentication").get<decltype(p.UserPassAuthentication)::value_type>();
   }
+
+  if (j.count("MQTTPubSub") != 0) {
+    MQTTPubSubConfiguration_t config;
+    auto bUrl = j.at("MQTTPubSub").at("BrokerUrl").get<std::string>();
+    config.BrokerUrl = bUrl;
+    auto prefix = j.at("MQTTPubSub").at("Prefix").get<std::string>();
+    config.Prefix = prefix;
+    auto pId = j.at("MQTTPubSub").at("PublisherId").get<std::string>();
+    config.PublisherId = pId;
+    
+    if (j.at("MQTTPubSub").count("MqttCaFile") != 0) {
+     config.MqttCaFile = j.at("MQTTPubSub").at("MqttCaFile").get<decltype(p.MQTTPubSub->MqttCaFile)::value_type>(); }
+    if (j.at("MQTTPubSub").count("Username") != 0) {
+     config.Username = j.at("MQTTPubSub").at("Username").get<decltype(p.MQTTPubSub->Username)::value_type>(); }
+    if (j.at("MQTTPubSub").count("Password") != 0) {
+     config.Password = j.at("MQTTPubSub").at("Password").get<decltype(p.MQTTPubSub->Password)::value_type>(); }
+    p.MQTTPubSub = config;
+  }
 }
 
 Configuration FromJsonFile(std::string filename) {

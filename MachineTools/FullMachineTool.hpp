@@ -17,12 +17,13 @@
 class FullMachineTool : public InstantiatedMachineTool {
  public:
   FullMachineTool(UA_Server *pServer);
+  FullMachineTool(UA_Server *pServer, bool initialize, MqttSettings mqttSettings);
 
   void Simulate() override;
 
  protected:
   // Allow skipping initialization in subclasses
-  FullMachineTool(UA_Server *pServer, bool initialize);
+
   void CreateObject() override;
 
   void InstantiateIdentification();

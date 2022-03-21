@@ -28,10 +28,20 @@ struct UserPassAuthentication_t {
   std::string Password;
 };
 
+struct MQTTPubSubConfiguration_t {
+  std::optional<std::string> MqttCaFile;
+  std::string Prefix;
+  std::string BrokerUrl;  // Format opc.mqtt://...:1883
+  std::optional<std::string> Username;
+  std::optional<std::string> Password; 
+  std::string PublisherId;
+};
+
 struct Configuration {
   std::optional<std::string> Hostname;
   std::optional<std::vector<UserPassAuthentication_t>> UserPassAuthentication;
   std::optional<Encryption_t> Encryption;
+  std::optional<MQTTPubSubConfiguration_t> MQTTPubSub;
 };
 
 Configuration DefaultConfiguration();

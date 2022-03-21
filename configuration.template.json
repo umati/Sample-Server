@@ -7,5 +7,10 @@
         "TrustedClients": ["trusted/trustedClient.der"],
         "IssuerCerts": [],
         "Revocation": []
+    },
+    "MQTTPubSub": {
+        "Prefix": "vdw",
+        "BrokerUrl": "opc.mqtt://localhost:1883",
+        "PublisherId": "SampleServer"
     }
 }

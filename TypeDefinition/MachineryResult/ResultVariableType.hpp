@@ -10,15 +10,13 @@
 #include "ResultDataType.hpp"
 
 namespace machinery_result {
-    struct ResultType_t {
-        BindableMemberValue<UA_ResultDataType> Value;
-    };
-}  // namespace machineTool
-
+struct ResultType_t {
+  BindableMemberValue<UA_ResultDataType> Value;
+};
+}  // namespace machinery_result
 
 REFL_TYPE(
-machinery_result::ResultType_t,
-UmatiServerLib::attribute::UaVariableType(UmatiServerLib::constexp::NodeId(constants::NsMachineryResultUri, UA_MACHINERY_RESULTID_RESULTTYPE))
-)
+  machinery_result::ResultType_t,
+  UmatiServerLib::attribute::UaVariableType(UmatiServerLib::constexp::NodeId(constants::NsMachineryResultUri, UA_MACHINERY_RESULTID_RESULTTYPE)))
 REFL_FIELD(Value, UmatiServerLib::attribute::UaVariableTypeValue())
 REFL_END

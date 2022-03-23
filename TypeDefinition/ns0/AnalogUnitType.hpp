@@ -11,17 +11,18 @@
 
 namespace ns0 {
 
-    template <typename T>
-    struct AnalogUnitType_t {
-        BindableMemberValue<T> Value;
-        BindableMemberValue<UmatiServerLib::EUInformation_t> EngineeringUnits;
-    };
+template <typename T>
+struct AnalogUnitType_t {
+  BindableMemberValue<T> Value;
+  BindableMemberValue<UmatiServerLib::EUInformation_t> EngineeringUnits;
+};
 
 }  // namespace ns0
 
 REFL_TEMPLATE(
-        (typename T), (ns0::AnalogUnitType_t<T>), UmatiServerLib::attribute::UaVariableType(UmatiServerLib::constexp::NodeId(constants::Ns0Uri, UA_NS0ID_ANALOGUNITTYPE))
-        )
-        REFL_FIELD(Value, UmatiServerLib::attribute::UaVariableTypeValue())
-        REFL_FIELD(EngineeringUnits)
+  (typename T),
+  (ns0::AnalogUnitType_t<T>),
+  UmatiServerLib::attribute::UaVariableType(UmatiServerLib::constexp::NodeId(constants::Ns0Uri, UA_NS0ID_ANALOGUNITTYPE)))
+REFL_FIELD(Value, UmatiServerLib::attribute::UaVariableTypeValue())
+REFL_FIELD(EngineeringUnits)
 REFL_END

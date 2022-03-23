@@ -153,10 +153,10 @@ UA_StatusCode InstantiateVariable(
   varAttr.valueRank = readValueRank(pServer, memberInTypeNodeId);
 
   // Add Array Dimensions for Arrays
-  //TODO: Allow more than one Demensions
+  // TODO: Allow more than one Demensions
   if (varAttr.valueRank == UA_VALUERANK_ONE_DIMENSION) {
     varAttr.arrayDimensionsSize = 1;
-    UA_UInt32* arrayDims = UA_UInt32_new();
+    UA_UInt32 *arrayDims = UA_UInt32_new();
     arrayDims[0] = 1;
     varAttr.arrayDimensions = arrayDims;
   }

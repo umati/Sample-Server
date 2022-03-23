@@ -10,15 +10,14 @@
 #include "ResultMetaDataType.hpp"
 
 namespace machinery_result {
-    struct ResultDataType_t {
-        UA_ResultMetaDataType resultMetaData;
-        //size_t resultContentSize;
-        //UA_Variant *resultContent;
-    };
+struct ResultDataType_t {
+  UA_ResultMetaDataType resultMetaData;
+  // size_t resultContentSize;
+  // UA_Variant *resultContent;
+};
 }  // namespace machinery_result
-
 
 REFL_TYPE(machinery_result::ResultDataType_t, UmatiServerLib::attribute::UaDataType(&UA_TYPES_MACHINERY_RESULT[UA_TYPES_MACHINERY_RESULT_RESULTDATATYPE]))
 REFL_FIELD(resultMetaData)
-//REFL_FIELD(resultContent)
+// REFL_FIELD(resultContent)
 REFL_END

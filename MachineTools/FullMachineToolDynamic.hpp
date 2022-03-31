@@ -7,6 +7,7 @@
 
 #pragma once
 #include "FullMachineTool.hpp"
+// #include "../UmatiServerLib/Publication.hpp"
 
 // Chang address space during runtime
 class FullMachineToolDynamic : public FullMachineTool {

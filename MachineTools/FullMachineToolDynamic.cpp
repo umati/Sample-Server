@@ -28,12 +28,30 @@ void FullMachineToolDynamic::Simulate() {
     job.RunsPlanned->Value = 2;
     mt.Production->ActiveProgram->JobIdentifier.value = mt.Production->ProductionPlan->OrderedObjects.value.back()->Identifier.value;
     mt.Production->ActiveProgram->JobNodeId.value = *mt.Production->ProductionPlan->OrderedObjects.value.back().NodeId.NodeId;
+
+    if (m_mqttSettings.connectionIdent != nullptr) {
+      auto nId = m_publisher.m_namesToNodeIds["Production_WriterGroup"];
+      TopicCreator tc{m_mqttSettings.prefix, m_mqttSettings.publisherId, "Production_WriterGroup", "_.ProductionPlan." + ss.str()};
+      m_publisher.PublishFields(refl::reflect(job), job, tc, m_pServer, &nId, UA_FALSE, UA_TRUE);
+    }
+
   } else if ((m_simStep % 10) == 8) {
     if (!mt.Production->ProductionPlan->OrderedObjects->empty()) {
       auto lastIt = --mt.Production->ProductionPlan->OrderedObjects->end();
+      auto job = mt.Production->ProductionPlan->OrderedObjects->back();
       mt.Production->ProductionPlan->OrderedObjects.Delete(lastIt, m_pServer, n);
+      auto name = "_.ProductionPlan." + job.value.Identifier.value + "_Writer";
+      auto name2 = "_.ProductionPlan." + job.value.Identifier.value + ".State_Writer";
+
       mt.Production->ActiveProgram->JobIdentifier.value = mt.Production->ProductionPlan->OrderedObjects.value.front()->Identifier.value;
       mt.Production->ActiveProgram->JobNodeId.value = *mt.Production->ProductionPlan->OrderedObjects.value.front().NodeId.NodeId;
+
+      if (m_mqttSettings.connectionIdent != nullptr) {
+        auto nId = m_publisher.m_namesToNodeIds[name];
+        removeDataSetWriter(m_pServer, &nId);
+        auto nId2 = m_publisher.m_namesToNodeIds[name2];
+        removeDataSetWriter(m_pServer, &nId2);
+      }
     }
   }
 }

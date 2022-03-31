@@ -26,6 +26,7 @@ class InstantiatedMachineTool : public SimulatedInstance {
     UA_NodeId identificationWriterGroupIdent;
     UA_NodeId productionWriterGroupIdent;
     UA_NodeId equipmentWriterGroupIdent;
+    std::map<std::string, UA_NodeId> writerGroupNameToNodeId{};
   };
 
   InstantiatedMachineTool(UA_Server *pServer);
@@ -33,6 +34,7 @@ class InstantiatedMachineTool : public SimulatedInstance {
 
   const std::uint16_t &NsIndex;
   MqttSettings m_mqttSettings;
+  Publisher m_publisher;
 
  protected:
   virtual void CreateObject();

@@ -7,6 +7,8 @@
 
 #pragma once
 
+#include <vector>
+#include <functional>
 #include <Open62541Cpp/UA_NodeId.hpp>
 #include <Open62541Cpp/UA_RelativPathElement.hpp>
 
@@ -39,9 +41,24 @@ class BindableMember : public ValueDecorator<T> {
   /// NodeId, when binded. Enable deletion later on
   open62541Cpp::UA_NodeId NodeId;
 
+  /// NodeId, when part of publishedDataSets
+  std::vector<open62541Cpp::UA_NodeId> PublishedDataSetNodeIds;
+  std::vector<open62541Cpp::UA_NodeId> DataSetFieldNodeIds;
+
+  template <typename B>
+  void CallOnDataSetFieldId(std::function<void(B, UA_NodeId)> func, B as) {
+    std::for_each(DataSetFieldNodeIds.begin(), DataSetFieldNodeIds.end(), 
+      [func, as](auto pdsId) { func(as, *pdsId.NodeId); });
+  };
+
   BindableMember() = default;
   BindableMember(const T &val);
   virtual ~BindableMember() {}
+
+  BindableMember<T> &operator=(const T &other) {
+    this->value = other;
+    return *this;
+  }
 };
 
 template <typename T>

@@ -26,7 +26,6 @@ class InstantiatedMachineTool : public SimulatedInstance {
     UA_NodeId identificationWriterGroupIdent;
     UA_NodeId productionWriterGroupIdent;
     UA_NodeId equipmentWriterGroupIdent;
-    std::map<std::string, UA_NodeId> writerGroupNameToNodeId{};
   };
 
   InstantiatedMachineTool(UA_Server *pServer);

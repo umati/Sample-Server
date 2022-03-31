@@ -197,17 +197,20 @@ addPublishedDataSet(UA_Server *server, UA_NodeId* publishedDataSetIdent, std::st
  * **DataSetField handling**
  * The DataSetField (DSF) is part of the PDS and describes exactly one published field.
  */
-static void
+static UA_NodeId
 addDataSetField(UA_Server *server, UA_NodeId *publishedDataSetIdent, UA_NodeId toAdd, char* fieldNameAlias) {
     /* Add a field to the previous created PublishedDataSet */
     UA_DataSetFieldConfig dataSetFieldConfig;
+    UA_NodeId dataSetFieldIdentifier;
+    UA_NodeId_init(&dataSetFieldIdentifier);
     memset(&dataSetFieldConfig, 0, sizeof(UA_DataSetFieldConfig));
     dataSetFieldConfig.dataSetFieldType = UA_PUBSUB_DATASETFIELD_VARIABLE;
     dataSetFieldConfig.field.variable.fieldNameAlias = UA_STRING(fieldNameAlias);
     dataSetFieldConfig.field.variable.promotedField = UA_FALSE;
     dataSetFieldConfig.field.variable.publishParameters.publishedVariable = toAdd;
     dataSetFieldConfig.field.variable.publishParameters.attributeId = UA_ATTRIBUTEID_VALUE;
-    UA_Server_addDataSetField(server, *publishedDataSetIdent, &dataSetFieldConfig, NULL);
+    UA_Server_addDataSetField(server, *publishedDataSetIdent, &dataSetFieldConfig, &dataSetFieldIdentifier);
+    return dataSetFieldIdentifier;
 }
 
 /**
@@ -381,13 +384,17 @@ class Publisher {
         bool aggregrate;
         bool reversible;
         bool& addedSomething;
+        std::vector<open62541Cpp::UA_NodeId> &pdsIds;
+        std::vector<open62541Cpp::UA_NodeId> &dsfIds;
 
         template<typename T>
         void operator()(T& value) const {
             const auto ref = refl::reflect<T>();
 
             if constexpr (refl::descriptor::has_attribute<UmatiServerLib::attribute::UaVariableType>(ref)) {
-                addDataSetField(server, publishedDataSetIdent, *nodeId, const_cast<char*>(name.c_str()));
+                auto dsfId = addDataSetField(server, publishedDataSetIdent, *nodeId, const_cast<char*>(name.c_str()));
+                pdsIds.emplace_back(*publishedDataSetIdent);
+                dsfIds.emplace_back(dsfId);
                 addedSomething = true;           
             } else {
                 pub->PublishFields(ref, value, tc, server, writerGroupIdent, aggregrate, reversible);
@@ -404,7 +411,9 @@ class Publisher {
                     UA_NodeId nullNodeid = UA_NODEID_NUMERIC(0, 0);
                     if(UA_NodeId_equal(member(instance).NodeId.NodeId, &nullNodeid)) {}
                     else {
-                        addDataSetField(server, publishedDataSetIdent, *member(instance).NodeId.NodeId, const_cast<char*>(member.name.c_str()));
+                        auto dsfId = addDataSetField(server, publishedDataSetIdent, *member(instance).NodeId.NodeId, const_cast<char*>(member.name.c_str()));
+                        member(instance).PublishedDataSetNodeIds.emplace_back(*publishedDataSetIdent);
+                        member(instance).DataSetFieldNodeIds.emplace_back(dsfId);
                         addedSomething = true;
                     }
                 } else if constexpr (is_same_template<typename decltype(member)::value_type, BindableMember>::value) {
@@ -414,7 +423,9 @@ class Publisher {
                     
                     if constexpr (refl::descriptor::has_attribute<UmatiServerLib::attribute::UaDataType>(typeDescriptor) ||
                                 refl::descriptor::has_attribute<UmatiServerLib::attribute::UaVariableType>(typeDescriptor)) {
-                        addDataSetField(server, publishedDataSetIdent, *member(instance).NodeId.NodeId, const_cast<char*>(member.name.c_str()));
+                        auto dsfId = addDataSetField(server, publishedDataSetIdent, *member(instance).NodeId.NodeId, const_cast<char*>(member.name.c_str()));
+                        member(instance).PublishedDataSetNodeIds.emplace_back(*publishedDataSetIdent);
+                        member(instance).DataSetFieldNodeIds.emplace_back(dsfId);
                         addedSomething = true;
                     } else {
                         PublishFields(typeDescriptor, member(instance).value, tc2, server, writerGroupIdent, aggregate, reversible);
@@ -431,11 +442,14 @@ class Publisher {
                         tc2.publishedDataSetName = tc2.publishedDataSetName + "." + name;
 
                         if constexpr (is_same_template<typeof(elem.value), std::variant>::value) {
-                            std::visit(VariantVisitor{this, server, tc2, writerGroupIdent, publishedDataSetIdent, elem.NodeId.NodeId, name, aggregate, reversible, addedSomething}, elem.value);
+                            std::visit(VariantVisitor{this, server, tc2, writerGroupIdent, publishedDataSetIdent, elem.NodeId.NodeId, name, aggregate, reversible, addedSomething,
+                                elem.PublishedDataSetNodeIds, elem.DataSetFieldNodeIds}, elem.value);
                         } else {
-                            if (refl::descriptor::has_attribute<UmatiServerLib::attribute::UaVariableType>(refl::reflect(elem.value)) ||
+                            if (refl::descriptor::has_attribute<UmatiServerLib::attribute::UaDataType>(refl::reflect(elem.value)) ||
                                 refl::descriptor::has_attribute<UmatiServerLib::attribute::UaVariableType>(refl::reflect(elem.value))) {
-                                addDataSetField(server, publishedDataSetIdent, *elem.NodeId.NodeId, const_cast<char*>(name.c_str()));
+                                auto dsfId = addDataSetField(server, publishedDataSetIdent, *elem.NodeId.NodeId, const_cast<char*>(name.c_str()));
+                                member(instance).PublishedDataSetNodeIds.emplace_back(*publishedDataSetIdent);
+                                member(instance).DataSetFieldNodeIds.emplace_back(dsfId);
                                 addedSomething = true;
                             } else {
                                 PublishFields(refl::reflect(elem.value), elem.value, tc2, server, writerGroupIdent, aggregate, reversible);
@@ -456,7 +470,9 @@ class Publisher {
                     auto typeDescriptor = refl::reflect(member(instance).value);
                     if constexpr (refl::descriptor::has_attribute<UmatiServerLib::attribute::UaDataType>(typeDescriptor) ||
                                 refl::descriptor::has_attribute<UmatiServerLib::attribute::UaVariableType>(typeDescriptor)) {
-                        addDataSetField(server, publishedDataSetIdent, *member(instance).NodeId.NodeId, const_cast<char*>(member.name.c_str()));
+                        auto dsfId = addDataSetField(server, publishedDataSetIdent, *member(instance).NodeId.NodeId, const_cast<char*>(member.name.c_str()));
+                        member(instance).PublishedDataSetNodeIds.emplace_back(*publishedDataSetIdent);
+                        member(instance).DataSetFieldNodeIds.emplace_back(dsfId);
                         addedSomething = true;
                     } else {
                         PublishFields(typeDescriptor, member(instance).value, tc2, server, writerGroupIdent, aggregate, reversible);
@@ -473,8 +489,11 @@ class Publisher {
                         tc2.publishedDataSetName = tc2.publishedDataSetName + "." + s;
                         // PublishFields(refl::reflect(elem.value), elem.value, tc2, server, writerGroupIdent);
 
-                        if constexpr (refl::descriptor::has_attribute<UmatiServerLib::attribute::UaVariableType>(refl::reflect(elem.value))) {
-                            addDataSetField(server, publishedDataSetIdent, *elem.NodeId.NodeId, const_cast<char*>(elem.name.c_str()));
+                        if constexpr (refl::descriptor::has_attribute<UmatiServerLib::attribute::UaVariableType>(refl::reflect(elem.value))
+                                || refl::descriptor::has_attribute<UmatiServerLib::attribute::UaDataType>(refl::reflect(elem.value))) {
+                            auto dsfId = addDataSetField(server, publishedDataSetIdent, *elem.NodeId.NodeId, const_cast<char*>(elem.name.c_str()));
+                            member(instance).PublishedDataSetNodeIds.emplace_back(*publishedDataSetIdent);
+                            member(instance).DataSetFieldNodeIds.emplace_back(dsfId);
                             addedSomething = true;
                         } else {
                             PublishFields(refl::reflect(elem.value), elem.value, tc2, server, writerGroupIdent, aggregate, reversible);

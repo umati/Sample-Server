@@ -7,7 +7,7 @@
  */
 
 #include "BasicMachineTool.hpp"
-#include "../UmatiServerLib/Publication.hpp"
+// #include "../UmatiServerLib/Publication.hpp"
 
 BasicMachineTool::BasicMachineTool(UA_Server *pServer) : InstantiatedMachineTool(pServer) {
   MachineName = "BasicMachineTool";

@@ -175,8 +175,9 @@ void FullMachineTool::InstantiateProduction() {
   }
   */
 
-  if (m_mqttSettings.connectionIdent != nullptr)
-    Publish(mt.Production.value, m_pServer, m_mqttSettings.connectionIdent, n, m_mqttSettings.prefix, m_mqttSettings.publisherId, "Production", 2000);
+  if (m_mqttSettings.connectionIdent != nullptr) {
+    m_publisher.Publish(mt.Production.value, m_pServer, m_mqttSettings.connectionIdent, n, m_mqttSettings.prefix, m_mqttSettings.publisherId, "Production", 2000);
+  }
 }
 
 void FullMachineTool::InstantiateIdentification() {
@@ -206,7 +207,7 @@ void FullMachineTool::InstantiateIdentification() {
   swOS.SoftwareRevision = "3.12.0";  // Should be reasonably accurate as of Aug 2020 (googled it)
 
   if (m_mqttSettings.connectionIdent != nullptr)
-    Publish(mt.Identification.value, m_pServer, m_mqttSettings.connectionIdent, n, m_mqttSettings.prefix, m_mqttSettings.publisherId, "Identification", 2000, UA_TRUE, UA_FALSE);
+    m_publisher.Publish(mt.Identification.value, m_pServer, m_mqttSettings.connectionIdent, n, m_mqttSettings.prefix, m_mqttSettings.publisherId, "Identification", 2000, UA_TRUE, UA_FALSE);
 }
 
 void FullMachineTool::InstantiateTools() {
@@ -265,7 +266,7 @@ void FullMachineTool::InstantiateTools() {
   }
 
   if (m_mqttSettings.connectionIdent != nullptr)
-    Publish(mt.Equipment.value, m_pServer, m_mqttSettings.connectionIdent, n, m_mqttSettings.prefix, m_mqttSettings.publisherId, "Equipment", 2000);
+    m_publisher.Publish(mt.Equipment.value, m_pServer, m_mqttSettings.connectionIdent, n, m_mqttSettings.prefix, m_mqttSettings.publisherId, "Equipment", 2000);
 
   /*
   if (m_mqttSettings.connectionIdent != nullptr) {
@@ -389,7 +390,7 @@ void FullMachineTool::InstantiateMonitoring() {
   }
   */
   if (m_mqttSettings.connectionIdent != nullptr)
-    Publish(mt.Monitoring.value, m_pServer, m_mqttSettings.connectionIdent, n, m_mqttSettings.prefix, m_mqttSettings.publisherId, "Monitoring", 2000);
+    m_publisher.Publish(mt.Monitoring.value, m_pServer, m_mqttSettings.connectionIdent, n, m_mqttSettings.prefix, m_mqttSettings.publisherId, "Monitoring", 2000);
 }
 
 void FullMachineTool::InstantiatePrognosis() {
@@ -426,7 +427,7 @@ void FullMachineTool::InstantiatePrognosis() {
   utilityPrognosis.UtilityName = "H²";
 
   if (m_mqttSettings.connectionIdent != nullptr)
-    Publish(mt.Notification.value, m_pServer, m_mqttSettings.connectionIdent, n, m_mqttSettings.prefix, m_mqttSettings.publisherId, "Notification", 2000, UA_FALSE);
+    m_publisher.Publish(mt.Notification.value, m_pServer, m_mqttSettings.connectionIdent, n, m_mqttSettings.prefix, m_mqttSettings.publisherId, "Notification", 2000, UA_FALSE);
 }
 
 void FullMachineTool::Simulate() {

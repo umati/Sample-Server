@@ -11,6 +11,7 @@
 #include <type_traits>
 
 #include "../TypeDefinition/ns0/FiniteStateMachine.hpp"
+#include <open62541/server_pubsub.h>
 #include "StateMachine.hpp"
 
 namespace UmatiServerLib {
@@ -49,6 +50,7 @@ class StateMachineInstance : public StateMachine {
     m_stateMachineInstance.CurrentState->Value = state.DispName;
     m_stateMachineInstance.CurrentState->Id = *state.Id.NodeId;
     m_stateMachineInstance.CurrentState->Number = state.Number;
+    m_stateMachineInstance.CurrentState.CallOnDataSetFieldId(std::function(UA_Server_updateDataSetField), m_pServer);
   }
 
   STATEMACHINE_T &m_stateMachineInstance;

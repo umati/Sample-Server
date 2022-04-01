@@ -85,17 +85,6 @@ void InstantiatedMachineTool::InstantiateMonitoringStacklight(std::list<UA_Signa
 }
 
 void InstantiatedMachineTool::InstantiateMonitoringChannel(int numChannels) {
-
-  /*
-  if (m_mqttSettings.connectionIdent != nullptr) {
-    std::string topic = m_mqttSettings.prefix + "/json/data/" + m_mqttSettings.publisherId + "/Monitoring_WriterGroup";  
-    auto retval = addWriterGroup(m_pServer, const_cast<char*>(topic.c_str()), 2000, &m_mqttSettings.monitoringWriterGroupIdent, m_mqttSettings.connectionIdent);
-    if (retval != UA_STATUSCODE_GOOD) {
-      std::cout << "Error adding WriterGroup " << UA_StatusCode_name(retval) << "\n";
-    }
-  }
-  */
-
   for (std::size_t i = 1; i <= numChannels; ++i) {
     std::stringstream ss;
     ss << "Channel " << i;
@@ -107,20 +96,6 @@ void InstantiatedMachineTool::InstantiateMonitoringChannel(int numChannels) {
     channel.FeedOverride->Value = std::fmod(rnd() / 100.0, channel.FeedOverride->EURange->high);
     channel.Name = ss.str();
     channel.ChannelMode = UA_ChannelMode::UA_CHANNELMODE_AUTOMATIC;
-
-    /*
-    if (m_mqttSettings.connectionIdent != nullptr) {
-      UA_NodeId* publishedDataSetIdent = UA_NodeId_new();
-      UA_NodeId* dataSetWriterIdent = UA_NodeId_new();
-      TopicCreator tc{m_mqttSettings.prefix, m_mqttSettings.publisherId, "Monitoring_WriterGroup", channel.Name.value};     
-      addPublishedDataSet(m_pServer, publishedDataSetIdent, tc.publishedDataSetName);
-      addDataSetField(m_pServer, publishedDataSetIdent, *channel.ChannelMode.NodeId.NodeId, "ChannelMode");
-      addDataSetField(m_pServer, publishedDataSetIdent, *channel.ChannelState.NodeId.NodeId, "ChannelState");
-      addDataSetField(m_pServer, publishedDataSetIdent, *channel.Name.NodeId.NodeId, "Name");
-      addDataSetField(m_pServer, publishedDataSetIdent, *channel.FeedOverride.NodeId.NodeId, "FeedOverride");
-      addDataSetWriter(m_pServer, tc.getWriterName() , tc.getMetaDataTopic(), tc.getDataTopic(), publishedDataSetIdent, &m_mqttSettings.monitoringWriterGroupIdent, dataSetWriterIdent);
-    }
-    */  
   }
 }
 

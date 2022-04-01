@@ -54,11 +54,6 @@ class BindableMember : public ValueDecorator<T> {
   BindableMember() = default;
   BindableMember(const T &val);
   virtual ~BindableMember() {}
-
-  BindableMember<T> &operator=(const T &other) {
-    this->value = other;
-    return *this;
-  }
 };
 
 template <typename T>

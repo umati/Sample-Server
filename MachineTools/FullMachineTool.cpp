@@ -44,16 +44,6 @@ void FullMachineTool::CreateObject() {
 }
 
 void FullMachineTool::InstantiateProduction() {
-  /*
-  if (m_mqttSettings.connectionIdent != nullptr) {
-    std::string topic = m_mqttSettings.prefix + "/json/data/" + m_mqttSettings.publisherId + "/Production_WriterGroup";  
-    auto retval = addWriterGroup(m_pServer, const_cast<char*>(topic.c_str()), 2000, &m_mqttSettings.productionWriterGroupIdent, m_mqttSettings.connectionIdent);
-    if (retval != UA_STATUSCODE_GOOD) {
-      std::cout << "Error adding WriterGroup " << UA_StatusCode_name(retval) << "\n";
-    }
-  }
-  */
-
   InstantiateOptional(mt.Production->ActiveProgram->State, m_pServer, n);
   mt.Production->ActiveProgram->NumberInList = 0;
   mt.Production->ActiveProgram->Name = "Full Program";
@@ -89,7 +79,7 @@ void FullMachineTool::InstantiateProduction() {
     newUaStr.String,
     &UA_TYPES[UA_TYPES_STRING]);
 
-  mt.Production->ActiveProgram->JobIdentifier = job.Identifier;
+  mt.Production->ActiveProgram->JobIdentifier.value = job.Identifier.value;
   mt.Production->ActiveProgram->JobNodeId = *mt.Production->ProductionPlan->OrderedObjects.value.front().NodeId.NodeId;
 
   InstantiateOptional(job.PartSets, m_pServer, n);
@@ -112,68 +102,6 @@ void FullMachineTool::InstantiateProduction() {
     part.PartQuality = static_cast<UA_PartQuality>(i % (UA_PartQuality::UA_PARTQUALITY_WILLNOTBEMEASURED + 1));
     part.ProcessIrregularity = static_cast<UA_ProcessIrregularity>(i % (UA_ProcessIrregularity::UA_PROCESSIRREGULARITY_NOTYETDETERMINED + 1));
   }
-
-  /*
-  if (m_mqttSettings.connectionIdent != nullptr) {
-    UA_NodeId* publishedDataSetIdent = UA_NodeId_new();
-    UA_NodeId* dataSetWriterIdent = UA_NodeId_new();
-    TopicCreator tc{m_mqttSettings.prefix, m_mqttSettings.publisherId, "Production_WriterGroup", "ActiveProgram"};     
-    addPublishedDataSet(m_pServer, publishedDataSetIdent, tc.publishedDataSetName, UA_FALSE);
-    addDataSetField(m_pServer, publishedDataSetIdent, *mt.Production->ActiveProgram->Name.NodeId.NodeId, "Name");
-    addDataSetField(m_pServer, publishedDataSetIdent, *mt.Production->ActiveProgram->NumberInList.NodeId.NodeId, "NumberInList");
-    addDataSetField(m_pServer, publishedDataSetIdent, *mt.Production->ActiveProgram->JobIdentifier.NodeId.NodeId, "JobIdentifier");
-    addDataSetField(m_pServer, publishedDataSetIdent, *mt.Production->ActiveProgram->JobNodeId.NodeId.NodeId, "JobNodeId");
-    addDataSetField(m_pServer, publishedDataSetIdent, *mt.Production->ActiveProgram->State->CurrentState.NodeId.NodeId, "State.CurrentState");
-    addDataSetWriter(m_pServer, tc.getWriterName() , tc.getMetaDataTopic(), tc.getDataTopic(), publishedDataSetIdent, &m_mqttSettings.productionWriterGroupIdent, dataSetWriterIdent);
-  }
-
-  if (m_mqttSettings.connectionIdent != nullptr) {
-    UA_NodeId* publishedDataSetIdent = UA_NodeId_new();
-    UA_NodeId* dataSetWriterIdent = UA_NodeId_new();
-    TopicCreator tc{m_mqttSettings.prefix, m_mqttSettings.publisherId, "Production_WriterGroup", "ProductionPlan"};     
-    addPublishedDataSet(m_pServer, publishedDataSetIdent, tc.publishedDataSetName);
-    addDataSetField(m_pServer, publishedDataSetIdent, *mt.Production->ProductionPlan->NodeVersion.NodeId.NodeId, "NodeVersion");
-    addDataSetWriter(m_pServer, tc.getWriterName() , tc.getMetaDataTopic(), tc.getDataTopic(), publishedDataSetIdent, &m_mqttSettings.productionWriterGroupIdent, dataSetWriterIdent);
-  }
-
-   if (m_mqttSettings.connectionIdent != nullptr) {
-    UA_NodeId* publishedDataSetIdent = UA_NodeId_new();
-    UA_NodeId* dataSetWriterIdent = UA_NodeId_new();
-    TopicCreator tc{m_mqttSettings.prefix, m_mqttSettings.publisherId, "Production_WriterGroup", "ProductionPlan.MyJob1"};     
-    addPublishedDataSet(m_pServer, publishedDataSetIdent, tc.publishedDataSetName);
-    addDataSetField(m_pServer, publishedDataSetIdent, *job.Identifier.NodeId.NodeId, "Identifier");
-    addDataSetField(m_pServer, publishedDataSetIdent, *job.NumberInList.NodeId.NodeId, "NumberInList");
-    addDataSetField(m_pServer, publishedDataSetIdent, *job.RunsCompleted.NodeId.NodeId, "RunsCompleted");
-    addDataSetField(m_pServer, publishedDataSetIdent, *job.RunsPlanned.NodeId.NodeId, "RunsPlanned");
-    addDataSetField(m_pServer, publishedDataSetIdent, *job.State->CurrentState.NodeId.NodeId, "State.CurrentState");
-    addDataSetWriter(m_pServer, tc.getWriterName() , tc.getMetaDataTopic(), tc.getDataTopic(), publishedDataSetIdent, &m_mqttSettings.productionWriterGroupIdent, dataSetWriterIdent);
-  }
-
-  if (m_mqttSettings.connectionIdent != nullptr) {
-    UA_NodeId* publishedDataSetIdent = UA_NodeId_new();
-    UA_NodeId* dataSetWriterIdent = UA_NodeId_new();
-    TopicCreator tc{m_mqttSettings.prefix, m_mqttSettings.publisherId, "Production_WriterGroup", "ProductionPlan.MyJob1.PartSets.Set1"};     
-    addPublishedDataSet(m_pServer, publishedDataSetIdent, tc.publishedDataSetName);
-    addDataSetField(m_pServer, publishedDataSetIdent, *set1.ContainsMixedParts.NodeId.NodeId, "ContainsMixedParts");
-    addDataSetField(m_pServer, publishedDataSetIdent, *set1.PartsCompletedPerRun.NodeId.NodeId, "PartsCompletedPerRun");
-    addDataSetField(m_pServer, publishedDataSetIdent, *set1.PartsPerRun.NodeId.NodeId, "PartsPerRun");
-    addDataSetWriter(m_pServer, tc.getWriterName() , tc.getMetaDataTopic(), tc.getDataTopic(), publishedDataSetIdent, &m_mqttSettings.productionWriterGroupIdent, dataSetWriterIdent);
-  }
-
-  for(machineTool::ProductionPart_t *part: parts) {
-    if (m_mqttSettings.connectionIdent != nullptr) {
-      UA_NodeId* publishedDataSetIdent = UA_NodeId_new();
-      UA_NodeId* dataSetWriterIdent = UA_NodeId_new();
-      std::string name = std::string("ProductionPlan.MyJob1.PartSets.Set1.PartsPerRun.") + part->Name.value;
-      TopicCreator tc{m_mqttSettings.prefix, m_mqttSettings.publisherId, "Production_WriterGroup", name};     
-      addPublishedDataSet(m_pServer, publishedDataSetIdent, tc.publishedDataSetName);
-      addDataSetField(m_pServer, publishedDataSetIdent, *part->Name.NodeId.NodeId, "Name");
-      addDataSetField(m_pServer, publishedDataSetIdent, *part->PartQuality.NodeId.NodeId, "PartQuality");
-      addDataSetField(m_pServer, publishedDataSetIdent, *part->ProcessIrregularity.NodeId.NodeId, "ProcessIrregularity");
-      addDataSetWriter(m_pServer, tc.getWriterName() , tc.getMetaDataTopic(), tc.getDataTopic(), publishedDataSetIdent, &m_mqttSettings.productionWriterGroupIdent, dataSetWriterIdent);
-    }
-  }
-  */
 
   if (m_mqttSettings.connectionIdent != nullptr) {
     m_publisher.Publish(mt.Production.value, m_pServer, m_mqttSettings.connectionIdent, n, m_mqttSettings.prefix, m_mqttSettings.publisherId, "Production", 2000);
@@ -211,16 +139,6 @@ void FullMachineTool::InstantiateIdentification() {
 }
 
 void FullMachineTool::InstantiateTools() {
-  /*
-  if (m_mqttSettings.connectionIdent != nullptr) {
-    std::string topic = m_mqttSettings.prefix + "/json/data/" + m_mqttSettings.publisherId + "/Equipment_WriterGroup";  
-    auto retval = addWriterGroup(m_pServer, const_cast<char*>(topic.c_str()), 2000, &m_mqttSettings.equipmentWriterGroupIdent, m_mqttSettings.connectionIdent);
-    if (retval != UA_STATUSCODE_GOOD) {
-      std::cout << "Error adding WriterGroup " << UA_StatusCode_name(retval) << "\n";
-    }
-  }
-  */
-
   InstantiateOptional(mt.Equipment->Tools, m_pServer, n);
   InstantiateOptional(mt.Equipment->Tools->NodeVersion, m_pServer, n);
   n.Remove(mt.Equipment->Tools->NodeVersion.NodeId);
@@ -268,56 +186,6 @@ void FullMachineTool::InstantiateTools() {
   if (m_mqttSettings.connectionIdent != nullptr)
     m_publisher.Publish(mt.Equipment.value, m_pServer, m_mqttSettings.connectionIdent, n, m_mqttSettings.prefix, m_mqttSettings.publisherId, "Equipment", 2000);
 
-  /*
-  if (m_mqttSettings.connectionIdent != nullptr) {
-    UA_NodeId* publishedDataSetIdent = UA_NodeId_new();
-    UA_NodeId* dataSetWriterIdent = UA_NodeId_new();
-    TopicCreator tc{m_mqttSettings.prefix, m_mqttSettings.publisherId, "Equipment", "Tools"};     
-    addPublishedDataSet(m_pServer, publishedDataSetIdent, tc.publishedDataSetName);
-    addDataSetField(m_pServer, publishedDataSetIdent, *mt.Equipment->Tools->NodeVersion.NodeId.NodeId, "NodeVersion");
-    addDataSetWriter(m_pServer, tc.getWriterName() , tc.getMetaDataTopic(), tc.getDataTopic(), publishedDataSetIdent, &m_mqttSettings.equipmentWriterGroupIdent, dataSetWriterIdent);
-  }
-
-  if (m_mqttSettings.connectionIdent != nullptr) {
-    UA_NodeId* publishedDataSetIdent = UA_NodeId_new();
-    UA_NodeId* dataSetWriterIdent = UA_NodeId_new();
-    TopicCreator tc{m_mqttSettings.prefix, m_mqttSettings.publisherId, "Equipment", "Tools.Multi 1"};     
-    addPublishedDataSet(m_pServer, publishedDataSetIdent, tc.publishedDataSetName);
-    addDataSetField(m_pServer, publishedDataSetIdent, *multiTool.Identifier.NodeId.NodeId, "Identifier");
-    addDataSetField(m_pServer, publishedDataSetIdent, *multiTool.Name.NodeId.NodeId, "Identifier");
-    addDataSetWriter(m_pServer, tc.getWriterName() , tc.getMetaDataTopic(), tc.getDataTopic(), publishedDataSetIdent, &m_mqttSettings.equipmentWriterGroupIdent, dataSetWriterIdent);
-  }
-
-  if (m_mqttSettings.connectionIdent != nullptr) {
-    UA_NodeId* publishedDataSetIdent = UA_NodeId_new();
-    UA_NodeId* dataSetWriterIdent = UA_NodeId_new();
-    TopicCreator tc{m_mqttSettings.prefix, m_mqttSettings.publisherId, "Equipment", std::string("Tools.Tool 1")};     
-    addPublishedDataSet(m_pServer, publishedDataSetIdent, tc.publishedDataSetName);
-    addDataSetField(m_pServer, publishedDataSetIdent, *tool.ControlIdentifier1.NodeId.NodeId, "ControlIdentifier1");
-    addDataSetField(m_pServer, publishedDataSetIdent, *tool.ControlIdentifier2.NodeId.NodeId, "ControlIdentifier2");
-    addDataSetField(m_pServer, publishedDataSetIdent, *tool.Identifier.NodeId.NodeId, "Identifier");
-    addDataSetField(m_pServer, publishedDataSetIdent, *tool.Locked.NodeId.NodeId, "Locked");
-    addDataSetField(m_pServer, publishedDataSetIdent, *tool.ToolLife->ToolLifeEntry.NodeId.NodeId, "ToolLife.Rotations");
-    addDataSetWriter(m_pServer, tc.getWriterName() , tc.getMetaDataTopic(), tc.getDataTopic(), publishedDataSetIdent, &m_mqttSettings.equipmentWriterGroupIdent, dataSetWriterIdent);
-  }
-
-  int i = 0;
-  for(auto tool: subtools) {
-      if (m_mqttSettings.connectionIdent != nullptr) {
-    UA_NodeId* publishedDataSetIdent = UA_NodeId_new();
-    UA_NodeId* dataSetWriterIdent = UA_NodeId_new();
-    TopicCreator tc{m_mqttSettings.prefix, m_mqttSettings.publisherId, "Equipment", std::string("Tools.Multi 1.") + tool->Identifier.value};     
-    addPublishedDataSet(m_pServer, publishedDataSetIdent, tc.publishedDataSetName);
-    addDataSetField(m_pServer, publishedDataSetIdent, *tool->ControlIdentifier1.NodeId.NodeId, "ControlIdentifier1");
-    addDataSetField(m_pServer, publishedDataSetIdent, *tool->ControlIdentifier2.NodeId.NodeId, "ControlIdentifier2");
-    addDataSetField(m_pServer, publishedDataSetIdent, *tool->Identifier.NodeId.NodeId, "Identifier");
-    addDataSetField(m_pServer, publishedDataSetIdent, *tool->Locked.NodeId.NodeId, "Locked");
-    addDataSetField(m_pServer, publishedDataSetIdent, *tool->ToolLife->ToolLifeEntry.NodeId.NodeId, "ToolLife.Rotations");
-    addDataSetWriter(m_pServer, tc.getWriterName() , tc.getMetaDataTopic(), tc.getDataTopic(), publishedDataSetIdent, &m_mqttSettings.equipmentWriterGroupIdent, dataSetWriterIdent);
-    i++;
-  }
-  }
-  */
 }
 
 void FullMachineTool::InstantiateMonitoring() {
@@ -341,54 +209,18 @@ void FullMachineTool::InstantiateMonitoring() {
   spindle1.Name = "Spindle 1";
   spindle1.IsUsedAsAxis = false;
 
-  /*
-  if (m_mqttSettings.connectionIdent != nullptr) {
-    UA_NodeId* publishedDataSetIdent = UA_NodeId_new();
-    UA_NodeId* dataSetWriterIdent = UA_NodeId_new();
-    TopicCreator tc{m_mqttSettings.prefix, m_mqttSettings.publisherId, "Monitoring_WriterGroup", spindle1.Name.value};       
-    addPublishedDataSet(m_pServer, publishedDataSetIdent, tc.getPublishedDataSetName());
-    addDataSetField(m_pServer, publishedDataSetIdent, *spindle1.Override.NodeId.NodeId, "Override");
-    addDataSetField(m_pServer, publishedDataSetIdent, *spindle1.IsRotating.NodeId.NodeId, "IsRotating");
-    addDataSetField(m_pServer, publishedDataSetIdent, *spindle1.IsUsedAsAxis.NodeId.NodeId, "IsUsedAsAxis");
-    addDataSetWriter(m_pServer, tc.getWriterName() , tc.getMetaDataTopic(), tc.getDataTopic(), publishedDataSetIdent, &m_mqttSettings.monitoringWriterGroupIdent, dataSetWriterIdent);
-  }
-  */
 
   auto &edm = mt.Monitoring->MonitoredElement.Add<machineTool::EDMGeneratorMonitoring_t>(m_pServer, n, {m_nsIndex, "EDM"});
   edm.IsOn = true;
   edm.Name = "EDM";
   edm.EDMGeneratorState = UA_EDMGeneratorState::UA_EDMGENERATORSTATE_ACTIVE_HIGH_VOLTAGE;
 
-  /*
-  if (m_mqttSettings.connectionIdent != nullptr) {
-    UA_NodeId* publishedDataSetIdent = UA_NodeId_new();
-    UA_NodeId* dataSetWriterIdent = UA_NodeId_new();
-    TopicCreator tc{m_mqttSettings.prefix, m_mqttSettings.publisherId, "Monitoring_WriterGroup", edm.Name.value};       
-    addPublishedDataSet(m_pServer, publishedDataSetIdent, tc.getPublishedDataSetName(), UA_FALSE);
-    addDataSetField(m_pServer, publishedDataSetIdent, *edm.Name.NodeId.NodeId, "Name");
-    addDataSetField(m_pServer, publishedDataSetIdent, *edm.IsOn.NodeId.NodeId, "IsOn");
-    addDataSetField(m_pServer, publishedDataSetIdent, *edm.EDMGeneratorState.NodeId.NodeId, "EDMGeneratorState");
-    addDataSetWriter(m_pServer, tc.getWriterName() , tc.getMetaDataTopic(), tc.getDataTopic(), publishedDataSetIdent, &m_mqttSettings.monitoringWriterGroupIdent, dataSetWriterIdent);
-  } 
-  */
 
   auto &lsr = mt.Monitoring->MonitoredElement.Add<machineTool::LaserMonitoring_t>(m_pServer, n, {m_nsIndex, "Laser"});
   lsr.ControllerIsOn = false;
   lsr.Name = "Laser";
   lsr.LaserState = UA_LaserState::UA_LASERSTATE_READY;
 
-  /*
-  if (m_mqttSettings.connectionIdent != nullptr) {
-    UA_NodeId* publishedDataSetIdent = UA_NodeId_new();
-    UA_NodeId* dataSetWriterIdent = UA_NodeId_new();
-    TopicCreator tc{m_mqttSettings.prefix, m_mqttSettings.publisherId, "Monitoring_WriterGroup", lsr.Name.value};       
-    addPublishedDataSet(m_pServer, publishedDataSetIdent, tc.publishedDataSetName);
-    addDataSetField(m_pServer, publishedDataSetIdent, *lsr.ControllerIsOn.NodeId.NodeId, "IsOn");
-    addDataSetField(m_pServer, publishedDataSetIdent, *lsr.LaserState.NodeId.NodeId, "LaserState");
-    addDataSetField(m_pServer, publishedDataSetIdent, *lsr.Name.NodeId.NodeId, "Name");
-    addDataSetWriter(m_pServer, tc.getWriterName() ,tc.getMetaDataTopic(), tc.getDataTopic(), publishedDataSetIdent, &m_mqttSettings.monitoringWriterGroupIdent, dataSetWriterIdent);
-  }
-  */
   if (m_mqttSettings.connectionIdent != nullptr)
     m_publisher.Publish(mt.Monitoring.value, m_pServer, m_mqttSettings.connectionIdent, n, m_mqttSettings.prefix, m_mqttSettings.publisherId, "Monitoring", 2000);
 }

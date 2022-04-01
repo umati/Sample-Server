@@ -20,6 +20,11 @@ FullWoodworking::FullWoodworking(UA_Server *pServer) : InstantiatedWoodworking(p
   CreateObject();
 }
 
+FullWoodworking::FullWoodworking(UA_Server *pServer, MqttSettings settings) : InstantiatedWoodworking(pServer, settings) {
+  MachineName = "FullWoodworking";
+  CreateObject();
+}
+
 void FullWoodworking::CreateObject() {
   InstantiatedWoodworking::CreateObject();
   InstantiateIdentification();
@@ -59,6 +64,10 @@ void FullWoodworking::InstantiateIdentification() {
   ww.Identification->AssetId = "123456";
   ww.Identification->ComponentName = {"", "Machine"};
   ww.Identification->Location = "VIRTUAL 0 0 /N 49.628661 E 9.654903";
+
+  if (m_mqttSettings.connectionIdent != nullptr) {
+    m_publisher.Publish(ww.Identification.value, m_pServer, m_mqttSettings.connectionIdent, n, m_mqttSettings.prefix, m_mqttSettings.publisherId, "Identification", 2000);
+  }
 }
 
 void FullWoodworking::InstantiateMachineFlags() {
@@ -188,6 +197,10 @@ void FullWoodworking::InstantiateManufacturerSpecific() {
   InstantiateOptional(ww.ManufacturerSpecific, m_pServer, n);
   InstantiateOptional(ww.ManufacturerSpecific->LastProgramName, m_pServer, n);
   ww.ManufacturerSpecific->LastProgramName = "A1234";
+
+  if (m_mqttSettings.connectionIdent != nullptr) {
+    m_publisher.Publish(ww.ManufacturerSpecific.value, m_pServer, m_mqttSettings.connectionIdent, n, m_mqttSettings.prefix, m_mqttSettings.publisherId, "ManufacturerSpecific", 2000, UA_TRUE, UA_FALSE);
+  }
 }
 
 void FullWoodworking::InstantiateSubunits() {
@@ -199,6 +212,10 @@ void FullWoodworking::InstantiateSubunits() {
   InstantiateOptional(ww.State->SubUnits->SubUnit, m_pServer, n);
   ww.State->SubUnits->SubUnit->Overview->CurrentState = UA_WwUnitStateEnumeration::UA_WWUNITSTATEENUMERATION_READY;
   ww.State->SubUnits->SubUnit->Overview->CurrentMode = UA_WwUnitModeEnumeration::UA_WWUNITMODEENUMERATION_MANUAL;
+
+  if (m_mqttSettings.connectionIdent != nullptr) {
+    m_publisher.Publish(ww.State.value, m_pServer, m_mqttSettings.connectionIdent, n, m_mqttSettings.prefix, m_mqttSettings.publisherId, "State", 2000, UA_TRUE, UA_FALSE);
+  }
 }
 
 void FullWoodworking::Simulate() {

@@ -10,6 +10,7 @@
 class FullWoodworking : public InstantiatedWoodworking {
  public:
   FullWoodworking(UA_Server *pServer);
+  FullWoodworking(UA_Server *pServer, MqttSettings mqttsettings);
 
   void Simulate() override;
   virtual ~FullWoodworking() = default;

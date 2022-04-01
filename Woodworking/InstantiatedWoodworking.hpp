@@ -18,6 +18,7 @@
 class InstantiatedWoodworking : public SimulatedInstance {
  public:
   InstantiatedWoodworking(UA_Server *pServer);
+  InstantiatedWoodworking(UA_Server *pServer, MqttSettings settings);
   const std::uint16_t &NsIndex;
 
  protected:

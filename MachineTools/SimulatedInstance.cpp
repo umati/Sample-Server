@@ -9,6 +9,11 @@
 
 #include <cstdint>
 
-SimulatedInstance::SimulatedInstance() { rnd.seed(static_cast<unsigned int>(reinterpret_cast<std::uintptr_t>(this))); }
+SimulatedInstance::SimulatedInstance():
+  m_mqttSettings(MqttSettings{})
+ { rnd.seed(static_cast<unsigned int>(reinterpret_cast<std::uintptr_t>(this))); }
+SimulatedInstance::SimulatedInstance(MqttSettings settings): m_mqttSettings(settings)
+ { rnd.seed(static_cast<unsigned int>(reinterpret_cast<std::uintptr_t>(this))); }
+
 
 SimulatedInstance::~SimulatedInstance() {}

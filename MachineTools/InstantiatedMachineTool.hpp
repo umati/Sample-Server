@@ -18,22 +18,9 @@
 
 class InstantiatedMachineTool : public SimulatedInstance {
  public:
-  struct MqttSettings {
-    UA_NodeId *connectionIdent;
-    std::string prefix;
-    std::string publisherId;
-    UA_NodeId monitoringWriterGroupIdent;
-    UA_NodeId identificationWriterGroupIdent;
-    UA_NodeId productionWriterGroupIdent;
-    UA_NodeId equipmentWriterGroupIdent;
-  };
-
   InstantiatedMachineTool(UA_Server *pServer);
   InstantiatedMachineTool(UA_Server *pServer, MqttSettings mqttSetting);
-
   const std::uint16_t &NsIndex;
-  MqttSettings m_mqttSettings;
-  Publisher m_publisher;
 
  protected:
   virtual void CreateObject();

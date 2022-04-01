@@ -12,9 +12,10 @@
 #include <sstream>
 #include <unordered_map>
 
-InstantiatedMachineTool::InstantiatedMachineTool(UA_Server *pServer) : m_pServer(pServer), NsIndex(m_nsIndex), n(pServer), m_mqttSettings({}) {}
-InstantiatedMachineTool::InstantiatedMachineTool(UA_Server *pServer, MqttSettings mqttSettings) : 
-  m_pServer(pServer), NsIndex(m_nsIndex), n(pServer),m_mqttSettings(mqttSettings) { }
+InstantiatedMachineTool::InstantiatedMachineTool(UA_Server *pServer) : 
+  m_pServer(pServer), NsIndex(m_nsIndex), n(pServer) { }
+InstantiatedMachineTool::InstantiatedMachineTool(UA_Server *pServer, MqttSettings mqttSettings) :
+  SimulatedInstance(mqttSettings), m_pServer(pServer), NsIndex(m_nsIndex), n(pServer) { }
 
 void InstantiatedMachineTool::CreateObject() {
   std::stringstream ss;

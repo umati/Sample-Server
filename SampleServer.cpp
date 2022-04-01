@@ -260,20 +260,32 @@ int main(int argc, char *argv[]) {
   std::mutex accessDataMutex;
 
 
-  UA_NodeId connectionIdent{};
-  serverConfig.MQTTPubSub->PublisherId = "FullMachineTool";
-  addMQTTPubSubConnection(pServer, pConfig, serverConfig, connectionIdent);
+  UA_NodeId connectionIdentFMTD{};
+  UA_NodeId connectionIdentWood{};
+  serverConfig.MQTTPubSub->PublisherId = "FullMachineToolDynamic";
+  addMQTTPubSubConnection(pServer, pConfig, serverConfig, connectionIdentFMTD);
+  serverConfig.MQTTPubSub->PublisherId = "FullWoodworking";
+  addMQTTPubSubConnection(pServer, pConfig, serverConfig, connectionIdentWood);
+
   
   std::list<std::shared_ptr<SimulatedInstance>> machineTools;
   machineTools.push_back(std::make_shared<FullMachineTool>(pServer));
-  if (serverConfig.MQTTPubSub.has_value()) {
-  
+  if (serverConfig.MQTTPubSub.has_value()) {  
     machineTools.push_back(std::make_shared<FullMachineToolDynamic>(pServer, true,
-      InstantiatedMachineTool::MqttSettings{&connectionIdent, serverConfig.MQTTPubSub->Prefix, 
+      InstantiatedMachineTool::MqttSettings{&connectionIdentFMTD, serverConfig.MQTTPubSub->Prefix, 
                                             "FullMachineTool", 
                                             UA_NODEID_NULL}));
   } else {
-    machineTools.push_back(std::make_shared<FullMachineToolDynamic>(pServer));
+    machineTools.push_back(std::make_shared<FullWoodworking>(pServer));
+  }
+
+  if (serverConfig.MQTTPubSub.has_value()) {  
+    machineTools.push_back(std::make_shared<FullWoodworking>(pServer,
+      InstantiatedMachineTool::MqttSettings{&connectionIdentWood, serverConfig.MQTTPubSub->Prefix, 
+                                            "FullWoodworking", 
+                                            UA_NODEID_NULL}));
+  } else {
+    machineTools.push_back(std::make_shared<FullWoodworking>(pServer));
   }
   machineTools.push_back(std::make_shared<BasicMachineTool>(pServer));
   machineTools.push_back(std::make_shared<MRMachineTool>(pServer));
@@ -281,7 +293,6 @@ int main(int argc, char *argv[]) {
   machineTools.push_back(std::make_shared<CNShowcaseMachineTool>(pServer));
   /*machineTools.push_back(std::make_shared<BasicRobot>(pServer));*/
   machineTools.push_back(std::make_shared<BasicWoodworking>(pServer));
-  machineTools.push_back(std::make_shared<FullWoodworking>(pServer));
   machineTools.push_back(std::make_shared<BasicGMS>(pServer));
   machineTools.push_back(std::make_shared<HexagonSim>(pServer));
   machineTools.push_back(std::make_shared<OGPSmartScopeCNC500>(pServer));

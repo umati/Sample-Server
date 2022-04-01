@@ -12,6 +12,7 @@
 class BasicMachineTool : public InstantiatedMachineTool {
  public:
   BasicMachineTool(UA_Server *pServer);
+  BasicMachineTool(UA_Server *pServer, MqttSettings settings);
 
   void Simulate() override;
   virtual ~BasicMachineTool() = default;

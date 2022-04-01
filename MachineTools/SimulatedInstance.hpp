@@ -7,10 +7,26 @@
 
 #pragma once
 #include <random>
+#include <open62541/types.h>
+#include "../UmatiServerLib/Publication.hpp"
 
 class SimulatedInstance {
  public:
+  struct MqttSettings {
+    UA_NodeId *connectionIdent;
+    std::string prefix;
+    std::string publisherId;
+    UA_NodeId monitoringWriterGroupIdent;
+    UA_NodeId identificationWriterGroupIdent;
+    UA_NodeId productionWriterGroupIdent;
+    UA_NodeId equipmentWriterGroupIdent;
+  };
+  MqttSettings m_mqttSettings;
+  Publisher m_publisher;
+  
   SimulatedInstance();
+  SimulatedInstance(MqttSettings mqttSetting);
+  
   // Should be called every second
   virtual void Simulate() = 0;
   virtual ~SimulatedInstance() = 0;

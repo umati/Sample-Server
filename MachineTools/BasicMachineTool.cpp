@@ -14,11 +14,25 @@ BasicMachineTool::BasicMachineTool(UA_Server *pServer) : InstantiatedMachineTool
   CreateObject();
 }
 
+BasicMachineTool::BasicMachineTool(UA_Server *pServer, MqttSettings settings) : InstantiatedMachineTool(pServer, settings) {
+  MachineName = "BasicMachineTool";
+  CreateObject();
+}
+
 void BasicMachineTool::CreateObject() {
   InstantiatedMachineTool::CreateObject();
   InstantiateIdentification();
+  if (m_mqttSettings.connectionIdent != nullptr) {
+    m_publisher.Publish(mt.Identification.value, m_pServer, m_mqttSettings.connectionIdent, n, m_mqttSettings.prefix, m_mqttSettings.publisherId, "Identification", 2000);
+  }
   InstantiateMonitoring();
+  if (m_mqttSettings.connectionIdent != nullptr) {
+    m_publisher.Publish(mt.Monitoring.value, m_pServer, m_mqttSettings.connectionIdent, n, m_mqttSettings.prefix, m_mqttSettings.publisherId, "Monitoring", 2000);
+  }
   InstantiateProduction();
+    if (m_mqttSettings.connectionIdent != nullptr) {
+    m_publisher.Publish(mt.Production.value, m_pServer, m_mqttSettings.connectionIdent, n, m_mqttSettings.prefix, m_mqttSettings.publisherId, "Production", 2000);
+  }
 }
 
 void BasicMachineTool::InstantiateIdentification() { InstantiatedMachineTool::InstantiateIdentification(); }

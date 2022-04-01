@@ -277,10 +277,14 @@ int main(int argc, char* argv[]) {
 
   UA_NodeId connectionIdentFMTD{};
   UA_NodeId connectionIdentWood{};
+  UA_NodeId connectionIdentBMT{};
+
   serverConfig.MQTTPubSub->PublisherId = "FullMachineToolDynamic";
   addMQTTPubSubConnection(pServer, pConfig, serverConfig, connectionIdentFMTD);
   serverConfig.MQTTPubSub->PublisherId = "FullWoodworking";
   addMQTTPubSubConnection(pServer, pConfig, serverConfig, connectionIdentWood);
+  serverConfig.MQTTPubSub->PublisherId = "BasicMachineTool";
+  addMQTTPubSubConnection(pServer, pConfig, serverConfig, connectionIdentBMT);
 
   
   std::list<std::shared_ptr<SimulatedInstance>> machineTools;
@@ -288,7 +292,7 @@ int main(int argc, char* argv[]) {
   if (serverConfig.MQTTPubSub.has_value()) {  
     machineTools.push_back(std::make_shared<FullMachineToolDynamic>(pServer, true,
       InstantiatedMachineTool::MqttSettings{&connectionIdentFMTD, serverConfig.MQTTPubSub->Prefix, 
-                                            "FullMachineTool", 
+                                            "FullMachineToolDynamic", 
                                             UA_NODEID_NULL}));
   } else {
     machineTools.push_back(std::make_shared<FullWoodworking>(pServer));
@@ -302,7 +306,16 @@ int main(int argc, char* argv[]) {
   } else {
     machineTools.push_back(std::make_shared<FullWoodworking>(pServer));
   }
-  machineTools.push_back(std::make_shared<BasicMachineTool>(pServer));
+
+  if (serverConfig.MQTTPubSub.has_value()) {  
+    machineTools.push_back(std::make_shared<BasicMachineTool>(pServer,
+      InstantiatedMachineTool::MqttSettings{&connectionIdentBMT, serverConfig.MQTTPubSub->Prefix, 
+                                            "BasicMachineTool", 
+                                            UA_NODEID_NULL}));
+  } else {
+    machineTools.push_back(std::make_shared<BasicMachineTool>(pServer));
+  }
+
   machineTools.push_back(std::make_shared<MRMachineTool>(pServer));
   machineTools.push_back(std::make_shared<ShowcaseMachineTool>(pServer));
   machineTools.push_back(std::make_shared<CNShowcaseMachineTool>(pServer));

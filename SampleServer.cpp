@@ -319,8 +319,10 @@ int main(int argc, char *argv[]) {
   while (running) {
     ul.lock();
     std::uint16_t timeout = UA_Server_run_iterate(pServer, true);
+    // timeout = UA_Server_run_iterate(pServer, true);
+
     // Limit wait time, as UA_Server_run_iterate may return large numbers, when no clients are connected.
-    timeout = (std::uint16_t) 44;
+    timeout = (std::uint16_t) 50;
     ul.unlock();
     // std::this_thread::yield();
     std::this_thread::sleep_for(std::chrono::milliseconds(timeout));

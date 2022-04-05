@@ -213,6 +213,83 @@ addDataSetField(UA_Server *server, UA_NodeId *publishedDataSetIdent, UA_NodeId t
     return dataSetFieldIdentifier;
 }
 
+static void
+addPublishedDataSetEvent(UA_Server *server, UA_NodeId* publishedDataSetIdent, UA_NodeId eventNotifier, UA_NodeId eventType, std::string name, UA_Boolean sendViaWriterGroupTopic=UA_TRUE) {
+    UA_NodeId_init(publishedDataSetIdent);
+    /* The PublishedDataSetConfig contains all necessary public
+    * information for the creation of a new PublishedDataSet */
+    UA_PublishedDataSetConfig publishedDataSetConfig;
+    memset(&publishedDataSetConfig, 0, sizeof(UA_PublishedDataSetConfig));
+    publishedDataSetConfig.publishedDataSetType = UA_PUBSUB_DATASET_PUBLISHEDEVENTS;
+    publishedDataSetConfig.name = UA_STRING_ALLOC(name.c_str());
+    publishedDataSetConfig.sendViaWriterGroupTopic = sendViaWriterGroupTopic;
+
+    size_t selectedFieldSize = 3;
+    publishedDataSetConfig.config.event.eventNotfier = eventNotifier;
+    publishedDataSetConfig.config.event.selectedFieldsSize = selectedFieldSize;
+
+    UA_QualifiedName fieldBrowsePaths[selectedFieldSize];
+    fieldBrowsePaths[2] = UA_QUALIFIEDNAME(0, "Time");
+    fieldBrowsePaths[1] = UA_QUALIFIEDNAME(0, "Message");
+    fieldBrowsePaths[0] = UA_QUALIFIEDNAME(0, "Severity");
+    // fieldBrowsePaths[0] = UA_QUALIFIEDNAME(0, "SourceName");
+
+    UA_SimpleAttributeOperand selectedFields [selectedFieldSize];
+    for(size_t i = 0; i < selectedFieldSize; ++i) {
+        UA_SimpleAttributeOperand_init(&selectedFields[i]);
+        selectedFields[i].typeDefinitionId = UA_NODEID_NUMERIC(0, UA_NS0ID_BASEEVENTTYPE);
+        selectedFields[i].attributeId = UA_ATTRIBUTEID_VALUE;
+        selectedFields[i].browsePathSize = 1;
+        selectedFields[i].browsePath = &fieldBrowsePaths[i];
+    }
+    publishedDataSetConfig.config.event.selectedFields = selectedFields;
+
+    /* Adds a ContentFilter to the PDS*/
+    UA_ContentFilter contentFilter;
+    UA_ContentFilter_init(&contentFilter);
+    UA_ContentFilterElement contentFilterElement;
+    UA_ContentFilterElement_init(&contentFilterElement);
+    UA_ExtensionObject filterOperandExObj;
+    UA_ExtensionObject_init(&filterOperandExObj);
+    UA_LiteralOperand literalOperand;
+    UA_LiteralOperand_init(&literalOperand);
+
+    contentFilter.elementsSize = 1;
+    contentFilter.elements = &contentFilterElement;
+
+    contentFilterElement.filterOperandsSize = 1;
+    contentFilterElement.filterOperands = &filterOperandExObj;
+    contentFilterElement.filterOperator = UA_FILTEROPERATOR_OFTYPE;
+
+    filterOperandExObj.encoding             = UA_EXTENSIONOBJECT_DECODED;
+    filterOperandExObj.content.decoded.type = &UA_TYPES[UA_TYPES_LITERALOPERAND];
+    filterOperandExObj.content.decoded.data = &literalOperand;
+
+    UA_Variant_setScalar(&literalOperand.value, &eventType, &UA_TYPES[UA_TYPES_NODEID]);
+
+    publishedDataSetConfig.config.event.filter = contentFilter;
+
+    /* Create new PublishedDataSet based on the PublishedDataSetConfig. */
+    UA_Server_addPublishedDataSet(server, &publishedDataSetConfig, publishedDataSetIdent);
+}
+
+static UA_NodeId
+addDataSetFieldEvent(UA_Server *server, UA_NodeId *publishedDataSetIdent, UA_NodeId toAdd, char* fieldNameAlias) {
+    /* Add a field to the previous created PublishedDataSet */
+    UA_DataSetFieldConfig dataSetFieldConfig;
+    UA_NodeId dataSetFieldIdentifier;
+    UA_NodeId_init(&dataSetFieldIdentifier);
+    memset(&dataSetFieldConfig, 0, sizeof(UA_DataSetFieldConfig));
+    dataSetFieldConfig.dataSetFieldType = UA_PUBSUB_DATASETFIELD_EVENT;
+    dataSetFieldConfig.field.variable.fieldNameAlias = UA_STRING(fieldNameAlias);
+    dataSetFieldConfig.field.variable.promotedField = UA_FALSE;
+    dataSetFieldConfig.field.variable.publishParameters.publishedVariable = toAdd;
+    dataSetFieldConfig.field.variable.publishParameters.attributeId = UA_ATTRIBUTEID_VALUE;
+    UA_Server_addDataSetField(server, *publishedDataSetIdent, &dataSetFieldConfig, &dataSetFieldIdentifier);
+    return dataSetFieldIdentifier;
+}
+
+
 /**
  * **WriterGroup handling**
  * The WriterGroup (WG) is part of the connection and contains the primary configuration
@@ -301,6 +378,7 @@ addDataSetWriter(UA_Server *server, std::string writerName, std::string metadata
     memset(&dataSetWriterConfig, 0, sizeof(UA_DataSetWriterConfig));
     dataSetWriterConfig.dataSetWriterId = dataSetWriterId++;
     dataSetWriterConfig.keyFrameCount = 10;
+    dataSetWriterConfig.eventQueueMaxSize = 5;
 
     if(!reversible) {
         dataSetWriterConfig.dataSetFieldContentMask = (UA_DataSetFieldContentMask) (UA_DATASETFIELDCONTENTMASK_RAWDATA);

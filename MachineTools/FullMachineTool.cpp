@@ -42,16 +42,8 @@ void FullMachineTool::CreateObject() {
   InstantiateOptional(mt.Notification->Messages, m_pServer, n);
   writeEventNotifier(m_pServer, mt.Notification->Messages.NodeId);
 
-  if (m_mqttSettings.connectionIdent != nullptr) {
-    UA_NodeId *pds = UA_NodeId_new();
-    UA_NodeId *wgId = UA_NodeId_new();
-    UA_NodeId *dswIdent = UA_NodeId_new();
-    addPublishedDataSetEvent(m_pServer, pds, 
-                            *mt.Notification->Messages.NodeId.NodeId,
-                            UA_NODEID_NUMERIC(0, UA_NS0ID_ALARMCONDITIONTYPE), "tests", false);
-    auto retval = addWriterGroup(m_pServer, const_cast<char*>(std::string("vdw/json/metadata/FullMachineToolDynamic/Notification.Messages_WriterGroup").c_str()), 5000, wgId, m_mqttSettings.connectionIdent);
-    addDataSetWriter(m_pServer, "Event_Writer", "vdw/json/metadata/FullMachineToolDynamic/Notification.Messages_WriterGroup", "vdw/json/data/FullMachineToolDynamic/Notification.Messages_WriterGroup/Event_Writer", pds, wgId, dswIdent, UA_TRUE);
-  }
+  if (m_mqttSettings.connectionIdent != nullptr)
+    m_publisher.Publish(mt.Notification.value, m_pServer, m_mqttSettings.connectionIdent, n, m_mqttSettings.prefix, m_mqttSettings.publisherId, "Notification", 2000, UA_FALSE); 
 }
 
 void FullMachineTool::InstantiateProduction() {
@@ -269,8 +261,6 @@ void FullMachineTool::InstantiatePrognosis() {
   auto &utilityPrognosis = mt.Notification->Prognoses->Prognosis.Add<machineTool::UtilityChangePrognosis_t>(m_pServer, n, {m_nsIndex, "UtilityChange"});
   utilityPrognosis.UtilityName = "H²";
 
-  if (m_mqttSettings.connectionIdent != nullptr)
-    m_publisher.Publish(mt.Notification.value, m_pServer, m_mqttSettings.connectionIdent, n, m_mqttSettings.prefix, m_mqttSettings.publisherId, "Notification", 2000, UA_FALSE);
 }
 
 void FullMachineTool::Simulate() {

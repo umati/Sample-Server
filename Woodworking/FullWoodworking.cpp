@@ -191,6 +191,17 @@ void FullWoodworking::InstantiateMachineValues() {
 void FullWoodworking::InstantiateEventsDispatcher() {
   InstantiateOptional(ww.Events, m_pServer, n);
   writeEventNotifier(m_pServer, ww.Events.NodeId);
+  if (m_mqttSettings.connectionIdent != nullptr) {
+    auto wgi = m_publisher.Publish(ww.Events.value, m_pServer, m_mqttSettings.connectionIdent, n, m_mqttSettings.prefix, m_mqttSettings.publisherId, "Events", 2000, UA_TRUE, UA_FALSE);
+  
+    UA_NodeId *pds = UA_NodeId_new();
+    UA_NodeId *dswIdent = UA_NodeId_new();
+    auto tc2 = m_publisher.GetTOpicCreator(ww.Events.value, m_pServer, m_mqttSettings.connectionIdent, n, m_mqttSettings.prefix, m_mqttSettings.publisherId, "Events", 2000, UA_TRUE, UA_FALSE);
+    tc2.publishedDataSetName = tc2.publishedDataSetName + "." + "Events";
+    tc2.isEventWriter = true;
+    addPublishedDataSetEvent(m_pServer, pds, *ww.Events.NodeId.NodeId, UA_NODEID_NUMERIC(0, UA_NS0ID_BASEEVENTTYPE), tc2.getPublishedDataSetName(), UA_FALSE);
+    addDataSetWriter(m_pServer, tc2.getWriterName(), tc2.getMetaDataTopic(), tc2.getDataTopic(), pds, &wgi, dswIdent, UA_FALSE, 5);
+  }
 }
 
 void FullWoodworking::InstantiateManufacturerSpecific() {

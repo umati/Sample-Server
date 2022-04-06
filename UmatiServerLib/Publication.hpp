@@ -29,17 +29,30 @@ struct TopicCreator {
     std::string publisherId;
     std::string writerGroupName;
     std::string publishedDataSetName;
+    bool isEventWriter = false;
 
     auto getMetaDataTopic() {
+        if (isEventWriter) {
+        return prefix + "/json/metadata/" + publisherId + "/" + writerGroupName + "/" + publishedDataSetName + "_EventWriter";
+        } else {
         return prefix + "/json/metadata/" + publisherId + "/" + writerGroupName + "/" + publishedDataSetName + "_Writer";
+        }
     }
 
     auto getDataTopic() {
+        if (isEventWriter) {
+        return prefix + "/json/data/" + publisherId + "/" + writerGroupName + "/" + publishedDataSetName + "_EventWriter";
+        } else {
         return prefix + "/json/data/" + publisherId + "/" + writerGroupName + "/" + publishedDataSetName + "_Writer";
+        }
     }
 
     auto getWriterName() {
+        if (isEventWriter) {
+        return publishedDataSetName + "_EventWriter";
+        } else {
         return publishedDataSetName + "_Writer";
+        }
     }
 
     auto getPublishedDataSetName() {
@@ -224,15 +237,17 @@ addPublishedDataSetEvent(UA_Server *server, UA_NodeId* publishedDataSetIdent, UA
     publishedDataSetConfig.name = UA_STRING_ALLOC(name.c_str());
     publishedDataSetConfig.sendViaWriterGroupTopic = sendViaWriterGroupTopic;
 
-    size_t selectedFieldSize = 3;
+    size_t selectedFieldSize = 6;
     publishedDataSetConfig.config.event.eventNotfier = eventNotifier;
     publishedDataSetConfig.config.event.selectedFieldsSize = selectedFieldSize;
 
     UA_QualifiedName fieldBrowsePaths[selectedFieldSize];
-    fieldBrowsePaths[2] = UA_QUALIFIEDNAME(0, "Time");
-    fieldBrowsePaths[1] = UA_QUALIFIEDNAME(0, "Message");
-    fieldBrowsePaths[0] = UA_QUALIFIEDNAME(0, "Severity");
-    // fieldBrowsePaths[0] = UA_QUALIFIEDNAME(0, "SourceName");
+    fieldBrowsePaths[0] = UA_QUALIFIEDNAME_ALLOC(0, "Time");
+    fieldBrowsePaths[1] = UA_QUALIFIEDNAME_ALLOC(0, "Message");
+    fieldBrowsePaths[2] = UA_QUALIFIEDNAME_ALLOC(0, "Severity");
+    fieldBrowsePaths[3] = UA_QUALIFIEDNAME_ALLOC(0, "SourceName");
+    fieldBrowsePaths[4] = UA_QUALIFIEDNAME_ALLOC(0, "SourceNode");
+    fieldBrowsePaths[5] = UA_QUALIFIEDNAME_ALLOC(0, "EventType");
 
     UA_SimpleAttributeOperand selectedFields [selectedFieldSize];
     for(size_t i = 0; i < selectedFieldSize; ++i) {
@@ -270,7 +285,11 @@ addPublishedDataSetEvent(UA_Server *server, UA_NodeId* publishedDataSetIdent, UA
     publishedDataSetConfig.config.event.filter = contentFilter;
 
     /* Create new PublishedDataSet based on the PublishedDataSetConfig. */
-    UA_Server_addPublishedDataSet(server, &publishedDataSetConfig, publishedDataSetIdent);
+    auto res = UA_Server_addPublishedDataSet(server, &publishedDataSetConfig, publishedDataSetIdent);
+
+    if (res.addResult != UA_STATUSCODE_GOOD) {
+        std::cout << "Error adding DataSetEvent \n";
+    }
 }
 
 static UA_NodeId
@@ -369,7 +388,7 @@ addWriterGroup(UA_Server *server, char *topic, int interval, UA_NodeId* writerGr
  * message generation.
  */
 static void
-addDataSetWriter(UA_Server *server, std::string writerName, std::string metadataTopic, std::string dataTopic, UA_NodeId *publishedDataSetIdent, UA_NodeId *writerGroupIdent, UA_NodeId *outDataSetWriterIdent, UA_Boolean reversible) {
+addDataSetWriter(UA_Server *server, std::string writerName, std::string metadataTopic, std::string dataTopic, UA_NodeId *publishedDataSetIdent, UA_NodeId *writerGroupIdent, UA_NodeId *outDataSetWriterIdent, UA_Boolean reversible, size_t eventQueueMaxSize=0) {
     /* We need now a DataSetWriter within the WriterGroup. This means we must
      * create a new DataSetWriterConfig and add call the addWriterGroup function. */
     static UA_UInt16 dataSetWriterId = 0;
@@ -378,7 +397,7 @@ addDataSetWriter(UA_Server *server, std::string writerName, std::string metadata
     memset(&dataSetWriterConfig, 0, sizeof(UA_DataSetWriterConfig));
     dataSetWriterConfig.dataSetWriterId = dataSetWriterId++;
     dataSetWriterConfig.keyFrameCount = 10;
-    dataSetWriterConfig.eventQueueMaxSize = 5;
+    dataSetWriterConfig.eventQueueMaxSize = eventQueueMaxSize;
 
     if(!reversible) {
         dataSetWriterConfig.dataSetFieldContentMask = (UA_DataSetFieldContentMask) (UA_DATASETFIELDCONTENTMASK_RAWDATA);
@@ -535,6 +554,20 @@ class Publisher {
                         }
                     }
                 }
+                UA_Byte eventNotifier = UA_EVENTNOTIFIERTYPE_NONE;
+                UA_Server_readEventNotifier(server, *member(instance).NodeId.NodeId, &eventNotifier);
+                if(eventNotifier == UA_EVENTNOTIFIERTYPE_SUBSCRIBETOEVENTS) {
+                    std::cout << member(instance).NodeId << " has event notifier! \n";
+                    UA_NodeId *pds = UA_NodeId_new();
+                    UA_NodeId *dswIdent = UA_NodeId_new();
+                    auto tc2 = tc;
+                    tc2.publishedDataSetName = tc2.publishedDataSetName + "." + std::string(member.name);
+                    tc2.isEventWriter = true;
+                    addPublishedDataSetEvent(server, pds, 
+                                            *member(instance).NodeId.NodeId,
+                                            UA_NODEID_NUMERIC(0, UA_NS0ID_BASEEVENTTYPE), tc2.getPublishedDataSetName(), UA_FALSE);
+                    addDataSetWriter(server, tc2.getWriterName(), tc2.getMetaDataTopic(), tc2.getDataTopic(), pds, writerGroupIdent, dswIdent, UA_FALSE, 5);
+                }
             } else {
                 if constexpr (is_same_template<typename decltype(member)::value_type, BindableMemberValue>::value) {
                     std::cout << member.name.c_str() << '\n';
@@ -626,6 +659,15 @@ class Publisher {
         m_namesToNodeIds.insert({writerGroupName, *writerGroupIdent});
 
         PublishFields(typeDescriptor, instance, tc, pServer, writerGroupIdent, aggregate, reversible);
+
         return *writerGroupIdent;
+    }
+
+    template <typename T>
+    TopicCreator GetTOpicCreator(T &instance, UA_Server *pServer, UA_NodeId *connectionIdent, NodesMaster &nodesMaster, std::string prefix, std::string publisherId, std::string writerGroupBaseName, int intervalms, UA_Boolean aggregate=UA_TRUE, UA_Boolean reversible=UA_TRUE) {
+        constexpr auto typeDescriptor = refl::reflect<T>();
+        std::string writerGroupName = writerGroupBaseName + "_WriterGroup"; 
+        std::string topic = prefix + "/json/data/" + publisherId + "/" + writerGroupName;  
+        return TopicCreator{prefix, publisherId, writerGroupName, "_"};
     }
 };

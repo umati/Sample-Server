@@ -42,7 +42,7 @@ jobs:
           cmake ../Sample-Server/.github/ -DCMAKE_INSTALL_PREFIX:PATH=${{ env.CMAKE_INSTALL_PREFIX }}
           cmake --build .
       - name: Upload Artefacts
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: Sample-Server
           path: ${{ env.CMAKE_INSTALL_PREFIX }}/bin

@@ -41,6 +41,7 @@
 #include "Configuration/Configuration_json.hpp"
 #include "GMS/BasicGMS.hpp"
 #include "GMS/OGPSmartScopeCNC500.hpp"
+#include "GMS/WenzelLH.hpp"
 #include "MachineTools/BasicMachineTool.hpp"
 #include "MachineTools/CNShowcaseMachineTool.hpp"
 #include "MachineTools/FullMachineTool.hpp"
@@ -222,6 +223,7 @@ int main(int argc, char *argv[]) {
   machineTools.push_back(std::make_shared<FullWoodworking>(pServer));
   machineTools.push_back(std::make_shared<BasicGMS>(pServer));
   machineTools.push_back(std::make_shared<OGPSmartScopeCNC500>(pServer));
+  machineTools.push_back(std::make_shared<WenzelLH>(pServer));
 
   UA_Server_run_startup(pServer);
   std::unique_lock<decltype(accessDataMutex)> ul(accessDataMutex);

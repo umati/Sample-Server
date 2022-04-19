@@ -1,15 +1,15 @@
 # MIT License
-# 
+#
 # Copyright (c) 2019-2021  Christian von Arnim, ISW University of Stuttgart (for umati and VDW e.V.)
 # Copyright (c) 2021-2022  Götz Görisch, VDW - Verein Deutscher Werkzeugmaschinenfabriken e.V.
-# 
+#
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
 # in the Software without restriction, including without limitation the rights
 # to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 # copies of the Software, and to permit persons to whom the Software is
 # furnished to do so, subject to the following conditions:
-# 
+#
 # The above copyright notice and this permission notice shall be included in all
 # copies or substantial portions of the Software.
 #
@@ -28,7 +28,7 @@ RUN apk --no-cache add \
       cmake=3.21.3-r0 \
       gcc=10.3.1_git20211027-r0 \
       g++=10.3.1_git20211027-r0 \
-      git=2.34.1-r0 \
+      git=2.34.2-r0 \
       make=4.3-r0  \
       python3=3.9.7-r4 \
       patch=2.7.6-r7 && \

@@ -44,7 +44,7 @@ jobs:
       - name: Upload Artefacts
         uses: actions/upload-artifact@v3
         with:
-          name: Sample-Server
+          name: Sample-Server-${{matrix.os}}
           path: ${{ env.CMAKE_INSTALL_PREFIX }}/bin
       - name: Test Sample-Server
         run: |
@@ -69,7 +69,7 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v1.6.0
       - name: PrepareReg Names
-        run: | 
+        run: |
           echo IMAGE_REPOSITORY="$(echo "${{ github.repository }}" | tr '[:upper:]' '[:lower:]')" >> "$GITHUB_ENV"
           echo IMAGE_TAG="$(echo "${{ github.ref }}" | tr '[:upper:]' '[:lower:]' |  awk '{sub(/([^\/]*\/){2}/,""); gsub(/\/|_/, "-")}1')" >> "$GITHUB_ENV"
           echo IS_NOT_PR="${{ env.IS_NOT_PR }})"

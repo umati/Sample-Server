@@ -25,7 +25,7 @@
 # SOFTWARE.
 
 cmake_minimum_required(VERSION 3.15)
-project(SampleServer VERSION 0.3)
+project(SampleServer VERSION 1.0.5)
 
 set(CMAKE_CXX_STANDARD 20)
 

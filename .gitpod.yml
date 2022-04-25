@@ -27,9 +27,7 @@ image:
 
 tasks:
   - init: bash ./initialbuild.sh
-    command: npm install opcua-commander -g && \
-             sudo apt update && apt install yamllint && \
-             pip install cmakelang
+    command: npm install opcua-commander -g && sudo apt update && sudo apt -yy install yamllint && pip install cmakelang
     
 github:
   prebuilds:

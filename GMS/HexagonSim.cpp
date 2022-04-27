@@ -19,7 +19,7 @@ HexagonSim::HexagonSim(UA_Server *pServer) : InstantiatedMachineTool(pServer) {
 
 void HexagonSim::CreateObject() {
   std::stringstream ss;
-  ss << "http://www.hexagon.de/" << MachineName << "/";
+  ss << "https://www.hexagonmi.com/" << MachineName << "/";
   m_nsIndex = UA_Server_addNamespace(m_pServer, ss.str().c_str());
   UA_ObjectAttributes objAttr = UA_ObjectAttributes_default;
 
@@ -64,7 +64,7 @@ void HexagonSim::InstantiateResultManagement() {
   result.Value->resultMetaData.resultUri = UA_String_new();
   // UA_Variant_init(result.Value->resultMetaData.resultUri);
   UA_String_init(result.Value->resultMetaData.resultUri);
-  *result.Value->resultMetaData.resultUri = UA_String_fromChars("http://www.hexagon.com/report.pdf");
+  *result.Value->resultMetaData.resultUri = UA_String_fromChars("https://www.hexagonmi.com/report.pdf");
   result.Value->resultMetaData.resultUriSize = 1;
   result.Value->resultMetaData.fileFormat = UA_String_new();
   UA_String_init(result.Value->resultMetaData.fileFormat);
@@ -78,7 +78,7 @@ void HexagonSim::InstantiateResultManagement() {
 void HexagonSim::InstantiateIdentification() {
   {
     std::stringstream ss;
-    ss << "http://www.hexagon.de/#" << MachineName;
+    ss << "https://www.hexagonmi.com/products/coordinate-measuring-machines/bridge-cmms/ultra-high-accuracy-cmms/leitz-pmm-gold";
     mt.Identification->ProductInstanceUri = ss.str();
   }
 
@@ -126,7 +126,7 @@ void HexagonSim::InstantiateTools() {
     auto &tool = mt.Equipment->Tools->Tool.Add<machineTool::Tool_t>(m_pServer, n, {m_nsIndex, ss.str()});
     tool.ControlIdentifier1 = i * 10 + 2;
     tool.ControlIdentifierInterpretation = UA_ToolManagement::UA_TOOLMANAGEMENT_NUMBERBASED;
-    tool.Locked->Value = true;
+    tool.Locked->Value = false;
     tool.Locked->ReasonForLocking = UA_ToolLocked::UA_TOOLLOCKED_OTHER;
     tool.Name = ss.str();
     InstantiateOptional(tool.Name, m_pServer, n);

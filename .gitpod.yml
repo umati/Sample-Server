@@ -1,8 +1,8 @@
 ---
 # MIT License
 # 
-# Copyright 2018 (c) TypeFox GmbH
-# Copyright 2021 (c) Götz Görisch, VDW - Verein Deutscher Werkzeugmaschinenfabriken e.V.
+# Copyright (c) 2018 TypeFox GmbH
+# Copyright (c) 2021-2022 Götz Görisch, VDW - Verein Deutscher Werkzeugmaschinenfabriken e.V.
 # 
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -26,8 +26,8 @@ image:
   file: .gitpod.Dockerfile
 
 tasks:
-  - init: bash ./initialbuild.sh
-    command: npm install opcua-commander -g && sudo apt update && sudo apt -yy install yamllint && pip install cmakelang
+  - init: npm install opcua-commander -g && sudo apt update && sudo apt -yy install yamllint && pip install cmakelang
+    command: bash ./initialbuild.sh
     
 github:
   prebuilds:

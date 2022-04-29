@@ -2,8 +2,8 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * Copyright 2020-2021 (c) Christian von Arnim, ISW University of Stuttgart (for umati and VDW e.V.)
- * Copyright 2020 (c) Tonja Heinemann, ISW University of Stuttgart (for umati and VDW e.V.)
+ * Copyright (c) 2020-2022 Christian von Arnim, ISW University of Stuttgart (for umati and VDW e.V.)
+ * Copyright (c) 2020 Tonja Heinemann, ISW University of Stuttgart (for umati and VDW e.V.)
  */
 
 #include "MRMachineTool.hpp"
@@ -28,6 +28,7 @@ void MRMachineTool::CreateObject() {
   InstantiateIdentification();
   InstantiateMonitoring();
   InstantiateProduction();
+  InstantiateTools();
 
   InstantiateOptional(mt.Notification->Messages, m_pServer, n);
   writeEventNotifier(m_pServer, mt.Notification->Messages.NodeId);
@@ -41,7 +42,7 @@ void MRMachineTool::InstantiateIdentification() {
   InstantiateOptional(mt.Identification->Location, m_pServer, n);
   InstantiateOptional(mt.Identification->Model, m_pServer, n);
 
-  mt.Identification->Location = "METAV 2 16-3/VIRTUAL 0 0/N 48.781340 E 9.165731";
+  mt.Identification->Location = "VIRTUAL 0 0/N 48.781340 E 9.165731";
   mt.Identification->SerialNumber = std::string{"070-101-098-14"};
   mt.Identification->Manufacturer = {"", "ISW UA4MT Team"};
   mt.Identification->Model = {"", "T3IUTH"};
@@ -106,6 +107,27 @@ void MRMachineTool::InstantiateProduction() {
   writeEventNotifier(m_pServer, mt.Production->ActiveProgram->State.NodeId);
   writeEventNotifier(m_pServer, job.State.NodeId);
   writeEventNotifier(m_pServer, program.State.NodeId);
+}
+
+void MRMachineTool::InstantiateTools() {
+  InstantiateOptional(mt.Equipment->Tools, m_pServer, n);
+  InstantiateOptional(mt.Equipment->Tools->NodeVersion, m_pServer, n);
+  n.Remove(mt.Equipment->Tools->NodeVersion.NodeId);
+  auto &tool = mt.Equipment->Tools->Tool.Add<machineTool::Tool_t>(m_pServer, n, {m_nsIndex, "Tool1"});
+  tool.ControlIdentifier1 = 2;
+  tool.ControlIdentifierInterpretation = UA_ToolManagement::UA_TOOLMANAGEMENT_NUMBERBASED;
+  tool.Locked->Value = false;
+  tool.Locked->ReasonForLocking = UA_ToolLocked::UA_TOOLLOCKED_OTHER;
+  tool.Locked->ReasonForLocking.StatusCode = UA_STATUSCODE_BADNOTHINGTODO;
+  tool.Name = "Tool 0815";
+  InstantiateOptional(tool.Name, m_pServer, n);
+  InstantiateOptional(tool.ToolLife, m_pServer, n);
+  auto &toolLifeRotations = tool.ToolLife->ToolLifeEntry.Add<machineTool::ToolLife_t<std::int32_t>>(m_pServer, n, {m_nsIndex, "Rotations"});
+  toolLifeRotations.Indication = UA_ToolLifeIndication::UA_TOOLLIFEINDICATION_OTHER;
+  toolLifeRotations.Value = 512;
+  toolLifeRotations.IsCountingUp = true;
+  toolLifeRotations.LimitValue = 1 << 20;
+  InstantiateOptional(toolLifeRotations.LimitValue, m_pServer, n);
 }
 
 void MRMachineTool::Simulate() {

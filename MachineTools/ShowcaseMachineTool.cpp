@@ -2,8 +2,8 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * Copyright 2020-2021 (c) Christian von Arnim, ISW University of Stuttgart (for umati and VDW e.V.)
- * Copyright 2020-2021 (c) Götz Görisch, VDW - Verein Deutscher Werkzeugmaschinenfabriken e.V.
+ * Copyright (c) 2020-2021 Christian von Arnim, ISW University of Stuttgart (for umati and VDW e.V.)
+ * Copyright (c) 2020-2022 Götz Görisch, VDW - Verein Deutscher Werkzeugmaschinenfabriken e.V.
  */
 #include "ShowcaseMachineTool.hpp"
 
@@ -35,7 +35,7 @@ void ShowcaseMachineTool::InstantiateIdentification() {
   mt.Identification->SoftwareRevision = "v1.02.1";
   mt.Identification->DeviceClass = "Machining centre (other)";
   mt.Identification->ProductInstanceUri = "https://showcase.umati.org/Specs/Machinetools.html";
-  mt.Identification->Location = "CIMT E8 B014/VIRTUAL 0 0/N 49.871215 E 8.654204";
+  mt.Identification->Location = "GRIND 9 D46/VIRTUAL 0 0/N 49.871215 E 8.654204";
   mt.Identification->Model = {"", MachineName};
 }
 

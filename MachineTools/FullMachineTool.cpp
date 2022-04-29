@@ -121,12 +121,12 @@ void FullMachineTool::InstantiateIdentification() {
   mt.Identification->ComponentName = {"", MachineName};
   mt.Identification->ProductCode = "2021-47110815";
   mt.Identification->SoftwareRevision = "1.00.1";
-  mt.Identification->Location = "METAV 2 16-3/VIRTUAL 0 0/N 48.781340 E 9.165731";
+  mt.Identification->Location = "VIRTUAL 0 0/N 48.781340 E 9.165731";
   mt.Identification->Model = {"", MachineName};
 
   auto &swOS = mt.Identification->SoftwareIdentification->SoftwareItem.Add(m_pServer, n, {m_nsIndex, "OS"});
   swOS.Identifier = "Alpine Container";
-  swOS.SoftwareRevision = "3.12.0";  // Should be reasonably accurate as of Aug 2020 (googled it)
+  swOS.SoftwareRevision = "3.15.4";  // Match with DOCKERFILE version
 }
 void FullMachineTool::InstantiateTools() {
   InstantiateOptional(mt.Equipment->Tools, m_pServer, n);
@@ -138,7 +138,7 @@ void FullMachineTool::InstantiateTools() {
   tool.Locked->Value = false;
   tool.Locked->ReasonForLocking = UA_ToolLocked::UA_TOOLLOCKED_OTHER;
   tool.Locked->ReasonForLocking.StatusCode = UA_STATUSCODE_BADNOTHINGTODO;
-  tool.Name = {"", "Tool1"};
+  tool.Name = "Tool1";
   InstantiateOptional(tool.Name, m_pServer, n);
   InstantiateOptional(tool.ToolLife, m_pServer, n);
   auto &toolLifeRotations = tool.ToolLife->ToolLifeEntry.Add<machineTool::ToolLife_t<std::int32_t>>(m_pServer, n, {m_nsIndex, "Rotations"});

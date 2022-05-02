@@ -8,10 +8,10 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/github-script@v6
+      - uses: actions/github-script@v6.1.0
         env:
           PACKAGE_NAME: sample-server
           PER_PAGE: 100
@@ -19,14 +19,12 @@ jobs:
         with:
           github-token: ${{ secrets.DELETE_PACKAGES_TOKEN }}
           script: |
-            # yamllint disable-line   
             const response = await github.request("GET /orgs/${{ github.repository_owner }}/packages/container/${{ env.PACKAGE_NAME }}/versions",
               { per_page: ${{ env.PER_PAGE }}
             });
             for(version of response.data) {
                 if (version.metadata.container.tags.length == 0) {
                     console.log("delete " + version.id)
-                    # yamllint disable-line
                     const deleteResponse = await github.request("DELETE /orgs/${{ github.repository_owner }}/packages/container/${{ env.PACKAGE_NAME }}/versions/" + version.id, { });
                     console.log("status " + deleteResponse.status)
                 }

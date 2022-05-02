@@ -13,7 +13,7 @@
 #include "../TypeDefinition/GMS/GMSType.hpp"
 
 HexagonSim::HexagonSim(UA_Server *pServer) : InstantiatedMachineTool(pServer) {
-  MachineName = "Hexagon Sim";
+  MachineName = "Hexagon PMM Gold";
   CreateObject();
 }
 
@@ -90,13 +90,13 @@ void HexagonSim::InstantiateIdentification() {
   InstantiateOptional(mt.Identification->Model, m_pServer, n);
 
   mt.Identification->Manufacturer = {"", "Hexagon Manufacturing Intelligence"};
-  mt.Identification->ProductCode = "SIM_0815";
-  mt.Identification->YearOfConstruction = 2022;
+  mt.Identification->ProductCode = "PMM_Gold_0104";
+  mt.Identification->YearOfConstruction = 2021;
   mt.Identification->SoftwareRevision = "Quindos7 - V 7.22.22096";
   mt.Identification->DeviceClass = "Coordinate Measuring Machine";
-  mt.Identification->Location = "CTRL 5 5318/VIRTUAL 0 0/N 48.7685303 E 9.1653923";
+  mt.Identification->Location = "CTRL 5 5301/VIRTUAL 0 0/N 48.7685303 E 9.1653923";
   mt.Identification->Model = {"", MachineName};
-  mt.Identification->SerialNumber = "0815";
+  mt.Identification->SerialNumber = "0104";
 }
 
 void HexagonSim::InstantiateMonitoring() {

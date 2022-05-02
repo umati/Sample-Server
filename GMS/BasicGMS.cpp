@@ -129,7 +129,7 @@ void BasicGMS::InstantiateIdentification() {
   InstantiateOptional(mt.Identification->Location, m_pServer, n);
   InstantiateOptional(mt.Identification->Model, m_pServer, n);
 
-  mt.Identification->Manufacturer = {"", "ISW Sebastian Friedl"};
+  mt.Identification->Manufacturer = {"", "ISW University of Stuttgart"};
   mt.Identification->ProductCode = "CMM_123";
   mt.Identification->YearOfConstruction = 2022;
   mt.Identification->SoftwareRevision = "v1.05";

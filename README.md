@@ -1,39 +1,46 @@
 # umati sample server
 
+![Sample-Server](doc/assets/sample-server.jpg)
+
 Sample-Server implementation of various umati endorsed OPC UA companion specifications. Provides a :whale: :package: to run locally for development purpose.
+
+## Build status
+
+![GitHub Workflow Status](https://img.shields.io/github/workflow/status/umati/Sample-Server/Build)
+[![Gitpod ready-to-code](https://img.shields.io/badge/Gitpod-ready--to--code-blue?logo=gitpod)](https://gitpod.io/#https://github.com/umati/Sample-Server)
 
 ## Current Implementation
 
-[![Gitpod ready-to-code](https://img.shields.io/badge/Gitpod-ready--to--code-blue?logo=gitpod)](https://gitpod.io/#https://github.com/umati/Sample-Server)
-
-### Machine Tool Examples
-
-This is an example implementation of the OPC UA Machine Tool Companion Specification based on open62541. The server provides several simulated machine tools, which show different extension stages of the specification.
-
-### Woodworking Examples
-
-This is an example implementation of the OPC UA Woodworking Companion Specification. The server provides two simulated woodworking machines, a basic one implementing only mandatory variables/objects and a full one implementing every optional variable/object.
-
-#### Scope
+### Scope
 
 This implementation provides simulationed instances for the machine tool and woodworking specification, which changes most values in a pseudo random way. As no real machine simulation is done in the background, the values need not correlate with each other. Also only reading of values of OPC UA-clients is implemented. All write requests are ignored silently.
 
-#### Docker Image
+### Machine Tool Examples
 
-This repository automatically builds a sample server docker image which is then run at `opc.tcp://opcua.umati.app:4840` (Security: none and higher / Authentication: anonymous)
+This is an example implementation of the [OPC UA Machine Tool companion specification](https://reference.opcfoundation.org/MachineTool/docs/) based on open62541. The server provides several simulated machine tools, which show different extension stages of the specification.
 
-Use this container image for your local development purposes. Pull this public image at: `docker pull ghcr.io/umati/sample-server:main`
+### Woodworking Examples
+
+This is an example implementation of the [OPC UA for Woodworking companion specification](https://reference.opcfoundation.org/Woodworking/docs/). The server provides two simulated woodworking machines, a basic one implementing only mandatory variables/objects and a full one implementing every optional variable/object.
+
+### Geometrical Measurement Systems Example
+
+This is an example implementation oof the [OPC UA for Geometrical Measuring Systems companion specification](https://www.vdma.org/viewer/-/v2article/render/47597927). The server provide one simulated `BasisGMS` instance.
+
+## Public available instance
+
+The container image build by this repository is run public at `opc.tcp://opcua.umati.app:4840` (Security: none and higher / Authentication: anonymous) in the `develop` version.
+
+## Container Image
+
+This repository automatically builds a sample server container image to use image for your local development purposes. Pull this public image at: `docker pull ghcr.io/umati/sample-server:main`
 
 To run this image you need a docker installation and than typically:
 `docker run -d -p 4840:4840 ghcr.io/umati/sample-server:main`
 
 Refer to the [docker documentation](https://docs.docker.com/) for details.
 
-### Build status
-
-![GitHub Workflow Status](https://img.shields.io/github/workflow/status/umati/Sample-Server/Build)
-
-### Configuration
+## Configuration
 
 The configuration uses a json format. By default, the server looks for a file `configuration.json`. The supported parameters are:
 
@@ -62,6 +69,7 @@ The binding is done by comparing the name of structure members with the browse n
 ├──arch            architecture specific files
 ├──cmake           CMake files for building the project, e.g. custom find-scripts
 ├──Exceptions      Custom exceptions
+├──GMS             Simulated GMS instance
 ├──MachineTools    Simulated machine tools
 ├──model           Unpublished/Fixed NodeSet files
 ├──OpcUaTypes      C++ equivalent of some OPC UA DataTypes and helpers for their definition

@@ -18,6 +18,7 @@
 class MRMachineTool : public InstantiatedMachineTool {
  public:
   MRMachineTool(UA_Server *pServer);
+  MRMachineTool(UA_Server *pServer, MqttSettings mqttSettings);
 
   void Simulate() override;
 

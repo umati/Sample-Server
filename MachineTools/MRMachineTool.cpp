@@ -16,7 +16,9 @@
 #include "../UmatiServerLib/OpcUaCondition.hpp"
 #include "../UmatiServerLib/ServerHelper.hpp"
 
-MRMachineTool::MRMachineTool(UA_Server *pServer) : InstantiatedMachineTool(pServer) {
+MRMachineTool::MRMachineTool(UA_Server *pServer) : MRMachineTool(pServer, {}) {}
+
+MRMachineTool::MRMachineTool(UA_Server *pServer, MqttSettings mqttSettings) : InstantiatedMachineTool(pServer, mqttSettings) {
   MachineName = "MRMachineTool";
   CreateObject();
   isOnFor = m_simStep;
@@ -70,6 +72,30 @@ void MRMachineTool::InstantiateMonitoring() {
   });
   n.Remove(mt.Monitoring->Stacklight->NodeVersion.NodeId);
   SwitchOnStacklightColor(UA_SignalColor::UA_SIGNALCOLOR_YELLOW);
+
+  if (m_mqttSettings.connectionIdent != nullptr) {
+    std::string topic = m_mqttSettings.prefix + "/json/data/" + m_mqttSettings.publisherId + "/Monitoring_WriterGroup";  
+    auto retval = addWriterGroup(m_pServer, const_cast<char*>(topic.c_str()), 2000, &m_mqttSettings.monitoringWriterGroupIdent, m_mqttSettings.connectionIdent);
+    if (retval != UA_STATUSCODE_GOOD) {
+      std::cout << "Error adding WriterGroup " << UA_StatusCode_name(retval) << "\n";
+    }
+    UA_NodeId* publishedDataSetIdent = UA_NodeId_new();
+    UA_NodeId* dataSetWriterIdent = UA_NodeId_new();
+    TopicCreator tc{m_mqttSettings.prefix, m_mqttSettings.publisherId, "Monitoring_WriterGroup", m_mqttSettings.publisherId + "_.MachineTool"};     
+    addPublishedDataSet(m_pServer, publishedDataSetIdent, tc.publishedDataSetName);
+
+    UA_Variant v;
+    memset(&v, 0, sizeof(UA_Variant));
+    UA_Server_readValue(m_pServer, UA_NODEID_NUMERIC(0, UA_NS0ID_SERVER_NAMESPACEARRAY), &v);
+    auto nsIndex = mt.Monitoring->MachineTool.NodeId.NodeId->namespaceIndex;
+    auto array = ((UA_String*) v.data) + nsIndex;
+    auto nsUri = "nsu=" + std::string( reinterpret_cast<char*>(array->data), array->length) + ";";
+
+    addDataSetField(m_pServer, publishedDataSetIdent, *mt.Monitoring->MachineTool->FeedOverride.NodeId.NodeId, (nsUri + std::string(mt.Monitoring->MachineTool->FeedOverride.NodeId)).data());
+    addDataSetField(m_pServer, publishedDataSetIdent, *mt.Monitoring->MachineTool->IsWarmUp.NodeId.NodeId, (nsUri + std::string(mt.Monitoring->MachineTool->IsWarmUp.NodeId)).data());
+    addDataSetField(m_pServer, publishedDataSetIdent, *mt.Monitoring->MachineTool->OperationMode.NodeId.NodeId, (nsUri + std::string(mt.Monitoring->MachineTool->OperationMode.NodeId)).data());
+    addDataSetWriter(m_pServer, tc.getWriterName() , tc.getMetaDataTopic(), tc.getDataTopic(), publishedDataSetIdent, &m_mqttSettings.monitoringWriterGroupIdent, dataSetWriterIdent, UA_TRUE);
+  }
 }
 
 void MRMachineTool::InstantiateProduction() {

@@ -251,6 +251,7 @@ int main(int argc, char *argv[]) {
   UA_NodeId connectionIdentFMTD{};
   UA_NodeId connectionIdentWood{};
   UA_NodeId connectionIdentBMT{};
+  UA_NodeId connectionIdentMRMT{};
 
   serverConfig.MQTTPubSub->PublisherId = "FullMachineToolDynamic";
   addMQTTPubSubConnection(pServer, pConfig, serverConfig, connectionIdentFMTD);
@@ -258,6 +259,8 @@ int main(int argc, char *argv[]) {
   addMQTTPubSubConnection(pServer, pConfig, serverConfig, connectionIdentWood);
   serverConfig.MQTTPubSub->PublisherId = "BasicMachineTool";
   addMQTTPubSubConnection(pServer, pConfig, serverConfig, connectionIdentBMT);
+  serverConfig.MQTTPubSub->PublisherId = "MoreRealisticMachineTool";
+  addMQTTPubSubConnection(pServer, pConfig, serverConfig, connectionIdentMRMT);
 
   std::list<std::shared_ptr<SimulatedInstance>> machineTools;
   machineTools.push_back(std::make_shared<FullMachineTool>(pServer));
@@ -288,7 +291,15 @@ int main(int argc, char *argv[]) {
     machineTools.push_back(std::make_shared<BasicMachineTool>(pServer));
   }
 
-  machineTools.push_back(std::make_shared<MRMachineTool>(pServer));
+  if (serverConfig.MQTTPubSub.has_value()) {  
+    machineTools.push_back(std::make_shared<MRMachineTool>(pServer, 
+      InstantiatedMachineTool::MqttSettings{&connectionIdentMRMT, serverConfig.MQTTPubSub->Prefix, 
+                                            "MoreRealisticMachineTool", 
+                                            UA_NODEID_NULL}));
+  } else {
+    machineTools.push_back(std::make_shared<MRMachineTool>(pServer));
+  }
+
   machineTools.push_back(std::make_shared<ShowcaseMachineTool>(pServer));
   machineTools.push_back(std::make_shared<CNShowcaseMachineTool>(pServer));
   /*machineTools.push_back(std::make_shared<BasicRobot>(pServer));*/

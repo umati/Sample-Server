@@ -165,20 +165,21 @@ UA_StatusCode setServerConfig(UA_ServerConfig* pConfig, const Configuration::Con
   UA_CertificateVerification_AcceptAll(&pConfig->secureChannelPKI);
   // Use Default sizes
   std::vector<std::string> serverUrls;
+  constexpr int port = 4840;
   {
     std::stringstream ss;
-    ss << "opc.tcp://:" << *configFile.Port;
+    ss << "opc.tcp://:" << port;
     serverUrls.push_back(ss.str());
   }
   if (configFile.Hostname.has_value()) {
     std::stringstream ss;
-    ss << "opc.tcp://" << *configFile.Hostname << ":" << *configFile.Port;
+    ss << "opc.tcp://" << *configFile.Hostname << ":" << port;
     serverUrls.push_back(ss.str());
   }
   pConfig->serverUrls = (UA_String*)UA_Array_new(serverUrls.size(), &UA_TYPES[UA_TYPES_STRING]);
   pConfig->serverUrlsSize = serverUrls.size();
   std::transform(
-    std::begin(serverUrls), std::end(serverUrls), pConfig->serverUrls, [](const std::string& serverUrl) { return UA_String_fromChars(serverUrl.c_str()); });
+    std::begin(serverUrls), std::end(serverUrls), pConfig->serverUrls, [](const std::string &serverUrl) { return UA_String_fromChars(serverUrl.c_str()); });
   status = UA_ServerConfig_addAllSecurityPolicies(pConfig, &keys.PublicCert, &keys.PrivateKey);
   if (status != UA_STATUSCODE_GOOD) {
     return status;
@@ -256,9 +257,7 @@ int main(int argc, char* argv[]) {
     std::cout << "No encryption will be available." << std::endl;
   }
 
-  UA_Server* pServer = UA_Server_newWithConfig(pConfig);
-
-  // Create namespaces, order must match the CMakeLists.txt
+  // Create namespaces
   namespace_di_generated(pServer);
   namespace_machinery_generated(pServer);
   namespace_ia_generated(pServer);
@@ -286,7 +285,6 @@ int main(int argc, char* argv[]) {
   serverConfig.MQTTPubSub->PublisherId = "BasicMachineTool";
   addMQTTPubSubConnection(pServer, pConfig, serverConfig, connectionIdentBMT);
 
-  
   std::list<std::shared_ptr<SimulatedInstance>> machineTools;
   machineTools.push_back(std::make_shared<FullMachineTool>(pServer));
   if (serverConfig.MQTTPubSub.has_value()) {  

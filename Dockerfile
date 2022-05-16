@@ -28,7 +28,7 @@ RUN apk --no-cache add \
       cmake=3.21.3-r0 \
       gcc=10.3.1_git20211027-r0 \
       g++=10.3.1_git20211027-r0 \
-      git=2.34.1-r0 \
+      git=2.34.2-r0 \
       make=4.3-r0  \
       python3=3.9.7-r4 \
       patch=2.7.6-r7 && \

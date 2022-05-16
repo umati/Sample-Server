@@ -145,11 +145,27 @@ UA_StatusCode setServerConfig(UA_ServerConfig *pConfig, const Configuration::Con
   // Do not limit clients
   UA_CertificateVerification_AcceptAll(&pConfig->certificateVerification);
   // Use Default sizes
-  status = UA_ServerConfig_addNetworkLayerTCP(pConfig, 4840, 0, 0);
+  std::vector<std::string> serverUrls;
+  constexpr int port = 4840;
+  {
+    std::stringstream ss;
+    ss << "opc.tcp://:" << port;
+    serverUrls.push_back(ss.str());
+  }
+  if (configFile.Hostname.has_value()) {
+    std::stringstream ss;
+    ss << "opc.tcp://" << *configFile.Hostname << ":" << port;
+    serverUrls.push_back(ss.str());
+  }
+  pConfig->serverUrls = (UA_String *)UA_Array_new(serverUrls.size(), &UA_TYPES[UA_TYPES_STRING]);
+  pConfig->serverUrlsSize = serverUrls.size();
+  std::transform(
+    std::begin(serverUrls), std::end(serverUrls), pConfig->serverUrls, [](const std::string &serverUrl) { return UA_String_fromChars(serverUrl.c_str()); });
+  status = UA_ServerConfig_addAllSecurityPolicies(pConfig, &keys.PublicCert, &keys.PrivateKey);
   if (status != UA_STATUSCODE_GOOD) {
     return status;
   }
-  status = UA_ServerConfig_addAllSecurityPolicies(pConfig, &keys.PublicCert, &keys.PrivateKey);
+  status = UA_ServerConfig_addSecurityPolicyNone(pConfig, NULL);
   if (status != UA_STATUSCODE_GOOD) {
     return status;
   }
@@ -221,11 +237,6 @@ int main(int argc, char *argv[]) {
     std::cout << "No encryption will be available." << std::endl;
   }
 
-  if (serverConfig.Hostname.has_value()) {
-    UA_String_clear(&pConfig->customHostname);
-    pConfig->customHostname = UA_STRING_ALLOC(serverConfig.Hostname->c_str());
-  }
-
   // Create namespaces
   namespace_di_generated(pServer);
   namespace_ia_generated(pServer);
@@ -248,7 +259,6 @@ int main(int argc, char *argv[]) {
   serverConfig.MQTTPubSub->PublisherId = "BasicMachineTool";
   addMQTTPubSubConnection(pServer, pConfig, serverConfig, connectionIdentBMT);
 
-  
   std::list<std::shared_ptr<SimulatedInstance>> machineTools;
   machineTools.push_back(std::make_shared<FullMachineTool>(pServer));
   if (serverConfig.MQTTPubSub.has_value()) {  

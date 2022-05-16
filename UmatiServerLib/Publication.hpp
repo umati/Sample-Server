@@ -239,7 +239,7 @@ addPublishedDataSetEvent(UA_Server *server, UA_NodeId* publishedDataSetIdent, UA
 
     size_t selectedFieldSize = 6;
     publishedDataSetConfig.config.event.eventNotfier = eventNotifier;
-    publishedDataSetConfig.config.event.selectedFieldsSize = selectedFieldSize;
+    // publishedDataSetConfig.config.event.selectedFieldsSize = selectedFieldSize;
 
     UA_QualifiedName fieldBrowsePaths[selectedFieldSize];
     fieldBrowsePaths[0] = UA_QUALIFIEDNAME_ALLOC(0, "Time");
@@ -257,7 +257,7 @@ addPublishedDataSetEvent(UA_Server *server, UA_NodeId* publishedDataSetIdent, UA
         selectedFields[i].browsePathSize = 1;
         selectedFields[i].browsePath = &fieldBrowsePaths[i];
     }
-    publishedDataSetConfig.config.event.selectedFields = selectedFields;
+    // publishedDataSetConfig.config.event.selectedFields = selectedFields;
 
     /* Adds a ContentFilter to the PDS*/
     UA_ContentFilter contentFilter;
@@ -397,7 +397,7 @@ addDataSetWriter(UA_Server *server, std::string writerName, std::string metadata
     memset(&dataSetWriterConfig, 0, sizeof(UA_DataSetWriterConfig));
     dataSetWriterConfig.dataSetWriterId = dataSetWriterId++;
     dataSetWriterConfig.keyFrameCount = 10;
-    dataSetWriterConfig.eventQueueMaxSize = eventQueueMaxSize;
+    // dataSetWriterConfig.eventQueueMaxSize = eventQueueMaxSize;
 
     if(!reversible) {
         dataSetWriterConfig.dataSetFieldContentMask = (UA_DataSetFieldContentMask) (UA_DATASETFIELDCONTENTMASK_RAWDATA);
@@ -571,8 +571,6 @@ class Publisher {
             } else {
                 if constexpr (is_same_template<typename decltype(member)::value_type, BindableMemberValue>::value) {
                     std::cout << member.name.c_str() << '\n';
-                    auto x = *member(instance).NodeId.NodeId;
-                    std::cout << member.name.c_str() << '\n';
                     addDataSetField(server, publishedDataSetIdent, *member(instance).NodeId.NodeId, const_cast<char*>(member.name.c_str()));
                     addedSomething = true;
                 } else if constexpr (is_same_template<typename decltype(member)::value_type, BindableMember>::value) {
@@ -654,7 +652,7 @@ class Publisher {
             std::cout << "Error adding WriterGroup " << UA_StatusCode_name(retval) << "\n";
             return UA_NODEID_NUMERIC(0,0);
         }
-        TopicCreator tc{prefix, publisherId, writerGroupName, "_"};
+        TopicCreator tc{prefix, publisherId, writerGroupName, "_" };
 
         m_namesToNodeIds.insert({writerGroupName, *writerGroupIdent});
 

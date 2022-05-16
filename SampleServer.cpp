@@ -271,7 +271,6 @@ int main(int argc, char *argv[]) {
   serverConfig.MQTTPubSub->PublisherId = "BasicMachineTool";
   addMQTTPubSubConnection(pServer, pConfig, serverConfig, connectionIdentBMT);
 
-  
   std::list<std::shared_ptr<SimulatedInstance>> machineTools;
   machineTools.push_back(std::make_shared<FullMachineTool>(pServer));
   if (serverConfig.MQTTPubSub.has_value()) {  

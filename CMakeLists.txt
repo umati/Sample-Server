@@ -211,7 +211,6 @@ target_link_libraries(Configuration PRIVATE nlohmann_json::nlohmann_json)
 set(UA_ENABLE_PUBSUB)
 set(UA_ENABLE_PUBSUB_MQTT)
 set(UA_ENABLE_JSON_ENCODING)
-set(UA_ENABLE_PUBSUB_INFORMATIONMODEL)
 
 add_executable(
     ${PROJECT_NAME}

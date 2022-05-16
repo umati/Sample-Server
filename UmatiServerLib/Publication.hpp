@@ -652,7 +652,7 @@ class Publisher {
             std::cout << "Error adding WriterGroup " << UA_StatusCode_name(retval) << "\n";
             return UA_NODEID_NUMERIC(0,0);
         }
-        TopicCreator tc{prefix, publisherId, writerGroupName, "_" };
+        TopicCreator tc{prefix, publisherId, writerGroupName, publisherId + "_" };
 
         m_namesToNodeIds.insert({writerGroupName, *writerGroupIdent});
 

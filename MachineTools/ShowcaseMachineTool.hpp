@@ -11,6 +11,7 @@
 class ShowcaseMachineTool : public InstantiatedMachineTool {
  public:
   ShowcaseMachineTool(UA_Server *pServer);
+  ShowcaseMachineTool(UA_Server *pServer, MqttSettings mqttSettings);
 
   void Simulate() override;
   virtual ~ShowcaseMachineTool() = default;
@@ -22,5 +23,6 @@ class ShowcaseMachineTool : public InstantiatedMachineTool {
   void InstantiateMonitoring();
   void InstantiateTools();
   void InstantiateProduction();
+
   int m_simStep = 0;
 };

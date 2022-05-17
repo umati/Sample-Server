@@ -268,7 +268,6 @@ int main(int argc, char *argv[]) {
 
 
   std::list<std::shared_ptr<SimulatedInstance>> machineTools;
-  machineTools.push_back(std::make_shared<FullMachineTool>(pServer));
   if (serverConfig.MQTTPubSub.has_value()) {  
     machineTools.push_back(std::make_shared<FullMachineToolDynamic>(pServer, true,
       InstantiatedMachineTool::MqttSettings{&connectionIdentFMTD, serverConfig.MQTTPubSub->Prefix, 

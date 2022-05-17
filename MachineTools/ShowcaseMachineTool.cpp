@@ -7,7 +7,9 @@
  */
 #include "ShowcaseMachineTool.hpp"
 
-ShowcaseMachineTool::ShowcaseMachineTool(UA_Server *pServer) : InstantiatedMachineTool(pServer) {
+ShowcaseMachineTool::ShowcaseMachineTool(UA_Server *pServer) : ShowcaseMachineTool::ShowcaseMachineTool(pServer, {}) {}
+
+ShowcaseMachineTool::ShowcaseMachineTool(UA_Server *pServer, MqttSettings mqttSettings) : InstantiatedMachineTool(pServer, mqttSettings) {
   MachineName = "ShowcaseMachineTool";
   CreateObject();
 }
@@ -18,6 +20,9 @@ void ShowcaseMachineTool::CreateObject() {
   InstantiateMonitoring();
   InstantiateTools();
   InstantiateProduction();
+  if (m_mqttSettings.connectionIdent != nullptr) {
+    m_publisher.Publish(mt, m_pServer, m_mqttSettings.connectionIdent, n, m_mqttSettings.prefix, m_mqttSettings.publisherId, "MachineTool", 2000);
+  }
 }
 
 void ShowcaseMachineTool::InstantiateIdentification() {

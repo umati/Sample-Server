@@ -92,9 +92,9 @@ void MRMachineTool::InstantiateMonitoring() {
     auto array = ((UA_String*) v.data) + nsIndex;
     auto nsUri = "nsu=" + std::string( reinterpret_cast<char*>(array->data), array->length) + ";";
 
-    addDataSetField(m_pServer, publishedDataSetIdent, *mt.Monitoring->MachineTool->FeedOverride.NodeId.NodeId, (nsUri + std::string(mt.Monitoring->MachineTool->FeedOverride.NodeId)).data());
-    addDataSetField(m_pServer, publishedDataSetIdent, *mt.Monitoring->MachineTool->IsWarmUp.NodeId.NodeId, (nsUri + std::string(mt.Monitoring->MachineTool->IsWarmUp.NodeId)).data());
-    addDataSetField(m_pServer, publishedDataSetIdent, *mt.Monitoring->MachineTool->OperationMode.NodeId.NodeId, (nsUri + std::string(mt.Monitoring->MachineTool->OperationMode.NodeId)).data());
+    addDataSetField(m_pServer, publishedDataSetIdent, *mt.Monitoring->MachineTool->FeedOverride.NodeId.NodeId, (nsUri + "i=" + std::to_string(mt.Monitoring->MachineTool->FeedOverride.NodeId.NodeId->identifier.numeric)).data());
+    addDataSetField(m_pServer, publishedDataSetIdent, *mt.Monitoring->MachineTool->IsWarmUp.NodeId.NodeId, (nsUri + "i=" + std::string(mt.Monitoring->MachineTool->IsWarmUp.NodeId.NodeId->identifier.numeric)).data());
+    addDataSetField(m_pServer, publishedDataSetIdent, *mt.Monitoring->MachineTool->OperationMode.NodeId.NodeId, (nsUri + "i=" + std::string(mt.Monitoring->MachineTool->OperationMode.NodeId.NodeId->identifier.numeric)).data());
     addDataSetWriter(m_pServer, tc.getWriterName() , tc.getMetaDataTopic(), tc.getDataTopic(), publishedDataSetIdent, &m_mqttSettings.monitoringWriterGroupIdent, dataSetWriterIdent, UA_TRUE);
   }
 }

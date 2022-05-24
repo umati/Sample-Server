@@ -4,6 +4,7 @@ import json
 import os
 import shutil
 from pathlib import Path
+from typing import Any, Dict
 
 from jinja2 import Template
 
@@ -39,7 +40,7 @@ def writeConfiguration(src: Path, dst: Path, settings: Settings):
 
 basePath = Path(os.path.realpath(__file__)).parent
 
-data = {}
+data: Dict[str, Any] = {}
 
 # defaultSettings = basePath / 'defaultSettings.json'
 # with open(defaultSettings) as f:

@@ -14,10 +14,10 @@ class Settings:
         self._defaults = {
             "Hostnames": ["localhost"],
             "IPs": [],
-            "URI": "urn:UmatiSampleServer",
+            "URI": "urn:umatiSampleServer",
             "Keysize": 2048,
             "Days": 365,
-            "Subject": "/C=DE/O=SampleOrganization/CN=UmatiSampleServer@localhost",
+            "Subject": "/C=DE/O=SampleOrganization/CN=umatiSampleServer@localhost/L=Frankfurt/Main",
         }
         self._settings = settings
 

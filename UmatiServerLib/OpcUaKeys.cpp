@@ -143,10 +143,14 @@ std::vector<UA_ByteString> OpcUaKeys::readDir(std::string dirname) {
 }
 
 void OpcUaKeys::GenerateKeys() {
-  UA_String subject[3] = {UA_STRING_STATIC("C=DE"), UA_STRING_STATIC("O=SampleOrganization"), UA_STRING_STATIC("CN=UmatiSampleServer@localhost")};
+  UA_String subject[4] = {
+    UA_STRING_STATIC("C=DE"),
+    UA_STRING_STATIC("O=SampleOrganization"),
+    UA_STRING_STATIC("CN=umatiSampleServer@localhost"),
+    UA_STRING_STATIC("L=Frankfurt/Main")};
 
-  UA_UInt32 lenSubject = 3;
-  UA_String subjectAltName[2] = {UA_STRING_STATIC("DNS:localhost"), UA_STRING_STATIC("URI:urn:UmatiSampleServer")};
+  UA_UInt32 lenSubject = 4;
+  UA_String subjectAltName[2] = {UA_STRING_STATIC("DNS:localhost"), UA_STRING_STATIC("URI:urn:umatiSampleServer")};
   UA_UInt32 lenSubjectAltName = 2;
   auto status = UA_CreateCertificate(
     UA_Log_Stdout, subject, lenSubject, subjectAltName, lenSubjectAltName, 2048, UA_CertificateFormat::UA_CERTIFICATEFORMAT_PEM, &PrivateKey, &PublicCert);

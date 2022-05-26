@@ -2,18 +2,17 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * Copyright 2022 (c) mindonwarp
+ * Copyright 2022 (c) Alen Galinec
  */
 
-#include "FullGMS.hpp"
-
-#include <string>
 #include <sstream>
+#include <string>
 #include <unordered_map>
 
 #include "../TypeDefinition/GMS/Constants.hpp"
 #include "../TypeDefinition/GMS/GMSType.hpp"
 #include "../TypeDefinition/TypeDefinition.hpp"
+#include "FullGMS.hpp"
 
 namespace {
 static std::unordered_map<std::uint32_t, UmatiServerLib::LocalizedText_t> CLASS_MAP = {

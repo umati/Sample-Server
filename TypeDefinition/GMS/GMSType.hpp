@@ -3,6 +3,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
  * Copyright 2022 (c) Sebastian Friedl, ISW University of Stuttgart (for VDMA e.V.)
+ * Copyright 2022 (c) Alen Galinec
  */
 
 #pragma once
@@ -10,11 +11,10 @@
 #include "../MachineTool/Monitoring.hpp"
 #include "../MachineTool/Production.hpp"
 #include "../TypeDefinition.hpp"
-
 #include "Constants.hpp"
-#include "GMSNotification.hpp"
 #include "GMSEquipmentType.hpp"
 #include "GMSIdentificationType.hpp"
+#include "GMSNotification.hpp"
 #include "GMSResultManagementType.hpp"
 
 namespace GMS {

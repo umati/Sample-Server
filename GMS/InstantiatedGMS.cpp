@@ -2,12 +2,12 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * Copyright 2022 (c) mindonwarp
+ * Copyright 2022 (c) Alen Galinec
  */
 
-#include "InstantiatedGMS.hpp"
-
 #include <sstream>
+
+#include "InstantiatedGMS.hpp"
 
 InstantiatedGMS::InstantiatedGMS(UA_Server* pServer) : m_pServer(pServer), NsIndex(m_nsIndex), n(pServer) {}
 

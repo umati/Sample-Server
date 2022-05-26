@@ -2,7 +2,7 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * Copyright 2022 (c) mindonwarp
+ * Copyright 2022 (c) Alen Galinec
  */
 
 #pragma once
@@ -11,9 +11,9 @@
 #include <Open62541Cpp/UA_NodeId.hpp>
 #include <cstdint>
 
+#include "../MachineTools/SimulatedInstance.hpp"
 #include "../TypeDefinition/GMS/GMSType.hpp"
 #include "../UmatiServerLib/NodesMaster.hpp"
-#include "../MachineTools/SimulatedInstance.hpp"
 
 class InstantiatedGMS : public SimulatedInstance {
  public:

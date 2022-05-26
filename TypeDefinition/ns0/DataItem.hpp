@@ -2,14 +2,14 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * Copyright 2022 (c) mindonwarp
+ * Copyright 2022 (c) Alen Galinec
  */
 
 #pragma once
+#include <string>
+
 #include "../TypeDefinition.hpp"
 #include "Constants.hpp"
-
-#include <string>
 
 namespace ns0 {
 

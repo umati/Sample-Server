@@ -4,6 +4,7 @@
  *
  * Copyright 2019-2021 (c) Christian von Arnim, ISW University of Stuttgart (for umati and VDW e.V.)
  * Copyright 2022 (c) Sebastian Friedl, ISW University of Stuttgart (for VDMA e.V.)
+ * Copyright 2022 (c) Alen Galinec
  */
 
 #pragma once
@@ -16,8 +17,8 @@
 #include <variant>
 
 #include "../OpcUaTypes/DateTime.hpp"
-#include "../OpcUaTypes/StatusCode.hpp"
 #include "../OpcUaTypes/LocalizedText.hpp"
+#include "../OpcUaTypes/StatusCode.hpp"
 #include "NodeValue.hpp"
 
 namespace UmatiServerLib {

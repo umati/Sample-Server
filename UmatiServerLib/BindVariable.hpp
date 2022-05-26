@@ -5,6 +5,7 @@
  * Copyright 2020-2021 (c) Christian von Arnim, ISW University of Stuttgart (for umati and VDW e.V.)
  * Copyright 2021 (c) Christoph Ruckstetter, Michael Weinig AG
  * Copyright 2022 (c) Sebastian Friedl, ISW University of Stuttgart (for VDMA e.V.)
+ * Copyright 2022 (c) Alen Galinec
  */
 
 #pragma once
@@ -20,8 +21,8 @@
 #include <list>
 
 #include "../OpcUaTypes/DateTime.hpp"
-#include "../OpcUaTypes/StatusCode.hpp"
 #include "../OpcUaTypes/LocalizedText.hpp"
+#include "../OpcUaTypes/StatusCode.hpp"
 #include "BindableMemberValue.hpp"
 #include "ConvertSimpleValue.hpp"
 #include "ConvertStructValue.hpp"

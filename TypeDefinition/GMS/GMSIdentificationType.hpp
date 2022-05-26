@@ -3,9 +3,12 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
  * Copyright 2022 (c) Sebastian Friedl, ISW University of Stuttgart (for VDMA e.V.)
+ * Copyright 2022 (c) Alen Galinec
  */
 
 #pragma once
+#include <string>
+
 #include "../../UmatiServerLib/BindableMemberPlaceholder.hpp"
 #include "../MachineTool/MachineToolIdentification.hpp"
 #include "../Machinery/IMachineTagNameplate.hpp"
@@ -14,8 +17,6 @@
 #include "../ns0/Constants.hpp"
 #include "Constants.hpp"
 #include "WorkspaceType.hpp"
-
-#include <string>
 
 namespace GMS {
 

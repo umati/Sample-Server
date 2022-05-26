@@ -42,6 +42,7 @@
 
 #include "Configuration/Configuration_json.hpp"
 #include "GMS/BasicGMS.hpp"
+#include "GMS/FullGMS.hpp"
 #include "GMS/HexagonSim.hpp"
 #include "GMS/OGPSmartScopeCNC500.hpp"
 #include "GMS/WenzelLH.hpp"
@@ -238,6 +239,7 @@ int main(int argc, char *argv[]) {
   machineTools.push_back(std::make_shared<HexagonSim>(pServer));
   machineTools.push_back(std::make_shared<OGPSmartScopeCNC500>(pServer));
   machineTools.push_back(std::make_shared<WenzelLH>(pServer));
+  machineTools.push_back(std::make_shared<FullGMS>(pServer));
 
   UA_Server_run_startup(pServer);
   std::unique_lock<decltype(accessDataMutex)> ul(accessDataMutex);

@@ -252,10 +252,12 @@ target_link_libraries(Configuration PRIVATE nlohmann_json::nlohmann_json)
 
 add_executable(
     ${PROJECT_NAME}
+    GMS/InstantiatedGMS.cpp
     GMS/BasicGMS.cpp
     GMS/HexagonSim.cpp
     GMS/OGPSmartScopeCNC500.cpp
     GMS/WenzelLH.cpp
+    GMS/FullGMS.cpp
     MachineTools/BasicMachineTool.cpp
     MachineTools/CNShowcaseMachineTool.cpp
     MachineTools/FullMachineTool.cpp

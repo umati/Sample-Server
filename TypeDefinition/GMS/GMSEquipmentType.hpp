@@ -8,18 +8,22 @@
 
 #pragma once
 #include "../MachineTool/Equipment.hpp"
+#include "../MachineTool/ToolList.hpp"
 #include "../TypeDefinition.hpp"
 #include "Constants.hpp"
-#include "ToolList.hpp"
 
 namespace GMS {
 
-struct GMSEquipment_t {};
+struct GMSEquipment_t : public machineTool::Equipment_t {};
 
 }  // namespace GMS
 
 REFL_TYPE(
   GMS::GMSEquipment_t,
   Bases<machineTool::Equipment_t>(),
-  UmatiServerLib::attribute::UaObjectType(UmatiServerLib::constexp::NodeId(constants::NsGMSUri, UA_GMSID_EQUIPMENTTYPE)))
+  UmatiServerLib::attribute::UaObjectType(UmatiServerLib::constexp::NodeId(constants::NsGMSUri, UA_GMSID_GMSEQUIPMENTTYPE)))
+REFL_FIELD(
+  Tools,
+  UmatiServerLib::attribute::MemberInTypeNodeId(UmatiServerLib::constexp::NodeId(constants::NsGMSUri, UA_GMSID_GMSEQUIPMENTTYPE_TOOLS)),
+  UmatiServerLib::attribute::PlaceholderOptional())
 REFL_END

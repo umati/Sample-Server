@@ -6,21 +6,23 @@
  */
 
 #pragma once
-#include "../MachineTool/Equipment.hpp"
 #include "../MachineTool/MachineTool.hpp"
-#include "../MachineTool/MachineToolIdentification.hpp"
 #include "../MachineTool/Monitoring.hpp"
-#include "../MachineTool/Notification.hpp"
 #include "../MachineTool/Production.hpp"
 #include "../TypeDefinition.hpp"
+
 #include "Constants.hpp"
 #include "GMSNotification.hpp"
+#include "GMSEquipmentType.hpp"
+#include "GMSIdentificationType.hpp"
 #include "GMSResultManagementType.hpp"
 
 namespace GMS {
 struct GMS_t : public machineTool::MachineTool_t {
-  BindableMember<GMSResultManagementType_t> ResultManagement;
+  BindableMember<GMSEquipment_t> Equipment;
   BindableMember<GMSNotification_t> Notification;
+  BindableMember<GMSIdentification_t> Identification;
+  BindableMember<GMSResultManagementType_t> ResultManagement;
 };
 }  // namespace GMS
 
@@ -29,5 +31,7 @@ REFL_TYPE(
   Bases<machineTool::MachineTool_t>(),
   UmatiServerLib::attribute::UaObjectType(UmatiServerLib::constexp::NodeId(constants::NsGMSUri, UA_GMSID_GMSTYPE)))
 REFL_FIELD(ResultManagement)
+REFL_FIELD(Equipment, UmatiServerLib::attribute::UaBrowseName(constants::NsMachineToolUri))
 REFL_FIELD(Notification, UmatiServerLib::attribute::UaBrowseName(constants::NsMachineToolUri))
+REFL_FIELD(Identification, UmatiServerLib::attribute::UaBrowseName(constants::NsDIUri))
 REFL_END

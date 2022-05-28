@@ -12,6 +12,7 @@
 
 #include "../TypeDefinition/GMS/Constants.hpp"
 #include "../TypeDefinition/GMS/GMSType.hpp"
+#include "../TypeDefinition/TypeDefinition.hpp"
 
 FullGMS::FullGMS(UA_Server *pServer) : InstantiatedGMS(pServer) {
   MachineName = "FullGMS";
@@ -45,6 +46,7 @@ void FullGMS::CreateObject() {
   InstantiateMonitoring();
   InstantiateProduction();
   InstantiateResultManagement();
+  InstantiateEquipment();
 }
 
 void FullGMS::InstantiateIdentification() {
@@ -92,3 +94,4 @@ void FullGMS::InstantiateProduction() {
   gms.Production->ActiveProgram->State->CurrentState->Id =
     UA_NODEID_NUMERIC(nsFromUri(m_pServer, constants::NsMachineToolUri), UA_MACHINETOOLID_PRODUCTIONSTATEMACHINETYPE_RUNNING);
 }
+void FullGMS::InstantiateEquipment() { InstantiateOptional(gms.Equipment->Tools, m_pServer, n); }

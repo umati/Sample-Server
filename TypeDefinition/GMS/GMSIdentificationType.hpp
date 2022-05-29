@@ -13,10 +13,16 @@
 #include "../TypeDefinition.hpp"
 #include "../ns0/Constants.hpp"
 #include "Constants.hpp"
+#include "WorkspaceType.hpp"
+
+#include <string>
 
 namespace GMS {
 
-struct GMSIdentification_t : public machineTool::MachineToolIdentification_t {};
+struct GMSIdentification_t : public machineTool::MachineToolIdentification_t {
+  BindableMemberValue<std::string> SubDeviceClass;
+  BindableMemberValue<CartesianWorkspaceType_t> Workspace;
+};
 
 }  // namespace GMS
 
@@ -24,9 +30,12 @@ REFL_TYPE(
   GMS::GMSIdentification_t,
   Bases<machineTool::MachineToolIdentification_t>(),
   UmatiServerLib::attribute::UaObjectType(UmatiServerLib::constexp::NodeId(constants::NsGMSUri, UA_GMSID_GMSIDENTIFICATIONTYPE)))
-/* REFL_FIELD(
-         SoftwareIdentification,
-         UmatiServerLib::attribute::PlaceholderOptional(),
-         UmatiServerLib::attribute::MemberInTypeNodeId(
-                 UmatiServerLib::constexp::NodeId(constants::NsGMSUri, UA_GMSID_GMSIDENTIFICATIONTYPE_SOFTWAREIDENTIFICATION)))*/
+REFL_FIELD(
+  SubDeviceClass,
+  UmatiServerLib::attribute::MemberInTypeNodeId(UmatiServerLib::constexp::NodeId(constants::NsGMSUri, UA_GMSID_GMSIDENTIFICATIONTYPE_SUBDEVICECLASS)),
+  UmatiServerLib::attribute::PlaceholderOptional())
+REFL_FIELD(
+  Workspace,
+  UmatiServerLib::attribute::MemberInTypeNodeId(UmatiServerLib::constexp::NodeId(constants::NsGMSUri, UA_GMSID_GMSIDENTIFICATIONTYPE_WORKSPACE)),
+  UmatiServerLib::attribute::PlaceholderOptional())
 REFL_END

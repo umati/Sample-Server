@@ -77,6 +77,11 @@ void FullGMS::InstantiateIdentification() {
     ss << "2022-" << hasher(MachineName);
     gms.Identification->SerialNumber = ss.str();
   }
+
+  InstantiateOptional(gms.Identification->SubDeviceClass, m_pServer, n);
+  InstantiateOptional(gms.Identification->Workspace, m_pServer, n);
+
+  gms.Identification->SubDeviceClass = "CoordinateMeasuringMachine";
 }
 
 void FullGMS::InstantiateMonitoring() {
@@ -94,4 +99,13 @@ void FullGMS::InstantiateProduction() {
   gms.Production->ActiveProgram->State->CurrentState->Id =
     UA_NODEID_NUMERIC(nsFromUri(m_pServer, constants::NsMachineToolUri), UA_MACHINETOOLID_PRODUCTIONSTATEMACHINETYPE_RUNNING);
 }
-void FullGMS::InstantiateEquipment() { InstantiateOptional(gms.Equipment->Tools, m_pServer, n); }
+void FullGMS::InstantiateEquipment() {
+  InstantiateOptional(gms.Equipment->Tools, m_pServer, n);
+
+  auto &tool1 = gms.Equipment->Tools->Tool.Add<machineTool::Tool_t>(m_pServer, n, {m_nsIndex, "Tool 1"});
+
+  tool1.ControlIdentifier1 = 12;
+  tool1.ControlIdentifierInterpretation = UA_ToolManagement::UA_TOOLMANAGEMENT_NUMBERBASED;
+  tool1.Name = "My Tool";
+  InstantiateOptional(tool1.Name, m_pServer, n);
+}

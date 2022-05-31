@@ -11,10 +11,13 @@
 #include "../MachineTool/ToolList.hpp"
 #include "../TypeDefinition.hpp"
 #include "Constants.hpp"
+#include "GMSToolList.hpp"
 
 namespace GMS {
 
-struct GMSEquipment_t : public machineTool::Equipment_t {};
+struct GMSEquipment_t : public machineTool::Equipment_t {
+  BindableMember<GMSToolList_t> Tools;
+};
 
 }  // namespace GMS
 

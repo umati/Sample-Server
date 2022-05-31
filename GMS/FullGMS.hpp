@@ -24,4 +24,5 @@ class FullGMS : public InstantiatedGMS {
   void InstantiateMonitoring() override;
   void InstantiateProduction() override;
   void InstantiateEquipment() override;
+  void InstantiateNotification() override;
 };

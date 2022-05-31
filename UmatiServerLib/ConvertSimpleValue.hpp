@@ -32,6 +32,8 @@ class ConvertSimpleValue {
   static copyToVariantFunc asVariantFunc(primitivTypes_t pVariable);
   static copyToVariantFunc asVariantFunc(std::string *variable);
   static copyToVariantFunc asVariantFuncArray(std::vector<std::string> *variable);
+  static copyToVariantFunc asVariantFuncArray(std::vector<std::int32_t> *variable);
+  static copyToVariantFunc asVariantFuncArray(std::vector<std::uint32_t> *variable);
   static copyToVariantFunc asVariantFunc(UmatiServerLib::DateTime_t *variable);
   static copyToVariantFunc asVariantFunc(UmatiServerLib::StatusCode_t *variable);
   static copyToVariantFunc asVariantFunc(bool *pVariable);

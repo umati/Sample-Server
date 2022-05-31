@@ -47,6 +47,7 @@ void FullGMS::CreateObject() {
   InstantiateProduction();
   InstantiateResultManagement();
   InstantiateEquipment();
+  InstantiateNotification();
 }
 
 void FullGMS::InstantiateIdentification() {
@@ -103,9 +104,68 @@ void FullGMS::InstantiateEquipment() {
   InstantiateOptional(gms.Equipment->Tools, m_pServer, n);
 
   auto &tool1 = gms.Equipment->Tools->Tool.Add<machineTool::Tool_t>(m_pServer, n, {m_nsIndex, "Tool 1"});
-
   tool1.ControlIdentifier1 = 12;
   tool1.ControlIdentifierInterpretation = UA_ToolManagement::UA_TOOLMANAGEMENT_NUMBERBASED;
   tool1.Name = "My Tool";
   InstantiateOptional(tool1.Name, m_pServer, n);
+
+  auto &sensor1 = gms.Equipment->Tools->Tool.Add<GMS::GMSSensor_t>(m_pServer, n, {m_nsIndex, "Sensor 1"});
+  sensor1.Class = 2; /* TactileTouchTrigger */
+  sensor1.ControlIdentifier1 = 11;
+  sensor1.ControlIdentifier2 = 3;
+  sensor1.ControlIdentifierInterpretation = UA_ToolManagement::UA_TOOLMANAGEMENT_GROUPBASED;
+  sensor1.Locked->Value = true;
+  sensor1.Locked->ReasonForLocking = UA_ToolLocked::UA_TOOLLOCKED_BYOPERATOR;
+  sensor1.Name = "My Sensor";
+  InstantiateOptional(sensor1.ControlIdentifier2, m_pServer, n);
+  InstantiateOptional(sensor1.Name, m_pServer, n);
+
+  // Additional SensorType members
+  InstantiateOptional(sensor1.Alignment, m_pServer, n);
+  sensor1.Alignment = UA_ToolAlignmentState::UA_TOOLALIGNMENTSTATE_INDEXED;
+
+  InstantiateOptional(sensor1.Axes, m_pServer, n);
+  sensor1.Axes->push_back("X,Y,Z");
+
+  InstantiateOptional(sensor1.Capabilities, m_pServer, n);
+  sensor1.Capabilities->push_back(UA_ToolCapabilities::UA_TOOLCAPABILITIES_PTMEAS);
+
+  InstantiateOptional(sensor1.IsQualifiedStatus, m_pServer, n);
+  sensor1.IsQualifiedStatus = UA_ToolIsQualifiedStatus::UA_TOOLISQUALIFIEDSTATUS_QUALIFIED;
+
+  // EUInformation for Days according to CEFACT
+  const UmatiServerLib::EUInformation_t EU_Days{
+    .NamespaceUri = "http://www.opcfoundation.org/UA/units/un/cefact", .UnitId = 4473177, .DisplayName = {"", "d"}, .Description = {"", "days"}};
+
+  sensor1.ToolLife->Qualified->EngineeringUnits = EU_Days;
+  sensor1.ToolLife->Qualified->IsCountingUp = true;
+  sensor1.ToolLife->Qualified->StartValue = 0;
+  sensor1.ToolLife->Qualified->WarningValue = 5;
+  sensor1.ToolLife->Qualified->LimitValue = 7;
+  sensor1.ToolLife->Qualified->Value = 1;
+  InstantiateOptional(sensor1.ToolLife, m_pServer, n);
+  InstantiateOptional(sensor1.ToolLife->Qualified, m_pServer, n);
+  InstantiateOptional(sensor1.ToolLife->Qualified->Value, m_pServer, n);
+  InstantiateOptional(sensor1.ToolLife->Qualified->StartValue, m_pServer, n);
+  InstantiateOptional(sensor1.ToolLife->Qualified->WarningValue, m_pServer, n);
+  InstantiateOptional(sensor1.ToolLife->Qualified->LimitValue, m_pServer, n);
+}
+
+void FullGMS::InstantiateNotification() {
+  InstantiateOptional(gms.Notification->Prognoses, m_pServer, n);
+  InstantiateOptional(gms.Notification->Prognoses->Calibration, m_pServer, n);
+  gms.Notification->Prognoses->Calibration.value.Calibrated = true;
+  InstantiateOptional(gms.Notification->Prognoses->Calibration->CalibrationCertificate, m_pServer, n);
+  {
+    std::stringstream ss;
+    ss << "https://www.ptb.de/dcc/#" << MachineName;
+    gms.Notification->Prognoses->Calibration.value.CalibrationCertificate->push_back(ss.str());
+  }
+
+  InstantiateOptional(gms.Notification->Prognoses->Calibration->CalibrationInterval, m_pServer, n);
+  gms.Notification->Prognoses->Calibration.value.CalibrationInterval = 1000.0 * 60 * 60 * 24 * 356;
+  InstantiateOptional(gms.Notification->Prognoses->Calibration->CalibrationPreptime, m_pServer, n);
+  gms.Notification->Prognoses->Calibration.value.CalibrationPreptime = 1000.0 * 60 * 60 * 24 * 30;
+  gms.Notification->Prognoses->Calibration.value.DateOfCalibration = std::chrono::system_clock::now() - std::chrono::hours(24 * 7);
+  gms.Notification->Prognoses->Calibration.value.PredictedTime = std::chrono::system_clock::now() + std::chrono::hours(24 * 356);
 }

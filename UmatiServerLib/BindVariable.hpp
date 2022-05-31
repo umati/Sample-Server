@@ -57,7 +57,7 @@ class BindVariable {
 
   template <typename T>
   static copyToVariantFunc getToVariantFuncForEnumArray(std::vector<T> &value) {
-    return getToVariantFuncArray(*reinterpret_cast<std::vector<int32_t> *>(&value));
+    return getToVariantFuncArray(*reinterpret_cast<std::vector<std::int32_t> *>(&value));
   }
 
   // Handle structs

@@ -44,6 +44,28 @@ copyToVariantFunc ConvertSimpleValue::asVariantFuncArray(std::vector<std::string
   };
 }
 
+copyToVariantFunc ConvertSimpleValue::asVariantFuncArray(std::vector<std::int32_t> *variable) {
+  auto pVariable = variable;
+  return [pVariable](UA_Variant *dst) {
+    UA_Int32 *tmp = new UA_Int32[pVariable->size()];
+    for (size_t i = 0; i < pVariable->size(); ++i) {
+      tmp[i] = pVariable->at(i);
+    }
+    UA_Variant_setArray(dst, tmp, pVariable->size(), &UA_TYPES[UA_TYPES_INT32]);
+  };
+}
+
+copyToVariantFunc ConvertSimpleValue::asVariantFuncArray(std::vector<std::uint32_t> *variable) {
+  auto pVariable = variable;
+  return [pVariable](UA_Variant *dst) {
+    UA_UInt32 *tmp = new UA_UInt32[pVariable->size()];
+    for (size_t i = 0; i < pVariable->size(); ++i) {
+      tmp[i] = pVariable->at(i);
+    }
+    UA_Variant_setArray(dst, tmp, pVariable->size(), &UA_TYPES[UA_TYPES_UINT32]);
+  };
+}
+
 typedef std::ratio<1, 10000000> nano_100;
 typedef std::chrono::duration<std::int64_t, nano_100> nanoseconds_100;
 

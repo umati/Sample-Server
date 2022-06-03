@@ -6,6 +6,7 @@
  */
 #pragma once
 
+#include "../TypeDefinition.hpp"
 #include "Constants.hpp"
 
 namespace GMS {
@@ -30,8 +31,10 @@ struct CylindricalWorkspaceType_t : public WorkspaceType_t {
 REFL_TYPE(GMS::WorkspaceType_t, UmatiServerLib::attribute::UaDataType(&UA_TYPES_GMS[UA_TYPES_GMS_WORKSPACETYPE]))
 REFL_END
 
-REFL_TYPE(GMS::CartesianWorkspaceType_t, UmatiServerLib::attribute::UaDataType(&UA_TYPES_GMS[UA_TYPES_GMS_CARTESIANWORKSPACETYPE]));
+REFL_TYPE(
+  GMS::CartesianWorkspaceType_t, Bases<GMS::WorkspaceType_t>(), UmatiServerLib::attribute::UaDataType(&UA_TYPES_GMS[UA_TYPES_GMS_CARTESIANWORKSPACETYPE]));
 REFL_END
 
-REFL_TYPE(GMS::CylindricalWorkspaceType_t, UmatiServerLib::attribute::UaDataType(&UA_TYPES_GMS[UA_TYPES_GMS_CYLINDRICALWORKSPACETYPE]));
+REFL_TYPE(
+  GMS::CylindricalWorkspaceType_t, Bases<GMS::WorkspaceType_t>(), UmatiServerLib::attribute::UaDataType(&UA_TYPES_GMS[UA_TYPES_GMS_CYLINDRICALWORKSPACETYPE]));
 REFL_END

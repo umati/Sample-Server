@@ -12,7 +12,7 @@
 
 #include "../TypeDefinition.hpp"
 #include "../MachineTool/Tool.hpp"
-
+#include "../ns0/MultiStateDiscreteType.hpp"
 #include "Constants.hpp"
 
 namespace GMS {
@@ -27,16 +27,24 @@ struct GMSSensor_ToolLife_t {
   BindableMember<GMSToolLife_t> Qualified;
 };
 
+struct Class_t : public ns0::MultiStateDiscreteType_t {};
+
 struct GMSSensor_t : public machineTool::Tool_t {
   BindableMemberValue<UA_ToolAlignmentState> Alignment;
   BindableMemberValue<std::vector<std::string>> Axes;
   BindableMemberValue<std::vector<std::uint32_t>> Capabilities;
-  BindableMemberValue<std::uint32_t> Class;
+  BindableMember<Class_t> Class;
   BindableMemberValue<UA_ToolIsQualifiedStatus> IsQualifiedStatus;
   BindableMember<GMSSensor_ToolLife_t> ToolLife;
 };
 
 }  // namespace GMS
+
+REFL_TYPE(
+  GMS::Class_t,
+  Bases<ns0::MultiStateDiscreteType_t>(),
+  UmatiServerLib::attribute::UaVariableType(UmatiServerLib::constexp::NodeId(constants::NsGMSUri, UA_GMSID_SENSORTYPE_CLASS)))
+REFL_END
 
 REFL_TYPE(
   GMS::GMSToolLife_t,

@@ -9,10 +9,27 @@
 
 #include <string>
 #include <sstream>
+#include <unordered_map>
 
 #include "../TypeDefinition/GMS/Constants.hpp"
 #include "../TypeDefinition/GMS/GMSType.hpp"
 #include "../TypeDefinition/TypeDefinition.hpp"
+
+namespace {
+static std::unordered_map<std::uint32_t, UmatiServerLib::LocalizedText_t> CLASS_MAP = {
+  {0, {"en", "NoTool"}},
+  {1, {"en", "UnDefTool"}},
+  {2, {"en", "TactileTouchTrigger"}},
+  {3, {"en", "TactileMeasuring"}},
+  {4, {"en", "Optical-1D"}},
+  {5, {"en", "Optical-2D"}},
+  {6, {"en", "Optical-3D"}},
+  {7, {"en", "Roughness"}},
+  {8, {"en", "Eddy Current Sensor"}},
+  {9, {"en", "TemperatureProbing"}},
+  {10, {"en", "PtMeas"}},
+  {11, {"en", "Other"}}};
+}
 
 FullGMS::FullGMS(UA_Server *pServer) : InstantiatedGMS(pServer) {
   MachineName = "FullGMS";
@@ -100,6 +117,7 @@ void FullGMS::InstantiateProduction() {
   gms.Production->ActiveProgram->State->CurrentState->Id =
     UA_NODEID_NUMERIC(nsFromUri(m_pServer, constants::NsMachineToolUri), UA_MACHINETOOLID_PRODUCTIONSTATEMACHINETYPE_RUNNING);
 }
+
 void FullGMS::InstantiateEquipment() {
   InstantiateOptional(gms.Equipment->Tools, m_pServer, n);
 
@@ -110,7 +128,12 @@ void FullGMS::InstantiateEquipment() {
   InstantiateOptional(tool1.Name, m_pServer, n);
 
   auto &sensor1 = gms.Equipment->Tools->Tool.Add<GMS::GMSSensor_t>(m_pServer, n, {m_nsIndex, "Sensor 1"});
-  sensor1.Class = 2; /* TactileTouchTrigger */
+
+  for (const auto &kv : CLASS_MAP) {
+    sensor1.Class->EnumStrings->push_back(kv.second);
+  }
+  sensor1.Class->Value = 2; /* TactileTouchTrigger */
+
   sensor1.ControlIdentifier1 = 11;
   sensor1.ControlIdentifier2 = 3;
   sensor1.ControlIdentifierInterpretation = UA_ToolManagement::UA_TOOLMANAGEMENT_GROUPBASED;

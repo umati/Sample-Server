@@ -21,6 +21,7 @@
 
 #include "../OpcUaTypes/DateTime.hpp"
 #include "../OpcUaTypes/StatusCode.hpp"
+#include "../OpcUaTypes/LocalizedText.hpp"
 #include "BindableMemberValue.hpp"
 #include "ConvertSimpleValue.hpp"
 #include "ConvertStructValue.hpp"
@@ -114,8 +115,8 @@ class BindVariable {
     if constexpr (std::is_enum<T>::value) {
       return getToVariantFuncForEnumArray(value);
     } else if constexpr (
-      std::is_class<T>::value &&
-      !(std::is_same<std::string, T>::value || std::is_same<UmatiServerLib::StatusCode_t, T>::value || std::is_same<UmatiServerLib::DateTime_t, T>::value)) {
+      std::is_class<T>::value && !(std::is_same<std::string, T>::value || std::is_same<UmatiServerLib::StatusCode_t, T>::value ||
+                                   std::is_same<UmatiServerLib::DateTime_t, T>::value || std::is_same<UmatiServerLib::LocalizedText_t, T>::value)) {
       return bindStructuredValueByPathArray(pServer, nodeId, value);
     } else {
       return getToVariantFuncArray(value);

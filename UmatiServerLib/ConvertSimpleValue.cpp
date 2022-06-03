@@ -44,6 +44,17 @@ copyToVariantFunc ConvertSimpleValue::asVariantFuncArray(std::vector<std::string
   };
 }
 
+copyToVariantFunc ConvertSimpleValue::asVariantFuncArray(std::vector<UmatiServerLib::LocalizedText_t> *variable) {
+  auto pVariable = variable;
+  return [pVariable](UA_Variant *dst) {
+    UA_LocalizedText *tmp = new UA_LocalizedText[pVariable->size()];
+    for (size_t i = 0; i < pVariable->size(); ++i) {
+      tmp[i] = UA_LOCALIZEDTEXT_ALLOC(pVariable->at(i).locale.c_str(), pVariable->at(i).text.c_str());
+    }
+    UA_Variant_setArray(dst, tmp, pVariable->size(), &UA_TYPES[UA_TYPES_LOCALIZEDTEXT]);
+  };
+}
+
 copyToVariantFunc ConvertSimpleValue::asVariantFuncArray(std::vector<std::int32_t> *variable) {
   auto pVariable = variable;
   return [pVariable](UA_Variant *dst) {

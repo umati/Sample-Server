@@ -14,22 +14,6 @@
 #include "../TypeDefinition/TypeDefinition.hpp"
 #include "FullGMS.hpp"
 
-namespace {
-static std::unordered_map<std::uint32_t, UmatiServerLib::LocalizedText_t> CLASS_MAP = {
-  {0, {"en", "NoTool"}},
-  {1, {"en", "UnDefTool"}},
-  {2, {"en", "TactileTouchTrigger"}},
-  {3, {"en", "TactileMeasuring"}},
-  {4, {"en", "Optical-1D"}},
-  {5, {"en", "Optical-2D"}},
-  {6, {"en", "Optical-3D"}},
-  {7, {"en", "Roughness"}},
-  {8, {"en", "Eddy Current Sensor"}},
-  {9, {"en", "TemperatureProbing"}},
-  {10, {"en", "PtMeas"}},
-  {11, {"en", "Other"}}};
-}
-
 FullGMS::FullGMS(UA_Server *pServer) : InstantiatedGMS(pServer) {
   MachineName = "FullGMS";
   CreateObject();
@@ -67,11 +51,7 @@ void FullGMS::CreateObject() {
 }
 
 void FullGMS::InstantiateIdentification() {
-  {
-    std::stringstream ss;
-    ss << "http://www.isw.uni-stuttgart.de/#" << MachineName;
-    gms.Identification->ProductInstanceUri = ss.str();
-  }
+  InstantiatedGMS::InstantiateIdentification();
 
   InstantiateOptional(gms.Identification->YearOfConstruction, m_pServer, n);
   InstantiateOptional(gms.Identification->ProductCode, m_pServer, n);
@@ -79,6 +59,8 @@ void FullGMS::InstantiateIdentification() {
   InstantiateOptional(gms.Identification->DeviceClass, m_pServer, n);
   InstantiateOptional(gms.Identification->Location, m_pServer, n);
   InstantiateOptional(gms.Identification->Model, m_pServer, n);
+  InstantiateOptional(gms.Identification->SubDeviceClass, m_pServer, n);
+  InstantiateOptional(gms.Identification->Workspace, m_pServer, n);
 
   gms.Identification->Manufacturer = {"", "ISW University of Stuttgart"};
   gms.Identification->ProductCode = "CMM_1234";
@@ -87,17 +69,6 @@ void FullGMS::InstantiateIdentification() {
   gms.Identification->DeviceClass = "CoordinateMeasuringMachine";
   gms.Identification->Location = "CTRL 5 5318/VIRTUAL 0 0/N 48.7685303 E 9.2653923";
   gms.Identification->Model = {"", MachineName};
-
-  {
-    std::hash<std::string> hasher;
-    std::stringstream ss;
-    ss << "2022-" << hasher(MachineName);
-    gms.Identification->SerialNumber = ss.str();
-  }
-
-  InstantiateOptional(gms.Identification->SubDeviceClass, m_pServer, n);
-  InstantiateOptional(gms.Identification->Workspace, m_pServer, n);
-
   gms.Identification->SubDeviceClass = "CoordinateMeasuringMachine";
 }
 
@@ -120,25 +91,14 @@ void FullGMS::InstantiateProduction() {
 void FullGMS::InstantiateEquipment() {
   InstantiateOptional(gms.Equipment->Tools, m_pServer, n);
 
-  auto &tool1 = gms.Equipment->Tools->Tool.Add<machineTool::Tool_t>(m_pServer, n, {m_nsIndex, "Tool 1"});
-  tool1.ControlIdentifier1 = 12;
-  tool1.ControlIdentifierInterpretation = UA_ToolManagement::UA_TOOLMANAGEMENT_NUMBERBASED;
-  tool1.Name = "My Tool";
-  InstantiateOptional(tool1.Name, m_pServer, n);
-
-  auto &sensor1 = gms.Equipment->Tools->Tool.Add<GMS::GMSSensor_t>(m_pServer, n, {m_nsIndex, "Sensor 1"});
-
-  for (const auto &kv : CLASS_MAP) {
-    sensor1.Class->EnumStrings->push_back(kv.second);
-  }
+  auto &sensor1 = InstantiateSensor("Sensor1");
   sensor1.Class->Value = 2; /* TactileTouchTrigger */
-
   sensor1.ControlIdentifier1 = 11;
   sensor1.ControlIdentifier2 = 3;
   sensor1.ControlIdentifierInterpretation = UA_ToolManagement::UA_TOOLMANAGEMENT_GROUPBASED;
   sensor1.Locked->Value = true;
   sensor1.Locked->ReasonForLocking = UA_ToolLocked::UA_TOOLLOCKED_BYOPERATOR;
-  sensor1.Name = "My Sensor";
+  sensor1.Name = "T11_P3";
   InstantiateOptional(sensor1.ControlIdentifier2, m_pServer, n);
   InstantiateOptional(sensor1.Name, m_pServer, n);
 
@@ -146,6 +106,7 @@ void FullGMS::InstantiateEquipment() {
   InstantiateOptional(sensor1.Alignment, m_pServer, n);
   sensor1.Alignment = UA_ToolAlignmentState::UA_TOOLALIGNMENTSTATE_INDEXED;
 
+  // TODO: What is the correct format of the "Axes" property according to the spec?
   InstantiateOptional(sensor1.Axes, m_pServer, n);
   sensor1.Axes->push_back("X,Y,Z");
 

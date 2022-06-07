@@ -10,6 +10,7 @@
 
 #include <Open62541Cpp/UA_NodeId.hpp>
 #include <cstdint>
+#include <unordered_map>
 
 #include "../MachineTools/SimulatedInstance.hpp"
 #include "../TypeDefinition/GMS/GMSType.hpp"
@@ -37,6 +38,11 @@ class InstantiatedGMS : public SimulatedInstance {
   // virtual void InstantiateNotificationCalibration();
   // virtual void InstantiatePrognosesCalibration();
 
+ protected:
+  static const std::unordered_map<std::uint32_t, UmatiServerLib::LocalizedText_t> CLASS_MAP;
+  GMS::GMSSensor_t &InstantiateSensor(std::string const &sensorName);
+
+ protected:
   std::string MachineName;
   std::uint16_t m_nsIndex;
   GMS::GMS_t gms;

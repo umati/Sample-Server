@@ -33,10 +33,15 @@ void ShowcaseMachineTool::InstantiateIdentification() {
   InstantiateOptional(mt.Identification->DeviceClass, m_pServer, n);
   InstantiateOptional(mt.Identification->Location, m_pServer, n);
   InstantiateOptional(mt.Identification->Model, m_pServer, n);
+  InstantiateOptional(mt.Identification->ComponentName, m_pServer, n);
+  InstantiateOptional(mt.Identification->MonthOfConstruction, m_pServer, n);
+
 
   mt.Identification->Manufacturer = {"", "umati Showcase"};
+  mt.Identification->ComponentName = {"", "umati Showcase Component"};
   mt.Identification->ProductCode = "2653837gg1548";
   mt.Identification->YearOfConstruction = 2021;
+  mt.Identification->MonthOfConstruction = 11;
   mt.Identification->SoftwareRevision = "v1.02.1";
   mt.Identification->DeviceClass = "Machining centre (other)";
   mt.Identification->ProductInstanceUri = "https://showcase.umati.org/Specs/Machinetools.html";

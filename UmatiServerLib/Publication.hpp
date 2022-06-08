@@ -213,6 +213,11 @@ addPublishedDataSet(UA_Server *server, UA_NodeId* publishedDataSetIdent, std::st
 static UA_NodeId
 addDataSetField(UA_Server *server, UA_NodeId *publishedDataSetIdent, UA_NodeId toAdd, char* fieldNameAlias) {
     /* Add a field to the previous created PublishedDataSet */
+    static std::map<open62541Cpp::UA_NodeId, open62541Cpp::UA_NodeId> nodeId_to_pds{};
+
+    if(nodeId_to_pds.find(open62541Cpp::UA_NodeId(toAdd)) != nodeId_to_pds.end()) {
+        return UA_NODEID_NULL;
+    }
     UA_DataSetFieldConfig dataSetFieldConfig;
     UA_NodeId dataSetFieldIdentifier;
     UA_NodeId_init(&dataSetFieldIdentifier);
@@ -223,6 +228,8 @@ addDataSetField(UA_Server *server, UA_NodeId *publishedDataSetIdent, UA_NodeId t
     dataSetFieldConfig.field.variable.publishParameters.publishedVariable = toAdd;
     dataSetFieldConfig.field.variable.publishParameters.attributeId = UA_ATTRIBUTEID_VALUE;
     UA_Server_addDataSetField(server, *publishedDataSetIdent, &dataSetFieldConfig, &dataSetFieldIdentifier);
+
+    nodeId_to_pds[open62541Cpp::UA_NodeId(toAdd)] = open62541Cpp::UA_NodeId(*publishedDataSetIdent);
     return dataSetFieldIdentifier;
 }
 
@@ -490,6 +497,8 @@ class Publisher {
 
             if constexpr (refl::descriptor::has_attribute<UmatiServerLib::attribute::UaVariableType>(ref)) {
                 auto dsfId = addDataSetField(server, publishedDataSetIdent, *nodeId, const_cast<char*>(name.c_str()));
+                std::cout << "Added DataSetField " << name << '\n'; 
+
                 pdsIds.emplace_back(*publishedDataSetIdent);
                 dsfIds.emplace_back(dsfId);
                 addedSomething = true;           
@@ -503,17 +512,28 @@ class Publisher {
     bool AddFieldsToPublish(const refl::type_descriptor<T> &typeDescriptor, T &instance, TopicCreator tc, UA_Server *server, UA_NodeId *writerGroupIdent, UA_NodeId *publishedDataSetIdent, UA_Boolean aggregate, UA_Boolean reversible) {
         bool addedSomething = false;
         for_each(typeDescriptor.members, [&](const auto member) {
+            std::cout << "Found Member " << member.name << "\n";
             if constexpr (refl::descriptor::has_attribute<UmatiServerLib::attribute::PlaceholderOptional>(member)) {
+                std::cout << "Member is optional placeholder" << member.name << "\n";
+
                 if constexpr (is_same_template<typename decltype(member)::value_type, BindableMemberValue>::value) {
+                    std::cout << "Member is BindableMemberValue " << member.name << "\n";
+
                     UA_NodeId nullNodeid = UA_NODEID_NUMERIC(0, 0);
-                    if(UA_NodeId_equal(member(instance).NodeId.NodeId, &nullNodeid)) {}
+                    if(UA_NodeId_equal(member(instance).NodeId.NodeId, &nullNodeid)) {
+                        std::cout << "But NodeId is 0 \n";
+                    }
                     else {
                         auto dsfId = addDataSetField(server, publishedDataSetIdent, *member(instance).NodeId.NodeId, const_cast<char*>(member.name.c_str()));
                         member(instance).PublishedDataSetNodeIds.emplace_back(*publishedDataSetIdent);
                         member(instance).DataSetFieldNodeIds.emplace_back(dsfId);
                         addedSomething = true;
+                        std::cout << "Added DataSetField " << member.name << '\n'; 
                     }
                 } else if constexpr (is_same_template<typename decltype(member)::value_type, BindableMember>::value) {
+                    std::cout << "Member is BindableMember" << member.name << "\n";
+                    
+
                     auto tc2 = tc;
                     tc2.publishedDataSetName = tc2.publishedDataSetName + "." + std::string(member.name);
                     auto typeDescriptor = refl::reflect(member(instance).value);
@@ -524,6 +544,11 @@ class Publisher {
                         member(instance).PublishedDataSetNodeIds.emplace_back(*publishedDataSetIdent);
                         member(instance).DataSetFieldNodeIds.emplace_back(dsfId);
                         addedSomething = true;
+
+                        std::cout << "Member is UaDataType or UaVariableType " << member.name << "\n";
+
+                        std::cout << "Added DataSetField " << member.name << '\n'; 
+
                     } else {
                         PublishFields(typeDescriptor, member(instance).value, tc2, server, writerGroupIdent, aggregate, reversible);
                     }              
@@ -548,6 +573,9 @@ class Publisher {
                                 member(instance).PublishedDataSetNodeIds.emplace_back(*publishedDataSetIdent);
                                 member(instance).DataSetFieldNodeIds.emplace_back(dsfId);
                                 addedSomething = true;
+
+                                std::cout << "Added DataSetField " << name << '\n'; 
+
                             } else {
                                 PublishFields(refl::reflect(elem.value), elem.value, tc2, server, writerGroupIdent, aggregate, reversible);
                             } 
@@ -573,6 +601,8 @@ class Publisher {
                     std::cout << member.name.c_str() << '\n';
                     addDataSetField(server, publishedDataSetIdent, *member(instance).NodeId.NodeId, const_cast<char*>(member.name.c_str()));
                     addedSomething = true;
+                        std::cout << "Added DataSetField " << member.name << '\n'; 
+
                 } else if constexpr (is_same_template<typename decltype(member)::value_type, BindableMember>::value) {
                     auto tc2 = tc;
                     tc2.publishedDataSetName = tc2.publishedDataSetName + "." + std::string(member.name);
@@ -582,6 +612,8 @@ class Publisher {
                         auto dsfId = addDataSetField(server, publishedDataSetIdent, *member(instance).NodeId.NodeId, const_cast<char*>(member.name.c_str()));
                         member(instance).PublishedDataSetNodeIds.emplace_back(*publishedDataSetIdent);
                         member(instance).DataSetFieldNodeIds.emplace_back(dsfId);
+                        std::cout << "Added DataSetField " << member.name << '\n'; 
+
                         addedSomething = true;
                     } else {
                         PublishFields(typeDescriptor, member(instance).value, tc2, server, writerGroupIdent, aggregate, reversible);
@@ -603,6 +635,8 @@ class Publisher {
                             auto dsfId = addDataSetField(server, publishedDataSetIdent, *elem.NodeId.NodeId, const_cast<char*>(elem.name.c_str()));
                             member(instance).PublishedDataSetNodeIds.emplace_back(*publishedDataSetIdent);
                             member(instance).DataSetFieldNodeIds.emplace_back(dsfId);
+                            std::cout << "Added DataSetField " << elem.name << '\n'; 
+
                             addedSomething = true;
                         } else {
                             PublishFields(refl::reflect(elem.value), elem.value, tc2, server, writerGroupIdent, aggregate, reversible);
@@ -611,6 +645,23 @@ class Publisher {
                 }
             }
         });
+        return addedSomething;
+    }
+
+
+    template <typename T>
+    bool IterateOverBases(const refl::type_descriptor<T> &typeDescriptor, T& instance, TopicCreator tc, UA_Server *server, UA_NodeId *writerGroupIdent, UA_NodeId *publishedDataSetIdent, UA_Boolean aggregate, UA_Boolean reversible) {
+        bool addedSomething = false;
+        if constexpr (refl::descriptor::has_attribute<Bases>(refl::reflect<T>())) {
+            constexpr auto bases = refl::descriptor::get_attribute<Bases>(refl::reflect<T>());
+            if constexpr (bases.descriptors.size > 0) {
+            refl::util::for_each(bases.descriptors, [&](auto baseDescriptor) {
+                    std::cout << "Iterating over base " << baseDescriptor.name << " of " << typeDescriptor.name << '\n';
+                    addedSomething |= AddFieldsToPublish(baseDescriptor, static_cast<typename decltype(baseDescriptor)::type &>(instance), tc, server, writerGroupIdent, publishedDataSetIdent, aggregate, reversible);
+                    IterateOverBases(baseDescriptor, static_cast<typename decltype(baseDescriptor)::type &>(instance), tc, server, writerGroupIdent, publishedDataSetIdent, aggregate, reversible);
+                });
+            }
+        }
         return addedSomething;
     }
 
@@ -624,14 +675,8 @@ class Publisher {
 
         bool addedSomething = AddFieldsToPublish(typeDescriptor, instance, tc, server, writerGroupIdent, publishedDataSetIdent, aggregate, reversible);
         
-        if constexpr (refl::descriptor::has_attribute<Bases>(refl::reflect<T>())) {
-            constexpr auto bases = refl::descriptor::get_attribute<Bases>(refl::reflect<T>());
-            if constexpr (bases.descriptors.size > 0) {
-            refl::util::for_each(bases.descriptors, [&](auto baseDescriptor) {
-                    addedSomething |= AddFieldsToPublish(baseDescriptor, static_cast<typename decltype(baseDescriptor)::type &>(instance), tc, server, writerGroupIdent, publishedDataSetIdent, aggregate, reversible);
-                });
-            }
-        }
+        addedSomething |= IterateOverBases(typeDescriptor, instance, tc, server, writerGroupIdent, publishedDataSetIdent, aggregate, reversible);
+
         if (addedSomething) {
             addDataSetWriter(server, tc.getWriterName() , tc.getMetaDataTopic(), tc.getDataTopic(), publishedDataSetIdent, writerGroupIdent, dataSetWriterIdent, reversible);
             m_namesToNodeIds.insert({tc.getWriterName(), *dataSetWriterIdent});

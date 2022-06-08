@@ -5,6 +5,8 @@
  * Copyright 2022 (c) Alen Galinec
  */
 
+#include "FullGMS.hpp"
+
 #include <sstream>
 #include <string>
 #include <unordered_map>
@@ -12,7 +14,6 @@
 #include "../TypeDefinition/GMS/Constants.hpp"
 #include "../TypeDefinition/GMS/GMSType.hpp"
 #include "../TypeDefinition/TypeDefinition.hpp"
-#include "FullGMS.hpp"
 
 FullGMS::FullGMS(UA_Server *pServer) : InstantiatedGMS(pServer) {
   MachineName = "FullGMS";

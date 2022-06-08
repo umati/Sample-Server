@@ -7,12 +7,13 @@
  * Copyright 2022 (c) Alen Galinec
  */
 
+#include "ConvertSimpleValue.hpp"
+
 #include <open62541/types_generated.h>
 
 #include <Open62541Cpp/UA_String.hpp>
 #include <iostream>
 
-#include "ConvertSimpleValue.hpp"
 #include "NodeValue.hpp"
 #include "UaTypeHelper.hpp"
 

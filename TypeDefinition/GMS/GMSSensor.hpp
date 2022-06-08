@@ -17,14 +17,8 @@
 
 namespace GMS {
 
-struct GMSToolLife_t : public machineTool::ToolLife_t<double> {
-  BindableMemberValue<double> Value;
-  BindableMemberValue<UA_ToolLifeIndication> Indication;
-  BindableMemberValue<bool> IsCountingUp;
-};
-
 struct GMSSensor_ToolLife_t {
-  BindableMember<GMSToolLife_t> Qualified;
+  BindableMember<machineTool::ToolLife_t<double>> Qualified;
 };
 
 struct Class_t : public ns0::MultiStateDiscreteType_t {};
@@ -44,19 +38,6 @@ REFL_TYPE(
   GMS::Class_t,
   Bases<ns0::MultiStateDiscreteType_t>(),
   UmatiServerLib::attribute::UaVariableType(UmatiServerLib::constexp::NodeId(constants::NsGMSUri, UA_GMSID_SENSORTYPE_CLASS)))
-REFL_END
-
-REFL_TYPE(
-  GMS::GMSToolLife_t,
-  Bases<machineTool::ToolLife_t<double>>(),
-  UmatiServerLib::attribute::UaVariableType(UmatiServerLib::constexp::NodeId(constants::NsMachineToolUri, UA_MACHINETOOLID_TOOLLIFETYPE)))
-REFL_FIELD(Value, UmatiServerLib::attribute::UaVariableTypeValue())
-REFL_FIELD(
-  Indication,
-  UmatiServerLib::attribute::MemberInTypeNodeId(UmatiServerLib::constexp::NodeId(constants::NsGMSUri, UA_GMSID_SENSORTYPE_TOOLLIFE_QUALIFIED_INDICATION)))
-REFL_FIELD(
-  IsCountingUp,
-  UmatiServerLib::attribute::MemberInTypeNodeId(UmatiServerLib::constexp::NodeId(constants::NsGMSUri, UA_GMSID_SENSORTYPE_TOOLLIFE_QUALIFIED_ISCOUNTINGUP)))
 REFL_END
 
 REFL_TYPE(GMS::GMSSensor_ToolLife_t, UmatiServerLib::attribute::UaObjectType(UmatiServerLib::constexp::NodeId(constants::Ns0Uri, UA_NS0ID_BASEOBJECTTYPE)))

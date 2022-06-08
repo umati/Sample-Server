@@ -5,9 +5,9 @@
  * Copyright 2022 (c) Alen Galinec
  */
 
-#include <sstream>
-
 #include "InstantiatedGMS.hpp"
+
+#include <sstream>
 
 const std::unordered_map<std::uint32_t, UmatiServerLib::LocalizedText_t> InstantiatedGMS::CLASS_MAP = {
   {0, {"en", "NoTool"}},

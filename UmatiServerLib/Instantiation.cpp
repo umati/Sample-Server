@@ -57,6 +57,18 @@ UA_Int32 readValueRank(UA_Server *pServer, open62541Cpp::UA_NodeId nodeId) {
   return ret;
 }
 
+UA_Variant *readArrayDimensions(UA_Server *pServer, open62541Cpp::UA_NodeId nodeId) {
+  UA_Variant *varArrayDims = UA_Variant_new();
+  auto status = UA_Server_readArrayDimensions(pServer, *nodeId.NodeId, varArrayDims);
+  if (status != UA_STATUSCODE_GOOD) {
+    std::stringstream ss;
+    ss << "Could not read ArrayDimensions attribute from NodeId (" << static_cast<std::string>(nodeId) << "), Error: " << UA_StatusCode_name(status);
+    throw std::runtime_error(ss.str());
+  }
+
+  return varArrayDims;
+}
+
 open62541Cpp::UA_NodeId readTypeDefinition(UA_Server *pServer, open62541Cpp::UA_NodeId nodeId) {
   open62541Cpp::UA_NodeId ret;
 

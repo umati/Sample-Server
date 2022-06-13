@@ -19,7 +19,7 @@
 
 namespace UmatiServerLib {
 
-copyToVariantFunc ConvertSimpleValue::asVariantFunc(primitivTypes_t variable) {
+copyToVariantFunc ConvertSimpleValue::asVariantFunc(primitiveTypes_t variable) {
   auto pDataType = std::visit(primitivTypeVisitor_getTypePointer(), variable);
   auto pVariable = std::visit(primitivTypeVisitor_getPointer(), variable);
 
@@ -58,24 +58,12 @@ copyToVariantFunc ConvertSimpleValue::asVariantFuncArray(std::vector<UmatiServer
 
 copyToVariantFunc ConvertSimpleValue::asVariantFuncArray(std::vector<std::int32_t> *variable) {
   auto pVariable = variable;
-  return [pVariable](UA_Variant *dst) {
-    UA_Int32 *tmp = new UA_Int32[pVariable->size()];
-    for (size_t i = 0; i < pVariable->size(); ++i) {
-      tmp[i] = pVariable->at(i);
-    }
-    UA_Variant_setArray(dst, tmp, pVariable->size(), &UA_TYPES[UA_TYPES_INT32]);
-  };
+  return [pVariable](UA_Variant *dst) { UA_Variant_setArrayCopy(dst, pVariable->data(), pVariable->size(), &UA_TYPES[UA_TYPES_INT32]); };
 }
 
 copyToVariantFunc ConvertSimpleValue::asVariantFuncArray(std::vector<std::uint32_t> *variable) {
   auto pVariable = variable;
-  return [pVariable](UA_Variant *dst) {
-    UA_UInt32 *tmp = new UA_UInt32[pVariable->size()];
-    for (size_t i = 0; i < pVariable->size(); ++i) {
-      tmp[i] = pVariable->at(i);
-    }
-    UA_Variant_setArray(dst, tmp, pVariable->size(), &UA_TYPES[UA_TYPES_UINT32]);
-  };
+  return [pVariable](UA_Variant *dst) { UA_Variant_setArrayCopy(dst, pVariable->data(), pVariable->size(), &UA_TYPES[UA_TYPES_UINT32]); };
 }
 
 typedef std::ratio<1, 10000000> nano_100;

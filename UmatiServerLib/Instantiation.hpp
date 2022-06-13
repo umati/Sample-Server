@@ -28,6 +28,19 @@ open62541Cpp::UA_NodeId readTypeDefinition(UA_Server *pServer, open62541Cpp::UA_
 UA_Int32 readValueRank(UA_Server *pServer, open62541Cpp::UA_NodeId nodeId);
 open62541Cpp::UA_NodeId getReferenceTypeFromMemberNode(UA_Server *pServer, open62541Cpp::UA_NodeId nodeId, open62541Cpp::UA_NodeId parentNodeId);
 
+/**
+ * @brief
+ *    Reads the ArrayDimensions attribute from the specified node.
+ *    The result (UA_UInt32[]) is copied into the @code data member
+ *    of the returned variant, and the length of the returned array
+ *    is stored in the @code arrayLength member of the variant.
+ *
+ * @param pServer server instance
+ * @param nodeId  ID of the node to query
+ * @return UA_Variant* a pointer to the variant holding the result
+ */
+UA_Variant *readArrayDimensions(UA_Server *pServer, open62541Cpp::UA_NodeId nodeId);
+
 /// Look for interfaces and instantiate them
 void instantiateInterfaces(UA_Server *pServer, open62541Cpp::UA_NodeId member, open62541Cpp::UA_NodeId memberInType);
 
@@ -152,13 +165,11 @@ UA_StatusCode InstantiateVariable(
   UA_VariableAttributes varAttr = UA_VariableAttributes_default;
   varAttr.valueRank = readValueRank(pServer, memberInTypeNodeId);
 
-  // Add Array Dimensions for Arrays
-  // TODO: Allow more than one Demensions
-  if (varAttr.valueRank == UA_VALUERANK_ONE_DIMENSION) {
-    varAttr.arrayDimensionsSize = 1;
-    UA_UInt32 *arrayDims = UA_UInt32_new();
-    arrayDims[0] = 1;
-    varAttr.arrayDimensions = arrayDims;
+  // Add array dimensions
+  auto *arrayDims = readArrayDimensions(pServer, memberInTypeNodeId);
+  if (arrayDims->data) {
+    varAttr.arrayDimensionsSize = arrayDims->arrayLength;
+    varAttr.arrayDimensions = reinterpret_cast<UA_UInt32 *>(arrayDims->data);
   }
 
   auto dataType = readDataType(pServer, memberInTypeNodeId);

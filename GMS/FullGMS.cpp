@@ -109,7 +109,8 @@ void FullGMS::InstantiateEquipment() {
 
   // TODO: What is the correct format of the "Axes" property according to the spec?
   InstantiateOptional(sensor1.Axes, m_pServer, n);
-  sensor1.Axes->push_back("X,Y,Z");
+  sensor1.Axes->push_back("X");
+  sensor1.Axes->push_back("Y");
 
   InstantiateOptional(sensor1.Capabilities, m_pServer, n);
   sensor1.Capabilities->push_back(UA_ToolCapabilities::UA_TOOLCAPABILITIES_PTMEAS);

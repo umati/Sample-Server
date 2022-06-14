@@ -20,8 +20,8 @@
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
-
-FROM gitpod/workspace-full:build-branch-master
+# hadolint ignore=DL3007
+FROM gitpod/workspace-full:latest
 
 # Install custom tools, runtimes, etc.
 # For example "bastet", a command-line tetris clone:

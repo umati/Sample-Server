@@ -5,6 +5,7 @@
  * Copyright 2021 (c) Götz Görisch, VDW - Verein Deutscher Werkzeugmaschinenfabriken e.V.
  * Copyright 2021 (c) Christoph Ruckstetter, Michael Weinig AG
  * Copyright 2022 (c) Sebastian Friedl, ISW University of Stuttgart (for VDMA e.V.)
+ * Copyright 2022 (c) Alen Galinec
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -121,15 +122,14 @@ UA_StatusCode setServerConfig(UA_ServerConfig *pConfig, const Configuration::Con
   UA_CertificateVerification_AcceptAll(&pConfig->certificateVerification);
   // Use Default sizes
   std::vector<std::string> serverUrls;
-  constexpr int port = 4840;
   {
     std::stringstream ss;
-    ss << "opc.tcp://:" << port;
+    ss << "opc.tcp://:" << *configFile.Port;
     serverUrls.push_back(ss.str());
   }
   if (configFile.Hostname.has_value()) {
     std::stringstream ss;
-    ss << "opc.tcp://" << *configFile.Hostname << ":" << port;
+    ss << "opc.tcp://" << *configFile.Hostname << ":" << *configFile.Port;
     serverUrls.push_back(ss.str());
   }
   pConfig->serverUrls = (UA_String *)UA_Array_new(serverUrls.size(), &UA_TYPES[UA_TYPES_STRING]);

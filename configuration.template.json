@@ -1,10 +1,13 @@
 {
     "Hostname": "localhost",
+    "Port": 4840,
     "UserPassAuthentication": [],
     "Encryption": {
         "ServerCert": "server_cert.der",
         "ServerKey": "server_key.der",
-        "TrustedClients": ["trusted/trustedClient.der"],
+        "TrustedClients": [
+            "trusted/trustedClient.der"
+        ],
         "IssuerCerts": [],
         "Revocation": []
     }

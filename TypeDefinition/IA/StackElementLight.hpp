@@ -37,6 +37,6 @@ REFL_FIELD(
   UmatiServerLib::attribute::PlaceholderOptional())
 REFL_FIELD(
   StacklightMode,
-  UmatiServerLib::attribute::MemberInTypeNodeId(UmatiServerLib::constexp::NodeId(constants::NsIAUri, UA_IAID_STACKELEMENTLIGHTTYPE_STACKLIGHTMODE)),
+  UmatiServerLib::attribute::MemberInTypeNodeId(UmatiServerLib::constexp::NodeId(constants::NsIAUri, UA_IAID_STACKELEMENTLIGHTTYPE_SIGNALMODE)),
   UmatiServerLib::attribute::PlaceholderOptional())
 REFL_END

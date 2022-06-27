@@ -1,5 +1,6 @@
 {
     "Hostname": "",
+    "Port": 4840,
     "UserPassAuthentication": [],
     "Encryption": {
         "ServerCert": "server_cert.pem",

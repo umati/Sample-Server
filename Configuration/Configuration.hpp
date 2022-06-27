@@ -3,6 +3,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
  * Copyright 2021 (c) Christian von Arnim, ISW University of Stuttgart (for umati and VDW e.V.)
+ * Copyright 2022 (c) Alen Galinec
  */
 
 #include <optional>
@@ -30,6 +31,7 @@ struct UserPassAuthentication_t {
 
 struct Configuration {
   std::optional<std::string> Hostname;
+  std::optional<std::uint16_t> Port;
   std::optional<std::vector<UserPassAuthentication_t>> UserPassAuthentication;
   std::optional<Encryption_t> Encryption;
 };

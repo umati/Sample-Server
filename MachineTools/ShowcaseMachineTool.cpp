@@ -9,7 +9,7 @@
 
 ShowcaseMachineTool::ShowcaseMachineTool(UA_Server *pServer) : ShowcaseMachineTool::ShowcaseMachineTool(pServer, {}) {}
 
-ShowcaseMachineTool::ShowcaseMachineTool(UA_Server *pServer, MqttSettings mqttSettings) : InstantiatedMachineTool(pServer, mqttSettings) {
+ShowcaseMachineTool::ShowcaseMachineTool(UA_Server *pServer, MqttSettings settings) : InstantiatedMachineTool(pServer, settings) {
   MachineName = "ShowcaseMachineTool";
   CreateObject();
 }
@@ -17,8 +17,17 @@ ShowcaseMachineTool::ShowcaseMachineTool(UA_Server *pServer, MqttSettings mqttSe
 void ShowcaseMachineTool::CreateObject() {
   InstantiatedMachineTool::CreateObject();
   InstantiateIdentification();
+  if (m_mqttSettings.connectionIdent != nullptr) {
+    m_publisher.Publish(mt.Identification.value, m_pServer, m_mqttSettings.connectionIdent, n, m_mqttSettings.prefix, m_mqttSettings.publisherId, "Identification", 2000);
+  }
   InstantiateMonitoring();
+  if (m_mqttSettings.connectionIdent != nullptr) {
+    m_publisher.Publish(mt.Monitoring.value, m_pServer, m_mqttSettings.connectionIdent, n, m_mqttSettings.prefix, m_mqttSettings.publisherId, "Monitoring", 2000);
+  }
   InstantiateTools();
+  if (m_mqttSettings.connectionIdent != nullptr) {
+    m_publisher.Publish(mt.Production.value, m_pServer, m_mqttSettings.connectionIdent, n, m_mqttSettings.prefix, m_mqttSettings.publisherId, "Equipment", 2000);
+  }
   InstantiateProduction();
   if (m_mqttSettings.connectionIdent != nullptr) {
     m_publisher.Publish(mt, m_pServer, m_mqttSettings.connectionIdent, n, m_mqttSettings.prefix, m_mqttSettings.publisherId, "MachineTool", 2000);

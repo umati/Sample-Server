@@ -49,9 +49,9 @@ set(SAMPLESERVER_GENERATED_NODESET_AND_DATATYPES_OUTPUT_DIR "${PROJECT_SOURCE_DI
 # Generate types and namespace for DI
 ua_generate_nodeset_and_datatypes(
     NAME "di"
-    FILE_NS "${UA_NODESET_DIR}/DI/Opc.Ua.Di.NodeSet2.xml"
-    FILE_CSV "${UA_NODESET_DIR}/DI/OpcUaDiModel.csv"
-    FILE_BSD "${UA_NODESET_DIR}/DI/Opc.Ua.Di.Types.bsd"
+    FILE_NS "${open62541_NODESET_DIR}/DI/Opc.Ua.Di.NodeSet2.xml"
+    FILE_CSV "${open62541_NODESET_DIR}/DI/OpcUaDiModel.csv"
+    FILE_BSD "${open62541_NODESET_DIR}/DI/Opc.Ua.Di.Types.bsd"
     NAMESPACE_MAP "2:http://opcfoundation.org/UA/DI/"
     TARGET_PREFIX "${PROJECT_NAME}"
     OUTPUT_DIR "${SAMPLESERVER_GENERATED_NODESET_AND_DATATYPES_OUTPUT_DIR}"
@@ -72,8 +72,8 @@ configure_file(cmake/empty.bsd.template "${CMAKE_BINARY_DIR}/model/Opc.Ua.Machin
 
 ua_generate_nodeset_and_datatypes(
     NAME "machinery"
-    FILE_NS "${UA_NODESET_DIR}/Machinery/Opc.Ua.Machinery.NodeSet2.xml"
-    FILE_CSV "${UA_NODESET_DIR}/Machinery/NodeIds.csv"
+    FILE_NS "${open62541_NODESET_DIR}/Machinery/Opc.Ua.Machinery.NodeSet2.xml"
+    FILE_CSV "${open62541_NODESET_DIR}/Machinery/NodeIds.csv"
     FILE_BSD "${CMAKE_BINARY_DIR}/model/Opc.Ua.Machinery.Types.bsd"
     NAMESPACE_MAP "3:http://opcfoundation.org/UA/Machinery/"
     TARGET_PREFIX "${PROJECT_NAME}"
@@ -95,9 +95,9 @@ target_link_libraries(ua_gen_machinery PUBLIC ua_gen_di)
 
 ua_generate_nodeset_and_datatypes(
     NAME "ia"
-    FILE_NS "${UA_NODESET_DIR}/IA/Opc.Ua.IA.NodeSet2.xml"
-    FILE_CSV "${UA_NODESET_DIR}/IA/Opc.Ua.IA.NodeIds.csv"
-    FILE_BSD "${UA_NODESET_DIR}/IA/Opc.Ua.IA.NodeSet2.bsd"
+    FILE_NS "${open62541_NODESET_DIR}/IA/Opc.Ua.IA.NodeSet2.xml"
+    FILE_CSV "${open62541_NODESET_DIR}/IA/Opc.Ua.IA.NodeIds.csv"
+    FILE_BSD "${open62541_NODESET_DIR}/IA/Opc.Ua.IA.NodeSet2.bsd"
     NAMESPACE_MAP "4:http://opcfoundation.org/UA/IA/"
     TARGET_PREFIX "${PROJECT_NAME}"
     OUTPUT_DIR "${SAMPLESERVER_GENERATED_NODESET_AND_DATATYPES_OUTPUT_DIR}"
@@ -115,9 +115,9 @@ target_link_libraries(ua_gen_ia PUBLIC ua_gen_di)
 
 ua_generate_nodeset_and_datatypes(
     NAME "machinetool"
-    FILE_NS "${UA_NODESET_DIR}/MachineTool/Opc.Ua.MachineTool.NodeSet2.xml"
-    FILE_CSV "${UA_NODESET_DIR}/MachineTool/NodeIds.csv"
-    FILE_BSD "${UA_NODESET_DIR}/MachineTool/Opc.Ua.MachineTool.NodeSet2.bsd"
+    FILE_NS "${open62541_NODESET_DIR}/MachineTool/Opc.Ua.MachineTool.NodeSet2.xml"
+    FILE_CSV "${open62541_NODESET_DIR}/MachineTool/NodeIds.csv"
+    FILE_BSD "${open62541_NODESET_DIR}/MachineTool/Opc.Ua.MachineTool.NodeSet2.bsd"
     NAMESPACE_MAP "5:http://opcfoundation.org/UA/MachineTool/"
     TARGET_PREFIX "${PROJECT_NAME}"
     OUTPUT_DIR "${SAMPLESERVER_GENERATED_NODESET_AND_DATATYPES_OUTPUT_DIR}"
@@ -138,9 +138,9 @@ target_link_libraries(ua_gen_machinetool PUBLIC ua_gen_ia ua_gen_machinery)
 
 ua_generate_nodeset_and_datatypes(
     NAME "robotics"
-    FILE_NS "${UA_NODESET_DIR}/Robotics/Opc.Ua.Robotics.NodeSet2.xml"
-    FILE_CSV "${UA_NODESET_DIR}/Robotics/NodeIds.csv"
-    FILE_BSD "${UA_NODESET_DIR}/Robotics/Opc.Ua.Robotics.Types.bsd"
+    FILE_NS "${open62541_NODESET_DIR}/Robotics/Opc.Ua.Robotics.NodeSet2.xml"
+    FILE_CSV "${open62541_NODESET_DIR}/Robotics/NodeIds.csv"
+    FILE_BSD "${open62541_NODESET_DIR}/Robotics/Opc.Ua.Robotics.Types.bsd"
     NAMESPACE_MAP "6:http://opcfoundation.org/UA/Robotics/"
     TARGET_PREFIX "${PROJECT_NAME}"
     OUTPUT_DIR "${SAMPLESERVER_GENERATED_NODESET_AND_DATATYPES_OUTPUT_DIR}"

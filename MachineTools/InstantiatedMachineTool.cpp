@@ -58,7 +58,7 @@ void InstantiatedMachineTool::InstantiateIdentification() {
 void InstantiatedMachineTool::InstantiateMonitoringStacklight(std::list<UA_SignalColor> stacklightColors) {
   InstantiateOptional(mt.Monitoring->Stacklight, m_pServer, n);
   InstantiateOptional(mt.Monitoring->Stacklight->NodeVersion, m_pServer, n);
-  mt.Monitoring->Stacklight->StacklightMode = UA_StacklightOperationMode::UA_STACKLIGHTOPERATIONMODE_SEGMENTED;
+  mt.Monitoring->Stacklight->SignalMode = UA_StacklightOperationMode::UA_STACKLIGHTOPERATIONMODE_SEGMENTED;
 
   // Store size, as the list will become shorter
   std::size_t s = stacklightColors.size();
@@ -68,9 +68,9 @@ void InstantiatedMachineTool::InstantiateMonitoringStacklight(std::list<UA_Signa
     auto &light = mt.Monitoring->Stacklight->OrderedObjects.Add(m_pServer, n, {m_nsIndex, ss.str()});
     InstantiateOptional(light.IsPartOfBase, m_pServer, n);
     InstantiateOptional(light.SignalOn, m_pServer, n);
-    InstantiateOptional(light.StacklightMode, m_pServer, n);
+    InstantiateOptional(light.SignalMode, m_pServer, n);
 
-    light.StacklightMode = UA_SignalModeLight::UA_SIGNALMODELIGHT_CONTINUOUS;
+    light.SignalMode = UA_SignalModeLight::UA_SIGNALMODELIGHT_CONTINUOUS;
     light.IsPartOfBase = false;
     light.NumberInList = i;
     light.SignalOn = true;

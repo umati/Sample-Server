@@ -21,7 +21,7 @@ void ShowcaseMachineTool::CreateObject() {
   InstantiateTools();
   InstantiateProduction();
   if (m_mqttSettings.connectionIdent != nullptr) {
-    m_publisher.Publish(mt, m_pServer, m_mqttSettings.connectionIdent, n, m_mqttSettings.prefix, m_mqttSettings.publisherId, "MachineTool", 2000);
+    m_publisher.Publish(mt, m_pServer, m_mqttSettings.connectionIdent, n, m_mqttSettings.prefix, m_mqttSettings.publisherId, "", 2000);
   }
 }
 

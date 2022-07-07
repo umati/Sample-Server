@@ -31,7 +31,7 @@ void FullMachineToolDynamic::Simulate() {
 
     if (m_mqttSettings.connectionIdent != nullptr) {
       auto nId = m_publisher.m_namesToNodeIds["Production_WriterGroup"];
-      TopicCreator tc{m_mqttSettings.prefix, m_mqttSettings.publisherId, "Production_WriterGroup", m_mqttSettings.publisherId + "_.ProductionPlan." + ss.str()};
+      TopicCreator tc{m_mqttSettings.prefix, m_mqttSettings.publisherId, "Production_WriterGroup", ".ProductionPlan." + ss.str()};
       m_publisher.PublishFields(refl::reflect(job), job, tc, m_pServer, &nId, UA_FALSE, UA_TRUE);
     }
 

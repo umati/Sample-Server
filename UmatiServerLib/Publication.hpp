@@ -193,7 +193,7 @@ struct MqttConnectionConfig {
 };
 
 static void
-addPublishedDataSet(UA_Server *server, UA_NodeId* publishedDataSetIdent, std::string name, UA_Boolean sendViaWriterGroupTopic=UA_TRUE) {
+addPublishedDataSet(UA_Server *server, UA_NodeId* publishedDataSetIdent, std::string name, UA_Boolean sendViaWriterGroupTopic=UA_TRUE, std::string descr="") {
     UA_NodeId_init(publishedDataSetIdent);
     /* The PublishedDataSetConfig contains all necessary public
     * information for the creation of a new PublishedDataSet */
@@ -202,6 +202,7 @@ addPublishedDataSet(UA_Server *server, UA_NodeId* publishedDataSetIdent, std::st
     publishedDataSetConfig.publishedDataSetType = UA_PUBSUB_DATASET_PUBLISHEDITEMS;
     publishedDataSetConfig.name = UA_STRING_ALLOC(name.c_str());
     publishedDataSetConfig.sendViaWriterGroupTopic = sendViaWriterGroupTopic;
+    publishedDataSetConfig.config.itemsTemplate.metaData.description = UA_LOCALIZEDTEXT_ALLOC("en", descr.c_str());
     /* Create new PublishedDataSet based on the PublishedDataSetConfig. */
     UA_Server_addPublishedDataSet(server, &publishedDataSetConfig, publishedDataSetIdent);
 }
@@ -668,10 +669,12 @@ class Publisher {
     template <typename T>
     void PublishFields(const refl::type_descriptor<T> &typeDescriptor, T &instance, TopicCreator tc, UA_Server *server, UA_NodeId *writerGroupIdent, UA_Boolean aggregate, UA_Boolean reversible) {
         std::cout << "TypeName: " << typeDescriptor.name << '\n';
-        
+        UmatiServerLib::constexp::NodeId typeNodeId = refl::descriptor::get_attribute<UmatiServerLib::attribute::UaObjectType>(typeDescriptor).NodeId;
+        std::stringstream description;
+        description << "nsu=" << typeNodeId.NsUri << ";i=" << static_cast<unsigned>(typeNodeId.Identifier.numeric);
         UA_NodeId* publishedDataSetIdent = UA_NodeId_new();
         UA_NodeId* dataSetWriterIdent = UA_NodeId_new();
-        addPublishedDataSet(server, publishedDataSetIdent, tc.publishedDataSetName, aggregate);
+        addPublishedDataSet(server, publishedDataSetIdent, tc.publishedDataSetName, aggregate, description.str());
 
         bool addedSomething = AddFieldsToPublish(typeDescriptor, instance, tc, server, writerGroupIdent, publishedDataSetIdent, aggregate, reversible);
         

@@ -58,7 +58,7 @@ void InstantiatedMachineTool::InstantiateIdentification() {
 void InstantiatedMachineTool::InstantiateMonitoringStacklight(std::list<UA_SignalColor> stacklightColors) {
   InstantiateOptional(mt.Monitoring->Stacklight, m_pServer, n);
   InstantiateOptional(mt.Monitoring->Stacklight->NodeVersion, m_pServer, n);
-  mt.Monitoring->Stacklight->SignalMode = UA_StacklightOperationMode::UA_STACKLIGHTOPERATIONMODE_SEGMENTED;
+  mt.Monitoring->Stacklight->StacklightMode = UA_StacklightOperationMode::UA_STACKLIGHTOPERATIONMODE_SEGMENTED;
 
   // Store size, as the list will become shorter
   std::size_t s = stacklightColors.size();

@@ -35,7 +35,7 @@ struct TopicCreator {
         if (isEventWriter) {
         return prefix + "/json/metadata/" + publisherId + "/" + writerGroupName + "/" + publishedDataSetName + "_EventWriter";
         } else {
-        return prefix + "/json/metadata/" + publisherId + "/" + writerGroupName + "/" + publishedDataSetName + "_Writer";
+        return prefix + "/json/metadata/" + publisherId + "/" + writerGroupName + "/" + publishedDataSetName;
         }
     }
 
@@ -43,7 +43,7 @@ struct TopicCreator {
         if (isEventWriter) {
         return prefix + "/json/data/" + publisherId + "/" + writerGroupName + "/" + publishedDataSetName + "_EventWriter";
         } else {
-        return prefix + "/json/data/" + publisherId + "/" + writerGroupName + "/" + publishedDataSetName + "_Writer";
+        return prefix + "/json/data/" + publisherId + "/" + writerGroupName + "/" + publishedDataSetName;
         }
     }
 
@@ -51,7 +51,7 @@ struct TopicCreator {
         if (isEventWriter) {
         return publishedDataSetName + "_EventWriter";
         } else {
-        return publishedDataSetName + "_Writer";
+        return publishedDataSetName;
         }
     }
 
@@ -203,6 +203,15 @@ addPublishedDataSet(UA_Server *server, UA_NodeId* publishedDataSetIdent, std::st
     publishedDataSetConfig.name = UA_STRING_ALLOC(name.c_str());
     publishedDataSetConfig.sendViaWriterGroupTopic = sendViaWriterGroupTopic;
     publishedDataSetConfig.config.itemsTemplate.metaData.description = UA_LOCALIZEDTEXT_ALLOC("en", descr.c_str());
+    
+    UA_Variant v;
+    memset(&v, 0, sizeof(UA_Variant));
+    UA_Server_readValue(server, UA_NODEID_NUMERIC(0, UA_NS0ID_SERVER_NAMESPACEARRAY), &v);
+    UA_String* nsarray = (UA_String*) v.data;
+    auto nsarraylength = v.arrayLength;
+    publishedDataSetConfig.config.itemsTemplate.metaData.namespaces = nsarray;
+    publishedDataSetConfig.config.itemsTemplate.metaData.namespacesSize = nsarraylength;
+
     /* Create new PublishedDataSet based on the PublishedDataSetConfig. */
     UA_Server_addPublishedDataSet(server, &publishedDataSetConfig, publishedDataSetIdent);
 }
@@ -212,7 +221,7 @@ addPublishedDataSet(UA_Server *server, UA_NodeId* publishedDataSetIdent, std::st
  * The DataSetField (DSF) is part of the PDS and describes exactly one published field.
  */
 static UA_NodeId
-addDataSetField(UA_Server *server, UA_NodeId *publishedDataSetIdent, UA_NodeId toAdd, char* fieldNameAlias) {
+addDataSetField(UA_Server *server, UA_NodeId *publishedDataSetIdent, UA_NodeId toAdd, char* fieldNameAlias, UA_UInt32 attributeId = UA_ATTRIBUTEID_VALUE) {
     /* Add a field to the previous created PublishedDataSet */
     static std::map<open62541Cpp::UA_NodeId, open62541Cpp::UA_NodeId> nodeId_to_pds{};
 
@@ -227,9 +236,10 @@ addDataSetField(UA_Server *server, UA_NodeId *publishedDataSetIdent, UA_NodeId t
     dataSetFieldConfig.field.variable.fieldNameAlias = UA_STRING(fieldNameAlias);
     dataSetFieldConfig.field.variable.promotedField = UA_FALSE;
     dataSetFieldConfig.field.variable.publishParameters.publishedVariable = toAdd;
-    dataSetFieldConfig.field.variable.publishParameters.attributeId = UA_ATTRIBUTEID_VALUE;
-    UA_Server_addDataSetField(server, *publishedDataSetIdent, &dataSetFieldConfig, &dataSetFieldIdentifier);
-
+    dataSetFieldConfig.field.variable.publishParameters.attributeId = attributeId;
+    auto re = UA_Server_addDataSetField(server, *publishedDataSetIdent, &dataSetFieldConfig, &dataSetFieldIdentifier);
+    if(re.result != 0) 
+    std::cout << "Error adding" << fieldNameAlias << re.result << '\n';
     nodeId_to_pds[open62541Cpp::UA_NodeId(toAdd)] = open62541Cpp::UA_NodeId(*publishedDataSetIdent);
     return dataSetFieldIdentifier;
 }
@@ -471,6 +481,80 @@ static void removeDataSetWriter(UA_Server *server, UA_NodeId *dsw) {
  * @param nodesMaster A nodesmaster to manage the binding
  */
 
+static std::string UriEncode(const std::string & sSrc)
+{  
+
+   static const char SAFE[256] =
+	{
+        /*      0 1 2 3  4 5 6 7  8 9 A B  C D E F */
+        /* 0 */ 0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0,
+        /* 1 */ 0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0,
+        /* 2 */ 1,1,1,1, 1,1,1,1, 1,1,1,1, 1,1,1,0,
+        /* 3 */ 1,1,1,1, 1,1,1,1, 1,1,1,1, 1,1,1,1,
+        
+        /* 4 */ 1,1,1,1, 1,1,1,1, 1,1,1,1, 1,1,1,1,
+        /* 5 */ 1,1,1,1, 1,1,1,1, 1,1,1,1, 1,1,1,1,
+        /* 6 */ 1,1,1,1, 1,1,1,1, 1,1,1,1, 1,1,1,1,
+        /* 7 */ 1,1,1,1, 1,1,1,1, 1,1,1,1, 1,1,1,1,
+        
+        /* 8 */ 0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0,
+        /* 9 */ 0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0,
+        /* A */ 0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0,
+        /* B */ 0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0,
+        
+        /* C */ 0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0,
+        /* D */ 0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0,
+        /* E */ 0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0,
+        /* F */ 0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0
+	};
+   const char DEC2HEX[16 + 1] = "0123456789ABCDEF";
+   const unsigned char * pSrc = (const unsigned char *)sSrc.c_str();
+   const int SRC_LEN = sSrc.length();
+   unsigned char * const pStart = new unsigned char[SRC_LEN * 3];
+   unsigned char * pEnd = pStart;
+   const unsigned char * const SRC_END = pSrc + SRC_LEN;
+
+   for (; pSrc < SRC_END; ++pSrc)
+   {
+      if (SAFE[*pSrc]) 
+         *pEnd++ = *pSrc;
+      else
+      {
+         // escape this char
+         *pEnd++ = '_';
+         *pEnd++ = DEC2HEX[*pSrc >> 4];
+         *pEnd++ = DEC2HEX[*pSrc & 0x0F];
+      }
+   }
+
+   std::string sResult((char *)pStart, (char *)pEnd);
+   delete [] pStart;
+   return sResult;
+}
+
+
+
+
+static std::string getBrowseNameAsString(UA_Server *server, UA_NodeId nodeId) {
+    UA_QualifiedName qn;
+    UA_QualifiedName_init(&qn);
+
+    UA_Variant v;
+    memset(&v, 0, sizeof(UA_Variant));
+    UA_Server_readValue(server, UA_NODEID_NUMERIC(0, UA_NS0ID_SERVER_NAMESPACEARRAY), &v);
+    UA_String* nsarray = (UA_String*) v.data;
+    auto nsarraylength = v.arrayLength;
+
+    UA_Server_readBrowseName(server, nodeId, &qn);
+
+    std::string nsu((char*)nsarray[qn.namespaceIndex].data, nsarray[qn.namespaceIndex].length);
+    std::string name((char*)qn.name.data, qn.name.length);
+
+    std::stringstream ss;
+    ss << "nsu=" << nsu << ";name=" << name;
+    return UriEncode(ss.str());
+}
+
 class Publisher {
     public:
 
@@ -513,7 +597,9 @@ class Publisher {
     bool AddFieldsToPublish(const refl::type_descriptor<T> &typeDescriptor, T &instance, TopicCreator tc, UA_Server *server, UA_NodeId *writerGroupIdent, UA_NodeId *publishedDataSetIdent, UA_Boolean aggregate, UA_Boolean reversible) {
         bool addedSomething = false;
         for_each(typeDescriptor.members, [&](const auto member) {
-            std::cout << "Found Member " << member.name << "\n";
+            std::string browseName = getBrowseNameAsString(server, *member(instance).NodeId.NodeId);
+            std::cout << "Found Member " << member.name << " with BrowseName " << browseName << '\n';
+
             if constexpr (refl::descriptor::has_attribute<UmatiServerLib::attribute::PlaceholderOptional>(member)) {
                 std::cout << "Member is optional placeholder" << member.name << "\n";
 
@@ -536,7 +622,7 @@ class Publisher {
                     
 
                     auto tc2 = tc;
-                    tc2.publishedDataSetName = tc2.publishedDataSetName + "." + std::string(member.name);
+                    tc2.publishedDataSetName = tc2.publishedDataSetName + "." + browseName;
                     auto typeDescriptor = refl::reflect(member(instance).value);
                     
                     if constexpr (refl::descriptor::has_attribute<UmatiServerLib::attribute::UaDataType>(typeDescriptor) ||
@@ -561,8 +647,9 @@ class Publisher {
                         UA_QualifiedName_init(&qualifiedName);
                         UA_Server_readBrowseName(server, *nodeId, &qualifiedName);
                         std::string name((char*)qualifiedName.name.data, qualifiedName.name.length);
+                        auto browseNameElem = getBrowseNameAsString(server, *elem.NodeId.NodeId);
                         auto tc2 = tc;
-                        tc2.publishedDataSetName = tc2.publishedDataSetName + "." + name;
+                        tc2.publishedDataSetName = tc2.publishedDataSetName + "." + browseNameElem;
 
                         if constexpr (is_same_template<typeof(elem.value), std::variant>::value) {
                             std::visit(VariantVisitor{this, server, tc2, writerGroupIdent, publishedDataSetIdent, elem.NodeId.NodeId, name, aggregate, reversible, addedSomething,
@@ -590,7 +677,8 @@ class Publisher {
                     UA_NodeId *pds = UA_NodeId_new();
                     UA_NodeId *dswIdent = UA_NodeId_new();
                     auto tc2 = tc;
-                    tc2.publishedDataSetName = tc2.publishedDataSetName + "." + std::string(member.name);
+                    std::string browseName = getBrowseNameAsString(server, *member(instance).NodeId.NodeId);
+                    tc2.publishedDataSetName = tc2.publishedDataSetName + "." + browseName;
                     tc2.isEventWriter = true;
                     addPublishedDataSetEvent(server, pds, 
                                             *member(instance).NodeId.NodeId,
@@ -606,7 +694,7 @@ class Publisher {
 
                 } else if constexpr (is_same_template<typename decltype(member)::value_type, BindableMember>::value) {
                     auto tc2 = tc;
-                    tc2.publishedDataSetName = tc2.publishedDataSetName + "." + std::string(member.name);
+                    tc2.publishedDataSetName = tc2.publishedDataSetName + "." + browseName;
                     auto typeDescriptor = refl::reflect(member(instance).value);
                     if constexpr (refl::descriptor::has_attribute<UmatiServerLib::attribute::UaDataType>(typeDescriptor) ||
                                 refl::descriptor::has_attribute<UmatiServerLib::attribute::UaVariableType>(typeDescriptor)) {
@@ -623,10 +711,7 @@ class Publisher {
                     auto &value = member(instance).value;
                     for (auto &elem: value) {
                         auto nodeId = elem.NodeId.NodeId;
-                        UA_QualifiedName qualifiedName;
-                        UA_QualifiedName_init(&qualifiedName);
-                        UA_Server_readBrowseName(server, *nodeId, &qualifiedName);
-                        std::string s((char*)qualifiedName.name.data, qualifiedName.name.length);
+                        std::string s = getBrowseNameAsString(server, nodeId);
                         auto tc2 = tc;
                         tc2.publishedDataSetName = tc2.publishedDataSetName + "." + s;
                         // PublishFields(refl::reflect(elem.value), elem.value, tc2, server, writerGroupIdent);
@@ -666,21 +751,26 @@ class Publisher {
         return addedSomething;
     }
 
+    std::string test = "TypeDefinition";
+
     template <typename T>
     void PublishFields(const refl::type_descriptor<T> &typeDescriptor, T &instance, TopicCreator tc, UA_Server *server, UA_NodeId *writerGroupIdent, UA_Boolean aggregate, UA_Boolean reversible) {
         std::cout << "TypeName: " << typeDescriptor.name << '\n';
         UmatiServerLib::constexp::NodeId typeNodeId = refl::descriptor::get_attribute<UmatiServerLib::attribute::UaObjectType>(typeDescriptor).NodeId;
+        open62541Cpp::UA_NodeId nid = typeNodeId.UANodeId(server);
+        UA_NodeId x = *nid.NodeId;
         std::stringstream description;
         description << "nsu=" << typeNodeId.NsUri << ";i=" << static_cast<unsigned>(typeNodeId.Identifier.numeric);
         UA_NodeId* publishedDataSetIdent = UA_NodeId_new();
         UA_NodeId* dataSetWriterIdent = UA_NodeId_new();
         addPublishedDataSet(server, publishedDataSetIdent, tc.publishedDataSetName, aggregate, description.str());
+        addDataSetField(server, publishedDataSetIdent, x, const_cast<char*>(test.c_str()), UA_ATTRIBUTEID_NODEID);
 
         bool addedSomething = AddFieldsToPublish(typeDescriptor, instance, tc, server, writerGroupIdent, publishedDataSetIdent, aggregate, reversible);
         
         addedSomething |= IterateOverBases(typeDescriptor, instance, tc, server, writerGroupIdent, publishedDataSetIdent, aggregate, reversible);
 
-        if (addedSomething) {
+        if (addedSomething) {           
             addDataSetWriter(server, tc.getWriterName() , tc.getMetaDataTopic(), tc.getDataTopic(), publishedDataSetIdent, writerGroupIdent, dataSetWriterIdent, reversible);
             m_namesToNodeIds.insert({tc.getWriterName(), *dataSetWriterIdent});
         } else {
@@ -690,7 +780,7 @@ class Publisher {
     }
 
     template <typename T>
-    UA_NodeId Publish(T &instance, UA_Server *pServer, UA_NodeId *connectionIdent, NodesMaster &nodesMaster, std::string prefix, std::string publisherId, std::string writerGroupBaseName, int intervalms, UA_Boolean aggregate=UA_TRUE, UA_Boolean reversible=UA_TRUE) {
+    UA_NodeId Publish(T &instance, UA_Server *pServer, UA_NodeId *connectionIdent, NodesMaster &nodesMaster, std::string prefix, std::string publisherId, std::string writerGroupBaseName, int intervalms, UA_Boolean aggregate=UA_TRUE, UA_Boolean reversible=UA_FALSE) {
         constexpr auto typeDescriptor = refl::reflect<T>();
         UA_NodeId *writerGroupIdent = UA_NodeId_new();
         std::string writerGroupName = writerGroupBaseName + "_WriterGroup"; 

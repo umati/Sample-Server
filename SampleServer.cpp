@@ -268,6 +268,7 @@ int main(int argc, char *argv[]) {
 
 
   std::list<std::shared_ptr<SimulatedInstance>> machineTools;
+  /*
   if (serverConfig.MQTTPubSub.has_value()) {  
     machineTools.push_back(std::make_shared<FullMachineToolDynamic>(pServer, true,
       InstantiatedMachineTool::MqttSettings{&connectionIdentFMTD, serverConfig.MQTTPubSub->Prefix, 
@@ -303,21 +304,20 @@ int main(int argc, char *argv[]) {
   } else {
     machineTools.push_back(std::make_shared<MRMachineTool>(pServer));
   }
-
-
+  */
   if (serverConfig.MQTTPubSub.has_value()) {  
     machineTools.push_back(std::make_shared<ShowcaseMachineTool>(pServer, 
       InstantiatedMachineTool::MqttSettings{&connectionIdentSCMT, serverConfig.MQTTPubSub->Prefix, 
-                                            "ShowcaseMachineTool", 
+                                            "prefix=isw;nsu=de.uni-stuttgart.isw.sampleserver;i=1234", 
                                             UA_NODEID_NULL}));
   } else {
     machineTools.push_back(std::make_shared<ShowcaseMachineTool>(pServer));
   }
-
+  /*
   machineTools.push_back(std::make_shared<CNShowcaseMachineTool>(pServer));
-  /*machineTools.push_back(std::make_shared<BasicRobot>(pServer));*/
+  machineTools.push_back(std::make_shared<BasicRobot>(pServer));
   machineTools.push_back(std::make_shared<BasicWoodworking>(pServer));
-
+  */
   UA_Server_run_startup(pServer);
   std::unique_lock<decltype(accessDataMutex)> ul(accessDataMutex);
   std::thread t(simulate, std::ref(accessDataMutex), pServer, std::ref(machineTools));

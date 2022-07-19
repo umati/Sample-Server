@@ -40,6 +40,10 @@ To run this image you need a docker installation and than typically:
 
 Refer to the [docker documentation](https://docs.docker.com/) for details.
 
+## Local Usage
+
+To read how to prepare a VM and to test the server locally, please refer to the [usage documentation](doc/Usage.md).
+
 ## Configuration
 
 The configuration uses a json format. By default, the server looks for a file `configuration.json`. The supported parameters are:

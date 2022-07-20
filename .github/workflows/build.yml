@@ -81,7 +81,7 @@ jobs:
           username: ${{ github.repository_owner }}
           password: ${{ secrets.GITHUB_TOKEN }}
       - name: Build Docker Release
-        uses: "docker/build-push-action@v3.0.0"
+        uses: "docker/build-push-action@v3.1.0"
         with:
           file: "./Sample-Server/Dockerfile"
           context: ./Sample-Server

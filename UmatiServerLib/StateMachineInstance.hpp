@@ -50,7 +50,7 @@ class StateMachineInstance : public StateMachine {
     m_stateMachineInstance.CurrentState->Value = state.DispName;
     m_stateMachineInstance.CurrentState->Id = *state.Id.NodeId;
     m_stateMachineInstance.CurrentState->Number = state.Number;
-    m_stateMachineInstance.CurrentState.CallOnDataSetFieldId(std::function(UA_Server_updateDataSetField), m_pServer);
+    m_stateMachineInstance.CurrentState.CallOnDataSetFieldId(std::function(UA_Server_updateDataSetField), m_pServer, UA_TRUE, UA_FALSE);
   }
 
   STATEMACHINE_T &m_stateMachineInstance;

@@ -56,7 +56,7 @@
 /*#include "src_generated/namespace_robotics_generated.h"*/
 #include "src_generated/namespace_woodworking_generated.h"
 
-#include "deps/open62541/plugins/ua_network_pubsub_mqtt.h"
+#include "deps/open62541/plugins/mqtt/ua_mqtt-c_adapter.h"
 #include "UmatiServerLib/Publication.hpp"
 
 std::atomic_bool running{true};

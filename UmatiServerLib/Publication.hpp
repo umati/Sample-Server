@@ -148,7 +148,7 @@ struct MqttConnectionConfig {
            mqttClientId = UA_STRING_ALLOC(mMqttClientId.c_str());
            UA_Variant_setScalar(&connectionOptions[connectionOptionIndex++].value, &mqttClientId, &UA_TYPES[UA_TYPES_STRING]);
            connectionConfig.publisherId.string = mqttClientId;
-           connectionConfig.publisherIdType = UA_PUBSUB_PUBLISHERID_STRING;
+           connectionConfig.publisherIdType = UA_PUBLISHERIDTYPE_STRING;
         }
 
         if (options[ConnectionOptions::SEND_BUFFER_SIZE]) {

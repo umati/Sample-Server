@@ -46,9 +46,9 @@ class BindableMember : public ValueDecorator<T> {
   std::vector<open62541Cpp::UA_NodeId> DataSetFieldNodeIds;
 
   template <typename B>
-  void CallOnDataSetFieldId(std::function<void(B, UA_NodeId)> func, B as) {
+  void CallOnDataSetFieldId(std::function<void(B, UA_NodeId, UA_Boolean, UA_Boolean)> func, B as, UA_Boolean minor, UA_Boolean major) {
     std::for_each(DataSetFieldNodeIds.begin(), DataSetFieldNodeIds.end(), 
-      [func, as](auto pdsId) { func(as, *pdsId.NodeId); });
+      [func, as, minor, major](auto pdsId) { func(as, *pdsId.NodeId, minor, major); });
   };
 
   BindableMember() = default;

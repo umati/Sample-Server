@@ -1,0 +1,38 @@
+name: MSYS2-Build
+on: [push, pull_request]
+
+jobs:
+  msys2-mingw64:
+    runs-on: windows-latest
+    env:
+      CMAKE_INSTALL_PREFIX: "${{ github.workspace }}/install"
+    defaults:
+      run:
+        shell: msys2 {0}
+    steps:
+      - name: Checkout Sample-Server
+        uses: actions/checkout@v3
+        with:
+          path: Sample-Server
+          submodules: recursive
+      - name: Setup MSYS2
+        uses: msys2/setup-msys2@v2
+        with:
+          msystem: MINGW64
+          update: true
+          install: git mingw-w64-x86_64-cmake mingw-w64-x86_64-toolchain
+      - name: Set CMAKE_GENERATOR MinGW Makefiles
+        run: |
+          #shellcheck  disable=SC2154
+          echo "CMAKE_GENERATOR=MinGW Makefiles">> "$env:GITHUB_ENV"
+      - name: Build Sample-Server with dependencies
+        run: |
+          mkdir -p build
+          cd build
+          cmake ../Sample-Server/.github/ -DCMAKE_INSTALL_PREFIX:PATH=${{ env.CMAKE_INSTALL_PREFIX }} -DCMAKE_GENERATOR="MinGW Makefiles"
+          cmake --build .
+      - name: Upload Artefacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: Sample-Server
+          path: ${{ env.CMAKE_INSTALL_PREFIX }}/bin

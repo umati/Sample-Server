@@ -415,6 +415,7 @@ addDataSetWriter(UA_Server *server, std::string writerName, std::string metadata
     memset(&dataSetWriterConfig, 0, sizeof(UA_DataSetWriterConfig));
     dataSetWriterConfig.dataSetWriterId = dataSetWriterId++;
     dataSetWriterConfig.keyFrameCount = 10;
+    dataSetWriterConfig.publishDataSetMetaData = UA_TRUE;
     // dataSetWriterConfig.eventQueueMaxSize = eventQueueMaxSize;
 
     if(!reversible) {

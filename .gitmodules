@@ -14,3 +14,6 @@
 [submodule "deps/json"]
 	path = deps/json
 	url = https://github.com/nlohmann/json.git
+[submodule "deps/ADS"]
+	path = deps/ADS
+	url = https://github.com/Beckhoff/ADS.git

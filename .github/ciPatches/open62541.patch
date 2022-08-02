@@ -1,0 +1,29 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index ea02695d..0a142569 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -1094,9 +1094,10 @@ if(UA_ENABLE_PUBSUB)
+         endif()
+     endif()
+     if(UA_ENABLE_PUBSUB_MQTT)
+-        if(WIN32)
++        if(0)
+             MESSAGE(WARNING "Multithreading is enabled in MQTT plugin. This feature is under development and marked as EXPERIMENTAL")
+         else()
++            MESSAGE(WARNING "### Enabling PubSub Mqtt")
+             list(APPEND default_plugin_headers ${PROJECT_SOURCE_DIR}/deps/mqtt-c/mqtt_pal.h
+                                                ${PROJECT_SOURCE_DIR}/deps/mqtt-c/mqtt.h
+                                                ${PROJECT_SOURCE_DIR}/plugins/ua_network_pubsub_mqtt.h
+diff --git a/src/pubsub/ua_pubsub_networkmessage.c b/src/pubsub/ua_pubsub_networkmessage.c
+index a23c1528..18ed7472 100644
+--- a/src/pubsub/ua_pubsub_networkmessage.c
++++ b/src/pubsub/ua_pubsub_networkmessage.c
+@@ -847,7 +847,7 @@ UA_NetworkMessage_decodePayload(const UA_ByteString *src, size_t *offset, UA_Net
+                  return UA_STATUSCODE_BADOUTOFMEMORY);
+ 
+     for(UA_Byte i = 0; i < count; i++) {
+-        if(&dst->payload.dataSetPayload.sizes[i] == NULL){
++        if(false){
+             rv = UA_DataSetMessage_decodeBinary(src, offset,
+                                                 &(dst->payload.dataSetPayload.dataSetMessages[i]),
+                                                 0);

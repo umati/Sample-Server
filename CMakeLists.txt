@@ -28,7 +28,7 @@
 cmake_minimum_required(VERSION 3.10)
 project(SampleServer VERSION 1.2.0)
 
-set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD 17)
 
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake)
 
@@ -40,6 +40,7 @@ find_package(nlohmann_json REQUIRED)
 
 find_package(ReflCpp REQUIRED)
 find_package(Threads REQUIRED)
+find_package(ADS REQUIRED)
 
 if(NOT CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
     # needed or cmake doesn't recognize dependencies of generated files
@@ -359,6 +360,7 @@ add_executable(
     MachineTools/FullMachineToolDynamic.cpp
     MachineTools/InstantiatedMachineTool.cpp
     MachineTools/MRMachineTool.cpp
+    MachineTools/Relab.cpp
     MachineTools/ShowcaseMachineTool.cpp
     MachineTools/SimulatedInstance.cpp
     # Robotics/BasicRobot.cpp
@@ -375,12 +377,13 @@ target_link_libraries(
     PUBLIC SampleServerLib
            Configuration
            ua_gen_machinetool
-           # cmake-format: off
-           # ua_gen_robotics
-           # cmake-format: on
+           ua_gen_robotics
            ua_gen_woodworking
            ua_gen_gms
            ua_gen_additivemanufacturing
+           ADS::ADS
+           wsock32
+           ws2_32
 )
 target_compile_definitions(${PROJECT_NAME} PRIVATE UA_ENABLE_PUBSUB=ON UA_ENABLE_PUBSUB_MQTT=ON UA_ENABLE_MQTT_TLS=ON)
 

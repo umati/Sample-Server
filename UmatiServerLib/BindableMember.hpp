@@ -9,6 +9,7 @@
 
 #include <vector>
 #include <functional>
+#include <algorithm>
 #include <Open62541Cpp/UA_NodeId.hpp>
 #include <Open62541Cpp/UA_RelativPathElement.hpp>
 

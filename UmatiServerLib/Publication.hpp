@@ -237,7 +237,7 @@ addPublishedDataSetEvent(UA_Server *server, UA_NodeId* publishedDataSetIdent, UA
     publishedDataSetConfig.name = UA_STRING_ALLOC(name.c_str());
     publishedDataSetConfig.sendViaWriterGroupTopic = sendViaWriterGroupTopic;
 
-    size_t selectedFieldSize = 6;
+    const size_t selectedFieldSize = 6;
     publishedDataSetConfig.config.event.eventNotfier = eventNotifier;
     // publishedDataSetConfig.config.event.selectedFieldsSize = selectedFieldSize;
 
@@ -538,7 +538,7 @@ class Publisher {
                         auto tc2 = tc;
                         tc2.publishedDataSetName = tc2.publishedDataSetName + "." + name;
 
-                        if constexpr (is_same_template<typeof(elem.value), std::variant>::value) {
+                        if constexpr (is_same_template<decltype(elem.value), std::variant>::value) {
                             std::visit(VariantVisitor{this, server, tc2, writerGroupIdent, publishedDataSetIdent, elem.NodeId.NodeId, name, aggregate, reversible, addedSomething,
                                 elem.PublishedDataSetNodeIds, elem.DataSetFieldNodeIds}, elem.value);
                         } else {

@@ -72,6 +72,56 @@ The binding is done by comparing the name of structure members with the browse n
 ├──UmatiServerLib  Library for binding the defined types to OPC UA instances
 ├──Woodworkng      Simulated wood working sample machines
 ```
+## Example Build under Windows
+Dependencies:
+- Install and configure MinGW as described here https://code.visualstudio.com/docs/cpp/config-mingw
+- Install CMAKE https://cmake.org/download/
+
+```powershell
+mkdir _build
+mkdir _install
+mkdir _deps
+cd _deps
+cmake ..\.github\ -G "MinGW Makefiles" -DCMAKE_INSTALL_PREFIX:PATH="/Users/ac128531/Desktop/Sample-Server/Sample-Server/_install" -DUA_ENABLE_MQTT:BOOL=1
+```
+Edit `_deps\open62541External-prefix\src\open62541External-build\cmake_install.cmake` (See EXAMPLE diff below!).
+```diff
+diff --git a/./a.cmake b/./b.cmake
+index fa4a524..2949891 100644
+--- a/./a.cmake
++++ b/./b.cmake
+@@ -238,11 +238,11 @@ if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_
+ endif()
+
+ if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
+-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/include/open62541" TYPE FILE FILES "C:/Users/ac128531/Desktop/Sample-Server/Sample-Server/deps/open62541/plugins/ua_network_pubsub_mqtt.h")
++  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/include/open62541C:/Users/ac128531/Desktop/Sample-Server/Sample-Server/deps/open62541/plugins" TYPE FILE FILES "C:/Users/ac128531/Desktop/Sample-Server/Sample-Server/deps/open62541/plugins/ua_network_pubsub_mqtt.h")
+ endif()
+
+ if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
+-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/include/open62541" TYPE FILE FILES "C:/Users/ac128531/Desktop/Sample-Server/Sample-Server/deps/open62541/plugins/mqtt/ua_mqtt_adapter.h")
++  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/include/open62541C:/Users/ac128531/Desktop/Sample-Server/Sample-Server/deps/open62541/plugins/mqtt" TYPE FILE FILES "C:/Users/ac128531/Desktop/Sample-Server/Sample-Server/deps/open62541/plugins/mqtt/ua_mqtt_adapter.h")
+ endif()
+
+ if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
+```
+```powershell
+cmake --build .
+```
+The exe can be found under `<sourceDirectory>/_install/bin`. Put the `configuration.json` (see `configuration.template.json`) in this
+directory.
+
+`.vscode/settings.json` for debugging with C/C++ and cmake extensions for vscode:
+```json
+{
+    "cmake.sourceDirectory": "${workspaceFolder}",
+    "cmake.buildDirectory": "${workspaceFolder}/_build",
+    "cmake.installPrefix": "${workspaceFolder}/_install",
+    "cmake.generator": "MinGW Makefiles"
+}
+```
+
+
 
 ## License
 

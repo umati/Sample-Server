@@ -45,6 +45,7 @@
 #include "MachineTools/MRMachineTool.hpp"
 #include "MachineTools/ShowcaseMachineTool.hpp"
 #include "MachineTools/InstantiatedMachineTool.hpp"
+#include "MachineTools/Relab.hpp"
 /*#include "Robotics/BasicRobot.hpp"*/
 #include "UmatiServerLib/OpcUaKeys.hpp"
 #include "Woodworking/BasicWoodworking.hpp"
@@ -254,7 +255,7 @@ int main(int argc, char *argv[]) {
   UA_NodeId connectionIdentMRMT{};
   UA_NodeId connectionIdentSCMT{};
 
-
+  /*
   serverConfig.MQTTPubSub->PublisherId = "FullMachineToolDynamic";
   addMQTTPubSubConnection(pServer, pConfig, serverConfig, connectionIdentFMTD);
   serverConfig.MQTTPubSub->PublisherId = "FullWoodworking";
@@ -265,9 +266,10 @@ int main(int argc, char *argv[]) {
   addMQTTPubSubConnection(pServer, pConfig, serverConfig, connectionIdentMRMT);
   serverConfig.MQTTPubSub->PublisherId = "ShowcaseMachineTool";
   addMQTTPubSubConnection(pServer, pConfig, serverConfig, connectionIdentSCMT);
-
+  */
 
   std::list<std::shared_ptr<SimulatedInstance>> machineTools;
+  /*
   if (serverConfig.MQTTPubSub.has_value()) {  
     machineTools.push_back(std::make_shared<FullMachineToolDynamic>(pServer, true,
       InstantiatedMachineTool::MqttSettings{&connectionIdentFMTD, serverConfig.MQTTPubSub->Prefix, 
@@ -304,19 +306,19 @@ int main(int argc, char *argv[]) {
     machineTools.push_back(std::make_shared<MRMachineTool>(pServer));
   }
 
-
+  */
   if (serverConfig.MQTTPubSub.has_value()) {  
-    machineTools.push_back(std::make_shared<ShowcaseMachineTool>(pServer, 
+    machineTools.push_back(std::make_shared<Relab>(pServer, 
       InstantiatedMachineTool::MqttSettings{&connectionIdentSCMT, serverConfig.MQTTPubSub->Prefix, 
-                                            "ShowcaseMachineTool", 
+                                            "Relab", 
                                             UA_NODEID_NULL}));
   } else {
-    machineTools.push_back(std::make_shared<ShowcaseMachineTool>(pServer));
+    machineTools.push_back(std::make_shared<Relab>(pServer));
   }
 
-  machineTools.push_back(std::make_shared<CNShowcaseMachineTool>(pServer));
+  // machineTools.push_back(std::make_shared<CNShowcaseMachineTool>(pServer));
   /*machineTools.push_back(std::make_shared<BasicRobot>(pServer));*/
-  machineTools.push_back(std::make_shared<BasicWoodworking>(pServer));
+  // machineTools.push_back(std::make_shared<BasicWoodworking>(pServer));
 
   UA_Server_run_startup(pServer);
   std::unique_lock<decltype(accessDataMutex)> ul(accessDataMutex);

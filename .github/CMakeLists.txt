@@ -61,6 +61,8 @@ externalproject_add(
     open62541External
     BUILD_ALWAYS 1
     SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/../deps/open62541
+    PATCH_COMMAND "${Patch_EXECUTABLE}" -p1 --forward -d ${CMAKE_CURRENT_SOURCE_DIR}/../deps/open62541 <
+                    ${CMAKE_CURRENT_SOURCE_DIR}/ciPatches/open62541.patch || echo "Patch returned non-zero"
     CMAKE_ARGS -DUA_ENABLE_SUBSCRIPTIONS_ALARMS_CONDITIONS:BOOL=ON -DUA_ENABLE_SUBSCRIPTIONS_EVENTS:BOOL=ON
                -DUA_NAMESPACE_ZERO:STRING=FULL -DUA_ENABLE_ENCRYPTION:STRING=LIBRESSL -DUA_ENABLE_PUBSUB:BOOL=ON 
                -DUA_ENABLE_PUBSUB_MQTT:BOOL=ON -DUA_ENABLE_JSON_ENCODING:BOOL=ON
@@ -76,6 +78,15 @@ externalproject_add(
     CMAKE_ARGS -DCMAKE_INSTALL_PREFIX:PATH=${CMAKE_INSTALL_PREFIX}
     INSTALL_DIR "${CMAKE_INSTALL_PREFIX}"
     DEPENDS open62541External GTestExternal
+)
+
+externalproject_add(
+    AdsExternal
+    SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/../deps/ADS
+    PATCH_COMMAND "${Patch_EXECUTABLE}" -p1 --forward -d ${CMAKE_CURRENT_SOURCE_DIR}/../deps/ADS <
+                  ${CMAKE_CURRENT_SOURCE_DIR}/ciPatches/ads.patch || echo "Patch returned non-zero"
+    CMAKE_ARGS -DCMAKE_INSTALL_PREFIX:PATH=${CMAKE_INSTALL_PREFIX} -DBUILD_SHARED_LIBS=OFF
+    INSTALL_DIR "${CMAKE_INSTALL_PREFIX}"
 )
 
 externalproject_add(

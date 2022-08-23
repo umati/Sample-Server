@@ -26,7 +26,7 @@ Change to that directory
 cd build
 ```
 
-Call cmake with your preferred/installed generator and the properties 
+Call cmake with your preferred/installed generator and the properties
 ```CMake
 CMAKE_BUILD_TYPE=Debug
 CMAKE_INSTALL_PREFIX="[Sample-Server-Dir]/install" ../.github/

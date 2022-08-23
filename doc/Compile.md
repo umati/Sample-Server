@@ -6,8 +6,8 @@ Clone the GitHub repository using your preferred approach.
 This repository uses submodules, so be sure to clone them as well.
 
 Standard option:
-```
-$ git clone --recurse-submodules https://github.com/umati/Sample-Server.git
+```bash
+git clone --recurse-submodules https://github.com/umati/Sample-Server.git
 ```
 
 ## CMake for the Sample-Server
@@ -17,25 +17,25 @@ If possible on your system, execute the script `initialbuild.sh`, which calls cm
 
 If this is not possible, execute the steps yourself.
 Starting in the Sample-Servers topmost directory (the one that contains initialbuild.sh) create a build directory, e.g.
-```
-$ mkdir build
+```bash
+mkdir build
 ```
 
 Change to that directory
-```
-$ cd build
+```bash
+cd build
 ```
 
 Call cmake with your preferred/installed generator and the properties 
-```
+```CMake
 CMAKE_BUILD_TYPE=Debug
 CMAKE_INSTALL_PREFIX="[Sample-Server-Dir]/install" ../.github/
 ```
 with \[Sample-Server-Dir\] being the Sample-Servers topmost directory.
 
 Command-line for this cmake call:
-```
-$ cmake -DCMAKE_BUILD_TYPE=Debug -DCMAKE_INSTALL_PREFIX:PATH="[Sample-Server-Dir]/install" ../.github/
+```bash
+cmake -DCMAKE_BUILD_TYPE=Debug -DCMAKE_INSTALL_PREFIX:PATH="[Sample-Server-Dir]/install" ../.github/
 ```
 
 Generators that have worked in the past:
@@ -46,8 +46,8 @@ Generators that have worked in the past:
 
 If the cmake buildsystem was generated successfully, you can compile the project using said build system.
 Example for command-line using cmake:
-```
-$ cmake --build .
+```bash
+cmake --build .
 ```
 
 ## Run the server

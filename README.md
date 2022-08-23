@@ -43,6 +43,7 @@ Refer to the [docker documentation](https://docs.docker.com/) for details.
 ## Local Usage
 
 To read how to prepare a VM and to test the server locally, please refer to the [usage documentation](doc/Usage.md).
+To read how to compile the Sample-Server yourself, refer to the [compilation documentation](doc/Compile.md).
 
 ## Configuration
 

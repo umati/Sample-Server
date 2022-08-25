@@ -201,7 +201,7 @@ addPublishedDataSet(UA_Server *server, UA_NodeId* publishedDataSetIdent, std::st
     memset(&publishedDataSetConfig, 0, sizeof(UA_PublishedDataSetConfig));
     publishedDataSetConfig.publishedDataSetType = UA_PUBSUB_DATASET_PUBLISHEDITEMS;
     publishedDataSetConfig.name = UA_STRING_ALLOC(name.c_str());
-    publishedDataSetConfig.sendViaWriterGroupTopic = sendViaWriterGroupTopic;
+    publishedDataSetConfig.batchMessagesViaWriterGroupTopic = sendViaWriterGroupTopic;
     publishedDataSetConfig.config.itemsTemplate.metaData.description = UA_LOCALIZEDTEXT_ALLOC("en", descr.c_str());
     
     UA_Variant v;
@@ -253,7 +253,7 @@ addPublishedDataSetEvent(UA_Server *server, UA_NodeId* publishedDataSetIdent, UA
     memset(&publishedDataSetConfig, 0, sizeof(UA_PublishedDataSetConfig));
     publishedDataSetConfig.publishedDataSetType = UA_PUBSUB_DATASET_PUBLISHEDEVENTS;
     publishedDataSetConfig.name = UA_STRING_ALLOC(name.c_str());
-    publishedDataSetConfig.sendViaWriterGroupTopic = sendViaWriterGroupTopic;
+    publishedDataSetConfig.batchMessagesViaWriterGroupTopic = sendViaWriterGroupTopic;
 
     size_t selectedFieldSize = 6;
     publishedDataSetConfig.config.event.eventNotfier = eventNotifier;

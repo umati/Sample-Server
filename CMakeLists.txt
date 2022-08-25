@@ -255,6 +255,7 @@ add_executable(
     GMS/InstantiatedGMS.cpp
     GMS/BasicGMS.cpp
     GMS/HexagonSim.cpp
+    GMS/HexagonGlobal.cpp
     GMS/OGPSmartScopeCNC500.cpp
     GMS/WenzelLH.cpp
     GMS/FullGMS.cpp

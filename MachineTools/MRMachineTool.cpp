@@ -42,7 +42,7 @@ void MRMachineTool::InstantiateIdentification() {
   InstantiateOptional(mt.Identification->Location, m_pServer, n);
   InstantiateOptional(mt.Identification->Model, m_pServer, n);
 
-  mt.Identification->Location = "VIRTUAL 0 0/N 48.781340 E 9.165731";
+  mt.Identification->Location = "AMB 10 A75/IMTS 3 134744/VIRTUAL 0 0/N 48.781340 E 9.165731";
   mt.Identification->SerialNumber = std::string{"070-101-098-14"};
   mt.Identification->Manufacturer = {"", "ISW UA4MT Team"};
   mt.Identification->Model = {"", "T3IUTH"};

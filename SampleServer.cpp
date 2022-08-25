@@ -44,6 +44,7 @@
 #include "GMS/BasicGMS.hpp"
 #include "GMS/FullGMS.hpp"
 #include "GMS/HexagonSim.hpp"
+#include "GMS/HexagonGlobal.hpp"
 #include "GMS/OGPSmartScopeCNC500.hpp"
 #include "GMS/WenzelLH.hpp"
 #include "MachineTools/BasicMachineTool.hpp"
@@ -237,6 +238,7 @@ int main(int argc, char *argv[]) {
   machineTools.push_back(std::make_shared<FullWoodworking>(pServer));
   machineTools.push_back(std::make_shared<BasicGMS>(pServer));
   machineTools.push_back(std::make_shared<HexagonSim>(pServer));
+  machineTools.push_back(std::make_shared<HexagonGlobal>(pServer));
   machineTools.push_back(std::make_shared<OGPSmartScopeCNC500>(pServer));
   machineTools.push_back(std::make_shared<WenzelLH>(pServer));
   machineTools.push_back(std::make_shared<FullGMS>(pServer));

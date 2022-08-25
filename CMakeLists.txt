@@ -45,6 +45,7 @@ if(NOT CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
 endif()
 
 set(SAMPLESERVER_GENERATED_NODESET_AND_DATATYPES_OUTPUT_DIR "${PROJECT_SOURCE_DIR}/src_generated")
+set(open62541_NODESET_DIR "${PROJECT_SOURCE_DIR}/deps/open62541/deps/ua-nodeset/")
 
 # Generate types and namespace for DI
 ua_generate_nodeset_and_datatypes(

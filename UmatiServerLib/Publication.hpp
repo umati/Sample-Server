@@ -451,7 +451,7 @@ addDataSetWriter(UA_Server *server, std::string writerName, std::string metadata
     brokerTransportSettings->metaDataUpdateTime = 0;
 
     /* Choose the QOS Level for MQTT */
-    brokerTransportSettings->requestedDeliveryGuarantee = UA_BROKERTRANSPORTQUALITYOFSERVICE_BESTEFFORT;
+    brokerTransportSettings->requestedDeliveryGuarantee = UA_BROKERTRANSPORTQUALITYOFSERVICE_ATLEASTONCE;
 
     /* Encapsulate config in transportSettings */
     UA_ExtensionObject transportSettings;

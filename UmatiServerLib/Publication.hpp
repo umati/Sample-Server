@@ -418,7 +418,7 @@ addDataSetWriter(UA_Server *server, std::string writerName, std::string metadata
     dataSetWriterConfig.publishDataSetMetaData = UA_TRUE;
     // dataSetWriterConfig.eventQueueMaxSize = eventQueueMaxSize;
 
-    if(reversible) {
+    if(!reversible) {
         dataSetWriterConfig.dataSetFieldContentMask = (UA_DataSetFieldContentMask) (UA_DATASETFIELDCONTENTMASK_RAWDATA);
     }
 
@@ -554,6 +554,17 @@ static std::string getBrowseNameAsString(UA_Server *server, UA_NodeId nodeId) {
     std::stringstream ss;
     ss << "nsu=" << nsu << ";name=" << name;
     return UriEncode(ss.str());
+}
+
+static UA_NodeId readTypeDefinition(UA_Server *server, UA_NodeId *nodeId) {
+    UA_BrowseDescription bd;
+    UA_BrowseDescription_init(&bd);
+    bd.nodeId = *nodeId;
+    bd.nodeClassMask = UA_NODECLASS_OBJECT | UA_NODECLASS_OBJECTTYPE;
+    bd.browseDirection = UA_BROWSEDIRECTION_FORWARD;
+    bd.referenceTypeId = UA_NODEID_NUMERIC(0, UA_NS0ID_HASTYPEDEFINITION);
+    UA_BrowseResult res = UA_Server_browse(server, 1, &bd);
+    return res.references[0].nodeId.nodeId;
 }
 
 class Publisher {
@@ -765,7 +776,7 @@ class Publisher {
         UA_NodeId* publishedDataSetIdent = UA_NodeId_new();
         UA_NodeId* dataSetWriterIdent = UA_NodeId_new();
         addPublishedDataSet(server, publishedDataSetIdent, tc.publishedDataSetName, aggregate, description.str());
-        
+
         addDataSetField(server, publishedDataSetIdent, x, const_cast<char*>(test.c_str()), UA_ATTRIBUTEID_NODEID);
         std::cout << "Tried to add TypeDefintion with nodeId " << nid << '\n';
 

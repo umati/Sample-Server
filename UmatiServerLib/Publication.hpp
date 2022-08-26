@@ -418,7 +418,7 @@ addDataSetWriter(UA_Server *server, std::string writerName, std::string metadata
     dataSetWriterConfig.publishDataSetMetaData = UA_TRUE;
     // dataSetWriterConfig.eventQueueMaxSize = eventQueueMaxSize;
 
-    if(!reversible) {
+    if(reversible) {
         dataSetWriterConfig.dataSetFieldContentMask = (UA_DataSetFieldContentMask) (UA_DATASETFIELDCONTENTMASK_RAWDATA);
     }
 
@@ -765,7 +765,9 @@ class Publisher {
         UA_NodeId* publishedDataSetIdent = UA_NodeId_new();
         UA_NodeId* dataSetWriterIdent = UA_NodeId_new();
         addPublishedDataSet(server, publishedDataSetIdent, tc.publishedDataSetName, aggregate, description.str());
+        
         addDataSetField(server, publishedDataSetIdent, x, const_cast<char*>(test.c_str()), UA_ATTRIBUTEID_NODEID);
+        std::cout << "Tried to add TypeDefintion with nodeId " << nid << '\n';
 
         bool addedSomething = AddFieldsToPublish(typeDescriptor, instance, tc, server, writerGroupIdent, publishedDataSetIdent, aggregate, reversible);
         

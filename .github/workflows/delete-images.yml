@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/github-script@v6.3.2
+      - uses: actions/github-script@v6.3.3
         env:
           PACKAGE_NAME: sample-server
           PER_PAGE: 100

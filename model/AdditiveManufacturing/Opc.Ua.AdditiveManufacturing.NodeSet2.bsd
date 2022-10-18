@@ -1,0 +1,20 @@
+<opc:TypeDictionary xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:tns="http://opcfoundation.org/UA/AdditiveManufacturing/NodeSet2/" DefaultByteOrder="LittleEndian" xmlns:opc="http://opcfoundation.org/BinarySchema/" xmlns:ua="http://opcfoundation.org/UA/" TargetNamespace="http://opcfoundation.org/UA/AdditiveManufacturing/NodeSet2/">
+    <opc:Import Namespace="http://opcfoundation.org/UA/"/>
+    <opc:EnumeratedType LengthInBits="32" Name="MaterialFunction">
+        <opc:Documentation>This enumeration indicates the function of a specific material.</opc:Documentation>
+        <opc:EnumeratedValue Name="Undefined" Value="0"/>
+        <opc:EnumeratedValue Name="Main" Value="1"/>
+        <opc:EnumeratedValue Name="Auxiliary" Value="2"/>
+    </opc:EnumeratedType>
+    <opc:EnumeratedType LengthInBits="32" Name="SensorCategory">
+        <opc:Documentation>This enumeration indicates the severity of a specific sensor.</opc:Documentation>
+        <opc:EnumeratedValue Name="MachineHealth" Value="0"/>
+        <opc:EnumeratedValue Name="MaintenanceTracking" Value="1"/>
+        <opc:EnumeratedValue Name="ProcessMonitoring" Value="2"/>
+    </opc:EnumeratedType>
+    <opc:EnumeratedType LengthInBits="32" Name="SensorSeverity">
+        <opc:Documentation>This enumeration indicates the severity of a specific sensor.</opc:Documentation>
+        <opc:EnumeratedValue Name="Info" Value="0"/>
+        <opc:EnumeratedValue Name="Critical" Value="1"/>
+    </opc:EnumeratedType>
+</opc:TypeDictionary>

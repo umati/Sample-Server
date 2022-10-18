@@ -40,6 +40,8 @@
 #include <thread>
 #include <vector>
 
+#include "AdditiveManufacturing/BasicAMMachine.hpp"
+#include "AdditiveManufacturing/FullAMMachine.hpp"
 #include "Configuration/Configuration_json.hpp"
 #include "GMS/BasicGMS.hpp"
 #include "GMS/FullGMS.hpp"
@@ -64,6 +66,7 @@
 #include "src_generated/namespace_machinery_result_generated.h"
 #include "src_generated/namespace_machinetool_generated.h"
 
+#include "src_generated/namespace_additivemanufacturing_generated.h"
 /*#include "src_generated/namespace_robotics_generated.h"*/
 #include "src_generated/namespace_woodworking_generated.h"
 
@@ -224,6 +227,7 @@ int main(int argc, char *argv[]) {
   namespace_woodworking_generated(pServer);
   namespace_machinery_result_generated(pServer);
   namespace_gms_generated(pServer);
+  namespace_additivemanufacturing_generated(pServer);
   std::mutex accessDataMutex;
 
   std::list<std::shared_ptr<SimulatedInstance>> machineTools;
@@ -242,6 +246,8 @@ int main(int argc, char *argv[]) {
   machineTools.push_back(std::make_shared<OGPSmartScopeCNC500>(pServer));
   machineTools.push_back(std::make_shared<WenzelLH>(pServer));
   machineTools.push_back(std::make_shared<FullGMS>(pServer));
+  machineTools.push_back(std::make_shared<BasicAMMachine>(pServer));
+  machineTools.push_back(std::make_shared<FullAMMachine>(pServer));
 
   UA_Server_run_startup(pServer);
   std::unique_lock<decltype(accessDataMutex)> ul(accessDataMutex);

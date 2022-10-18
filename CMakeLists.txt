@@ -5,6 +5,7 @@
 # Copyright 2021 (c) Dennis Hezel, 3Yourmind GmbH
 # Copyright 2021 (c) Hermann Leinweber, basysKom GmbH
 # Copyright 2022 (c) Sebastian Friedl, ISW University of Stuttgart (for umati and VDMA e.V.)
+# Copyright 2022 (c) Patrick Möller, 3Yourmind GmbH
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -224,6 +225,29 @@ target_sources(
 )
 target_link_libraries(ua_gen_gms PUBLIC ua_gen_machinetool ua_gen_ia ua_gen_machinery ua_gen_machinery_result)
 
+ua_generate_nodeset_and_datatypes(
+    NAME "additivemanufacturing"
+    FILE_NS "${UA_NODESET_DIR}/AdditiveManufacturing/Opc.Ua.AdditiveManufacturing.NodeSet2.xml"
+    FILE_CSV "${UA_NODESET_DIR}/AdditiveManufacturing/Opc.Ua.AdditiveManufacturing.NodeSet2.csv"
+    FILE_BSD "${UA_NODESET_DIR}/AdditiveManufacturing/Opc.Ua.AdditiveManufacturing.NodeSet2.bsd"
+    NAMESPACE_MAP "10:http://opcfoundation.org/UA/AdditiveManufacturing/"
+    TARGET_PREFIX "${PROJECT_NAME}"
+    OUTPUT_DIR "${SAMPLESERVER_GENERATED_NODESET_AND_DATATYPES_OUTPUT_DIR}"
+    DEPENDS di ia machinery machinetool
+)
+
+add_library(ua_gen_additivemanufacturing)
+target_sources(
+    ua_gen_additivemanufacturing
+    PRIVATE # cmake-format: sort
+            "${SAMPLESERVER_GENERATED_NODESET_AND_DATATYPES_OUTPUT_DIR}/additivemanufacturing_nodeids.h"
+            ${UA_NODESET_ADDITIVEMANUFACTURING_HEADERS}
+            ${UA_NODESET_ADDITIVEMANUFACTURING_SOURCES}
+            ${UA_TYPES_ADDITIVEMANUFACTURING_HEADERS}
+            ${UA_TYPES_ADDITIVEMANUFACTURING_SOURCES}
+)
+target_link_libraries(ua_gen_additivemanufacturing PUBLIC ua_gen_di ua_gen_ia ua_gen_machinery ua_gen_machinetool)
+
 add_library(
     SampleServerLib
     OpcUaTypes/ConstNodeId.cpp
@@ -252,6 +276,9 @@ target_link_libraries(Configuration PRIVATE nlohmann_json::nlohmann_json)
 
 add_executable(
     ${PROJECT_NAME}
+    AdditiveManufacturing/BasicAMMachine.cpp
+    AdditiveManufacturing/FullAMMachine.cpp
+    AdditiveManufacturing/InstantiatedAMMachine.cpp
     GMS/InstantiatedGMS.cpp
     GMS/BasicGMS.cpp
     GMS/HexagonSim.cpp
@@ -278,7 +305,7 @@ add_executable(
 set_target_properties(${PROJECT_NAME} PROPERTIES LINKER_LANGUAGE CXX)
 target_link_libraries(
     ${PROJECT_NAME} PUBLIC SampleServerLib Configuration ua_gen_machinetool ua_gen_robotics ua_gen_woodworking
-                           ua_gen_gms
+                           ua_gen_gms ua_gen_additivemanufacturing
 )
 
 add_subdirectory(tests)

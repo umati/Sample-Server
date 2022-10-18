@@ -1,0 +1,50 @@
+<xs:schema elementFormDefault="qualified" targetNamespace="http://yourorganisation.org/Opc.Ua.AdditiveManufacturing.NodeSet2/Types.xsd" xmlns:tns="http://yourorganisation.org/Opc.Ua.AdditiveManufacturing.NodeSet2/Types.xsd" xmlns:ua="http://opcfoundation.org/UA/2008/02/Types.xsd" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+    <xs:import namespace="http://opcfoundation.org/UA/2008/02/Types.xsd"/>
+    <xs:simpleType name="MaterialFunction">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="Undefined_0"/>
+            <xs:enumeration value="Main_1"/>
+            <xs:enumeration value="Auxilary_2"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:element type="tns:MaterialFunction" name="MaterialFunction"/>
+    <xs:complexType name="ListOfMaterialFunction">
+        <xs:sequence>
+            <xs:element minOccurs="0" maxOccurs="unbounded" type="tns:MaterialFunction" name="MaterialFunction" nillable="true"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:element type="tns:ListOfMaterialFunction" name="ListOfMaterialFunction" nillable="true"/>
+    <xs:simpleType name="SensorCategory">
+        <xs:annotation>
+            <xs:documentation>This enumeration indicates the severity of a specific sensor.</xs:documentation>
+        </xs:annotation>
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="MachineHealth_0"/>
+            <xs:enumeration value="MaintenanceTracking_1"/>
+            <xs:enumeration value="ProcessMonitoring_2"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:element type="tns:SensorCategory" name="SensorCategory"/>
+    <xs:complexType name="ListOfSensorCategory">
+        <xs:sequence>
+            <xs:element minOccurs="0" maxOccurs="unbounded" type="tns:SensorCategory" name="SensorCategory" nillable="true"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:element type="tns:ListOfSensorCategory" name="ListOfSensorCategory" nillable="true"/>
+    <xs:simpleType name="SensorSeverity">
+        <xs:annotation>
+            <xs:documentation>This enumeration indicates the severity of a specific sensor.</xs:documentation>
+        </xs:annotation>
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="Info_0"/>
+            <xs:enumeration value="Critical_1"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:element type="tns:SensorSeverity" name="SensorSeverity"/>
+    <xs:complexType name="ListOfSensorSeverity">
+        <xs:sequence>
+            <xs:element minOccurs="0" maxOccurs="unbounded" type="tns:SensorSeverity" name="SensorSeverity" nillable="true"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:element type="tns:ListOfSensorSeverity" name="ListOfSensorSeverity" nillable="true"/>
+</xs:schema>

@@ -2,7 +2,7 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * Copyright 2022 (c) Patrick Möller, 3Yourmind GmbH
+ * Copyright 2022 (c) Patrick Moeller, 3Yourmind GmbH
  */
 
 #pragma once
@@ -32,11 +32,10 @@ REFL_FIELD(
   ExternalIdentifier,
   UmatiServerLib::attribute::MemberInTypeNodeId(UmatiServerLib::constexp::NodeId(constants::NsAMUri, UA_ADDITIVEMANUFACTURINGID_MATERIAL_EXTERNALIDENTIFIER)),
   UmatiServerLib::attribute::PlaceholderOptional())
-  REFL_FIELD(
+REFL_FIELD(
   Identifier,
   UmatiServerLib::attribute::MemberInTypeNodeId(UmatiServerLib::constexp::NodeId(constants::NsAMUri, UA_ADDITIVEMANUFACTURINGID_MATERIAL_IDENTIFIER)),
   UmatiServerLib::attribute::PlaceholderOptional())
-REFL_FIELD(
 REFL_FIELD(
   Manufacturer,
   UmatiServerLib::attribute::MemberInTypeNodeId(UmatiServerLib::constexp::NodeId(constants::NsAMUri, UA_ADDITIVEMANUFACTURINGID_MATERIAL_MANUFACTURER)),

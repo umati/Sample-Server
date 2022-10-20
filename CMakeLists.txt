@@ -5,7 +5,7 @@
 # Copyright 2021 (c) Dennis Hezel, 3Yourmind GmbH
 # Copyright 2021 (c) Hermann Leinweber, basysKom GmbH
 # Copyright 2022 (c) Sebastian Friedl, ISW University of Stuttgart (for umati and VDMA e.V.)
-# Copyright 2022 (c) Patrick Möller, 3Yourmind GmbH
+# Copyright 2022 (c) Patrick Moeller, 3Yourmind GmbH
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -277,8 +277,7 @@ target_link_libraries(Configuration PRIVATE nlohmann_json::nlohmann_json)
 add_executable(
     ${PROJECT_NAME}
     AdditiveManufacturing/BasicAMMachine.cpp
-    AdditiveManufacturing/FullAMMachine.cpp
-    AdditiveManufacturing/InstantiatedAMMachine.cpp
+    AdditiveManufacturing/SchowcaseAMMachine.cpp
     GMS/BasicGMS.cpp
     GMS/FullGMS.cpp
     GMS/HexagonGlobal.cpp

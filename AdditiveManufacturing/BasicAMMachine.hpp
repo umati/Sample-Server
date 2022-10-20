@@ -2,7 +2,7 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * Copyright 2022 (c) Patrick Möller, 3Yourmind GmbH
+ * Copyright 2022 (c) Patrick Moeller, 3Yourmind GmbH
  */
 
 #include "../MachineTools/InstantiatedMachineTool.hpp"
@@ -17,7 +17,7 @@ class BasicAMMachine : public InstantiatedMachineTool {
  protected:
   void CreateObject() override;
 
-  AdditiveManufacturing::AM_t mt;
+  AdditiveManufacturing::AM_t machine;
   UA_String m_resulturi[1];
   void InstantiateIdentification();
   void InstantiateMonitoring();

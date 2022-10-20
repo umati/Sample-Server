@@ -5,8 +5,4 @@
  * Copyright 2022 (c) Patrick Moeller, 3Yourmind GmbH
  */
 
-#pragma once
-
-namespace constants {
-constexpr const char *NsAMUri = "http://opcfoundation.org/AdditiveManufacturing/";
-}
+//TODO

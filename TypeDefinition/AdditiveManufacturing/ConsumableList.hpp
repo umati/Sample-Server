@@ -2,7 +2,7 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * Copyright 2022 (c) Patrick Möller, 3Yourmind GmbH
+ * Copyright 2022 (c) Patrick Moeller, 3Yourmind GmbH
  */
 
 #pragma once
@@ -28,4 +28,4 @@ REFL_FIELD(
   UmatiServerLib::attribute::MemberInTypeNodeId(
     UmatiServerLib::constexp::NodeId(constants::NsAMUri, UA_ADDITIVEMANUFACTURINGID_CONSUMABLELIST)),
   UmatiServerLib::attribute::PlaceholderOptional())
-REFL_ENDS
+REFL_END

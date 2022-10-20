@@ -41,7 +41,7 @@
 #include <vector>
 
 #include "AdditiveManufacturing/BasicAMMachine.hpp"
-#include "AdditiveManufacturing/FullAMMachine.hpp"
+#include "AdditiveManufacturing/SchowcaseAMMachine.hpp"
 #include "Configuration/Configuration_json.hpp"
 #include "GMS/BasicGMS.hpp"
 #include "GMS/FullGMS.hpp"
@@ -247,7 +247,7 @@ int main(int argc, char *argv[]) {
   machineTools.push_back(std::make_shared<WenzelLH>(pServer));
   machineTools.push_back(std::make_shared<FullGMS>(pServer));
   machineTools.push_back(std::make_shared<BasicAMMachine>(pServer));
-  machineTools.push_back(std::make_shared<FullAMMachine>(pServer));
+  machineTools.push_back(std::make_shared<ShowcaseAMMachine>(pServer));
 
   UA_Server_run_startup(pServer);
   std::unique_lock<decltype(accessDataMutex)> ul(accessDataMutex);

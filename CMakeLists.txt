@@ -227,9 +227,9 @@ target_link_libraries(ua_gen_gms PUBLIC ua_gen_machinetool ua_gen_ia ua_gen_mach
 
 ua_generate_nodeset_and_datatypes(
     NAME "additivemanufacturing"
-    FILE_NS "${UA_NODESET_DIR}/AdditiveManufacturing/Opc.Ua.AdditiveManufacturing.NodeSet2.xml"
-    FILE_CSV "${UA_NODESET_DIR}/AdditiveManufacturing/Opc.Ua.AdditiveManufacturing.NodeSet2.csv"
-    FILE_BSD "${UA_NODESET_DIR}/AdditiveManufacturing/Opc.Ua.AdditiveManufacturing.NodeSet2.bsd"
+    FILE_NS "${PROJECT_SOURCE_DIR}/model/AdditiveManufacturing/Opc.Ua.AdditiveManufacturing.NodeSet2.xml"
+    FILE_CSV "${PROJECT_SOURCE_DIR}/model/AdditiveManufacturing/Opc.Ua.AdditiveManufacturing.NodeSet2.csv"
+    FILE_BSD "${PROJECT_SOURCE_DIR}/model/AdditiveManufacturing/Opc.Ua.AdditiveManufacturing.NodeSet2.bsd"
     NAMESPACE_MAP "10:http://opcfoundation.org/UA/AdditiveManufacturing/"
     TARGET_PREFIX "${PROJECT_NAME}"
     OUTPUT_DIR "${SAMPLESERVER_GENERATED_NODESET_AND_DATATYPES_OUTPUT_DIR}"
@@ -279,13 +279,13 @@ add_executable(
     AdditiveManufacturing/BasicAMMachine.cpp
     AdditiveManufacturing/FullAMMachine.cpp
     AdditiveManufacturing/InstantiatedAMMachine.cpp
-    GMS/InstantiatedGMS.cpp
     GMS/BasicGMS.cpp
-    GMS/HexagonSim.cpp
+    GMS/FullGMS.cpp
     GMS/HexagonGlobal.cpp
+    GMS/HexagonSim.cpp
+    GMS/InstantiatedGMS.cpp
     GMS/OGPSmartScopeCNC500.cpp
     GMS/WenzelLH.cpp
-    GMS/FullGMS.cpp
     MachineTools/BasicMachineTool.cpp
     MachineTools/CNShowcaseMachineTool.cpp
     MachineTools/FullMachineTool.cpp
@@ -304,8 +304,14 @@ add_executable(
 
 set_target_properties(${PROJECT_NAME} PROPERTIES LINKER_LANGUAGE CXX)
 target_link_libraries(
-    ${PROJECT_NAME} PUBLIC SampleServerLib Configuration ua_gen_machinetool ua_gen_robotics ua_gen_woodworking
-                           ua_gen_gms ua_gen_additivemanufacturing
+    ${PROJECT_NAME}
+    PUBLIC SampleServerLib
+           Configuration
+           ua_gen_machinetool
+           ua_gen_robotics
+           ua_gen_woodworking
+           ua_gen_gms
+           ua_gen_additivemanufacturing
 )
 
 add_subdirectory(tests)

@@ -23,7 +23,7 @@ REFL_TYPE(
   AdditiveManufacturing::AM_t,
   Bases<machineTool::MachineTool_t>(),
   UmatiServerLib::attribute::UaObjectType(UmatiServerLib::constexp::NodeId(
-    constants::NsGMSUri, UA_ADDITIVEMANUFACTURINGID_ADDITIVEMANUFACTURING)))  // FIXME: Check NodeId() parameters for correctness
+    constants::NsAMUri, UA_ADDITIVEMANUFACTURINGID_ADDITIVEMANUFACTURING)))  // FIXME: Check NodeId() parameters for correctness
 REFL_FIELD(Equipment, UmatiServerLib::attribute::UaBrowseName(constants::NsMachineToolUri))
 REFL_FIELD(Identification, UmatiServerLib::attribute::UaBrowseName(constants::NsDIUri))
 REFL_END

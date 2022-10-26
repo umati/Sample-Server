@@ -8,5 +8,5 @@
 #pragma once
 
 namespace constants {
-constexpr const char *NsAMUri = "http://opcfoundation.org/AdditiveManufacturing/";
+constexpr const char *NsAMUri = "http://opcfoundation.org/UA/AdditiveManufacturing/";
 }

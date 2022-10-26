@@ -14,8 +14,7 @@
 
 namespace AdditiveManufacturing {
 
-struct Material_t {
-  BindableMemberValue<bool> ReadyForProduction;
+struct Consumable_t {
   BindableMemberValue<std::string> ExternalIdentifier;
   BindableMemberValue<std::string> Identifier;
   BindableMemberValue<std::string> Manufacturer;
@@ -26,26 +25,26 @@ struct Material_t {
 }  // namespace AdditiveManufacturing
 
 REFL_TYPE(
-  AdditiveManufacturing::Material_t,
-  UmatiServerLib::attribute::UaObjectType(UmatiServerLib::constexp::NodeId(constants::NsAMUri, UA_ADDITIVEMANUFACTURINGID_MATERIAL)))
+  AdditiveManufacturing::Consumable_t,
+  UmatiServerLib::attribute::UaObjectType(UmatiServerLib::constexp::NodeId(constants::NsAMUri, UA_ADDITIVEMANUFACTURINGID_CONSUMABLE)))
 REFL_FIELD(
   ExternalIdentifier,
-  UmatiServerLib::attribute::MemberInTypeNodeId(UmatiServerLib::constexp::NodeId(constants::NsAMUri, UA_ADDITIVEMANUFACTURINGID_MATERIAL_EXTERNALIDENTIFIER)),
+  UmatiServerLib::attribute::MemberInTypeNodeId(UmatiServerLib::constexp::NodeId(constants::NsAMUri, UA_ADDITIVEMANUFACTURINGID_CONSUMABLE_EXTERNALIDENTIFIER)),
   UmatiServerLib::attribute::PlaceholderOptional())
 REFL_FIELD(
   Identifier,
-  UmatiServerLib::attribute::MemberInTypeNodeId(UmatiServerLib::constexp::NodeId(constants::NsAMUri, UA_ADDITIVEMANUFACTURINGID_MATERIAL_IDENTIFIER)),
+  UmatiServerLib::attribute::MemberInTypeNodeId(UmatiServerLib::constexp::NodeId(constants::NsAMUri, UA_ADDITIVEMANUFACTURINGID_CONSUMABLE_IDENTIFIER)),
   UmatiServerLib::attribute::PlaceholderOptional())
 REFL_FIELD(
   Manufacturer,
-  UmatiServerLib::attribute::MemberInTypeNodeId(UmatiServerLib::constexp::NodeId(constants::NsAMUri, UA_ADDITIVEMANUFACTURINGID_MATERIAL_MANUFACTURER)),
+  UmatiServerLib::attribute::MemberInTypeNodeId(UmatiServerLib::constexp::NodeId(constants::NsAMUri, UA_ADDITIVEMANUFACTURINGID_CONSUMABLE_MANUFACTURER)),
   UmatiServerLib::attribute::PlaceholderOptional())
 REFL_FIELD(
   Name,
-  UmatiServerLib::attribute::MemberInTypeNodeId(UmatiServerLib::constexp::NodeId(constants::NsAMUri, UA_ADDITIVEMANUFACTURINGID_MATERIAL_NAME)),
+  UmatiServerLib::attribute::MemberInTypeNodeId(UmatiServerLib::constexp::NodeId(constants::NsAMUri, UA_ADDITIVEMANUFACTURINGID_CONSUMABLE_NAME)),
   UmatiServerLib::attribute::PlaceholderOptional())
 REFL_FIELD(
   RemainingQuantity,
-  UmatiServerLib::attribute::MemberInTypeNodeId(UmatiServerLib::constexp::NodeId(constants::NsAMUri, UA_ADDITIVEMANUFACTURINGID_MATERIAL_REMAININGQUANTITY)),
+  UmatiServerLib::attribute::MemberInTypeNodeId(UmatiServerLib::constexp::NodeId(constants::NsAMUri, UA_ADDITIVEMANUFACTURINGID_CONSUMABLE_REMAININGQUANTITY)),
   UmatiServerLib::attribute::PlaceholderOptional())
 REFL_END

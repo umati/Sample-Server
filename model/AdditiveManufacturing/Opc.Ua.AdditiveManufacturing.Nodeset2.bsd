@@ -1,4 +1,4 @@
-<opc:TypeDictionary xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:tns="http://yourorganisation.org/Opc.Ua.AdditiveManufacturing.NodeSet2/" DefaultByteOrder="LittleEndian" xmlns:opc="http://opcfoundation.org/BinarySchema/" xmlns:ua="http://opcfoundation.org/UA/" TargetNamespace="http://yourorganisation.org/Opc.Ua.AdditiveManufacturing.NodeSet2/">
+<opc:TypeDictionary xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:tns="http://opcfoundation.org/UA/AdditiveManufacturing//" DefaultByteOrder="LittleEndian" xmlns:opc="http://opcfoundation.org/BinarySchema/" xmlns:ua="http://opcfoundation.org/UA/" TargetNamespace="http://opcfoundation.org/UA/AdditiveManufacturing//">
     <opc:Import Namespace="http://opcfoundation.org/UA/"/>
     <opc:EnumeratedType LengthInBits="32" Name="MaterialFunction">
         <opc:EnumeratedValue Name="Undefined" Value="0"/>

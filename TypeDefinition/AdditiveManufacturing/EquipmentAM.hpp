@@ -29,7 +29,7 @@ REFL_FIELD(
   Consumables,
   UmatiServerLib::attribute::MemberInTypeNodeId(UmatiServerLib::constexp::NodeId(constants::NsAMUri, UA_ADDITIVEMANUFACTURINGID_CONSUMABLES)),
   UmatiServerLib::attribute::PlaceholderOptional())
-  REFL_FIELD(
+REFL_FIELD(
   Materials,
   UmatiServerLib::attribute::MemberInTypeNodeId(UmatiServerLib::constexp::NodeId(constants::NsAMUri, UA_ADDITIVEMANUFACTURINGID_EQUIPMENTAM_MATERIALS)),
   UmatiServerLib::attribute::PlaceholderOptional())

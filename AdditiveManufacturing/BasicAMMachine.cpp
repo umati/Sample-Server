@@ -8,10 +8,8 @@
 #include "BasicAMMachine.hpp"
 
 BasicAMMachine::BasicAMMachine(UA_Server *pServer) : InstantiatedMachineTool(pServer) {
-  if (initialize) {
-    MachineName = "BasicAMMachine";
-    CreateObject();
-  }
+  MachineName = "BasicAMMachine";
+  CreateObject();
 }
 
 void BasicAMMachine::CreateObject() {
@@ -37,8 +35,8 @@ void BasicAMMachine::CreateObject() {
   UA_ObjectAttributes_clear(&objAttr);
   UmatiServerLib::Bind::MembersRefl(machine, m_pServer, m_nodeId, n);
   InstantiateIdentification();
-  InstantiateMonitoring(); //TODO
-  InstantiateProduction(); //TODO
+  InstantiateMonitoring();
+  InstantiateProduction();
 }
 
 void BasicAMMachine::InstantiateIdentification() {
@@ -71,4 +69,30 @@ void BasicAMMachine::InstantiateIdentification() {
     ss << "2022-" << hasher(MachineName);
     machine.Identification->SerialNumber = ss.str();
   }
+}
+
+void BasicAMMachine::InstantiateMonitoring() {
+  InstantiateMonitoringMT();
+  InstantiateMonitoringStacklight({UA_SignalColor::UA_SIGNALCOLOR_RED, UA_SignalColor::UA_SIGNALCOLOR_YELLOW, UA_SignalColor::UA_SIGNALCOLOR_GREEN});
+  InstantiateMonitoringChannel(1);  // FIXME: Is this needed?
+}
+
+void BasicAMMachine::InstantiateProduction() {
+  InstantiateOptional(machine.Production->ActiveProgram->State, m_pServer, n);
+  machine.Production->ActiveProgram->NumberInList = 0;
+  machine.Production->ActiveProgram->Name = "Basic Program";
+  machine.Production->ActiveProgram->State->CurrentState->Value = {"en", "Running"};
+  machine.Production->ActiveProgram->State->CurrentState->Number = 1;
+  machine.Production->ActiveProgram->State->CurrentState->Id =
+    UA_NODEID_NUMERIC(nsFromUri(m_pServer, constants::NsMachineToolUri), UA_MACHINETOOLID_PRODUCTIONSTATEMACHINETYPE_RUNNING);
+}
+
+// FIXME: Is that relevant?
+void BasicAMMachine::Simulate() {
+  ++m_simStep;
+  if ((m_simStep % 2) == 1) {
+    SimulateStacklight();
+  }
+
+  mt.Monitoring->MachineTool->PowerOnDuration = m_simStep / 3600;
 }

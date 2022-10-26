@@ -24,6 +24,7 @@ REFL_TYPE(
   UmatiServerLib::attribute::UaObjectType(UmatiServerLib::constexp::NodeId(constants::NsAMUri, UA_ADDITIVEMANUFACTURINGID_MACHINEIDENTIFICATIONAM)))
 REFL_FIELD(
   AMTechnologyIdentifier,
-  UmatiServerLib::attribute::MemberInTypeNodeId(UmatiServerLib::constexp::NodeId(constants::NsAMUri, UA_ADDITIVEMANUFACTURINGID_MACHINEIDENTIFICATIONAM_AMTECHNOLOGYIDENTIFIER)),
+  UmatiServerLib::attribute::MemberInTypeNodeId(
+    UmatiServerLib::constexp::NodeId(constants::NsAMUri, UA_ADDITIVEMANUFACTURINGID_MACHINEIDENTIFICATIONAM_AMTECHNOLOGYIDENTIFIER)),
   UmatiServerLib::attribute::PlaceholderOptional())
 REFL_END

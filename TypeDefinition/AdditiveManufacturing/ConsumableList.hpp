@@ -11,10 +11,9 @@
 #include "Constants.hpp"
 #include "Consumable.hpp"
 
-
 namespace AdditiveManufacturing {
 
-struct ConsumableList_t{
+struct ConsumableList_t {
   BindableMemberPlaceholder<BindableMember, Consumable_t> Consumable;
 };
 
@@ -25,7 +24,6 @@ REFL_TYPE(
   UmatiServerLib::attribute::UaObjectType(UmatiServerLib::constexp::NodeId(constants::Ns0Uri, UA_NS0ID_BASEOBJECTTYPE)))
 REFL_FIELD(
   Consumables,
-  UmatiServerLib::attribute::MemberInTypeNodeId(
-    UmatiServerLib::constexp::NodeId(constants::NsAMUri, UA_ADDITIVEMANUFACTURINGID_CONSUMABLELIST)),
+  UmatiServerLib::attribute::MemberInTypeNodeId(UmatiServerLib::constexp::NodeId(constants::NsAMUri, UA_ADDITIVEMANUFACTURINGID_CONSUMABLELIST)),
   UmatiServerLib::attribute::PlaceholderOptional())
 REFL_END

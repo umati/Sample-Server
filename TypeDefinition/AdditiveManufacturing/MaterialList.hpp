@@ -11,21 +11,18 @@
 #include "Constants.hpp"
 #include "Material.hpp"
 
-
 namespace AdditiveManufacturing {
 
-struct MaterialList_t{
+struct MaterialList_t {
   BindableMemberPlaceholder<BindableMember, Material_t> Material;
 };
 
 }  // namespace AdditiveManufacturing
 
 REFL_TYPE(
-  AdditiveManufacturing::MaterialList_t,
-  UmatiServerLib::attribute::UaObjectType(UmatiServerLib::constexp::NodeId(constants::Ns0Uri, UA_NS0ID_BASEOBJECTTYPE)))
+  AdditiveManufacturing::MaterialList_t, UmatiServerLib::attribute::UaObjectType(UmatiServerLib::constexp::NodeId(constants::Ns0Uri, UA_NS0ID_BASEOBJECTTYPE)))
 REFL_FIELD(
   Materials,
-  UmatiServerLib::attribute::MemberInTypeNodeId(
-    UmatiServerLib::constexp::NodeId(constants::NsAMUri, UA_ADDITIVEMANUFACTURINGID_MATERIALLIST)),
+  UmatiServerLib::attribute::MemberInTypeNodeId(UmatiServerLib::constexp::NodeId(constants::NsAMUri, UA_ADDITIVEMANUFACTURINGID_MATERIALLIST)),
   UmatiServerLib::attribute::PlaceholderOptional())
 REFL_ENDS

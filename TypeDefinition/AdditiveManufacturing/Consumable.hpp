@@ -20,7 +20,7 @@ struct Material_t {
   BindableMemberValue<std::string> Identifier;
   BindableMemberValue<std::string> Manufacturer;
   BindableMemberValue<std::string> Name;
-  BindableMemberValue<std::string> RemainingQuantity; //FIXME: Add correct type
+  BindableMemberValue<std::string> RemainingQuantity;  // FIXME: Add correct type
 };
 
 }  // namespace AdditiveManufacturing

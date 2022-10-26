@@ -8,6 +8,7 @@
 #pragma once
 #include <string>
 
+#include "../../OpcUaTypes/EUInformation.hpp"
 #include "../TypeDefinition.hpp"
 #include "../ns0/Constants.hpp"
 #include "Constants.hpp"
@@ -18,10 +19,10 @@ struct Material_t {
   BindableMemberValue<bool> ReadyForProduction;
   BindableMemberValue<std::string> ExternalIdentifier;
   BindableMemberValue<std::string> Identifier;
-  BindableMemberValue<std::string> Function; //FIXME: Add enum MaterialFunction
+  BindableMemberValue<std::string> Function;  // FIXME: Add enum MaterialFunction
   BindableMemberValue<std::string> Manufacturer;
   BindableMemberValue<std::string> Name;
-  BindableMemberValue<std::string> RemainingQuantity; //FIXME: Add correct type
+  BindableMemberValue<std::string> RemainingQuantity;  // FIXME: Add correct type
 };
 
 }  // namespace AdditiveManufacturing
@@ -33,7 +34,7 @@ REFL_FIELD(
   ExternalIdentifier,
   UmatiServerLib::attribute::MemberInTypeNodeId(UmatiServerLib::constexp::NodeId(constants::NsAMUri, UA_ADDITIVEMANUFACTURINGID_MATERIAL_EXTERNALIDENTIFIER)),
   UmatiServerLib::attribute::PlaceholderOptional())
-  REFL_FIELD(
+REFL_FIELD(
   Identifier,
   UmatiServerLib::attribute::MemberInTypeNodeId(UmatiServerLib::constexp::NodeId(constants::NsAMUri, UA_ADDITIVEMANUFACTURINGID_MATERIAL_IDENTIFIER)),
   UmatiServerLib::attribute::PlaceholderOptional())

@@ -5,4 +5,23 @@
  * Copyright 2022 (c) Patrick Moeller, 3Yourmind GmbH
  */
 
-//TODO
+#pragma once
+#include "../MachineTools/InstantiatedMachineTool.hpp"
+
+class ShowcaseAMMachine : public InstantiatedMachineTool {
+ public:
+  ShowcaseAMMachine(UA_Server *pServer);
+
+  void Simulate() override;
+  virtual ~ShowcaseAMMachine() = default;
+
+ protected:
+  void CreateObject() override;
+
+  AdditiveManufacturing::AM_t machine;
+  void InstantiateIdentification();
+  void InstantiateMonitoring();
+  void InstantiateTools();
+  void InstantiateProduction();
+  int m_simStep = 0;
+};

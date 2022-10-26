@@ -5,6 +5,7 @@
  * Copyright 2022 (c) Patrick Moeller, 3Yourmind GmbH
  */
 
+#pragma once
 #include "../MachineTools/InstantiatedMachineTool.hpp"
 
 class BasicAMMachine : public InstantiatedMachineTool {
@@ -18,14 +19,8 @@ class BasicAMMachine : public InstantiatedMachineTool {
   void CreateObject() override;
 
   AdditiveManufacturing::AM_t machine;
-  UA_String m_resulturi[1];
   void InstantiateIdentification();
   void InstantiateMonitoring();
   void InstantiateProduction();
-  void InstantiateTools();
   int m_simStep = 0;
-
-  void initCorrection(GMS::CorrectionType_t &corr, std::string Identifier, std::string CharacteristicIdentfier, double value);
-
-  void InstantiateResultManagement();
 };

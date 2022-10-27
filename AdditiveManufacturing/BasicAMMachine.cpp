@@ -27,7 +27,7 @@ void BasicAMMachine::CreateObject() {
     UA_NODEID_NUMERIC(nsFromUri(m_pServer, constants::NsMachineryUri), UA_MACHINERYID_MACHINES),
     UA_NODEID_NUMERIC(0, UA_NS0ID_ORGANIZES),
     *open62541Cpp::UA_QualifiedName(m_nsIndex, MachineName).QualifiedName,
-    UA_NODEID_NUMERIC(nsFromUri(m_pServer, constants::NsGMSUri), UA_GMSID_GMSTYPE),
+    UA_NODEID_NUMERIC(nsFromUri(m_pServer, constants::NsAMUri), UA_ADDITIVEMANUFACTURINGID_ADDITIVIEMANUFACTURINGTYPE),
     objAttr,
     nullptr,
     m_nodeId.NodeId);

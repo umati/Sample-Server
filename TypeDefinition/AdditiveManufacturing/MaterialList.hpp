@@ -6,6 +6,8 @@
  */
 
 #pragma once
+#include "../../UmatiServerLib/BindableMember.hpp"
+#include "../../UmatiServerLib/BindableMemberPlaceholder.hpp"
 #include "../TypeDefinition.hpp"
 #include "../ns0/Constants.hpp"
 #include "Constants.hpp"
@@ -22,7 +24,7 @@ struct MaterialList_t {
 REFL_TYPE(
   AdditiveManufacturing::MaterialList_t, UmatiServerLib::attribute::UaObjectType(UmatiServerLib::constexp::NodeId(constants::Ns0Uri, UA_NS0ID_BASEOBJECTTYPE)))
 REFL_FIELD(
-  Materials,
-  UmatiServerLib::attribute::MemberInTypeNodeId(UmatiServerLib::constexp::NodeId(constants::NsAMUri, UA_ADDITIVEMANUFACTURINGID_MATERIALLIST)),
+  Material,
+  UmatiServerLib::attribute::MemberInTypeNodeId(UmatiServerLib::constexp::NodeId(constants::NsAMUri, UA_ADDITIVEMANUFACTURINGID_MATERIALLISTTYPE_MATERIAL)),
   UmatiServerLib::attribute::PlaceholderOptional())
-REFL_ENDS
+REFL_END

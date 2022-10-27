@@ -226,14 +226,74 @@ target_sources(
 target_link_libraries(ua_gen_gms PUBLIC ua_gen_machinetool ua_gen_ia ua_gen_machinery ua_gen_machinery_result)
 
 ua_generate_nodeset_and_datatypes(
+    NAME "irdi"
+    FILE_NS "${UA_NODESET_DIR}/PADIM/Opc.Ua.IRDI.NodeSet2.xml"
+    TARGET_PREFIX "${PROJECT_NAME}"
+    OUTPUT_DIR "${SAMPLESERVER_GENERATED_NODESET_AND_DATATYPES_OUTPUT_DIR}"
+)
+
+add_library(ua_gen_irdi)
+target_sources(
+    ua_gen_irdi
+    PRIVATE # cmake-format: sort
+            ${UA_NODESET_IRDI_HEADERS} ${UA_NODESET_IRDI_SOURCES}
+)
+target_link_libraries(ua_gen_irdi PUBLIC open62541::open62541)
+
+set(TMP_NSURI "http://opcfoundation.org/UA/PADIM/")
+configure_file(cmake/empty.bsd.template "${CMAKE_BINARY_DIR}/model/Opc.Ua.PADIM.Types.bsd")
+
+ua_generate_nodeset_and_datatypes(
+    NAME "padim"
+    FILE_NS "${UA_NODESET_DIR}/PADIM/Opc.Ua.PADIM.NodeSet2.xml"
+    FILE_CSV "${UA_NODESET_DIR}/PADIM/Opc.Ua.PADIM.NodeIds.csv"
+    FILE_BSD "${CMAKE_BINARY_DIR}/model/Opc.Ua.PADIM.Types.bsd"
+    NAMESPACE_MAP "6:http://opcfoundation.org/UA/PADIM/"
+    TARGET_PREFIX "${PROJECT_NAME}"
+    OUTPUT_DIR "${SAMPLESERVER_GENERATED_NODESET_AND_DATATYPES_OUTPUT_DIR}"
+    DEPENDS di irdi
+)
+
+add_library(ua_gen_padim)
+target_sources(
+    ua_gen_padim
+    PRIVATE # cmake-format: sort
+            "${SAMPLESERVER_GENERATED_NODESET_AND_DATATYPES_OUTPUT_DIR}/padim_nodeids.h" ${UA_NODESET_PADIM_HEADERS}
+            ${UA_NODESET_PADIM_SOURCES} ${UA_TYPES_PADIM_HEADERS} ${UA_TYPES_PADIM_SOURCES}
+)
+target_link_libraries(ua_gen_padim PUBLIC ua_gen_di ua_gen_irdi)
+
+ua_generate_nodeset_and_datatypes(
+    NAME "process_value"
+    FILE_NS "${PROJECT_SOURCE_DIR}/model/AdditiveManufacturing/Opc.Ua.Machinery.ProcessValues.xml"
+    TARGET_PREFIX "${PROJECT_NAME}"
+    OUTPUT_DIR "${SAMPLESERVER_GENERATED_NODESET_AND_DATATYPES_OUTPUT_DIR}"
+    DEPENDS di irdi padim
+)
+
+add_library(ua_gen_process_value)
+target_sources(
+    ua_gen_process_value
+    PRIVATE # cmake-format: sort
+            ${UA_NODESET_PROCESS_VALUE_HEADERS} ${UA_NODESET_PROCESS_VALUE_SOURCES}
+)
+target_link_libraries(ua_gen_process_value PUBLIC ua_gen_di ua_gen_irdi ua_gen_padim)
+
+ua_generate_nodeset_and_datatypes(
     NAME "additivemanufacturing"
     FILE_NS "${PROJECT_SOURCE_DIR}/model/AdditiveManufacturing/Opc.Ua.AdditiveManufacturing.NodeSet2.xml"
     FILE_CSV "${PROJECT_SOURCE_DIR}/model/AdditiveManufacturing/Opc.Ua.AdditiveManufacturing.NodeSet2.csv"
     FILE_BSD "${PROJECT_SOURCE_DIR}/model/AdditiveManufacturing/Opc.Ua.AdditiveManufacturing.NodeSet2.bsd"
-    NAMESPACE_MAP "10:http://opcfoundation.org/UA/AdditiveManufacturing/"
+    NAMESPACE_MAP "8:http://yourorganisation.org/Opc.Ua.AdditiveManufacturing.NodeSet2/"
     TARGET_PREFIX "${PROJECT_NAME}"
     OUTPUT_DIR "${SAMPLESERVER_GENERATED_NODESET_AND_DATATYPES_OUTPUT_DIR}"
-    DEPENDS di ia machinery machinetool
+    DEPENDS di
+            ia
+            machinery
+            machinetool
+            irdi
+            padim
+            process_value
 )
 
 add_library(ua_gen_additivemanufacturing)
@@ -246,7 +306,16 @@ target_sources(
             ${UA_TYPES_ADDITIVEMANUFACTURING_HEADERS}
             ${UA_TYPES_ADDITIVEMANUFACTURING_SOURCES}
 )
-target_link_libraries(ua_gen_additivemanufacturing PUBLIC ua_gen_di ua_gen_ia ua_gen_machinery ua_gen_machinetool)
+target_link_libraries(
+    ua_gen_additivemanufacturing
+    PUBLIC ua_gen_di
+           ua_gen_ia
+           ua_gen_machinery
+           ua_gen_machinetool
+           ua_gen_irdi
+           ua_gen_padim
+           ua_gen_process_value
+)
 
 add_library(
     SampleServerLib
@@ -277,7 +346,7 @@ target_link_libraries(Configuration PRIVATE nlohmann_json::nlohmann_json)
 add_executable(
     ${PROJECT_NAME}
     AdditiveManufacturing/BasicAMMachine.cpp
-    AdditiveManufacturing/SchowcaseAMMachine.cpp
+    AdditiveManufacturing/ShowcaseAMMachine.cpp
     GMS/BasicGMS.cpp
     GMS/FullGMS.cpp
     GMS/HexagonGlobal.cpp

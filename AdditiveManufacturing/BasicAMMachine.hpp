@@ -7,6 +7,7 @@
 
 #pragma once
 #include "../MachineTools/InstantiatedMachineTool.hpp"
+#include "../TypeDefinition/AdditiveManufacturing/AdditiveManufacturing.hpp"
 
 class BasicAMMachine : public InstantiatedMachineTool {
  public:

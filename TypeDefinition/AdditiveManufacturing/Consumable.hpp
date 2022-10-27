@@ -26,25 +26,25 @@ struct Consumable_t {
 
 REFL_TYPE(
   AdditiveManufacturing::Consumable_t,
-  UmatiServerLib::attribute::UaObjectType(UmatiServerLib::constexp::NodeId(constants::NsAMUri, UA_ADDITIVEMANUFACTURINGID_CONSUMABLE)))
+  UmatiServerLib::attribute::UaObjectType(UmatiServerLib::constexp::NodeId(constants::NsAMUri, UA_ADDITIVEMANUFACTURINGID_CONSUMABLETYPE)))
 REFL_FIELD(
   ExternalIdentifier,
-  UmatiServerLib::attribute::MemberInTypeNodeId(UmatiServerLib::constexp::NodeId(constants::NsAMUri, UA_ADDITIVEMANUFACTURINGID_CONSUMABLE_EXTERNALIDENTIFIER)),
+  UmatiServerLib::attribute::MemberInTypeNodeId(UmatiServerLib::constexp::NodeId(constants::NsAMUri, UA_ADDITIVEMANUFACTURINGID_CONSUMABLETYPE_EXTERNALIDENTIFIER)),  // FIXME: Wrong LIST type
   UmatiServerLib::attribute::PlaceholderOptional())
 REFL_FIELD(
   Identifier,
-  UmatiServerLib::attribute::MemberInTypeNodeId(UmatiServerLib::constexp::NodeId(constants::NsAMUri, UA_ADDITIVEMANUFACTURINGID_CONSUMABLE_IDENTIFIER)),
+  UmatiServerLib::attribute::MemberInTypeNodeId(UmatiServerLib::constexp::NodeId(constants::NsAMUri, UA_ADDITIVEMANUFACTURINGID_CONSUMABLETYPE_IDENTIFIER)),  // FIXME: Wrong LIST type
   UmatiServerLib::attribute::PlaceholderOptional())
 REFL_FIELD(
   Manufacturer,
-  UmatiServerLib::attribute::MemberInTypeNodeId(UmatiServerLib::constexp::NodeId(constants::NsAMUri, UA_ADDITIVEMANUFACTURINGID_CONSUMABLE_MANUFACTURER)),
+  UmatiServerLib::attribute::MemberInTypeNodeId(UmatiServerLib::constexp::NodeId(constants::NsAMUri, UA_ADDITIVEMANUFACTURINGID_CONSUMABLETYPE_MANUFACTURER)),
   UmatiServerLib::attribute::PlaceholderOptional())
 REFL_FIELD(
   Name,
-  UmatiServerLib::attribute::MemberInTypeNodeId(UmatiServerLib::constexp::NodeId(constants::NsAMUri, UA_ADDITIVEMANUFACTURINGID_CONSUMABLE_NAME)),
+  UmatiServerLib::attribute::MemberInTypeNodeId(UmatiServerLib::constexp::NodeId(constants::NsAMUri, UA_ADDITIVEMANUFACTURINGID_CONSUMABLETYPE_NAME)),
   UmatiServerLib::attribute::PlaceholderOptional())
 REFL_FIELD(
   RemainingQuantity,
-  UmatiServerLib::attribute::MemberInTypeNodeId(UmatiServerLib::constexp::NodeId(constants::NsAMUri, UA_ADDITIVEMANUFACTURINGID_CONSUMABLE_REMAININGQUANTITY)),
+  UmatiServerLib::attribute::MemberInTypeNodeId(UmatiServerLib::constexp::NodeId(constants::NsAMUri, UA_ADDITIVEMANUFACTURINGID_CONSUMABLETYPE_REMAININGQUANTITY_EURANGE)),
   UmatiServerLib::attribute::PlaceholderOptional())
 REFL_END

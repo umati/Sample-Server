@@ -41,7 +41,7 @@
 #include <vector>
 
 #include "AdditiveManufacturing/BasicAMMachine.hpp"
-#include "AdditiveManufacturing/SchowcaseAMMachine.hpp"
+#include "AdditiveManufacturing/ShowcaseAMMachine.hpp"
 #include "Configuration/Configuration_json.hpp"
 #include "GMS/BasicGMS.hpp"
 #include "GMS/FullGMS.hpp"
@@ -59,14 +59,17 @@
 #include "UmatiServerLib/OpcUaKeys.hpp"
 #include "Woodworking/BasicWoodworking.hpp"
 #include "Woodworking/FullWoodworking.hpp"
+#include "src_generated/namespace_additivemanufacturing_generated.h"
 #include "src_generated/namespace_di_generated.h"
 #include "src_generated/namespace_gms_generated.h"
 #include "src_generated/namespace_ia_generated.h"
+#include "src_generated/namespace_irdi_generated.h"
 #include "src_generated/namespace_machinery_generated.h"
 #include "src_generated/namespace_machinery_result_generated.h"
 #include "src_generated/namespace_machinetool_generated.h"
+#include "src_generated/namespace_padim_generated.h"
+#include "src_generated/namespace_process_value_generated.h"
 
-#include "src_generated/namespace_additivemanufacturing_generated.h"
 /*#include "src_generated/namespace_robotics_generated.h"*/
 #include "src_generated/namespace_woodworking_generated.h"
 
@@ -227,6 +230,9 @@ int main(int argc, char *argv[]) {
   namespace_woodworking_generated(pServer);
   namespace_machinery_result_generated(pServer);
   namespace_gms_generated(pServer);
+  namespace_irdi_generated(pServer);
+  namespace_padim_generated(pServer);
+  namespace_process_value_generated(pServer);
   namespace_additivemanufacturing_generated(pServer);
   std::mutex accessDataMutex;
 

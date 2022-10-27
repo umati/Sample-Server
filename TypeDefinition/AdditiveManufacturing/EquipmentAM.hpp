@@ -24,13 +24,13 @@ struct EquipmentAM_t : public machineTool::Equipment_t {
 REFL_TYPE(
   AdditiveManufacturing::EquipmentAM_t,
   Bases<machineTool::Equipment_t>(),
-  UmatiServerLib::attribute::UaObjectType(UmatiServerLib::constexp::NodeId(constants::NsAMUri, UA_ADDITIVEMANUFACTURINGID_EQUIPMENTAM)))
+  UmatiServerLib::attribute::UaObjectType(UmatiServerLib::constexp::NodeId(constants::NsAMUri, UA_ADDITIVEMANUFACTURINGID_EQUIPMENTAMTYPE)))
 REFL_FIELD(
   Consumables,
-  UmatiServerLib::attribute::MemberInTypeNodeId(UmatiServerLib::constexp::NodeId(constants::NsAMUri, UA_ADDITIVEMANUFACTURINGID_CONSUMABLES)),
+  UmatiServerLib::attribute::MemberInTypeNodeId(UmatiServerLib::constexp::NodeId(constants::NsAMUri, UA_ADDITIVEMANUFACTURINGID_CONSUMABLELISTTYPE_CONSUMABLE)),
   UmatiServerLib::attribute::PlaceholderOptional())
 REFL_FIELD(
   Materials,
-  UmatiServerLib::attribute::MemberInTypeNodeId(UmatiServerLib::constexp::NodeId(constants::NsAMUri, UA_ADDITIVEMANUFACTURINGID_EQUIPMENTAM_MATERIALS)),
+  UmatiServerLib::attribute::MemberInTypeNodeId(UmatiServerLib::constexp::NodeId(constants::NsAMUri, UA_ADDITIVEMANUFACTURINGID_EQUIPMENTAMTYPE_MATERIALS)),
   UmatiServerLib::attribute::PlaceholderOptional())
 REFL_END

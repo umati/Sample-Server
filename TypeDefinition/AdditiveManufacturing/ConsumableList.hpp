@@ -8,6 +8,8 @@
 #pragma once
 #include "../TypeDefinition.hpp"
 #include "../ns0/Constants.hpp"
+#include "../../UmatiServerLib/BindableMemberPlaceholder.hpp"
+#include "../../UmatiServerLib/BindableMember.hpp"
 #include "Constants.hpp"
 #include "Consumable.hpp"
 
@@ -23,7 +25,7 @@ REFL_TYPE(
   AdditiveManufacturing::ConsumableList_t,
   UmatiServerLib::attribute::UaObjectType(UmatiServerLib::constexp::NodeId(constants::Ns0Uri, UA_NS0ID_BASEOBJECTTYPE)))
 REFL_FIELD(
-  Consumables,
-  UmatiServerLib::attribute::MemberInTypeNodeId(UmatiServerLib::constexp::NodeId(constants::NsAMUri, UA_ADDITIVEMANUFACTURINGID_CONSUMABLELIST)),
+  Consumable,
+  UmatiServerLib::attribute::MemberInTypeNodeId(UmatiServerLib::constexp::NodeId(constants::NsAMUri, UA_ADDITIVEMANUFACTURINGID_CONSUMABLELISTTYPE_CONSUMABLE)),
   UmatiServerLib::attribute::PlaceholderOptional())
 REFL_END

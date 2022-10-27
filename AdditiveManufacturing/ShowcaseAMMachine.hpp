@@ -7,6 +7,7 @@
 
 #pragma once
 #include "../MachineTools/InstantiatedMachineTool.hpp"
+#include "../TypeDefinition/AdditiveManufacturing/AdditiveManufacturing.hpp"
 
 class ShowcaseAMMachine : public InstantiatedMachineTool {
  public:
@@ -19,8 +20,9 @@ class ShowcaseAMMachine : public InstantiatedMachineTool {
   void CreateObject() override;
 
   AdditiveManufacturing::AM_t machine;
-  void InstantiateIdentification();
+  void InstantiateIdentification() override;
   void InstantiateMonitoring();
+  void InstantiateEquipment();
   void InstantiateTools();
   void InstantiateProduction();
   int m_simStep = 0;

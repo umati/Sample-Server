@@ -9,6 +9,8 @@
 #include <string>
 
 #include "../MachineTool/MachineToolIdentification.hpp"
+#include "../../UmatiServerLib/BindableMemberValue.hpp"
+#include "Constants.hpp"
 
 namespace AdditiveManufacturing {
 
@@ -21,10 +23,10 @@ struct MachineIdentificationAM_t : public machineTool::MachineToolIdentification
 REFL_TYPE(
   AdditiveManufacturing::MachineIdentificationAM_t,
   Bases<machineTool::MachineToolIdentification_t>(),
-  UmatiServerLib::attribute::UaObjectType(UmatiServerLib::constexp::NodeId(constants::NsAMUri, UA_ADDITIVEMANUFACTURINGID_MACHINEIDENTIFICATIONAM)))
+  UmatiServerLib::attribute::UaObjectType(UmatiServerLib::constexp::NodeId(constants::NsAMUri, UA_ADDITIVEMANUFACTURINGID_MACHINEIDENTIFICATIONAMTYPE)))
 REFL_FIELD(
   AMTechnologyIdentifier,
   UmatiServerLib::attribute::MemberInTypeNodeId(
-    UmatiServerLib::constexp::NodeId(constants::NsAMUri, UA_ADDITIVEMANUFACTURINGID_MACHINEIDENTIFICATIONAM_AMTECHNOLOGYIDENTIFIER)),
+    UmatiServerLib::constexp::NodeId(constants::NsAMUri, UA_ADDITIVEMANUFACTURINGID_MACHINEIDENTIFICATIONAMTYPE_AMTECHNOLOGYIDENTIFIER)),
   UmatiServerLib::attribute::PlaceholderOptional())
 REFL_END

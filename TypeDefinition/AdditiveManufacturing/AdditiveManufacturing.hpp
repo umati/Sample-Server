@@ -6,6 +6,7 @@
  */
 
 #pragma once
+#include "../../UmatiServerLib/BindableMember.hpp"
 #include "../MachineTool/MachineTool.hpp"
 #include "../TypeDefinition.hpp"
 #include "Constants.hpp"
@@ -14,16 +15,15 @@
 
 namespace AdditiveManufacturing {
 struct AM_t : public machineTool::MachineTool_t {
-  BindableMember<EquipmentAMType_t> Equipment;
-  BindableMember<MachineIdentificationAMType_t> Identification;
+  BindableMember<EquipmentAM_t> Equipment;
+  BindableMember<MachineIdentificationAM_t> Identification;
 };
 }  // namespace AdditiveManufacturing
 
 REFL_TYPE(
   AdditiveManufacturing::AM_t,
   Bases<machineTool::MachineTool_t>(),
-  UmatiServerLib::attribute::UaObjectType(UmatiServerLib::constexp::NodeId(
-    constants::NsAMUri, UA_ADDITIVEMANUFACTURINGID_ADDITIVEMANUFACTURING)))  // FIXME: Check NodeId() parameters for correctness
+  UmatiServerLib::attribute::UaObjectType(UmatiServerLib::constexp::NodeId(constants::NsAMUri, UA_ADDITIVEMANUFACTURINGID_ADDITIVIEMANUFACTURINGTYPE)))
 REFL_FIELD(Equipment, UmatiServerLib::attribute::UaBrowseName(constants::NsMachineToolUri))
 REFL_FIELD(Identification, UmatiServerLib::attribute::UaBrowseName(constants::NsDIUri))
 REFL_END

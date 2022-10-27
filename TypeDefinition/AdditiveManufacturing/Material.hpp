@@ -9,6 +9,7 @@
 #include <string>
 
 #include "../../OpcUaTypes/EUInformation.hpp"
+#include "../../UmatiServerLib/BindableMemberValue.hpp"
 #include "../TypeDefinition.hpp"
 #include "../ns0/Constants.hpp"
 #include "Constants.hpp"
@@ -29,29 +30,29 @@ struct Material_t {
 
 REFL_TYPE(
   AdditiveManufacturing::Material_t,
-  UmatiServerLib::attribute::UaObjectType(UmatiServerLib::constexp::NodeId(constants::NsAMUri, UA_ADDITIVEMANUFACTURINGID_MATERIAL)))
+  UmatiServerLib::attribute::UaObjectType(UmatiServerLib::constexp::NodeId(constants::NsAMUri, UA_ADDITIVEMANUFACTURINGID_MATERIALTYPE)))
 REFL_FIELD(
   ExternalIdentifier,
-  UmatiServerLib::attribute::MemberInTypeNodeId(UmatiServerLib::constexp::NodeId(constants::NsAMUri, UA_ADDITIVEMANUFACTURINGID_MATERIAL_EXTERNALIDENTIFIER)),
+  UmatiServerLib::attribute::MemberInTypeNodeId(UmatiServerLib::constexp::NodeId(constants::NsAMUri, UA_ADDITIVEMANUFACTURINGID_MATERIALTYPE_EXTERNALIDENTIFIER)),
   UmatiServerLib::attribute::PlaceholderOptional())
 REFL_FIELD(
   Identifier,
-  UmatiServerLib::attribute::MemberInTypeNodeId(UmatiServerLib::constexp::NodeId(constants::NsAMUri, UA_ADDITIVEMANUFACTURINGID_MATERIAL_IDENTIFIER)),
+  UmatiServerLib::attribute::MemberInTypeNodeId(UmatiServerLib::constexp::NodeId(constants::NsAMUri, UA_ADDITIVEMANUFACTURINGID_MATERIALTYPE_IDENTIFIER)),
   UmatiServerLib::attribute::PlaceholderOptional())
 REFL_FIELD(
   Function,
-  UmatiServerLib::attribute::MemberInTypeNodeId(UmatiServerLib::constexp::NodeId(constants::NsAMUri, UA_ADDITIVEMANUFACTURINGID_MATERIAL_FUNCTION)),
+  UmatiServerLib::attribute::MemberInTypeNodeId(UmatiServerLib::constexp::NodeId(constants::NsAMUri, UA_ADDITIVEMANUFACTURINGID_MATERIALTYPE_FUNCTION)),
   UmatiServerLib::attribute::PlaceholderOptional())
 REFL_FIELD(
   Manufacturer,
-  UmatiServerLib::attribute::MemberInTypeNodeId(UmatiServerLib::constexp::NodeId(constants::NsAMUri, UA_ADDITIVEMANUFACTURINGID_MATERIAL_MANUFACTURER)),
+  UmatiServerLib::attribute::MemberInTypeNodeId(UmatiServerLib::constexp::NodeId(constants::NsAMUri, UA_ADDITIVEMANUFACTURINGID_MATERIALTYPE_MANUFACTURER)),
   UmatiServerLib::attribute::PlaceholderOptional())
 REFL_FIELD(
   Name,
-  UmatiServerLib::attribute::MemberInTypeNodeId(UmatiServerLib::constexp::NodeId(constants::NsAMUri, UA_ADDITIVEMANUFACTURINGID_MATERIAL_NAME)),
+  UmatiServerLib::attribute::MemberInTypeNodeId(UmatiServerLib::constexp::NodeId(constants::NsAMUri, UA_ADDITIVEMANUFACTURINGID_MATERIALTYPE_NAME)),
   UmatiServerLib::attribute::PlaceholderOptional())
 REFL_FIELD(
   RemainingQuantity,
-  UmatiServerLib::attribute::MemberInTypeNodeId(UmatiServerLib::constexp::NodeId(constants::NsAMUri, UA_ADDITIVEMANUFACTURINGID_MATERIAL_REMAININGQUANTITY)),
+  UmatiServerLib::attribute::MemberInTypeNodeId(UmatiServerLib::constexp::NodeId(constants::NsAMUri, UA_ADDITIVEMANUFACTURINGID_MATERIALTYPE_REMAININGQUANTITY)),
   UmatiServerLib::attribute::PlaceholderOptional())
 REFL_END

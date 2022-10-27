@@ -6,7 +6,9 @@
  */
 
 #pragma once
+#include "../../src_generated/additivemanufacturing_nodeids.h"
+#include "../../src_generated/types_additivemanufacturing_generated.h"
 
 namespace constants {
-constexpr const char *NsAMUri = "http://opcfoundation.org/UA/AdditiveManufacturing/";
+constexpr const char *NsAMUri = "http://yourorganisation.org/Opc.Ua.AdditiveManufacturing.NodeSet2/";
 }

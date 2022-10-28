@@ -7,48 +7,30 @@
 
 #include "ShowcaseAMMachine.hpp"
 
-ShowcaseAMMachine::ShowcaseAMMachine(UA_Server *pServer) : InstantiatedMachineTool(pServer) {
+ShowcaseAMMachine::ShowcaseAMMachine(UA_Server *pServer) : InstantiatedAMMachine(pServer) {
   MachineName = "ShowcaseAMMachine";
   CreateObject();
 }
 
 void ShowcaseAMMachine::CreateObject() {
-  InstantiatedMachineTool::CreateObject();
-  InstantiateIdentification();
-  InstantiateMonitoring();
+  InstantiatedAMMachine::CreateObject();
+  mt.Identification->ProductInstanceUri = "http://www.3yourmind.com/#ShowcaseAMMachine";
+  mt.Identification->Location = "FormNext 10 A75/IMTS E3 134744/VIRTUAL 0 0/N 52.491225 E 13.388392";  // FIXME: add formnext booth location
   InstantiateEquipment();
-  InstantiateProduction();
 }
 
-void ShowcaseAMMachine::InstantiateIdentification() {
-  InstantiatedMachineTool::InstantiateIdentification();
-  InstantiateOptional(machine.Identification->YearOfConstruction, m_pServer, n);
-  InstantiateOptional(machine.Identification->ProductCode, m_pServer, n);
-  InstantiateOptional(machine.Identification->SoftwareRevision, m_pServer, n);
-  InstantiateOptional(machine.Identification->DeviceClass, m_pServer, n);
-  InstantiateOptional(machine.Identification->Location, m_pServer, n);
-  InstantiateOptional(machine.Identification->Model, m_pServer, n);
-
-  machine.Identification->Manufacturer = {"", "3YOURMIND"};
-  machine.Identification->ProductCode = "AM_123_SC";
-  machine.Identification->YearOfConstruction = 2022;
-  machine.Identification->SoftwareRevision = "v1.0.0";
-  machine.Identification->DeviceClass = "Additive Manufacturing machine";
-  machine.Identification->ProductInstanceUri = "http://www.3yourmind.com/#ShowcaseAMMachine";
-  machine.Identification->Location = "FormNext 10 A75/IMTS E3 134744/VIRTUAL 0 0/N 52.491225 E 13.388392";  // FIXME: add formnext booth location
-  machine.Identification->Model = {"", MachineName};
-  machine.Identification->AMTechnologyIdentifier = "MEX";
-}
-
-void ShowcaseAMMachine::InstantiateMonitoring() {
-  InstantiateMonitoringMT();
-  InstantiateMonitoringStacklight({UA_SignalColor::UA_SIGNALCOLOR_RED, UA_SignalColor::UA_SIGNALCOLOR_YELLOW, UA_SignalColor::UA_SIGNALCOLOR_GREEN});
-  InstantiateMonitoringChannel(1);  // FIXME: Is this needed?
+template <class T>
+static void InitiateRemainingQuantity(T &RemainingQuantity, double value) {
+  RemainingQuantity->Value = value;
+  RemainingQuantity->EngineeringUnits.value.DisplayName.text = "kg";
+  RemainingQuantity->EngineeringUnits.value.Description.text = "Kilogram";
+  RemainingQuantity->EngineeringUnits.value.UnitId = 4933453;
+  RemainingQuantity->EngineeringUnits.value.NamespaceUri = "http://www.opcfoundation.org/UA/units/un/cefact";
 }
 
 void ShowcaseAMMachine::InstantiateEquipment() {
-  InstantiateOptional(machine.Equipment->Materials, m_pServer, n);
-  InstantiateOptional(machine.Equipment->Consumables, m_pServer, n);
+  InstantiateOptional(mt.Equipment->Materials, m_pServer, n);
+  InstantiateOptional(mt.Equipment->Consumables, m_pServer, n);
 
   for (size_t i = 1; i <= 2; ++i) {
     std::stringstream consumable_ss;
@@ -57,10 +39,13 @@ void ShowcaseAMMachine::InstantiateEquipment() {
     material_ss << "Material" << i;
     std::stringstream manufacturer_ss;
     manufacturer_ss << "Manufacturer" << i;
-    std::stringstream quantity_ss;
-    quantity_ss << i << "KG";
 
-    auto &material = machine.Equipment->Materials->Material.Add<AdditiveManufacturing::Material_t>(m_pServer, n, {m_nsIndex, material_ss.str()});
+    auto &material = mt.Equipment->Materials->Material.Add(m_pServer, n, {m_nsIndex, material_ss.str()});
+
+    InstantiateOptional(material.ExternalIdentifier, m_pServer, n);
+    InstantiateOptional(material.Manufacturer, m_pServer, n);
+    InstantiateOptional(material.Name, m_pServer, n);
+    InstantiateOptional(material.RemainingQuantity, m_pServer, n);
 
     material.ReadyForProduction = (i % 2) > 0;
     material.Identifier = std::to_string(i * 10 + 2);
@@ -68,46 +53,28 @@ void ShowcaseAMMachine::InstantiateEquipment() {
     material.Function = "Main";
     material.Manufacturer = manufacturer_ss.str();
     material.Name = material_ss.str();
-    material.RemainingQuantity = quantity_ss.str();
+    InitiateRemainingQuantity(material.RemainingQuantity, 10.0 * i);
 
-    InstantiateOptional(material.ReadyForProduction, m_pServer, n);
-    InstantiateOptional(material.ExternalIdentifier, m_pServer, n);
-    InstantiateOptional(material.Function, m_pServer, n);
-    InstantiateOptional(material.Manufacturer, m_pServer, n);
-    InstantiateOptional(material.Name, m_pServer, n);
-    InstantiateOptional(material.RemainingQuantity, m_pServer, n);
-
-    auto &consumable = machine.Equipment->Consumables->Consumable.Add<AdditiveManufacturing::Consumable_t>(m_pServer, n, {m_nsIndex, consumable_ss.str()});
-
-    consumable.Identifier = std::to_string(i * 10 + 4);
-    consumable.ExternalIdentifier = std::to_string(i * 10 + 5);
-    consumable.Manufacturer = manufacturer_ss.str();
-    consumable.Name = material_ss.str();
-    consumable.RemainingQuantity = quantity_ss.str();
+    auto &consumable = mt.Equipment->Consumables->Consumable.Add<AdditiveManufacturing::Consumable_t>(m_pServer, n, {m_nsIndex, consumable_ss.str()});
 
     InstantiateOptional(consumable.ExternalIdentifier, m_pServer, n);
     InstantiateOptional(consumable.Manufacturer, m_pServer, n);
     InstantiateOptional(consumable.Name, m_pServer, n);
     InstantiateOptional(consumable.RemainingQuantity, m_pServer, n);
+
+    consumable.Identifier = std::to_string(i * 10 + 4);
+    consumable.ExternalIdentifier = std::to_string(i * 10 + 5);
+    consumable.Manufacturer = manufacturer_ss.str();
+    consumable.Name = material_ss.str();
+    InitiateRemainingQuantity(consumable.RemainingQuantity, 10.0 * i);
   }
 }
 
-void ShowcaseAMMachine::InstantiateProduction() {
-  InstantiateOptional(machine.Production->ActiveProgram->State, m_pServer, n);
-  machine.Production->ActiveProgram->NumberInList = 0;
-  machine.Production->ActiveProgram->Name = "Print Job";
-  machine.Production->ActiveProgram->State->CurrentState->Value = {"en", "Running"};
-  machine.Production->ActiveProgram->State->CurrentState->Number = 1;
-  machine.Production->ActiveProgram->State->CurrentState->Id =
-    UA_NODEID_NUMERIC(nsFromUri(m_pServer, constants::NsMachineToolUri), UA_MACHINETOOLID_PRODUCTIONSTATEMACHINETYPE_RUNNING);
-}
-
-// FIXME: Is that relevant?
 void ShowcaseAMMachine::Simulate() {
   ++m_simStep;
   if ((m_simStep % 2) == 1) {
     SimulateStacklight();
   }
 
-  machine.Monitoring->MachineTool->PowerOnDuration = m_simStep / 3600;
+  mt.Monitoring->MachineTool->PowerOnDuration = m_simStep / 3600;
 }

@@ -25,6 +25,6 @@ REFL_TYPE(
   AdditiveManufacturing::MaterialList_t, UmatiServerLib::attribute::UaObjectType(UmatiServerLib::constexp::NodeId(constants::Ns0Uri, UA_NS0ID_BASEOBJECTTYPE)))
 REFL_FIELD(
   Material,
-  UmatiServerLib::attribute::MemberInTypeNodeId(UmatiServerLib::constexp::NodeId(constants::NsAMUri, UA_ADDITIVEMANUFACTURINGID_MATERIALLISTTYPE_MATERIAL)),
+  UmatiServerLib::attribute::MemberInTypeNodeId(UmatiServerLib::constexp::NodeId(constants::NsAMUri, UA_ADDITIVEMANUFACTURINGID_EQUIPMENTAMTYPE_MATERIALS_MATERIAL)),
   UmatiServerLib::attribute::PlaceholderOptional())
 REFL_END

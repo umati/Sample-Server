@@ -284,7 +284,7 @@ ua_generate_nodeset_and_datatypes(
     FILE_NS "${PROJECT_SOURCE_DIR}/model/AdditiveManufacturing/Opc.Ua.AdditiveManufacturing.NodeSet2.xml"
     FILE_CSV "${PROJECT_SOURCE_DIR}/model/AdditiveManufacturing/Opc.Ua.AdditiveManufacturing.NodeSet2.csv"
     FILE_BSD "${PROJECT_SOURCE_DIR}/model/AdditiveManufacturing/Opc.Ua.AdditiveManufacturing.NodeSet2.bsd"
-    NAMESPACE_MAP "8:http://yourorganisation.org/Opc.Ua.AdditiveManufacturing.NodeSet2/"
+    NAMESPACE_MAP "8:http://opcfoundation.org/UA/AdditiveManufacturing/NodeSet2/"
     TARGET_PREFIX "${PROJECT_NAME}"
     OUTPUT_DIR "${SAMPLESERVER_GENERATED_NODESET_AND_DATATYPES_OUTPUT_DIR}"
     DEPENDS di
@@ -346,6 +346,7 @@ target_link_libraries(Configuration PRIVATE nlohmann_json::nlohmann_json)
 add_executable(
     ${PROJECT_NAME}
     AdditiveManufacturing/BasicAMMachine.cpp
+    AdditiveManufacturing/InstantiatedAMMachine.cpp
     AdditiveManufacturing/ShowcaseAMMachine.cpp
     GMS/BasicGMS.cpp
     GMS/FullGMS.cpp

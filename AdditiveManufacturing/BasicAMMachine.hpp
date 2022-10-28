@@ -6,10 +6,9 @@
  */
 
 #pragma once
-#include "../MachineTools/InstantiatedMachineTool.hpp"
-#include "../TypeDefinition/AdditiveManufacturing/AdditiveManufacturing.hpp"
+#include "../AdditiveManufacturing/InstantiatedAMMachine.hpp"
 
-class BasicAMMachine : public InstantiatedMachineTool {
+class BasicAMMachine : public InstantiatedAMMachine {
  public:
   BasicAMMachine(UA_Server *pServer);
 
@@ -17,11 +16,5 @@ class BasicAMMachine : public InstantiatedMachineTool {
   virtual ~BasicAMMachine() = default;
 
  protected:
-  void CreateObject() override;
-
-  AdditiveManufacturing::AM_t machine;
-  void InstantiateIdentification();
-  void InstantiateMonitoring();
-  void InstantiateProduction();
   int m_simStep = 0;
 };

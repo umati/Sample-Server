@@ -9,6 +9,7 @@
 #include <string>
 
 #include "../TypeDefinition.hpp"
+#include "../ns0/AnalogUnitType.hpp"
 #include "../ns0/Constants.hpp"
 #include "Constants.hpp"
 
@@ -19,7 +20,7 @@ struct Consumable_t {
   BindableMemberValue<std::string> Identifier;
   BindableMemberValue<std::string> Manufacturer;
   BindableMemberValue<std::string> Name;
-  BindableMemberValue<std::string> RemainingQuantity;  // FIXME: Add correct type
+  BindableMember<ns0::AnalogUnitType_t<double>> RemainingQuantity;
 };
 
 }  // namespace AdditiveManufacturing
@@ -29,11 +30,13 @@ REFL_TYPE(
   UmatiServerLib::attribute::UaObjectType(UmatiServerLib::constexp::NodeId(constants::NsAMUri, UA_ADDITIVEMANUFACTURINGID_CONSUMABLETYPE)))
 REFL_FIELD(
   ExternalIdentifier,
-  UmatiServerLib::attribute::MemberInTypeNodeId(UmatiServerLib::constexp::NodeId(constants::NsAMUri, UA_ADDITIVEMANUFACTURINGID_CONSUMABLETYPE_EXTERNALIDENTIFIER)),  // FIXME: Wrong LIST type
+  UmatiServerLib::attribute::MemberInTypeNodeId(
+    UmatiServerLib::constexp::NodeId(constants::NsAMUri, UA_ADDITIVEMANUFACTURINGID_CONSUMABLETYPE_EXTERNALIDENTIFIER)),  // FIXME: Wrong LIST type
   UmatiServerLib::attribute::PlaceholderOptional())
 REFL_FIELD(
   Identifier,
-  UmatiServerLib::attribute::MemberInTypeNodeId(UmatiServerLib::constexp::NodeId(constants::NsAMUri, UA_ADDITIVEMANUFACTURINGID_CONSUMABLETYPE_IDENTIFIER)),  // FIXME: Wrong LIST type
+  UmatiServerLib::attribute::MemberInTypeNodeId(
+    UmatiServerLib::constexp::NodeId(constants::NsAMUri, UA_ADDITIVEMANUFACTURINGID_CONSUMABLETYPE_IDENTIFIER)),  // FIXME: Wrong LIST type
   UmatiServerLib::attribute::PlaceholderOptional())
 REFL_FIELD(
   Manufacturer,
@@ -45,6 +48,7 @@ REFL_FIELD(
   UmatiServerLib::attribute::PlaceholderOptional())
 REFL_FIELD(
   RemainingQuantity,
-  UmatiServerLib::attribute::MemberInTypeNodeId(UmatiServerLib::constexp::NodeId(constants::NsAMUri, UA_ADDITIVEMANUFACTURINGID_CONSUMABLETYPE_REMAININGQUANTITY_EURANGE)),
+  UmatiServerLib::attribute::MemberInTypeNodeId(
+    UmatiServerLib::constexp::NodeId(constants::NsAMUri, UA_ADDITIVEMANUFACTURINGID_CONSUMABLETYPE_REMAININGQUANTITY)),
   UmatiServerLib::attribute::PlaceholderOptional())
 REFL_END

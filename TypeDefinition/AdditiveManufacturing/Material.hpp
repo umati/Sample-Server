@@ -11,6 +11,7 @@
 #include "../../OpcUaTypes/EUInformation.hpp"
 #include "../../UmatiServerLib/BindableMemberValue.hpp"
 #include "../TypeDefinition.hpp"
+#include "../ns0/AnalogUnitType.hpp"
 #include "../ns0/Constants.hpp"
 #include "Constants.hpp"
 
@@ -23,7 +24,7 @@ struct Material_t {
   BindableMemberValue<std::string> Function;  // FIXME: Add enum MaterialFunction
   BindableMemberValue<std::string> Manufacturer;
   BindableMemberValue<std::string> Name;
-  BindableMemberValue<std::string> RemainingQuantity;  // FIXME: Add correct type
+  BindableMember<ns0::AnalogUnitType_t<double>> RemainingQuantity;
 };
 
 }  // namespace AdditiveManufacturing
@@ -33,7 +34,8 @@ REFL_TYPE(
   UmatiServerLib::attribute::UaObjectType(UmatiServerLib::constexp::NodeId(constants::NsAMUri, UA_ADDITIVEMANUFACTURINGID_MATERIALTYPE)))
 REFL_FIELD(
   ExternalIdentifier,
-  UmatiServerLib::attribute::MemberInTypeNodeId(UmatiServerLib::constexp::NodeId(constants::NsAMUri, UA_ADDITIVEMANUFACTURINGID_MATERIALTYPE_EXTERNALIDENTIFIER)),
+  UmatiServerLib::attribute::MemberInTypeNodeId(
+    UmatiServerLib::constexp::NodeId(constants::NsAMUri, UA_ADDITIVEMANUFACTURINGID_MATERIALTYPE_EXTERNALIDENTIFIER)),
   UmatiServerLib::attribute::PlaceholderOptional())
 REFL_FIELD(
   Identifier,
@@ -53,6 +55,7 @@ REFL_FIELD(
   UmatiServerLib::attribute::PlaceholderOptional())
 REFL_FIELD(
   RemainingQuantity,
-  UmatiServerLib::attribute::MemberInTypeNodeId(UmatiServerLib::constexp::NodeId(constants::NsAMUri, UA_ADDITIVEMANUFACTURINGID_MATERIALTYPE_REMAININGQUANTITY)),
+  UmatiServerLib::attribute::MemberInTypeNodeId(
+    UmatiServerLib::constexp::NodeId(constants::NsAMUri, UA_ADDITIVEMANUFACTURINGID_MATERIALTYPE_REMAININGQUANTITY)),
   UmatiServerLib::attribute::PlaceholderOptional())
 REFL_END

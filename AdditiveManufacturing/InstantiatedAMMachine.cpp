@@ -7,8 +7,7 @@
 
 #include "InstantiatedAMMachine.hpp"
 
-InstantiatedAMMachine::InstantiatedAMMachine(UA_Server *pServer) : m_pServer(pServer), NsIndex(m_nsIndex), n(pServer) {
-}
+InstantiatedAMMachine::InstantiatedAMMachine(UA_Server *pServer) : m_pServer(pServer), NsIndex(m_nsIndex), n(pServer) {}
 
 void InstantiatedAMMachine::CreateObject() {
   std::stringstream ss;

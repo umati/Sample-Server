@@ -6,10 +6,10 @@
  */
 
 #pragma once
+#include "../../UmatiServerLib/BindableMember.hpp"
+#include "../../UmatiServerLib/BindableMemberPlaceholder.hpp"
 #include "../TypeDefinition.hpp"
 #include "../ns0/Constants.hpp"
-#include "../../UmatiServerLib/BindableMemberPlaceholder.hpp"
-#include "../../UmatiServerLib/BindableMember.hpp"
 #include "Constants.hpp"
 #include "Consumable.hpp"
 

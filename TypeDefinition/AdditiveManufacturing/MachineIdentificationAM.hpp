@@ -8,8 +8,8 @@
 #pragma once
 #include <string>
 
-#include "../MachineTool/MachineToolIdentification.hpp"
 #include "../../UmatiServerLib/BindableMemberValue.hpp"
+#include "../MachineTool/MachineToolIdentification.hpp"
 #include "Constants.hpp"
 
 namespace AdditiveManufacturing {

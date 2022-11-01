@@ -27,6 +27,10 @@ This is an example implementation of the [OPC UA for Woodworking companion speci
 
 This is an example implementation oof the [OPC UA for Geometrical Measuring Systems companion specification](https://www.vdma.org/viewer/-/v2article/render/47597927). The server provide one simulated `BasisGMS` instance.
 
+### Additive Manufacturing Examples
+
+This is an example implementation of the [OPC UA for Additive Manufacturing companion specification](https://reference.opcfoundation.org/AdditiveManufacturing/docs/). The server provides two simulated additive manufacturing machines, a basic one implementing only mandatory variables/objects and a full one implementing every optional variable/object.
+
 ## Public available instance
 
 The container image build by this repository is run public at `opc.tcp://opcua.umati.app:4840` (Security: none and higher / Authentication: anonymous) in the `develop` version.
@@ -71,19 +75,20 @@ The binding is done by comparing the name of structure members with the browse n
 ## Folder Structure
 
 ```text
-├──arch            architecture specific files
-├──cmake           CMake files for building the project, e.g. custom find-scripts
-├──Exceptions      Custom exceptions
-├──GMS             Simulated GMS instance
-├──MachineTools    Simulated machine tools
-├──model           Unpublished/Fixed NodeSet files
-├──OpcUaTypes      C++ equivalent of some OPC UA DataTypes and helpers for their definition
-├──Robotics        Simulated Robots
-├──tests           Some unit tests, initially created for tracking down bugs
-├──tools/certGen   Custom certificate generator tool           
-├──TypeDefinition  Definition of C++ Types for OPC UA Types, that can be bind later
-├──UmatiServerLib  Library for binding the defined types to OPC UA instances
-├──Woodworkng      Simulated wood working sample machines
+├──AdditiveManufacturing   Simulated Additive Manufacturing machine
+├──arch                    architecture specific files
+├──cmake                   CMake files for building the project, e.g. custom find-scripts
+├──Exceptions              Custom exceptions
+├──GMS                     Simulated GMS instance
+├──MachineTools            Simulated machine tools
+├──model                   Unpublished/Fixed NodeSet files
+├──OpcUaTypes              C++ equivalent of some OPC UA DataTypes and helpers for their definition
+├──Robotics                Simulated Robots
+├──tests                   Some unit tests, initially created for tracking down bugs
+├──tools/certGen           Custom certificate generator tool           
+├──TypeDefinition          Definition of C++ Types for OPC UA Types, that can be bind later
+├──UmatiServerLib          Library for binding the defined types to OPC UA instances
+├──Woodworkng              Simulated wood working sample machines
 ```
 
 ## License

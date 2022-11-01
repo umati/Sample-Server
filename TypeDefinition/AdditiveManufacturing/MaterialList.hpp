@@ -23,7 +23,8 @@ struct MaterialList_t {
 }  // namespace AdditiveManufacturing
 
 REFL_TYPE(
-  AdditiveManufacturing::MaterialList_t, UmatiServerLib::attribute::UaObjectType(UmatiServerLib::constexp::NodeId(constants::Ns0Uri, UA_NS0ID_BASEOBJECTTYPE)))
+  AdditiveManufacturing::MaterialList_t,
+  UmatiServerLib::attribute::UaObjectType(UmatiServerLib::constexp::NodeId(constants::NsAMUri, UA_ADDITIVEMANUFACTURINGID_MATERIALLISTTYPE)))
 REFL_FIELD(
   Material,
   UmatiServerLib::attribute::MemberInTypeNodeId(

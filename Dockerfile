@@ -31,7 +31,8 @@ RUN apk --no-cache add \
       git=2.36.3-r0 \
       make=4.3-r0  \
       python3=3.10.8-r0 \
-      patch=2.7.6-r7 && \
+      patch=2.7.6-r7 \
+      linux-headers=5.16.7-r1 && \
     mkdir /install
 
 ARG BUILD_TYPE=Debug

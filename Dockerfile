@@ -24,7 +24,7 @@
 FROM alpine:3.17.0 as build-env
 
 RUN apk --no-cache add \
-      bash=5.2.9-r0 \
+      bash=5.2.12-r0 \
       cmake=3.24.3-r0 \
       gcc=12.2.1_git20220924-r4 \
       g++=12.2.1_git20220924-r4\

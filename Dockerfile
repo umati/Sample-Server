@@ -24,13 +24,13 @@
 FROM alpine:3.17.0 as build-env
 
 RUN apk --no-cache add \
-      bash=5.2.12-r0 \
+      bash=5.2.15-r0 \
       cmake=3.24.3-r0 \
       gcc=12.2.1_git20220924-r4 \
       g++=12.2.1_git20220924-r4\
-      git=2.38.1-r0 \
+      git=2.38.2-r0 \
       make=4.3-r1  \
-      python3=3.10.8-r3 \
+      python3=3.10.9-r1 \
       patch=2.7.6-r8 \
       linux-headers=5.19.5-r0 && \
     mkdir /install

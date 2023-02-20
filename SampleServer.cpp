@@ -254,6 +254,7 @@ int main(int argc, char *argv[]) {
   UA_NodeId connectionIdentBMT{};
   UA_NodeId connectionIdentMRMT{};
   UA_NodeId connectionIdentSCMT{};
+  UA_NodeId connectionIdentRelab{};
 
   /*
   serverConfig.MQTTPubSub->PublisherId = "FullMachineToolDynamic";
@@ -267,6 +268,9 @@ int main(int argc, char *argv[]) {
   serverConfig.MQTTPubSub->PublisherId = "ShowcaseMachineTool";
   addMQTTPubSubConnection(pServer, pConfig, serverConfig, connectionIdentSCMT);
   */
+
+  serverConfig.MQTTPubSub->PublisherId = "Relab";
+  addMQTTPubSubConnection(pServer, pConfig, serverConfig, connectionIdentRelab);
 
   std::list<std::shared_ptr<SimulatedInstance>> machineTools;
   /*
@@ -307,13 +311,18 @@ int main(int argc, char *argv[]) {
   }
 
   */
+
+  std::cout << "Ads RemoteNetId: " << serverConfig.Ads->getRemoteNetId() << '\n';
   if (serverConfig.MQTTPubSub.has_value()) {  
     machineTools.push_back(std::make_shared<Relab>(pServer, 
-      InstantiatedMachineTool::MqttSettings{&connectionIdentSCMT, serverConfig.MQTTPubSub->Prefix, 
+      InstantiatedMachineTool::MqttSettings{&connectionIdentRelab, serverConfig.MQTTPubSub->Prefix, 
                                             "Relab", 
-                                            UA_NODEID_NULL}));
+                                            UA_NODEID_NULL},
+      Relab::AdsSettings(serverConfig.Ads->LocalNetId, serverConfig.Ads->RemoteNetId, serverConfig.Ads->getRemoteNetId(), serverConfig.Ads->RemotePort)
+      ));
   } else {
-    machineTools.push_back(std::make_shared<Relab>(pServer));
+    machineTools.push_back(std::make_shared<Relab>(pServer, 
+      Relab::AdsSettings(serverConfig.Ads->LocalNetId, serverConfig.Ads->RemoteNetId, serverConfig.Ads->getRemoteNetId(), serverConfig.Ads->RemotePort)));
   }
 
   // machineTools.push_back(std::make_shared<CNShowcaseMachineTool>(pServer));
@@ -330,7 +339,7 @@ int main(int argc, char *argv[]) {
     // timeout = UA_Server_run_iterate(pServer, true);
 
     // Limit wait time, as UA_Server_run_iterate may return large numbers, when no clients are connected.
-    timeout = (std::uint16_t) 50;
+    timeout = (std::uint16_t) 10;
     ul.unlock();
     // std::this_thread::yield();
     std::this_thread::sleep_for(std::chrono::milliseconds(timeout));

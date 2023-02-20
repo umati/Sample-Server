@@ -47,6 +47,18 @@ void from_json(const nlohmann::json &j, Configuration &p) {
      config.Password = j.at("MQTTPubSub").at("Password").get<decltype(p.MQTTPubSub->Password)::value_type>(); }
     p.MQTTPubSub = config;
   }
+
+  if (j.count("Ads") != 0) {
+    ADSConfiguration_t config;
+    auto localNetId = j.at("Ads").at("LocalNetId").get<std::array<uint8_t,6>>();
+    auto remotNetId = j.at("Ads").at("RemoteNetId").get<std::array<uint8_t,6>>();
+    auto remotePort = j.at("Ads").at("RemotePort").get<uint16_t>();
+
+    config.LocalNetId = localNetId;
+    config.RemoteNetId = remotNetId;
+    config.RemotePort = remotePort;
+    p.Ads = config;
+  }
 }
 
 Configuration FromJsonFile(std::string filename) {

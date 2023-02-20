@@ -8,6 +8,8 @@
 #include <optional>
 #include <string>
 #include <vector>
+#include <array>
+#include <sstream>
 
 namespace Configuration {
 struct Encryption_t {
@@ -37,11 +39,40 @@ struct MQTTPubSubConfiguration_t {
   std::string PublisherId;
 };
 
+struct ADSConfiguration_t {
+  std::array<uint8_t, 6> LocalNetId;
+  std::array<uint8_t, 6> RemoteNetId;
+  uint16_t RemotePort; 
+  
+  std::string getLocalNetId() {
+    std::stringstream ss;
+    ss << unsigned(LocalNetId[0]);
+
+    for(auto mIter = std::next(LocalNetId.begin()); mIter != LocalNetId.end(); ++mIter) {
+      ss << '.' << unsigned(*mIter);
+    }
+
+    return ss.str();
+  }
+
+  std::string getRemoteNetId() {
+    std::stringstream ss;
+    ss << unsigned(RemoteNetId[0]);
+
+    for(auto mIter = std::next(RemoteNetId.begin()); mIter != (RemoteNetId.end() - 2); ++mIter) {
+      ss << '.' << unsigned(*mIter);
+    }
+
+    return ss.str();
+  }
+};
+
 struct Configuration {
   std::optional<std::string> Hostname;
   std::optional<std::vector<UserPassAuthentication_t>> UserPassAuthentication;
   std::optional<Encryption_t> Encryption;
   std::optional<MQTTPubSubConfiguration_t> MQTTPubSub;
+  std::optional<ADSConfiguration_t> Ads;
 };
 
 Configuration DefaultConfiguration();

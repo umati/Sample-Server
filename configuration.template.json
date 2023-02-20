@@ -12,5 +12,24 @@
         "Prefix": "vdw",
         "BrokerUrl": "opc.mqtt://localhost:1883",
         "PublisherId": "SampleServer"
+    },
+    "Ads": {
+        "LocalNetId": [
+            169,
+            254,
+            14,
+            122,
+            1,
+            2
+        ],
+        "RemoteNetId": [
+            169,
+            254,
+            14,
+            122,
+            1,
+            1
+        ],
+        "RemotePort": 851
     }
 }

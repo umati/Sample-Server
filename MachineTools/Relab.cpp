@@ -7,43 +7,32 @@
  */
 #include <variant>
 #include "Relab.hpp"
-#include "ADS/AdsLib.h"
-#include "ADS/AmsRouter.h"
-#include "ADS/AdsVariable.h"
-// #include "C:\TwinCAT\AdsApi\TcAdsDll\Include\TcAdsDef.h"
-// #include "C:\TwinCAT\AdsApi\TcAdsDll\Include\TcAdsApi.h"
+
 #include <windows.h>
 
-// static const AmsNetId remoteNetId { 169, 254, 14, 122, 1, 1 };
-// const AmsNetId localNetId { 169, 254, 14, 122, 1, 1 };
-// static const char remoteIpV4[] = "ads-server";
-// uncomment and adjust if automatic AmsNetId deduction is not working as expected
-// AdsSetLocalAddress(localNetId);
-// AdsSetLocalAddress(localNetId);
-// AdsDevice route {remoteIpV4, remoteNetId, AMSPORT_R0_PLC_TC3};
+Relab::Relab(UA_Server *pServer, AdsSettings adsSettings) : Relab::Relab(pServer, {}, adsSettings) {}
 
-Relab::Relab(UA_Server *pServer) : Relab::Relab(pServer, {}) {}
-
-Relab::Relab(UA_Server *pServer, MqttSettings mqttSettings) : InstantiatedMachineTool(pServer, mqttSettings) {
-  MachineName = "Relab";
-  long      nErr, nPort;
-  AmsAddr   Addr;
-  DWORD     dwData;
-  // Kommunikationsport auf dem ADS Router öffnen
-  AmsNetId localNetId{169, 254, 14, 122, 1, 2};
-  AdsSetLocalAddress(localNetId);
-  nPort = AdsPortOpenEx();
-  nErr = AdsGetLocalAddressEx(nPort, &Addr);
-  if (nErr) std::cerr << "Error: AdsGetLocalAddress: " << nErr << '\n';
-  // TwinCAT2 RTS1 Port = 801
-
-  Addr.port = 851;
-  Addr.netId = AmsNetId{169, 254, 14, 122, 1, 1};
-  AdsDevice route {"169.254.14.122", Addr.netId, AMSPORT_R0_PLC_TC3};
-
-  AdsVariable<int64_t> readVar {route, "PRG_OPCUA.laser_state"};
+Relab::Relab(UA_Server *pServer, MqttSettings mqttSettings, AdsSettings adsSettings) : InstantiatedMachineTool(pServer, mqttSettings) {
+  try {
+    MachineName = "Relab";
+    // Kommunikationsport auf dem ADS Router öffnen
+    AmsNetId localNetId = adsSettings.LocalNetId;
+    route = new AdsDevice({remoteAddr.c_str(), Addr.netId, AMSPORT_R0_PLC_TC3});
+    AdsSetLocalAddress(localNetId);
+    nPort = AdsPortOpenEx();
+    nErr = AdsGetLocalAddressEx(nPort, &Addr);
+    remoteAddr = adsSettings.RemoteNetIdStr;
+    if (nErr) std::cerr << "Error: AdsGetLocalAddress: " << nErr << '\n';
+    // TwinCAT2 RTS1 Port = 801
+    Addr.port = adsSettings.RemotePort;
+    Addr.netId =  adsSettings.RemoteNetId;
+  } catch (AdsException ex) {
+    std::cout << ex.what();
+    exit(1);
+  }
   CreateObject();
 }
+
 
 void Relab::CreateObject() {
   InstantiatedMachineTool::CreateObject();
@@ -52,6 +41,7 @@ void Relab::CreateObject() {
   InstantiateTools();
   InstantiateProduction();
   if (m_mqttSettings.connectionIdent != nullptr) {
+    std::cout << "Setting up publisher " << m_mqttSettings.connectionIdent->namespaceIndex << '\n';
     m_publisher.Publish(mt, m_pServer, m_mqttSettings.connectionIdent, n, m_mqttSettings.prefix, m_mqttSettings.publisherId, "MachineTool", 2000);
   }
 }
@@ -138,15 +128,12 @@ void Relab::Simulate() {
   
   mt.Monitoring->MachineTool->PowerOnDuration = m_simStep / 3600;
   */
- /*
-  AdsVariable<int64_t> readVar {route, "PRG_OPCUA.laser_state"};
-  auto potLsr = std::get_if<machineTool::LaserMonitoring_t>(&mt.Monitoring->MonitoredElement.value.front().value);
-
-  potLsr->LaserState.value = UA_LaserState((int64_t)readVar);
-  std::cout << __FUNCTION__ << "():\n";
-  for (size_t i = 0; i < 8; ++i) {
-    std::cout << "ADS read " << std::hex << (uint32_t)readVar << '\n';
+  try  {
+    AdsVariable<int16_t> readVar {*route, "GVL_Main.laser_power_potty"};
+    auto potLsr = std::get_if<machineTool::LaserMonitoring_t>(&mt.Monitoring->MonitoredElement.value.front().value);
+    potLsr->LaserState.value = UA_LaserState((int32_t) readVar);
   }
-  */
-
+  catch (AdsException ex) {
+    std::cout << "ADS read error " << ex.what() << '\n';
+  }
 }

@@ -6,7 +6,7 @@ Sample-Server implementation of various umati endorsed OPC UA companion specific
 
 ## Build status
 
-![GitHub Workflow Status](https://img.shields.io/github/workflow/status/umati/Sample-Server/Build)
+![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/umati/Sample-Server/build.yml)
 [![Gitpod ready-to-code](https://img.shields.io/badge/Gitpod-ready--to--code-blue?logo=gitpod)](https://gitpod.io/#https://github.com/umati/Sample-Server)
 
 ## Current Implementation

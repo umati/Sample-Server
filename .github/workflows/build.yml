@@ -52,7 +52,7 @@ jobs:
           ctest --output-on-failure ${{ env.ARG_CTEST }}
 
   docker:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     env:
       # Check if this is not a pull request andGITHUB_TOKEN is set
       # As all env variables are strings, you need to compare

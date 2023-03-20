@@ -1,11 +1,11 @@
 # MIT License
 #
-# Copyright 2020-2021 (c) Christian von Arnim, ISW University of Stuttgart (for umati and VDW e.V.)
-# Copyright 2021 (c) Götz Görisch, VDW - Verein Deutscher Werkzeugmaschinenfabriken e.V.
-# Copyright 2021 (c) Dennis Hezel, 3Yourmind GmbH
-# Copyright 2021 (c) Hermann Leinweber, basysKom GmbH
-# Copyright 2022 (c) Sebastian Friedl, ISW University of Stuttgart (for umati and VDMA e.V.)
-# Copyright 2022 (c) Patrick Moeller, 3Yourmind GmbH
+# Copyright (c) 2020-2021 Christian von Arnim, ISW University of Stuttgart (for umati and VDW e.V.)
+# Copyright (c) 2021-2023 Götz Görisch, VDW - Verein Deutscher Werkzeugmaschinenfabriken e.V.
+# Copyright (c) 2021 Dennis Hezel, 3Yourmind GmbH
+# Copyright (c) 2021 Hermann Leinweber, basysKom GmbH
+# Copyright (c) 2022 Sebastian Friedl, ISW University of Stuttgart (for umati and VDMA e.V.)
+# Copyright (c) 2022 Patrick Moeller, 3Yourmind GmbH
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -26,7 +26,7 @@
 # SOFTWARE.
 
 cmake_minimum_required(VERSION 3.15)
-project(SampleServer VERSION 1.1.1)
+project(SampleServer VERSION 1.2.0)
 
 set(CMAKE_CXX_STANDARD 20)
 
@@ -185,10 +185,10 @@ target_link_libraries(ua_gen_woodworking PUBLIC ua_gen_machinery)
 
 ua_generate_nodeset_and_datatypes(
     NAME "machinery_result"
-    FILE_NS "${PROJECT_SOURCE_DIR}/model/GMS/Opc.Ua.MachineryResult.NodeSet2.xml"
-    FILE_CSV "${PROJECT_SOURCE_DIR}/model/GMS/Opc.Ua.MachineryResult.NodeSet2.csv"
-    FILE_BSD "${PROJECT_SOURCE_DIR}/model/GMS/Opc.Ua.MachineryResult.NodeSet2.bsd"
-    NAMESPACE_MAP "7:http://opcfoundation.org/UA/Machinery/Result/"
+    FILE_NS "${UA_NODESET_DIR}/Machinery/Result/Opc.Ua.Machinery.Result.NodeSet2.xml"
+    FILE_CSV "${UA_NODESET_DIR}/Machinery/Result/Opc.Ua.Machinery.Result.NodeSet2.csv"
+    FILE_BSD "${UA_NODESET_DIR}/Machinery/Result/Opc.Ua.Machinery.Result.NodeSet2.bsd"
+    NAMESPACE_MAP "8:http://opcfoundation.org/UA/Machinery/Result/"
     TARGET_PREFIX "${PROJECT_NAME}"
     OUTPUT_DIR "${SAMPLESERVER_GENERATED_NODESET_AND_DATATYPES_OUTPUT_DIR}"
 )
@@ -207,10 +207,10 @@ target_link_libraries(ua_gen_machinery_result PUBLIC open62541::open62541)
 
 ua_generate_nodeset_and_datatypes(
     NAME "gms"
-    FILE_NS "${PROJECT_SOURCE_DIR}/model/GMS/opc.ua.gms.nodeset2.xml"
-    FILE_CSV "${PROJECT_SOURCE_DIR}/model/GMS/opc.ua.gms.nodeset2.csv"
-    FILE_BSD "${PROJECT_SOURCE_DIR}/model/GMS/opc.ua.gms.nodeset2.bsd"
-    NAMESPACE_MAP "8:http://opcfoundation.org/GMS/"
+    FILE_NS "${UA_NODESET_DIR}/GMS/opc.ua.gms.nodeset2.xml"
+    FILE_CSV "${UA_NODESET_DIR}/GMS/opc.ua.gms.nodeset2.csv"
+    FILE_BSD "${UA_NODESET_DIR}/GMS/opc.ua.gms.nodeset2.bsd"
+    NAMESPACE_MAP "9:http://opcfoundation.org/UA/GMS/"
     TARGET_PREFIX "${PROJECT_NAME}"
     OUTPUT_DIR "${SAMPLESERVER_GENERATED_NODESET_AND_DATATYPES_OUTPUT_DIR}"
     DEPENDS di ia machinery machinery_result machinetool

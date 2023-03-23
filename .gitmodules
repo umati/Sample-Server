@@ -13,3 +13,6 @@
 [submodule "deps/json"]
 	path = deps/json
 	url = https://github.com/nlohmann/json.git
+[submodule "deps/libressl/portable"]
+	path = deps/libressl/portable
+	url = https://github.com/libressl-portable/portable.git

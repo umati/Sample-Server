@@ -38,6 +38,10 @@ jobs:
           echo "ARG_CTEST=-C Debug">> "$env:GITHUB_ENV"
       - name: Build server with dependencies
         run: |
+          echo "BASEDIR=$(pwd)" >> "$env:GITHUB_ENV"
+          cd Sample-Server/deps/libressl/portable/
+          ./autogen.sh
+          cd  ${{ env.BASEDIR }}
           mkdir -p build
           cd build
           cmake ../Sample-Server/.github/ -DCMAKE_INSTALL_PREFIX:PATH=${{ env.CMAKE_INSTALL_PREFIX }}

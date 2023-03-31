@@ -22,11 +22,10 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-image:
-  file: .gitpod.Dockerfile
+image: gitpod/workspace-full:2023-03-24-22-45-37
 
 tasks:
-  - init: npm install opcua-commander -g && sudo apt update && sudo apt -yy install yamllint && pip install cmakelang
+  - init: npm install --location=global opcua-commander && sudo apt update && sudo apt -yy install yamllint && pip install cmakelang
     command: bash ./initialbuild.sh
     
 github:

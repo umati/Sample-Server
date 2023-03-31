@@ -21,7 +21,7 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 # hadolint ignore=DL3007
-FROM gitpod/workspace-full:latest
+FROM gitpod/workspace-full:2023-03-24-22-45-37
 
 # Install custom tools, runtimes, etc.
 # For example "bastet", a command-line tetris clone:

@@ -186,7 +186,7 @@ target_link_libraries(ua_gen_woodworking PUBLIC ua_gen_machinery)
 ua_generate_nodeset_and_datatypes(
     NAME "machinery_result"
     FILE_NS "${UA_NODESET_DIR}/Machinery/Result/Opc.Ua.Machinery.Result.NodeSet2.xml"
-    FILE_CSV "${UA_NODESET_DIR}/Machinery/Result/Opc.Ua.Machinery.Result.NodeSet2.csv"
+    FILE_CSV "${UA_NODESET_DIR}/Machinery/Result/NodeIds.csv"
     FILE_BSD "${UA_NODESET_DIR}/Machinery/Result/Opc.Ua.Machinery.Result.NodeSet2.bsd"
     NAMESPACE_MAP "8:http://opcfoundation.org/UA/Machinery/Result/"
     TARGET_PREFIX "${PROJECT_NAME}"

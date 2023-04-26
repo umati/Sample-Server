@@ -49,8 +49,8 @@ externalproject_add(
     libreSSLExternal
     DOWNLOAD_DIR ${CMAKE_CURRENT_BINARY_DIR}/libreSslDownload
     SOURCE_DIR ${CMAKE_CURRENT_BINARY_DIR}/libreSslSource
-    URL "https://ftp.openbsd.org/pub/OpenBSD/LibreSSL/libressl-3.7.1.tar.gz"
-    URL_HASH SHA256=98086961a2b8b657ed0fea3056fb2db14294b6bfa193c15a5236a0a35c843ded
+    URL "https://mirror.leaseweb.com/pub/OpenBSD/LibreSSL/libressl-3.7.2.tar.gz"
+    URL_HASH SHA256=b06aa538fefc9c6b33c4db4931a09a5f52d9d2357219afcbff7d93fe12ebf6f7
     PATCH_COMMAND "${Patch_EXECUTABLE}" -p1 --forward -d ${CMAKE_CURRENT_BINARY_DIR}/libreSslSource <
                   ${CMAKE_CURRENT_SOURCE_DIR}/ciPatches/libressl-no_postfix.patch || echo "Patch returned non-zero"
     CMAKE_ARGS -DLIBRESSL_APPS:BOOL=0 -DCMAKE_INSTALL_PREFIX:PATH=${CMAKE_INSTALL_PREFIX}

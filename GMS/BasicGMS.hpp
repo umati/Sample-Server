@@ -3,13 +3,14 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
  * Copyright 2022 (c) Sebastian Friedl, ISW University of Stuttgart (for VDMA e.V.)
+* Copyright 2022 (c) Alen Galinec
  */
 
 #pragma once
-#include "../MachineTools/InstantiatedMachineTool.hpp"
+#include "InstantiatedGMS.hpp"
 #include "../TypeDefinition/GMS/GMSType.hpp"
 
-class BasicGMS : public InstantiatedMachineTool {
+class BasicGMS : public InstantiatedGMS {
  public:
   BasicGMS(UA_Server *pServer);
 
@@ -25,6 +26,8 @@ class BasicGMS : public InstantiatedMachineTool {
   void InstantiateMonitoring();
   void InstantiateProduction();
   void InstantiateTools();
+  void InstantiateEquipment() override;
+  void InstantiateNotification() override;
   int m_simStep = 0;
 
   void initCorrection(GMS::CorrectionType_t &corr, std::string Identifier, std::string CharacteristicIdentfier, double value);

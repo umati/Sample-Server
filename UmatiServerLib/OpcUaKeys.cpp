@@ -21,8 +21,8 @@
 #include <open62541/plugin/create_certificate.h>
 #include <open62541/plugin/log_stdout.h>
 #include <open62541/types_generated_handling.h>
-#include <Open62541Cpp/UA_QualifiedName.hpp>
 
+#include <Open62541Cpp/UA_QualifiedName.hpp>
 #include <algorithm>
 #include <cstring>  // memset
 #include <fstream>
@@ -160,10 +160,9 @@ void OpcUaKeys::GenerateKeys() {
   UA_UInt16 keySize = 2048;
   UA_KeyValueMap_setScalar(kvm, *open62541Cpp::UA_QualifiedName(0, "key-size-bits").QualifiedName, (void *)&keySize, &UA_TYPES[UA_TYPES_UINT16]);
 
-
   auto status = UA_CreateCertificate(
     UA_Log_Stdout, subject, lenSubject, subjectAltName, lenSubjectAltName, UA_CertificateFormat::UA_CERTIFICATEFORMAT_PEM, kvm, &PrivateKey, &PublicCert);
-    UA_KeyValueMap_delete(kvm);
+  UA_KeyValueMap_delete(kvm);
   if (status != UA_STATUSCODE_GOOD) {
     std::stringstream ss;
     ss << "Generating OPC UA Server certificate failed: " << UA_StatusCode_name(status);

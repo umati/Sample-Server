@@ -2,8 +2,9 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * Copyright 2020-2021 (c) Christian von Arnim, ISW University of Stuttgart (for umati and VDW e.V.)
- * Copyright 2021 (c) Götz Görisch, VDW - Verein Deutscher Werkzeugmaschinenfabriken e.V.
+ * Copyright (c) 2020-2021 Christian von Arnim, ISW University of Stuttgart (for umati and VDW e.V.)
+ * Copyright (c) 2021,2023 Götz Görisch, VDW - Verein Deutscher Werkzeugmaschinenfabriken e.V.
+ * Copyright (c) 2023 Sebastian Friedl, FVA GmbH
  */
 
 #include "OpcUaKeys.hpp"
@@ -21,6 +22,7 @@
 #include <open62541/plugin/log_stdout.h>
 #include <open62541/types_generated_handling.h>
 
+#include <Open62541Cpp/UA_QualifiedName.hpp>
 #include <algorithm>
 #include <cstring>  // memset
 #include <fstream>
@@ -152,8 +154,15 @@ void OpcUaKeys::GenerateKeys() {
   UA_UInt32 lenSubject = 4;
   UA_String subjectAltName[2] = {UA_STRING_STATIC("DNS:localhost"), UA_STRING_STATIC("URI:urn:umatiSampleServer")};
   UA_UInt32 lenSubjectAltName = 2;
+  UA_KeyValueMap *kvm = UA_KeyValueMap_new();
+  UA_UInt16 expiresIn = 366;
+  UA_KeyValueMap_setScalar(kvm, *open62541Cpp::UA_QualifiedName(0, "expires-in-days").QualifiedName, (void *)&expiresIn, &UA_TYPES[UA_TYPES_UINT16]);
+  UA_UInt16 keySize = 2048;
+  UA_KeyValueMap_setScalar(kvm, *open62541Cpp::UA_QualifiedName(0, "key-size-bits").QualifiedName, (void *)&keySize, &UA_TYPES[UA_TYPES_UINT16]);
+
   auto status = UA_CreateCertificate(
-    UA_Log_Stdout, subject, lenSubject, subjectAltName, lenSubjectAltName, 2048, UA_CertificateFormat::UA_CERTIFICATEFORMAT_PEM, &PrivateKey, &PublicCert);
+    UA_Log_Stdout, subject, lenSubject, subjectAltName, lenSubjectAltName, UA_CertificateFormat::UA_CERTIFICATEFORMAT_PEM, kvm, &PrivateKey, &PublicCert);
+  UA_KeyValueMap_delete(kvm);
   if (status != UA_STATUSCODE_GOOD) {
     std::stringstream ss;
     ss << "Generating OPC UA Server certificate failed: " << UA_StatusCode_name(status);

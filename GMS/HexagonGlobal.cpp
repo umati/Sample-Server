@@ -90,13 +90,13 @@ void HexagonGlobal::InstantiateIdentification() {
   InstantiateOptional(mt.Identification->Model, m_pServer, n);
 
   mt.Identification->Manufacturer = {"", "Hexagon Manufacturing Intelligence"};
-  mt.Identification->ProductCode = "GLOBAL S 07.10.07";
-  mt.Identification->YearOfConstruction = 2021;
-  mt.Identification->SoftwareRevision = "PC-DMIS 2022.2";
+  mt.Identification->ProductCode = "GLOBAL S D-12.22.10 A+/T+";
+  mt.Identification->YearOfConstruction = 2023;
+  mt.Identification->SoftwareRevision = "PC-DMIS 2023.1";
   mt.Identification->DeviceClass = "Coordinate Measuring Machine";
   mt.Identification->Location = "CTRL 5 5301/VIRTUAL 0 0/N 48.6939789 E 9.1839305";
   mt.Identification->Model = {"", "GLOBAL S"};
-  mt.Identification->SerialNumber = "GLOB002326|A";
+  mt.Identification->SerialNumber = "GLOD001413IA";
 }
 
 void HexagonGlobal::InstantiateMonitoring() {

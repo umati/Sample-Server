@@ -1,7 +1,7 @@
 # MIT License
 # 
 # Copyright (c) 2019-2021  Christian von Arnim, ISW University of Stuttgart (for umati and VDW e.V.)
-# Copyright (c) 2021-2022  Götz Görisch, VDW - Verein Deutscher Werkzeugmaschinenfabriken e.V.
+# Copyright (c) 2021-2023  Götz Görisch, VDW - Verein Deutscher Werkzeugmaschinenfabriken e.V.
 # 
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -21,18 +21,18 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 #
-FROM alpine:3.17.3 as build-env
+FROM alpine:3.18.0 as build-env
 
 RUN apk --no-cache add \
-      bash=5.2.15-r0 \
-      cmake=3.24.4-r0 \
-      gcc=12.2.1_git20220924-r4 \
-      g++=12.2.1_git20220924-r4\
-      git=2.38.5-r0 \
-      make=4.3-r1  \
-      python3=3.10.11-r0 \
-      patch=2.7.6-r9 \
-      linux-headers=5.19.5-r0 && \
+      bash=5.2.15-r3\
+      cmake=3.26.3-r1 \
+      gcc=12.2.1_git20220924-r10 \
+      g++=12.2.1_git20220924-r10\
+      git=2.40.1-r0 \
+      make=4.4.1-r1  \
+      python3=3.11.3-r11 \
+      patch=2.7.6-r10 \
+      linux-headers=6.3-r0 && \
     mkdir /install
 
 ARG BUILD_TYPE=Debug
@@ -45,9 +45,9 @@ RUN cmake /src/Sample-Server/.github/ \
       -DCMAKE_INSTALL_PREFIX:PATH=/install /build &&\
     cmake --build .
 
-FROM alpine:3.17.3 as runtime
+FROM alpine:3.18.0 as runtime
 RUN apk --no-cache add \
-      libstdc++=12.2.1_git20220924-r4
+      libstdc++=12.2.1_git20220924-r10
 COPY --from=build-env /install/bin /app
 COPY ./configuration.docker.json /configuration.json
 

@@ -1,8 +1,22 @@
 {
-    "extends": [
-      "config:base"
+  "extends": [
+    "config:base"
+  ],
+  "rebaseWhen": "behind-base-branch",
+  "dependencyDashboard": true,
+  "git-submodules": {
+    "enabled": true
+  },
+  "regexManagers": [
+  {
+   "fileMatch": ["^Dockerfile$"],
+   "matchStringsStrategy": "any",
+   "matchStrings": [
+   "\\s\\s(?<package>[a-z0-9][a-z0-9-_]+)=(?<currentValue>[a-z0-9-_.]+)\\s+"
     ],
-    "git-submodules": {
-      "enabled": true
+   "versioningTemplate": "loose",
+   "datasourceTemplate": "repology",
+   "depNameTemplate": "alpine_3_18/{{package}}"
     }
-  }
+  ]
+}

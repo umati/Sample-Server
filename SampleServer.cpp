@@ -220,10 +220,10 @@ int main(int argc, char *argv[]) {
     std::cout << "No encryption will be available." << std::endl;
   }
 
-  // Create namespaces
+  // Create namespaces, order must match the NAMESPACE_MAP in CMakeLists.txt
   namespace_di_generated(pServer);
-  namespace_ia_generated(pServer);
   namespace_machinery_generated(pServer);
+  namespace_ia_generated(pServer);
   namespace_machinetool_generated(pServer);
   UA_Server_addNamespace(pServer, "Need for namespace index");
   /*namespace_robotics_generated(pServer);*/

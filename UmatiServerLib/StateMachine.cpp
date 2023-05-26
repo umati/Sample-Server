@@ -90,7 +90,6 @@ StateMachine::State_t StateMachine::readStateValues(open62541Cpp::UA_NodeId stat
   ret.DispName.text = std::string(dispName.text.data, dispName.text.data + dispName.text.length);
   ret.Id = stateObj;
   UA_LocalizedText_clear(&dispName);
-  std::cout << "State: " << ret.DispName.text << std::endl;
   return ret;
 }
 

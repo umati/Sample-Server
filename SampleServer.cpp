@@ -225,7 +225,7 @@ int main(int argc, char *argv[]) {
   namespace_machinery_generated(pServer);
   namespace_ia_generated(pServer);
   namespace_machinetool_generated(pServer);
-  UA_Server_addNamespace(pServer, "Need for namespace index");
+  /*UA_Server_addNamespace(pServer, "Need for namespace index");*/
   /*namespace_robotics_generated(pServer);*/
   namespace_woodworking_generated(pServer);
   namespace_machinery_result_generated(pServer);

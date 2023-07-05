@@ -1,11 +1,11 @@
 # MIT License
 #
-# Copyright 2020-2021 (c) Christian von Arnim, ISW University of Stuttgart (for umati and VDW e.V.)
-# Copyright 2021 (c) Götz Görisch, VDW - Verein Deutscher Werkzeugmaschinenfabriken e.V.
-# Copyright 2021 (c) Dennis Hezel, 3Yourmind GmbH
-# Copyright 2021 (c) Hermann Leinweber, basysKom GmbH
-# Copyright 2022 (c) Sebastian Friedl, ISW University of Stuttgart (for umati and VDMA e.V.)
-# Copyright 2022 (c) Patrick Moeller, 3Yourmind GmbH
+# Copyright (c) 2020-2021 Christian von Arnim, ISW University of Stuttgart (for umati and VDW e.V.)
+# Copyright (c) 2021-2023 Götz Görisch, VDW - Verein Deutscher Werkzeugmaschinenfabriken e.V.
+# Copyright (c) 2021 Dennis Hezel, 3Yourmind GmbH
+# Copyright (c) 2021 Hermann Leinweber, basysKom GmbH
+# Copyright (c) 2022 Sebastian Friedl, ISW University of Stuttgart (for umati and VDMA e.V.)
+# Copyright (c) 2022 Patrick Moeller, 3Yourmind GmbH
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -185,9 +185,9 @@ target_link_libraries(ua_gen_woodworking PUBLIC ua_gen_machinery)
 
 ua_generate_nodeset_and_datatypes(
     NAME "machinery_result"
-    FILE_NS "${PROJECT_SOURCE_DIR}/model/GMS/Opc.Ua.MachineryResult.NodeSet2.xml"
-    FILE_CSV "${PROJECT_SOURCE_DIR}/model/GMS/Opc.Ua.MachineryResult.NodeSet2.csv"
-    FILE_BSD "${PROJECT_SOURCE_DIR}/model/GMS/Opc.Ua.MachineryResult.NodeSet2.bsd"
+    FILE_NS "${UA_NODESET_DIR}/Machinery/Result/Opc.Ua.Machinery.Result.NodeSet2.xml"
+    FILE_CSV "${UA_NODESET_DIR}/Machinery/Result/NodeIds.csv"
+    FILE_BSD "${UA_NODESET_DIR}/Machinery/Result/Opc.Ua.Machinery.Result.NodeSet2.bsd"
     NAMESPACE_MAP "7:http://opcfoundation.org/UA/Machinery/Result/"
     TARGET_PREFIX "${PROJECT_NAME}"
     OUTPUT_DIR "${SAMPLESERVER_GENERATED_NODESET_AND_DATATYPES_OUTPUT_DIR}"
@@ -207,9 +207,9 @@ target_link_libraries(ua_gen_machinery_result PUBLIC open62541::open62541)
 
 ua_generate_nodeset_and_datatypes(
     NAME "gms"
-    FILE_NS "${PROJECT_SOURCE_DIR}/model/GMS/opc.ua.gms.nodeset2.xml"
-    FILE_CSV "${PROJECT_SOURCE_DIR}/model/GMS/opc.ua.gms.nodeset2.csv"
-    FILE_BSD "${PROJECT_SOURCE_DIR}/model/GMS/opc.ua.gms.nodeset2.bsd"
+    FILE_NS "${UA_NODESET_DIR}/GMS/opc.ua.gms.nodeset2.xml"
+    FILE_CSV "${UA_NODESET_DIR}/GMS/opc.ua.gms.nodesids.csv"
+    FILE_BSD "${UA_NODESET_DIR}/GMS/opc.ua.gms.types.bsd"
     NAMESPACE_MAP "8:http://opcfoundation.org/GMS/"
     TARGET_PREFIX "${PROJECT_NAME}"
     OUTPUT_DIR "${SAMPLESERVER_GENERATED_NODESET_AND_DATATYPES_OUTPUT_DIR}"
@@ -248,7 +248,7 @@ ua_generate_nodeset_and_datatypes(
     FILE_NS "${UA_NODESET_DIR}/PADIM/Opc.Ua.PADIM.NodeSet2.xml"
     FILE_CSV "${UA_NODESET_DIR}/PADIM/Opc.Ua.PADIM.NodeIds.csv"
     FILE_BSD "${CMAKE_BINARY_DIR}/model/Opc.Ua.PADIM.Types.bsd"
-    NAMESPACE_MAP "6:http://opcfoundation.org/UA/PADIM/"
+    NAMESPACE_MAP "10:http://opcfoundation.org/UA/PADIM/"
     TARGET_PREFIX "${PROJECT_NAME}"
     OUTPUT_DIR "${SAMPLESERVER_GENERATED_NODESET_AND_DATATYPES_OUTPUT_DIR}"
     DEPENDS di irdi
@@ -263,9 +263,16 @@ target_sources(
 )
 target_link_libraries(ua_gen_padim PUBLIC ua_gen_di ua_gen_irdi)
 
+set(TMP_NSURI "http://opcfoundation.org/UA/Machinery/ProcessValues/")
+configure_file(cmake/empty.bsd.template "${CMAKE_BINARY_DIR}/model/opc.ua.machinery.processvalues.bsd")
+
 ua_generate_nodeset_and_datatypes(
     NAME "process_value"
-    FILE_NS "${PROJECT_SOURCE_DIR}/model/AdditiveManufacturing/Opc.Ua.Machinery.ProcessValues.xml"
+    FILE_NS "${UA_NODESET_DIR}/Machinery/ProcessValues/opc.ua.machinery.processvalues.xml"
+    FILE_CSV "${UA_NODESET_DIR}/Machinery/ProcessValues/opc.ua.machinery.processvalues.csv"
+    FILE_BSD "${CMAKE_BINARY_DIR}/model/opc.ua.machinery.processvalues.bsd"
+    
+    NAMESPACE_MAP "11:http://opcfoundation.org/UA/Machinery/ProcessValues/"
     TARGET_PREFIX "${PROJECT_NAME}"
     OUTPUT_DIR "${SAMPLESERVER_GENERATED_NODESET_AND_DATATYPES_OUTPUT_DIR}"
     DEPENDS di irdi padim
@@ -284,7 +291,7 @@ ua_generate_nodeset_and_datatypes(
     FILE_NS "${PROJECT_SOURCE_DIR}/model/AdditiveManufacturing/Opc.Ua.AdditiveManufacturing.NodeSet2.xml"
     FILE_CSV "${PROJECT_SOURCE_DIR}/model/AdditiveManufacturing/Opc.Ua.AdditiveManufacturing.NodeSet2.csv"
     FILE_BSD "${PROJECT_SOURCE_DIR}/model/AdditiveManufacturing/Opc.Ua.AdditiveManufacturing.NodeSet2.bsd"
-    NAMESPACE_MAP "8:http://opcfoundation.org/UA/AdditiveManufacturing/NodeSet2/"
+    NAMESPACE_MAP "12:http://opcfoundation.org/UA/AdditiveManufacturing/NodeSet2/"
     TARGET_PREFIX "${PROJECT_NAME}"
     OUTPUT_DIR "${SAMPLESERVER_GENERATED_NODESET_AND_DATATYPES_OUTPUT_DIR}"
     DEPENDS di

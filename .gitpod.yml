@@ -22,7 +22,8 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-image: gitpod/workspace-full:2023-03-24-22-45-37
+# hadolint ignore=DL3007
+image: gitpod/workspace-full:latest
 
 tasks:
   - init: npm install --location=global opcua-commander && sudo apt update && sudo apt -yy install yamllint && pip install cmakelang

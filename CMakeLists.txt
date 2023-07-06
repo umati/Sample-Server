@@ -74,7 +74,7 @@ configure_file(cmake/empty.bsd.template "${CMAKE_BINARY_DIR}/model/Opc.Ua.Machin
 ua_generate_nodeset_and_datatypes(
     NAME "machinery"
     FILE_NS "${UA_NODESET_DIR}/Machinery/Opc.Ua.Machinery.NodeSet2.xml"
-    FILE_CSV "${UA_NODESET_DIR}/Machinery/NodeIds.csv"
+    FILE_CSV "${UA_NODESET_DIR}/Machinery/Opc.Ua.Machinery.NodeIds.csv"
     FILE_BSD "${CMAKE_BINARY_DIR}/model/Opc.Ua.Machinery.Types.bsd"
     NAMESPACE_MAP "3:http://opcfoundation.org/UA/Machinery/"
     TARGET_PREFIX "${PROJECT_NAME}"

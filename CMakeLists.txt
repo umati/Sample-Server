@@ -207,10 +207,10 @@ target_link_libraries(ua_gen_machinery_result PUBLIC open62541::open62541)
 
 ua_generate_nodeset_and_datatypes(
     NAME "gms"
-    FILE_NS "${PROJECT_SOURCE_DIR}/model/GMS/opc.ua.gms.nodeset2.xml"
-    FILE_CSV "${PROJECT_SOURCE_DIR}/model/GMS/opc.ua.gms.nodeset2.csv"
-    FILE_BSD "${PROJECT_SOURCE_DIR}/model/GMS/opc.ua.gms.nodeset2.bsd"
-    NAMESPACE_MAP "8:http://opcfoundation.org/GMS/"
+    FILE_NS "${UA_NODESET_DIR}/GMS/opc.ua.gms.nodeset2.xml"
+    FILE_CSV "${UA_NODESET_DIR}/GMS/opc.ua.gms.nodesids.csv"
+    FILE_BSD "${UA_NODESET_DIR}/GMS/opc.ua.gms.types.bsd"
+    NAMESPACE_MAP "8:http://opcfoundation.org/UA/GMS/"
     TARGET_PREFIX "${PROJECT_NAME}"
     OUTPUT_DIR "${SAMPLESERVER_GENERATED_NODESET_AND_DATATYPES_OUTPUT_DIR}"
     DEPENDS di ia machinery machinery_result machinetool

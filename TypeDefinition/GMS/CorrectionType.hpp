@@ -25,7 +25,7 @@ struct CorrectionType_t {
 REFL_TYPE(GMS::CorrectionType_t, UmatiServerLib::attribute::UaObjectType(UmatiServerLib::constexp::NodeId(constants::NsGMSUri, UA_GMSID_CORRECTIONTYPE)))
 REFL_FIELD(
   CharacteristicIdentfier,
-  UmatiServerLib::attribute::MemberInTypeNodeId(UmatiServerLib::constexp::NodeId(constants::NsGMSUri, UA_GMSID_CORRECTIONTYPE_CHARACTERISTICIDENTFIER)))
+  UmatiServerLib::attribute::MemberInTypeNodeId(UmatiServerLib::constexp::NodeId(constants::NsGMSUri, UA_GMSID_CORRECTIONTYPE_CHARACTERISTICIDENTIFIER)))
 REFL_FIELD(
   CorrectionValueAbsolute,
   UmatiServerLib::attribute::MemberInTypeNodeId(UmatiServerLib::constexp::NodeId(constants::NsGMSUri, UA_GMSID_CORRECTIONTYPE_CORRECTIONVALUEABSOLUTE)),

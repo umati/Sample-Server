@@ -1,5 +1,5 @@
 src_generated/
-build/
+build-auto/
 install/
 package*.json
 node_modules

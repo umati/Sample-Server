@@ -26,7 +26,6 @@ struct CylindricalWorkspaceType_t : public WorkspaceType_t {
   BindableMemberValue<UA_Double> Radius;
 };
 
-
 namespace internalTypes {
 
 static const UA_DataType UA_WorkspaceType = {

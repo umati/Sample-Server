@@ -37,11 +37,13 @@ jobs:
           echo "CMAKE_GENERATOR=Visual Studio 17 2022">> "$env:GITHUB_ENV"
           echo "ARG_CTEST=-C Debug">> "$env:GITHUB_ENV"
       - name: Build server with dependencies
+        # yamllint disable rule:line-length
         run: |
           mkdir -p build
           cd build
           cmake ../Sample-Server/.github/ -DCMAKE_INSTALL_PREFIX:PATH=${{ env.CMAKE_INSTALL_PREFIX }}
           cmake --build .
+        # yamllint enable rule:line-length
       - name: Upload Artefacts
         uses: actions/upload-artifact@v3
         with:
@@ -70,10 +72,12 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2.9.1
       - name: PrepareReg Names
+        # yamllint disable rule:line-length
         run: |
           echo IMAGE_REPOSITORY="$(echo "${{ github.repository }}" | tr '[:upper:]' '[:lower:]')" >> "$GITHUB_ENV"
           echo IMAGE_TAG="$(echo "${{ github.ref }}" | tr '[:upper:]' '[:lower:]' |  awk '{sub(/([^\/]*\/){2}/,""); gsub(/\/|_/, "-")}1')" >> "$GITHUB_ENV"
           echo IS_NOT_PR="${{ env.IS_NOT_PR }})"
+        # yamllint enable rule:line-length
       - name: Login to GitHub Container Registry
         uses: docker/login-action@v2.2.0
         if: env.IS_NOT_PR == 'true' && ${{ github.actor }} != 'dependabot'

@@ -26,9 +26,24 @@ struct CylindricalWorkspaceType_t : public WorkspaceType_t {
   BindableMemberValue<UA_Double> Radius;
 };
 
+
+namespace internalTypes {
+
+static const UA_DataType UA_WorkspaceType = {
+  UA_TYPENAME("WorkspaceType")        /* .typeName */
+  {0, UA_NODEIDTYPE_NUMERIC, {3006}}, /* .typeId */
+  {0, UA_NODEIDTYPE_NUMERIC, {0}},    /* .binaryEncodingId, the numericidentifier used on the wire (thenamespaceindex is from .typeId) */
+  0,                                  /* .memSize */
+  UA_DATATYPEKIND_STRUCTURE,          /* .typeKind */
+  true,                               /* .pointerFree */
+  false,                              /* .overlayable (depends on endianness and the absence of padding) */
+  0,                                  /* .membersSize */
+  NULL};
+}  // namespace internalTypes
+
 }  // namespace GMS
 
-REFL_TYPE(GMS::WorkspaceType_t, UmatiServerLib::attribute::UaDataType(&UA_TYPES_GMS[UA_TYPES_GMS_WORKSPACETYPE]))
+REFL_TYPE(GMS::WorkspaceType_t, UmatiServerLib::attribute::UaDataType(&GMS::internalTypes::UA_WorkspaceType))
 REFL_END
 
 REFL_TYPE(

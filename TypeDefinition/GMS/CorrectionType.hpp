@@ -12,7 +12,7 @@
 
 namespace GMS {
 struct CorrectionType_t {
-  BindableMemberValue<std::string> CharacteristicIdentfier;
+  BindableMemberValue<std::string> CharacteristicIdentifier;
   BindableMember<ns0::AnalogUnitType_t<double>> CorrectionValueAbsolute;
   BindableMember<ns0::AnalogUnitType_t<double>> CorrectionValueRelative;
   BindableMemberValue<std::string> Description;
@@ -24,7 +24,7 @@ struct CorrectionType_t {
 
 REFL_TYPE(GMS::CorrectionType_t, UmatiServerLib::attribute::UaObjectType(UmatiServerLib::constexp::NodeId(constants::NsGMSUri, UA_GMSID_CORRECTIONTYPE)))
 REFL_FIELD(
-  CharacteristicIdentfier,
+  CharacteristicIdentifier,
   UmatiServerLib::attribute::MemberInTypeNodeId(UmatiServerLib::constexp::NodeId(constants::NsGMSUri, UA_GMSID_CORRECTIONTYPE_CHARACTERISTICIDENTIFIER)))
 REFL_FIELD(
   CorrectionValueAbsolute,

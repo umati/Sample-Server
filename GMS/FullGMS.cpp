@@ -113,7 +113,8 @@ void FullGMS::InstantiateEquipment() {
   sensor1.Axes->push_back("Y");
 
   InstantiateOptional(sensor1.Capabilities, m_pServer, n);
-  sensor1.Capabilities->push_back(UA_ToolCapabilities::UA_TOOLCAPABILITIES_PTMEAS);
+  /// \todo Must be updated to release specification
+  //sensor1.Capabilities->push_back(UA_ToolCapabilities::UA_TOOLCAPABILITIES_PTMEAS);
 
   InstantiateOptional(sensor1.IsQualifiedStatus, m_pServer, n);
   sensor1.IsQualifiedStatus = UA_ToolIsQualifiedStatus::UA_TOOLISQUALIFIEDSTATUS_QUALIFIED;

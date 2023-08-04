@@ -127,7 +127,7 @@ UA_StatusCode setServerConfig(UA_ServerConfig *pConfig, const Configuration::Con
   pConfig->applicationDescription.productUri = UA_STRING_ALLOC("https://github.com/umati/Sample-Server/");
 
   // Do not limit clients
-  UA_CertificateVerification_AcceptAll(&pConfig->certificateVerification);
+  UA_CertificateVerification_AcceptAll(&pConfig->secureChannelPKI);
   // Use Default sizes
   std::vector<std::string> serverUrls;
   {
@@ -160,7 +160,7 @@ UA_StatusCode setServerConfig(UA_ServerConfig *pConfig, const Configuration::Con
     }
   }
   status = UA_AccessControl_default(
-    pConfig, true, NULL, &pConfig->securityPolicies[pConfig->securityPoliciesSize - 1].policyUri, users.size(), users.size() == 0 ? nullptr : &users[0]);
+    pConfig, true, &pConfig->securityPolicies[pConfig->securityPoliciesSize - 1].policyUri, users.size(), users.size() == 0 ? nullptr : &users[0]);
   if (status != UA_STATUSCODE_GOOD) {
     return status;
   }

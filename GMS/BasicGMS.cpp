@@ -92,9 +92,9 @@ void BasicGMS::InstantiateResultManagement() {
   initCorrection(corr3, "corr3", "c_456", 0.75);
 }
 
-void BasicGMS::initCorrection(GMS::CorrectionType_t &corr, std::string Identifier, std::string CharacteristicIdentfier, double value) {
+void BasicGMS::initCorrection(GMS::CorrectionType_t &corr, std::string Identifier, std::string CharacteristicIdentifier, double value) {
   corr.Identifier = Identifier;
-  corr.CharacteristicIdentfier = CharacteristicIdentfier;
+  corr.CharacteristicIdentifier = CharacteristicIdentifier;
   InstantiateOptional(corr.CorrectionValueAbsolute, m_pServer, n);
   corr.CorrectionValueAbsolute->Value = value;
   corr.CorrectionValueAbsolute->EngineeringUnits.value.DisplayName.text = "µm";

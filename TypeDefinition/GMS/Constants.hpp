@@ -10,5 +10,5 @@
 #include "../../src_generated/types_gms_generated.h"
 
 namespace constants {
-constexpr const char *NsGMSUri = "http://opcfoundation.org/GMS/";
+constexpr const char *NsGMSUri = "http://opcfoundation.org/UA/GMS/";
 }

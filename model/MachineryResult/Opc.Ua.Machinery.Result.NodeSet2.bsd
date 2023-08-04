@@ -1,7 +1,15 @@
 <opc:TypeDictionary xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:tns="http://opcfoundation.org/UA/Machinery/Result/" DefaultByteOrder="LittleEndian" xmlns:opc="http://opcfoundation.org/BinarySchema/" xmlns:ua="http://opcfoundation.org/UA/" TargetNamespace="http://opcfoundation.org/UA/Machinery/Result/">
     <opc:Import Namespace="http://opcfoundation.org/UA/"/>
+    <opc:StructuredType BaseType="ua:ExtensionObject" Name="BaseResultTransferOptionsDataType">
+        <opc:Documentation>Abstract type containing information which file should be provided.</opc:Documentation>
+        <opc:Field TypeName="opc:CharArray" Name="ResultId"/>
+    </opc:StructuredType>
+    <opc:StructuredType BaseType="tns:BaseResultTransferOptionsDataType" Name="ResultTransferOptionsDataType">
+        <opc:Documentation>Contains information which file should be provided.</opc:Documentation>
+        <opc:Field SourceType="tns:BaseResultTransferOptionsDataType" TypeName="opc:CharArray" Name="ResultId"/>
+    </opc:StructuredType>
     <opc:StructuredType BaseType="ua:ExtensionObject" Name="ProcessingTimesDataType">
-        <opc:Documentation>contains measured times that were generated during the execution of a recipe</opc:Documentation>
+        <opc:Documentation>Contains measured times that were generated during the execution of a recipe.</opc:Documentation>
         <opc:Field TypeName="opc:Bit" Name="AcquisitionDurationSpecified"/>
         <opc:Field TypeName="opc:Bit" Name="ProcessingDurationSpecified"/>
         <opc:Field Length="30" TypeName="opc:Bit" Name="Reserved1"/>
@@ -12,11 +20,9 @@
     </opc:StructuredType>
     <opc:StructuredType BaseType="ua:ExtensionObject" Name="ResultDataType">
         <opc:Documentation>Contains fields that were created during the execution of a recipe.</opc:Documentation>
-        <opc:Field TypeName="opc:Bit" Name="ResultContentSpecified"/>
-        <opc:Field Length="31" TypeName="opc:Bit" Name="Reserved1"/>
         <opc:Field TypeName="tns:ResultMetaDataType" Name="ResultMetaData"/>
-        <opc:Field SwitchField="ResultContentSpecified" TypeName="opc:Int32" Name="NoOfResultContent"/>
-        <opc:Field LengthField="NoOfResultContent" SwitchField="ResultContentSpecified" TypeName="ua:Variant" Name="ResultContent"/>
+        <opc:Field TypeName="opc:Int32" Name="NoOfResultContent"/>
+        <opc:Field LengthField="NoOfResultContent" TypeName="ua:Variant" Name="ResultContent"/>
     </opc:StructuredType>
     <opc:StructuredType BaseType="ua:ExtensionObject" Name="ResultMetaDataType">
         <opc:Documentation>Meta data of a result, describing the result.</opc:Documentation>
@@ -58,14 +64,10 @@
         <opc:Field SwitchField="ResultUriSpecified" TypeName="opc:Int32" Name="NoOfResultUri"/>
         <opc:Field LengthField="NoOfResultUri" SwitchField="ResultUriSpecified" TypeName="opc:CharArray" Name="ResultUri"/>
         <opc:Field SwitchField="ResultEvaluationSpecified" TypeName="tns:ResultEvaluationEnum" Name="ResultEvaluation"/>
-        <opc:Field SwitchField="ResultEvaluationCodeSpecified" TypeName="opc:Int32" Name="ResultEvaluationCode"/>
+        <opc:Field SwitchField="ResultEvaluationCodeSpecified" TypeName="opc:Int64" Name="ResultEvaluationCode"/>
         <opc:Field SwitchField="ResultEvaluationDetailsSpecified" TypeName="ua:LocalizedText" Name="ResultEvaluationDetails"/>
         <opc:Field SwitchField="FileFormatSpecified" TypeName="opc:Int32" Name="NoOfFileFormat"/>
         <opc:Field LengthField="NoOfFileFormat" SwitchField="FileFormatSpecified" TypeName="opc:CharArray" Name="FileFormat"/>
-    </opc:StructuredType>
-    <opc:StructuredType BaseType="ua:ExtensionObject" Name="ResultTransferOptionsDataType">
-        <opc:Documentation>Contains information which file should be provided.</opc:Documentation>
-        <opc:Field TypeName="opc:CharArray" Name="ResultId"/>
     </opc:StructuredType>
     <opc:EnumeratedType LengthInBits="32" Name="ResultEvaluationEnum">
         <opc:Documentation>Indicates whether a result was in tolerance</opc:Documentation>

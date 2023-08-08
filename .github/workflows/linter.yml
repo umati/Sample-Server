@@ -27,7 +27,7 @@ jobs:
     # Name the Job
     name: Lint Code Base (super-linter)
     # Set the agent to run on
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
 
     ##################
     # Load all steps #
@@ -37,7 +37,7 @@ jobs:
       # Checkout the code base #
       ##########################
       - name: Checkout Code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v3.5.3
         with:
           # Full git history is needed to get a proper list
           # of changed files within `super-linter`
@@ -47,7 +47,7 @@ jobs:
       # Run Linter against code base #
       ################################
       - name: Lint Code Base
-        uses: github/super-linter@v5.0.0
+        uses: super-linter/super-linter@v5.2.0
         env:
           VALIDATE_CPP: false # Use clang-formt instead 
           VALIDATE_ALL_CODEBASE: false
@@ -57,11 +57,11 @@ jobs:
 # CMake Format
   cmake-format-linter:
     name: Lint Code Base (cmake-format-lint)
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v3.5.3
       - name: Format CMake files
         id: cmake-format
         uses: PuneetMatharu/cmake-format-lint-action@v1.0.4
         with:
-          args: --config-files cmake-format.yaml
+          args: --config-files ./github/linters/cmake-format.yaml

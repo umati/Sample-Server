@@ -1,7 +1,8 @@
+---
 additional_commands:
   ua_generate_nodeset_and_datatypes:
     flags:
-    - INTERNAL
+      - INTERNAL
     kwargs:
       NAME: '1'
       FILE_NS: '1'

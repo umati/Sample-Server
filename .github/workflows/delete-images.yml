@@ -18,6 +18,7 @@ jobs:
 
         with:
           github-token: ${{ secrets.DELETE_PACKAGES_TOKEN }}
+          # yamllint disable rule:line-length
           script: |
             const response = await github.request("GET /orgs/${{ github.repository_owner }}/packages/container/${{ env.PACKAGE_NAME }}/versions",
               { per_page: ${{ env.PER_PAGE }}
@@ -29,3 +30,4 @@ jobs:
                     console.log("status " + deleteResponse.status)
                 }
             }
+          # yamllint enable rule:line-length

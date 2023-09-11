@@ -16,7 +16,7 @@ ShowcaseAMMachine::ShowcaseAMMachine(UA_Server *pServer) : InstantiatedAMMachine
 void ShowcaseAMMachine::CreateObject() {
   InstantiatedAMMachine::CreateObject();
   mt.Identification->ProductInstanceUri = "http://www.3yourmind.com/#ShowcaseAMMachine";
-  mt.Identification->Location = "formnext 11 D69/N 52.491225 E 13.388392";
+  mt.Identification->Location = "EMO 9 F24/N 52.491225 E 13.388392";
   InstantiateEquipment();
 }
 

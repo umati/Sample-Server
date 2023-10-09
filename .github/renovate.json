@@ -3,7 +3,7 @@
   "rebaseWhen": "behind-base-branch",
   "dependencyDashboard": true,
   "git-submodules": {"enabled": true},
-  "regexManagers": [
+  "customManagers": [
     {
       "customType": "regex",
       "fileMatch": ["^Dockerfile$"],

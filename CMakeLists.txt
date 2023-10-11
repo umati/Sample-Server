@@ -137,35 +137,35 @@ target_sources(
 )
 target_link_libraries(ua_gen_machinetool PUBLIC ua_gen_ia ua_gen_machinery)
 
-#ua_generate_nodeset_and_datatypes(
-#    NAME "robotics"
-#    FILE_NS "${UA_NODESET_DIR}/Robotics/Opc.Ua.Robotics.NodeSet2.xml"
-#    FILE_CSV "${UA_NODESET_DIR}/Robotics/NodeIds.csv"
-#    FILE_BSD "${UA_NODESET_DIR}/Robotics/Opc.Ua.Robotics.Types.bsd"
-#    NAMESPACE_MAP "6:http://opcfoundation.org/UA/Robotics/"
-#    TARGET_PREFIX "${PROJECT_NAME}"
-#    OUTPUT_DIR "${SAMPLESERVER_GENERATED_NODESET_AND_DATATYPES_OUTPUT_DIR}"
-#    DEPENDS di
-#)
-#
-#add_library(ua_gen_robotics)
-#target_sources(
-#    ua_gen_robotics
-#    PRIVATE # cmake-format: sort
-#            "${SAMPLESERVER_GENERATED_NODESET_AND_DATATYPES_OUTPUT_DIR}/robotics_nodeids.h"
-#            ${UA_NODESET_ROBOTICS_HEADERS}
-#            ${UA_NODESET_ROBOTICS_SOURCES}
-#            ${UA_TYPES_ROBOTICS_HEADERS}
-#            ${UA_TYPES_ROBOTICS_SOURCES}
-#)
-#target_link_libraries(ua_gen_robotics PUBLIC ua_gen_di)
+ua_generate_nodeset_and_datatypes(
+   NAME "robotics"
+   FILE_NS "${UA_NODESET_DIR}/Robotics/Opc.Ua.Robotics.NodeSet2.xml"
+   FILE_CSV "${UA_NODESET_DIR}/Robotics/NodeIds.csv"
+   FILE_BSD "${UA_NODESET_DIR}/Robotics/Opc.Ua.Robotics.Types.bsd"
+   NAMESPACE_MAP "6:http://opcfoundation.org/UA/Robotics/"
+   TARGET_PREFIX "${PROJECT_NAME}"
+   OUTPUT_DIR "${SAMPLESERVER_GENERATED_NODESET_AND_DATATYPES_OUTPUT_DIR}"
+   DEPENDS di
+)
+
+add_library(ua_gen_robotics)
+target_sources(
+   ua_gen_robotics
+   PRIVATE # cmake-format: sort
+           "${SAMPLESERVER_GENERATED_NODESET_AND_DATATYPES_OUTPUT_DIR}/robotics_nodeids.h"
+           ${UA_NODESET_ROBOTICS_HEADERS}
+           ${UA_NODESET_ROBOTICS_SOURCES}
+           ${UA_TYPES_ROBOTICS_HEADERS}
+           ${UA_TYPES_ROBOTICS_SOURCES}
+)
+target_link_libraries(ua_gen_robotics PUBLIC ua_gen_di)
 
 ua_generate_nodeset_and_datatypes(
     NAME "woodworking"
     FILE_NS "${PROJECT_SOURCE_DIR}/model/Woodworking/Opc.Ua.Woodworking.NodeSet2.xml"
     FILE_CSV "${PROJECT_SOURCE_DIR}/model/Woodworking/Opc.Ua.Woodworking.NodeIds.csv"
     FILE_BSD "${PROJECT_SOURCE_DIR}/model/Woodworking/Opc.Ua.Woodworking.NodeSet2.bsd"
-    NAMESPACE_MAP "6:http://opcfoundation.org/UA/Woodworking/"
+    NAMESPACE_MAP "7:http://opcfoundation.org/UA/Woodworking/"
     TARGET_PREFIX "${PROJECT_NAME}"
     OUTPUT_DIR "${SAMPLESERVER_GENERATED_NODESET_AND_DATATYPES_OUTPUT_DIR}"
     DEPENDS machinery
@@ -188,7 +188,7 @@ ua_generate_nodeset_and_datatypes(
     FILE_NS "${UA_NODESET_DIR}/Machinery/Result/Opc.Ua.Machinery.Result.NodeSet2.xml"
     FILE_CSV "${UA_NODESET_DIR}/Machinery/Result/NodeIds.csv"
     FILE_BSD "${PROJECT_SOURCE_DIR}/model/MachineryResult/Opc.Ua.Machinery.Result.NodeSet2.bsd"
-    NAMESPACE_MAP "7:http://opcfoundation.org/UA/Machinery/Result/"
+    NAMESPACE_MAP "8:http://opcfoundation.org/UA/Machinery/Result/"
     TARGET_PREFIX "${PROJECT_NAME}"
     OUTPUT_DIR "${SAMPLESERVER_GENERATED_NODESET_AND_DATATYPES_OUTPUT_DIR}"
 )
@@ -210,7 +210,7 @@ ua_generate_nodeset_and_datatypes(
     FILE_NS "${UA_NODESET_DIR}/GMS/opc.ua.gms.nodeset2.xml"
     FILE_CSV "${UA_NODESET_DIR}/GMS/opc.ua.gms.nodesids.csv"
     FILE_BSD "${UA_NODESET_DIR}/GMS/opc.ua.gms.types.bsd"
-    NAMESPACE_MAP "8:http://opcfoundation.org/UA/GMS/"
+    NAMESPACE_MAP "9:http://opcfoundation.org/UA/GMS/"
     TARGET_PREFIX "${PROJECT_NAME}"
     OUTPUT_DIR "${SAMPLESERVER_GENERATED_NODESET_AND_DATATYPES_OUTPUT_DIR}"
     DEPENDS di ia machinery_result machinetool machinery
@@ -248,7 +248,7 @@ ua_generate_nodeset_and_datatypes(
     FILE_NS "${UA_NODESET_DIR}/PADIM/Opc.Ua.PADIM.NodeSet2.xml"
     FILE_CSV "${UA_NODESET_DIR}/PADIM/Opc.Ua.PADIM.NodeIds.csv"
     FILE_BSD "${CMAKE_BINARY_DIR}/model/Opc.Ua.PADIM.Types.bsd"
-    NAMESPACE_MAP "10:http://opcfoundation.org/UA/PADIM/"
+    NAMESPACE_MAP "11:http://opcfoundation.org/UA/PADIM/"
     TARGET_PREFIX "${PROJECT_NAME}"
     OUTPUT_DIR "${SAMPLESERVER_GENERATED_NODESET_AND_DATATYPES_OUTPUT_DIR}"
     DEPENDS di irdi
@@ -284,7 +284,7 @@ ua_generate_nodeset_and_datatypes(
     FILE_NS "${PROJECT_SOURCE_DIR}/model/AdditiveManufacturing/Opc.Ua.AdditiveManufacturing.NodeSet2.xml"
     FILE_CSV "${PROJECT_SOURCE_DIR}/model/AdditiveManufacturing/Opc.Ua.AdditiveManufacturing.NodeSet2.csv"
     FILE_BSD "${PROJECT_SOURCE_DIR}/model/AdditiveManufacturing/Opc.Ua.AdditiveManufacturing.NodeSet2.bsd"
-    NAMESPACE_MAP "12:http://opcfoundation.org/UA/AdditiveManufacturing/NodeSet2/"
+    NAMESPACE_MAP "13:http://opcfoundation.org/UA/AdditiveManufacturing/NodeSet2/"
     TARGET_PREFIX "${PROJECT_NAME}"
     OUTPUT_DIR "${SAMPLESERVER_GENERATED_NODESET_AND_DATATYPES_OUTPUT_DIR}"
     DEPENDS di
@@ -363,8 +363,8 @@ add_executable(
     MachineTools/MRMachineTool.cpp
     MachineTools/ShowcaseMachineTool.cpp
     MachineTools/SimulatedInstance.cpp
-#    Robotics/BasicRobot.cpp
-#    Robotics/InstantiatedRobot.cpp
+    Robotics/BasicRobot.cpp
+    Robotics/InstantiatedRobot.cpp
     SampleServer.cpp
     Woodworking/BasicWoodworking.cpp
     Woodworking/FullWoodworking.cpp
@@ -382,7 +382,7 @@ target_link_libraries(
     PUBLIC SampleServerLib
            Configuration
            ua_gen_machinetool
-#           ua_gen_robotics
+           ua_gen_robotics
            ua_gen_woodworking
            ua_gen_gms
            ua_gen_additivemanufacturing

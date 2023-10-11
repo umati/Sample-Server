@@ -55,7 +55,7 @@
 #include "MachineTools/FullMachineToolDynamic.hpp"
 #include "MachineTools/MRMachineTool.hpp"
 #include "MachineTools/ShowcaseMachineTool.hpp"
-/*#include "Robotics/BasicRobot.hpp"*/
+#include "Robotics/BasicRobot.hpp"
 #include "UmatiServerLib/OpcUaKeys.hpp"
 #include "Woodworking/BasicWoodworking.hpp"
 #include "Woodworking/FullWoodworking.hpp"
@@ -70,7 +70,7 @@
 #include "src_generated/namespace_padim_generated.h"
 #include "src_generated/namespace_process_value_generated.h"
 
-/*#include "src_generated/namespace_robotics_generated.h"*/
+#include "src_generated/namespace_robotics_generated.h"
 #include "src_generated/namespace_woodworking_generated.h"
 
 std::atomic_bool running{true};
@@ -226,7 +226,7 @@ int main(int argc, char *argv[]) {
   namespace_ia_generated(pServer);
   namespace_machinetool_generated(pServer);
   /*UA_Server_addNamespace(pServer, "Need for namespace index");*/
-  /*namespace_robotics_generated(pServer);*/
+  namespace_robotics_generated(pServer);
   namespace_woodworking_generated(pServer);
   namespace_machinery_result_generated(pServer);
   namespace_gms_generated(pServer);
@@ -243,7 +243,7 @@ int main(int argc, char *argv[]) {
   machineTools.push_back(std::make_shared<MRMachineTool>(pServer));
   machineTools.push_back(std::make_shared<ShowcaseMachineTool>(pServer));
   machineTools.push_back(std::make_shared<CNShowcaseMachineTool>(pServer));
-  /*machineTools.push_back(std::make_shared<BasicRobot>(pServer));*/
+  machineTools.push_back(std::make_shared<BasicRobot>(pServer));
   machineTools.push_back(std::make_shared<BasicWoodworking>(pServer));
   machineTools.push_back(std::make_shared<FullWoodworking>(pServer));
   machineTools.push_back(std::make_shared<BasicGMS>(pServer));

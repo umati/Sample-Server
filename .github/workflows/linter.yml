@@ -47,7 +47,7 @@ jobs:
       # Run Linter against code base #
       ################################
       - name: Lint Code Base
-        uses: super-linter/super-linter@v5.4.3
+        uses: super-linter/super-linter@v5.5.0
         env:
           VALIDATE_CPP: false # Use clang-formt instead 
           VALIDATE_ALL_CODEBASE: false

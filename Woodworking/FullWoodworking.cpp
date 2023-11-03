@@ -58,7 +58,7 @@ void FullWoodworking::InstantiateIdentification() {
   ww.Identification->InitialOperationDate = std::chrono::system_clock::now();
   ww.Identification->AssetId = "123456";
   ww.Identification->ComponentName = {"", "Machine"};
-  ww.Identification->Location = "VIRTUAL 0 0/N 49.628661 E 9.654903";
+  ww.Identification->Location = "BXP 9 9502/VIRTUAL 0 0/N 49.628661 E 9.654903";
 }
 
 void FullWoodworking::InstantiateMachineFlags() {

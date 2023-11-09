@@ -3,16 +3,20 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
  * Copyright 2022 (c) Sebastian Friedl, ISW University of Stuttgart (for VDMA e.V.)
+ * Copyright 2022 (c) Alen Galinec
  */
 
 #include "BasicGMS.hpp"
 
+#include <sstream>
 #include <string>
+#include <unordered_map>
 
 #include "../TypeDefinition/GMS/Constants.hpp"
 #include "../TypeDefinition/GMS/GMSType.hpp"
+#include "../TypeDefinition/TypeDefinition.hpp"
 
-BasicGMS::BasicGMS(UA_Server *pServer) : InstantiatedMachineTool(pServer) {
+BasicGMS::BasicGMS(UA_Server *pServer) : InstantiatedGMS(pServer) {
   MachineName = "BasicGMS";
   CreateObject();
 }
@@ -42,8 +46,10 @@ void BasicGMS::CreateObject() {
   InstantiateIdentification();
   InstantiateMonitoring();
   InstantiateProduction();
+  InstantiateEquipment();
   InstantiateTools();
   InstantiateResultManagement();
+  InstantiateNotification();
 
   InstantiateOptional(mt.Notification->Prognoses, m_pServer, n);
   InstantiateOptional(mt.Notification->Prognoses->Calibration, m_pServer, n);
@@ -176,6 +182,65 @@ void BasicGMS::InstantiateTools() {
     tool.Locked->ReasonForLocking = UA_ToolLocked::UA_TOOLLOCKED_OTHER;
     tool.Name = ss.str();
     InstantiateOptional(tool.Name, m_pServer, n);
+  }
+}
+
+void BasicGMS::InstantiateEquipment() {
+  InstantiateOptional(gms.Equipment->Tools, m_pServer, n);
+
+  auto &sensor1 = InstantiateSensor("Sensor1");
+  sensor1.Class->Value = 2; /* TactileTouchTrigger */
+  sensor1.ControlIdentifier1 = 11;
+  sensor1.ControlIdentifier2 = 3;
+  sensor1.ControlIdentifierInterpretation = UA_ToolManagement::UA_TOOLMANAGEMENT_GROUPBASED;
+  sensor1.Locked->Value = true;
+  sensor1.Locked->ReasonForLocking = UA_ToolLocked::UA_TOOLLOCKED_BYOPERATOR;
+  sensor1.Name = "T11_P3";
+  InstantiateOptional(sensor1.ControlIdentifier2, m_pServer, n);
+  InstantiateOptional(sensor1.Name, m_pServer, n);
+
+  // Additional SensorType members
+  InstantiateOptional(sensor1.Alignment, m_pServer, n);
+  sensor1.Alignment = UA_ToolAlignmentState::UA_TOOLALIGNMENTSTATE_INDEXED;
+
+  // TODO: What is the correct format of the "Axes" property according to the spec?
+  InstantiateOptional(sensor1.Axes, m_pServer, n);
+  sensor1.Axes->push_back("X");
+  sensor1.Axes->push_back("Y");
+
+  InstantiateOptional(sensor1.Capabilities, m_pServer, n);
+  sensor1.Capabilities->push_back(UA_ToolCapabilities::UA_TOOLCAPABILITIES_PTMEAS);
+
+  InstantiateOptional(sensor1.IsQualifiedStatus, m_pServer, n);
+  sensor1.IsQualifiedStatus = UA_ToolIsQualifiedStatus::UA_TOOLISQUALIFIEDSTATUS_QUALIFIED;
+
+  // EUInformation for Days according to CEFACT
+  const UmatiServerLib::EUInformation_t EU_Days{
+    .NamespaceUri = "http://www.opcfoundation.org/UA/units/un/cefact", .UnitId = 4473177, .DisplayName = {"", "d"}, .Description = {"", "days"}};
+
+  sensor1.ToolLife->Qualified->EngineeringUnits = EU_Days;
+  sensor1.ToolLife->Qualified->IsCountingUp = true;
+  sensor1.ToolLife->Qualified->StartValue = 0;
+  sensor1.ToolLife->Qualified->WarningValue = 5;
+  sensor1.ToolLife->Qualified->LimitValue = 7;
+  sensor1.ToolLife->Qualified->Value = 1;
+  InstantiateOptional(sensor1.ToolLife, m_pServer, n);
+  InstantiateOptional(sensor1.ToolLife->Qualified, m_pServer, n);
+  InstantiateOptional(sensor1.ToolLife->Qualified->Value, m_pServer, n);
+  InstantiateOptional(sensor1.ToolLife->Qualified->StartValue, m_pServer, n);
+  InstantiateOptional(sensor1.ToolLife->Qualified->WarningValue, m_pServer, n);
+  InstantiateOptional(sensor1.ToolLife->Qualified->LimitValue, m_pServer, n);
+}
+
+void BasicGMS::InstantiateNotification() {
+  InstantiateOptional(gms.Notification->Prognoses, m_pServer, n);
+  InstantiateOptional(gms.Notification->Prognoses->Calibration, m_pServer, n);
+  gms.Notification->Prognoses->Calibration.value.Calibrated = true;
+  InstantiateOptional(gms.Notification->Prognoses->Calibration->CalibrationCertificate, m_pServer, n);
+  {
+    std::stringstream ss;
+    ss << "https://www.ptb.de/dcc/#" << MachineName;
+    gms.Notification->Prognoses->Calibration.value.CalibrationCertificate->push_back(ss.str());
   }
 }
 

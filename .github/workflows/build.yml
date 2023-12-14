@@ -45,7 +45,7 @@ jobs:
           cmake --build .
         # yamllint enable rule:line-length
       - name: Upload Artefacts
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: Sample-Server-${{matrix.os}}
           path: ${{ env.CMAKE_INSTALL_PREFIX }}/bin

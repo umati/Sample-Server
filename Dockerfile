@@ -51,6 +51,11 @@ RUN apk --no-cache add \
 COPY --from=build-env /install/bin /app
 COPY ./configuration.docker.json /configuration.json
 
+RUN adduser -DH sampleserver
+USER sampleserver
+
 EXPOSE 4840
 
 ENTRYPOINT ["/app/SampleServer"]
+
+HEALTHCHECK CMD netstat -ltn | grep -c 4840

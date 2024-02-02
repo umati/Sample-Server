@@ -9,6 +9,10 @@ on:
     branches: [main, develop]
   merge_group:
 
+permissions: 
+  contents: read
+  packages: write
+
 jobs:
   build:
     strategy:

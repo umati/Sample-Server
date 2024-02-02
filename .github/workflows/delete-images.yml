@@ -6,6 +6,10 @@ on:
     # * is a special character in YAML so you have to quote this string
     - cron: '0 0 1 * *'
 
+permissions: 
+    contents: read
+    packages: write
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -15,7 +19,6 @@ jobs:
         env:
           PACKAGE_NAME: sample-server
           PER_PAGE: 100
-
         with:
           github-token: ${{ secrets.DELETE_PACKAGES_TOKEN }}
           # yamllint disable rule:line-length

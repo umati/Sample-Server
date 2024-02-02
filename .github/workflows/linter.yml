@@ -19,6 +19,7 @@ on:
   pull_request:
     branches: [main, develop]
 
+permissions: read-all
 ###############
 # Set the Job #
 ###############
@@ -47,9 +48,10 @@ jobs:
       # Run Linter against code base #
       ################################
       - name: Lint Code Base
-        uses: super-linter/super-linter@v5.7.2
+        uses: super-linter/super-linter@v6.0.0
         env:
           VALIDATE_CPP: false # Use clang-formt instead 
+          VALIDATE_ANSIBLE: false
           VALIDATE_ALL_CODEBASE: false
           DEFAULT_BRANCH: main
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

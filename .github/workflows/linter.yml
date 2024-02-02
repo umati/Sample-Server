@@ -19,6 +19,7 @@ on:
   pull_request:
     branches: [main, develop]
 
+permissions: read-all
 ###############
 # Set the Job #
 ###############

@@ -51,6 +51,7 @@ jobs:
         uses: super-linter/super-linter@v6.0.0
         env:
           VALIDATE_CPP: false # Use clang-formt instead 
+          VALIDATE_ANSIBLE: false
           VALIDATE_ALL_CODEBASE: false
           DEFAULT_BRANCH: main
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

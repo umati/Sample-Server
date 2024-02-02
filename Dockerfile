@@ -54,3 +54,5 @@ COPY ./configuration.docker.json /configuration.json
 EXPOSE 4840
 
 ENTRYPOINT ["/app/SampleServer"]
+
+HEALTHCHECK CMD netstat -ltn | grep -c 4840

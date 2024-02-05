@@ -21,7 +21,20 @@ on:
   schedule:
     - cron: '0 3 * * 1'
 
-permissions: read-all
+permissions:
+  actions: read
+  checks: read
+  contents: read
+  deployments: read
+  discussions: read
+  issues: read
+  packages: read
+  pages: read
+  pull-requests: read
+  repository-projects: read
+  security-events: write
+  statuses: read
+
 
 jobs:
   analyze:

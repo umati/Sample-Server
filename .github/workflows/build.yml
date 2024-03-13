@@ -83,7 +83,7 @@ jobs:
           echo IS_NOT_PR="${{ env.IS_NOT_PR }})"
         # yamllint enable rule:line-length
       - name: Login to GitHub Container Registry
-        uses: docker/login-action@v3.0.0
+        uses: docker/login-action@v3.1.0
         if: env.IS_NOT_PR == 'true'
         with:
           registry: ghcr.io

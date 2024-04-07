@@ -121,7 +121,7 @@ void FullMachineTool::InstantiateIdentification() {
   mt.Identification->ComponentName = {"", MachineName};
   mt.Identification->ProductCode = "2021-47110815";
   mt.Identification->SoftwareRevision = "1.00.1";
-  mt.Identification->Location = "BXP 9 9502/VIRTUAL 0 0/N 48.781340 E 9.165731";
+  mt.Identification->Location = "CCMT W4 A411/BXP 9 9502/VIRTUAL 0 0/N 48.781340 E 9.165731";
   mt.Identification->Model = {"", MachineName};
 
   auto &swOS = mt.Identification->SoftwareIdentification->SoftwareItem.Add(m_pServer, n, {m_nsIndex, "OS"});

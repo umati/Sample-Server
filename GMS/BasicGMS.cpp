@@ -134,7 +134,7 @@ void BasicGMS::InstantiateIdentification() {
   mt.Identification->YearOfConstruction = 2022;
   mt.Identification->SoftwareRevision = "v1.05";
   mt.Identification->DeviceClass = "CoordinateMeasuringMachine";
-  mt.Identification->Location = "EMO 9 F24/VIRTUAL 0 0/N 48.7685303 E 9.1653923";
+  mt.Identification->Location = "CCMT W4 A411/EMO 9 F24/VIRTUAL 0 0/N 48.7685303 E 9.1653923";
   mt.Identification->Model = {"", MachineName};
 
   {

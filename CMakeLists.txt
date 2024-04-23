@@ -33,6 +33,7 @@ set(CMAKE_CXX_STANDARD 20)
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake)
 
 find_package(open62541 REQUIRED)
+include("${open62541_DIR}/open62541Macros.cmake")
 find_package(Open62541Cpp REQUIRED)
 find_package(GTest REQUIRED NO_CMAKE_SYSTEM_PACKAGE_REGISTRY)
 find_package(nlohmann_json REQUIRED)

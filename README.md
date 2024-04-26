@@ -8,6 +8,7 @@ Sample-Server implementation of various umati endorsed OPC UA companion specific
 
 ![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/umati/Sample-Server/build.yml)
 [![Gitpod ready-to-code](https://img.shields.io/badge/Gitpod-ready--to--code-blue?logo=gitpod)](https://gitpod.io/#https://github.com/umati/Sample-Server)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.6336934.svg)](https://doi.org/10.5281/zenodo.6336934)
 
 ## Current Implementation
 

@@ -134,7 +134,7 @@ void WenzelLH::InstantiateIdentification() {
   mt.Identification->YearOfConstruction = 2022;
   mt.Identification->SoftwareRevision = "V1.0.0";
   mt.Identification->DeviceClass = "GMS";
-  mt.Identification->Location = "HMI 8 D16/EMO 6 B79/VIRTUAL 0 0/N 48.694241 E 9.183833";
+  mt.Identification->Location = "GRIND 9 D21/VIRTUAL 1 1/N 48.694241 E 9.183833";
   mt.Identification->Model = {"", MachineName};
 
   {

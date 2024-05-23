@@ -24,15 +24,15 @@
 FROM alpine:3.20.0 as build-env
 
 RUN apk --no-cache add \
-      bash=5.2.21-r0 \
-      cmake=3.27.8-r0 \
-      gcc=13.2.1_git20231014-r0 \
-      g++=13.2.1_git20231014-r0\
-      git=2.43.4-r0 \
+      bash=5.2.26-r0 \
+      cmake=3.29.3-r0 \
+      gcc=13.2.1_git20240309-r0 \
+      g++=13.2.1_git20240309-r0 \
+      git=2.45.1-r0 \
       make=4.4.1-r2  \
-      python3=3.11.9-r0 \
+      python3=3.12.3-r1 \
       patch=2.7.6-r10 \
-      linux-headers=6.5-r0 && \
+      linux-headers=6.6-r0 && \
     mkdir /install
 
 ARG BUILD_TYPE=Debug
@@ -47,7 +47,7 @@ RUN cmake /src/Sample-Server/.github/ \
 
 FROM alpine:3.20.0 as runtime
 RUN apk --no-cache add \
-      libstdc++=13.2.1_git20231014-r0
+      libstdc++=13.2.1_git20240309-r0
 COPY --from=build-env /install/bin /app
 COPY ./configuration.docker.json /configuration.json
 

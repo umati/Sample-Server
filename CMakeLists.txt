@@ -47,6 +47,7 @@ if(NOT CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
 endif()
 
 set(SAMPLESERVER_GENERATED_NODESET_AND_DATATYPES_OUTPUT_DIR "${PROJECT_SOURCE_DIR}/src_generated")
+set(UA_NODESET_DIR "${CMAKE_CURRENT_SOURCE_DIR}/deps/open62541/deps/ua-nodeset")
 
 # Generate types and namespace for DI
 ua_generate_nodeset_and_datatypes(
@@ -54,7 +55,6 @@ ua_generate_nodeset_and_datatypes(
     FILE_NS "${UA_NODESET_DIR}/DI/Opc.Ua.Di.NodeSet2.xml"
     FILE_CSV "${UA_NODESET_DIR}/DI/Opc.Ua.Di.NodeIds.csv"
     FILE_BSD "${UA_NODESET_DIR}/DI/Opc.Ua.Di.Types.bsd"
-    NAMESPACE_MAP "2:http://opcfoundation.org/UA/DI/"
     TARGET_PREFIX "${PROJECT_NAME}"
     OUTPUT_DIR "${SAMPLESERVER_GENERATED_NODESET_AND_DATATYPES_OUTPUT_DIR}"
 )
@@ -77,7 +77,6 @@ ua_generate_nodeset_and_datatypes(
     FILE_NS "${UA_NODESET_DIR}/Machinery/Opc.Ua.Machinery.NodeSet2.xml"
     FILE_CSV "${UA_NODESET_DIR}/Machinery/Opc.Ua.Machinery.NodeIds.csv"
     FILE_BSD "${CMAKE_BINARY_DIR}/model/Opc.Ua.Machinery.Types.bsd"
-    NAMESPACE_MAP "3:http://opcfoundation.org/UA/Machinery/"
     TARGET_PREFIX "${PROJECT_NAME}"
     OUTPUT_DIR "${SAMPLESERVER_GENERATED_NODESET_AND_DATATYPES_OUTPUT_DIR}"
     DEPENDS di
@@ -100,7 +99,6 @@ ua_generate_nodeset_and_datatypes(
     FILE_NS "${UA_NODESET_DIR}/IA/Opc.Ua.IA.NodeSet2.xml"
     FILE_CSV "${UA_NODESET_DIR}/IA/Opc.Ua.IA.NodeIds.csv"
     FILE_BSD "${UA_NODESET_DIR}/IA/Opc.Ua.IA.NodeSet2.bsd"
-    NAMESPACE_MAP "4:http://opcfoundation.org/UA/IA/"
     TARGET_PREFIX "${PROJECT_NAME}"
     OUTPUT_DIR "${SAMPLESERVER_GENERATED_NODESET_AND_DATATYPES_OUTPUT_DIR}"
     DEPENDS di
@@ -120,7 +118,6 @@ ua_generate_nodeset_and_datatypes(
     FILE_NS "${UA_NODESET_DIR}/MachineTool/Opc.Ua.MachineTool.NodeSet2.xml"
     FILE_CSV "${UA_NODESET_DIR}/MachineTool/NodeIds.csv"
     FILE_BSD "${UA_NODESET_DIR}/MachineTool/Opc.Ua.MachineTool.NodeSet2.bsd"
-    NAMESPACE_MAP "5:http://opcfoundation.org/UA/MachineTool/"
     TARGET_PREFIX "${PROJECT_NAME}"
     OUTPUT_DIR "${SAMPLESERVER_GENERATED_NODESET_AND_DATATYPES_OUTPUT_DIR}"
     DEPENDS di machinery ia
@@ -143,7 +140,6 @@ target_link_libraries(ua_gen_machinetool PUBLIC ua_gen_ia ua_gen_machinery)
 #    FILE_NS "${UA_NODESET_DIR}/Robotics/Opc.Ua.Robotics.NodeSet2.xml"
 #    FILE_CSV "${UA_NODESET_DIR}/Robotics/NodeIds.csv"
 #    FILE_BSD "${UA_NODESET_DIR}/Robotics/Opc.Ua.Robotics.Types.bsd"
-#    NAMESPACE_MAP "6:http://opcfoundation.org/UA/Robotics/"
 #    TARGET_PREFIX "${PROJECT_NAME}"
 #    OUTPUT_DIR "${SAMPLESERVER_GENERATED_NODESET_AND_DATATYPES_OUTPUT_DIR}"
 #    DEPENDS di
@@ -166,7 +162,6 @@ ua_generate_nodeset_and_datatypes(
     FILE_NS "${PROJECT_SOURCE_DIR}/model/Woodworking/Opc.Ua.Woodworking.NodeSet2.xml"
     FILE_CSV "${PROJECT_SOURCE_DIR}/model/Woodworking/Opc.Ua.Woodworking.NodeIds.csv"
     FILE_BSD "${PROJECT_SOURCE_DIR}/model/Woodworking/Opc.Ua.Woodworking.NodeSet2.bsd"
-    NAMESPACE_MAP "6:http://opcfoundation.org/UA/Woodworking/"
     TARGET_PREFIX "${PROJECT_NAME}"
     OUTPUT_DIR "${SAMPLESERVER_GENERATED_NODESET_AND_DATATYPES_OUTPUT_DIR}"
     DEPENDS machinery
@@ -189,7 +184,6 @@ ua_generate_nodeset_and_datatypes(
     FILE_NS "${UA_NODESET_DIR}/Machinery/Result/Opc.Ua.Machinery.Result.NodeSet2.xml"
     FILE_CSV "${UA_NODESET_DIR}/Machinery/Result/NodeIds.csv"
     FILE_BSD "${PROJECT_SOURCE_DIR}/model/MachineryResult/Opc.Ua.Machinery.Result.NodeSet2.bsd"
-    NAMESPACE_MAP "7:http://opcfoundation.org/UA/Machinery/Result/"
     TARGET_PREFIX "${PROJECT_NAME}"
     OUTPUT_DIR "${SAMPLESERVER_GENERATED_NODESET_AND_DATATYPES_OUTPUT_DIR}"
 )
@@ -211,7 +205,6 @@ ua_generate_nodeset_and_datatypes(
     FILE_NS "${UA_NODESET_DIR}/GMS/opc.ua.gms.nodeset2.xml"
     FILE_CSV "${UA_NODESET_DIR}/GMS/opc.ua.gms.nodesids.csv"
     FILE_BSD "${UA_NODESET_DIR}/GMS/opc.ua.gms.types.bsd"
-    NAMESPACE_MAP "8:http://opcfoundation.org/UA/GMS/"
     TARGET_PREFIX "${PROJECT_NAME}"
     OUTPUT_DIR "${SAMPLESERVER_GENERATED_NODESET_AND_DATATYPES_OUTPUT_DIR}"
     DEPENDS di ia machinery_result machinetool machinery
@@ -249,7 +242,6 @@ ua_generate_nodeset_and_datatypes(
     FILE_NS "${UA_NODESET_DIR}/PADIM/Opc.Ua.PADIM.NodeSet2.xml"
     FILE_CSV "${UA_NODESET_DIR}/PADIM/Opc.Ua.PADIM.NodeIds.csv"
     FILE_BSD "${CMAKE_BINARY_DIR}/model/Opc.Ua.PADIM.Types.bsd"
-    NAMESPACE_MAP "10:http://opcfoundation.org/UA/PADIM/"
     TARGET_PREFIX "${PROJECT_NAME}"
     OUTPUT_DIR "${SAMPLESERVER_GENERATED_NODESET_AND_DATATYPES_OUTPUT_DIR}"
     DEPENDS di irdi
@@ -285,7 +277,6 @@ ua_generate_nodeset_and_datatypes(
     FILE_NS "${PROJECT_SOURCE_DIR}/model/AdditiveManufacturing/Opc.Ua.AdditiveManufacturing.NodeSet2.xml"
     FILE_CSV "${PROJECT_SOURCE_DIR}/model/AdditiveManufacturing/Opc.Ua.AdditiveManufacturing.NodeSet2.csv"
     FILE_BSD "${PROJECT_SOURCE_DIR}/model/AdditiveManufacturing/Opc.Ua.AdditiveManufacturing.NodeSet2.bsd"
-    NAMESPACE_MAP "12:http://opcfoundation.org/UA/AdditiveManufacturing/NodeSet2/"
     TARGET_PREFIX "${PROJECT_NAME}"
     OUTPUT_DIR "${SAMPLESERVER_GENERATED_NODESET_AND_DATATYPES_OUTPUT_DIR}"
     DEPENDS di

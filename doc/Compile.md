@@ -1,5 +1,7 @@
 # Compile the Sample-Server
 
+Note: Tutorial for Visual Studio Code in `doc\.vscode\RunOnWindows.md`.
+
 ## Get the files
 
 Clone the GitHub repository using your preferred approach.

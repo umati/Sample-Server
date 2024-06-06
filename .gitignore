@@ -4,3 +4,7 @@ install/
 package*.json
 node_modules
 /.vscode
+build/
+_build/
+_install/
+buildDeps/

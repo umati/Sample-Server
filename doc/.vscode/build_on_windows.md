@@ -3,7 +3,7 @@
 * Visual Studio Code
 * [Build tools for Visual Studio](https://visualstudio.microsoft.com/de/downloads/#build-tools-for-visual-studio-2022)
 * Visual Studio Code *CMake Tools* extension
-* Visual Studio Code *C/C++ Extension Pack* extension 
+* Visual Studio Code *C/C++ Extension Pack* extension
 
 ## Download and Build
 ```ps

@@ -46,7 +46,7 @@ Generators that have worked in the past:
 * Visual Studio 2017 or newer
 
 
-If the cmake buildsystem was generated successfully, you can compile the project using said build system.
+If the cmake buildsystem was generated successfully, you can compile the project using said build tool.
 Example for command-line using cmake:
 ```bash
 cmake --build .

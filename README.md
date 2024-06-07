@@ -69,7 +69,7 @@ The configuration uses a json format. By default, the server looks for a file `c
 
 ## Concept
 
-This implementation represents the OPC UA Instance with an instance of an C++ struct and connects them together. So writing an value in the C++ instance will also set this value in the corresponding `OPC UA node`. The binding is established by utilizing reflection (an improved version of the binding in [this publication](https://ieeexplore.ieee.org/document/8972189)).
+This implementation represents the OPC UA Instance with an instance of an C++ struct and connects them together. So writing an value in the C++ instance will also set this value in the corresponding `OPC UA node`. The binding is established by utilizing reflection, as described in [this publication](https://ieeexplore.ieee.org/document/10143130)).
 
 The binding is done by comparing the name of structure members with the browse name of the OPC UA instance. As the binding uses memory addresses of the C++ instance, the instance itself must not be copied after the binding.
 

@@ -4,7 +4,14 @@
       "consoleFull"
     ],
     "ignore": [
-      "**/__snapshots__/**"
+      "**/__snapshots__/**",
+      "**/build/**",
+      "**/deps/**",
+      "**/_build/**",
+      "**/_install/**",
+      "**/.venv/**",
+      "**/.venv2/**"
+
     ],
     "absolute": true
-  }
+}

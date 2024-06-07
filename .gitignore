@@ -3,4 +3,8 @@ build-auto/
 install/
 package*.json
 node_modules
-.vscode
+/.vscode
+build/
+_build/
+_install/
+buildDeps/

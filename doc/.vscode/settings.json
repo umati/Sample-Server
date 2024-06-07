@@ -1,0 +1,7 @@
+{
+    "cmake.installPrefix": "${workspaceFolder}/_install",
+    "cmake.buildDirectory": "${workspaceFolder}/build",
+    "cmake.debugConfig": {
+        "cwd": "${workspaceFolder}"
+    }
+}

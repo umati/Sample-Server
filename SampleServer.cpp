@@ -187,8 +187,9 @@ int main(int argc, char *argv[]) {
     std::cout << e.what() << std::endl;
   }
   std::cout << "SampleServer, exit with Ctrl+C" << std::endl;
-  UA_Server *pServer = UA_Server_new();
-  auto pConfig = UA_Server_getConfig(pServer);
+
+  UA_ServerConfig *pConfig = new UA_ServerConfig();
+  UA_ServerConfig_setDefault(pConfig);
 
   try {
     if (!serverConfig.Encryption.has_value()) {
@@ -219,6 +220,8 @@ int main(int argc, char *argv[]) {
     UA_ServerConfig_setDefault(pConfig);
     std::cout << "No encryption will be available." << std::endl;
   }
+
+  UA_Server *pServer = UA_Server_newWithConfig(pConfig);
 
   // Create namespaces, order must match the CMakeLists.txt
   namespace_di_generated(pServer);

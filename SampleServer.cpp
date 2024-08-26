@@ -116,7 +116,7 @@ UA_StatusCode setServerConfig(UA_ServerConfig *pConfig, const Configuration::Con
     return status;
   }
   pConfig->nodeLifecycle.generateChildNodeId = generateChildNodeIdInParentNs;
-  // Companion Specificaitons will trigger many warnings, and values in instances are set later
+  // Companion Specifications will trigger many warnings, and values in instances are set later
   pConfig->allowEmptyVariables = UA_RuleHandling::UA_RULEHANDLING_ACCEPT;
   pConfig->modellingRulesOnInstances = UA_FALSE;
   UA_String_clear(&pConfig->applicationDescription.applicationUri);

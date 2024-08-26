@@ -1,0 +1,4 @@
+
+./build/*
+./deps/*
+./src_generated/*

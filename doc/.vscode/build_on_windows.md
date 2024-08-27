@@ -1,11 +1,14 @@
-# How to build using vscode
+# How to build using Visual Studio Code
+
 ## Prerequisites
+
 * Visual Studio Code
 * [Build tools for Visual Studio](https://visualstudio.microsoft.com/de/downloads/#build-tools-for-visual-studio-2022)
 * Visual Studio Code *CMake Tools* extension
 * Visual Studio Code *C/C++ Extension Pack* extension
 
 ## Download and Build
+
 ```ps
 git clone https://github.com/umati/Sample-Server.git
 git submodule update --init --recursive
@@ -14,6 +17,7 @@ cp -R doc/.vscode .
 ```
 
 There are two cmake-based build steps using two different `CMakeLists.txt`:
+
 1. `.github/CMakeLists.txt` Builds the dependencies (git submodules) and the Sample-Server. Only required once after pulling the repository or after an update of the dependencies.
 2. `./CMakeLists.txt` builds only the Sample-Server not the dependencies. This file is used for building and testing.
 
@@ -39,6 +43,7 @@ cmake --build .
 ```
 
 For Step 2, i.e., building only the Sample-Server:
+
 * Hit `ctrl+shift+p` and enter `> CMake: Select a Kit` command. Then select *Visual Studio Build Tools 2022 Release - x86_amd64*
 * Hit `ctrl+shift+p` and enter `> CMake: Configure` to configure
 * Hit `ctrl+shift+p` and enter `> CMake: Build Target` the select `SampleServer EXECUTABLE` to build.
@@ -47,6 +52,7 @@ Alternativly you can use the buttons at the bottom of the IDE:
 ![alt text](image-3.png)
 
 Alternative for Step 2 (using commandline):
+
 ```ps
 mkdir build
 cd build
@@ -55,11 +61,14 @@ cmake --no-warn-unused-cli -DCMAKE_INSTALL_PREFIX:STRING="C:/<...>/Sample-Server
 cmake --build . -t SampleServer
 ```
 
-## Running using vscode
+## Running using Visual Studio Code
+
 Get the sample configuration.json file
+
 ```ps
 cp .vscode/configuration.json configuration.json
 ```
+
 Run by hitting the green arrow.
 
 ![alt text](image-2.png)
@@ -67,6 +76,7 @@ Run by hitting the green arrow.
 Server should be available on `localhost:34840`
 
 Alternatively run by using powershell:
+
 ```ps
 # In root directory of repository
 .\build\Debug\SampleServer.exe

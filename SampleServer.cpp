@@ -6,6 +6,7 @@
  * Copyright 2021 (c) Christoph Ruckstetter, Michael Weinig AG
  * Copyright 2022 (c) Sebastian Friedl, ISW University of Stuttgart (for VDMA e.V.)
  * Copyright 2022 (c) Alen Galinec
+ * Copyright 2024 (c) Nico Brandt, ISW University of Stuttgart (for umati and VDW e.V.)
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal

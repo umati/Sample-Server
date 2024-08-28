@@ -6,6 +6,7 @@
  * Copyright 2021 (c) Christoph Ruckstetter, Michael Weinig AG
  * Copyright 2022 (c) Sebastian Friedl, ISW University of Stuttgart (for VDMA e.V.)
  * Copyright 2022 (c) Alen Galinec
+ * Copyright 2024 (c) Nico Brandt, ISW University of Stuttgart (for umati and VDW e.V.)
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -116,7 +117,7 @@ UA_StatusCode setServerConfig(UA_ServerConfig *pConfig, const Configuration::Con
     return status;
   }
   pConfig->nodeLifecycle.generateChildNodeId = generateChildNodeIdInParentNs;
-  // Companion Specificaitons will trigger many warnings, and values in instances are set later
+  // Companion Specifications will trigger many warnings, and values in instances are set later
   pConfig->allowEmptyVariables = UA_RuleHandling::UA_RULEHANDLING_ACCEPT;
   pConfig->modellingRulesOnInstances = UA_FALSE;
   UA_String_clear(&pConfig->applicationDescription.applicationUri);
@@ -187,8 +188,9 @@ int main(int argc, char *argv[]) {
     std::cout << e.what() << std::endl;
   }
   std::cout << "SampleServer, exit with Ctrl+C" << std::endl;
-  UA_Server *pServer = UA_Server_new();
-  auto pConfig = UA_Server_getConfig(pServer);
+
+  UA_ServerConfig *pConfig = new UA_ServerConfig();
+  UA_ServerConfig_setDefault(pConfig);
 
   try {
     if (!serverConfig.Encryption.has_value()) {
@@ -219,6 +221,8 @@ int main(int argc, char *argv[]) {
     UA_ServerConfig_setDefault(pConfig);
     std::cout << "No encryption will be available." << std::endl;
   }
+
+  UA_Server *pServer = UA_Server_newWithConfig(pConfig);
 
   // Create namespaces, order must match the CMakeLists.txt
   namespace_di_generated(pServer);

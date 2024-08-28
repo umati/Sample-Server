@@ -42,7 +42,7 @@ COPY . /src/Sample-Server
 WORKDIR /build
 RUN cmake /src/Sample-Server/.github/ \
       -DCMAKE_BUILD_TYPE=${BUILD_TYPE} \
-      -DCMAKE_INSTALL_PREFIX:PATH=/install /build &&\
+      -DCMAKE_INSTALL_PREFIX:PATH=/install /build && \
     cmake --build .
 
 FROM alpine:3.20.2 AS runtime

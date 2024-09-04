@@ -68,7 +68,7 @@ void FullGMS::InstantiateIdentification() {
   gms.Identification->YearOfConstruction = 2022;
   gms.Identification->SoftwareRevision = "v1.05";
   gms.Identification->DeviceClass = "CoordinateMeasuringMachine";
-  gms.Identification->Location = "VIRTUAL 1 1/N 48.7685303 E 9.2653923";
+  gms.Identification->Location = "IMTS E3 135256/AMB 9 C45/VIRTUAL 1 1/N 48.7685303 E 9.2653923";
   gms.Identification->Model = {"", MachineName};
   gms.Identification->SubDeviceClass = "CoordinateMeasuringMachine";
 }

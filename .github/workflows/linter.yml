@@ -19,7 +19,9 @@ on:
   pull_request:
     branches: [main, develop]
 
-permissions: read-all
+permissions:
+  contents: read
+
 ###############
 # Set the Job #
 ###############
@@ -27,6 +29,11 @@ jobs:
   super-linter:
     # Name the Job
     name: Lint Code Base (super-linter)
+    permissions:
+      # To write linting fixes
+      contents: write
+      # To write Super-linter status checks
+      statuses: write
     # Set the agent to run on
     runs-on: ubuntu-22.04
 
@@ -43,6 +50,7 @@ jobs:
           # Full git history is needed to get a proper list
           # of changed files within `super-linter`
           fetch-depth: 0
+          token: ${{ secrets.SUPER_LINTER_TOKEN }}
 
       ################################
       # Run Linter against code base #
@@ -50,13 +58,31 @@ jobs:
       - name: Lint Code Base
         uses: super-linter/super-linter@v7.1.0
         env:
-          VALIDATE_CPP: false # Use clang-formt instead 
+          VALIDATE_CPP: false # Use clang-formt instead
           VALIDATE_ANSIBLE: false
           VALIDATE_ALL_CODEBASE: false
-          DEFAULT_BRANCH: main
+          FIX_MARKDOWN_PRETTIER: true
+          FIX_YAML_PRETTIER: true
+          FIX_JSON_PRETTIER: true
+          FIX_SHELL_SHFMT: true
+          DEFAULT_BRANCH: develop
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-# CMake Format
+      - name: Commit and push linting fixes
+        # Run only on:
+        # - Pull requests
+        # - Not on the default branch
+        if: >
+          github.event_name == 'pull_request' &&
+          github.ref_name != github.event.repository.default_branch
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          branch: ${{ github.event.pull_request.head.ref || github.head_ref || github.ref }}
+          commit_message: "chore: fix linting issues"
+          commit_user_name: super-linter
+          commit_user_email: super-linter@super-linter.dev
+
+  # CMake Format
   cmake-format-linter:
     name: Lint Code Base (cmake-format-lint)
     runs-on: ubuntu-22.04

@@ -9,7 +9,7 @@ on:
     branches: [main, develop]
   merge_group:
 
-permissions: 
+permissions:
   contents: read
   packages: write
 

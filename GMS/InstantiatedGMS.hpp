@@ -12,6 +12,7 @@
 #include <cstdint>
 #include <unordered_map>
 
+#include "../MachineTools/InstantiatedMachineTool.hpp"
 #include "../MachineTools/SimulatedInstance.hpp"
 #include "../TypeDefinition/GMS/GMSType.hpp"
 #include "../UmatiServerLib/NodesMaster.hpp"

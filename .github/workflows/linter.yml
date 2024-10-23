@@ -45,7 +45,7 @@ jobs:
       # Checkout the code base #
       ##########################
       - name: Checkout Code
-        uses: actions/checkout@v4.2.1
+        uses: actions/checkout@v4.2.2
         with:
           # Full git history is needed to get a proper list
           # of changed files within `super-linter`
@@ -87,7 +87,7 @@ jobs:
     name: Lint Code Base (cmake-format-lint)
     runs-on: ubuntu-24.04
     steps:
-      - uses: actions/checkout@v4.2.1
+      - uses: actions/checkout@v4.2.2
       - name: Format CMake files
         id: cmake-format
         uses: PuneetMatharu/cmake-format-lint-action@v1.0.4

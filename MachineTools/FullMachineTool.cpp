@@ -121,7 +121,7 @@ void FullMachineTool::InstantiateIdentification() {
   mt.Identification->ComponentName = {"", MachineName};
   mt.Identification->ProductCode = "2021-47110815";
   mt.Identification->SoftwareRevision = "1.00.1";
-  mt.Identification->Location = "IMTS E3 135256/AMB 9 C45/VIRTUAL 1 1/N 48.781340 E 9.165731";
+  mt.Identification->Location = "JIMTOF E7 E7128/VIRTUAL 1 1/N 48.781340 E 9.165731";
   mt.Identification->Model = {"", MachineName};
 
   auto &swOS = mt.Identification->SoftwareIdentification->SoftwareItem.Add(m_pServer, n, {m_nsIndex, "OS"});

@@ -16,7 +16,7 @@ ShowcaseAMMachine::ShowcaseAMMachine(UA_Server *pServer) : InstantiatedAMMachine
 void ShowcaseAMMachine::CreateObject() {
   InstantiatedAMMachine::CreateObject();
   mt.Identification->ProductInstanceUri = "http://www.3yourmind.com/#ShowcaseAMMachine";
-  mt.Identification->Location = "IMTS E3 135256/AMB 9 C45/VIRTUAL 1 1/N 52.491225 E 13.388392";
+  mt.Identification->Location = "JIMTOF E7 E7128/VIRTUAL 1 1/N 52.491225 E 13.388392";
   InstantiateEquipment();
 }
 

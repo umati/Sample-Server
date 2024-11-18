@@ -43,18 +43,10 @@ externalproject_add(
     INSTALL_DIR "${CMAKE_INSTALL_PREFIX}"
 )
 
-find_package(Patch REQUIRED)
-# Patch command might be applied already, so errors need to be ignored.
-externalproject_add(
-    libreSSLExternal
-    DOWNLOAD_DIR ${CMAKE_CURRENT_BINARY_DIR}/libreSslDownload
-    SOURCE_DIR ${CMAKE_CURRENT_BINARY_DIR}/libreSslSource
-    URL "https://mirror.leaseweb.com/pub/OpenBSD/LibreSSL/libressl-3.8.2.tar.gz"
-    URL_HASH SHA256=6d4b8d5bbb25a1f8336639e56ec5088052d43a95256697a85c4ce91323c25954
-    DOWNLOAD_EXTRACT_TIMESTAMP true
-    PATCH_COMMAND "${Patch_EXECUTABLE}" -p1 --forward -d ${CMAKE_CURRENT_BINARY_DIR}/libreSslSource <
-                  ${CMAKE_CURRENT_SOURCE_DIR}/ciPatches/libressl-no_postfix.patch || echo "Patch returned non-zero"
-    CMAKE_ARGS -DLIBRESSL_APPS:BOOL=0 -DCMAKE_INSTALL_PREFIX:PATH=${CMAKE_INSTALL_PREFIX}
+ExternalProject_Add(
+    mbedTLSExternal
+    SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/../deps/mbedtls
+    CMAKE_ARGS -DENABLE_PROGRAMS:BOOL=0 -DENABLE_TESTING:BOOL=0 -DCMAKE_INSTALL_PREFIX:PATH=${CMAKE_INSTALL_PREFIX}
     INSTALL_DIR "${CMAKE_INSTALL_PREFIX}"
 )
 
@@ -62,10 +54,10 @@ externalproject_add(
     open62541External
     SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/../deps/open62541
     CMAKE_ARGS -DUA_ENABLE_SUBSCRIPTIONS_ALARMS_CONDITIONS:BOOL=ON -DUA_ENABLE_SUBSCRIPTIONS_EVENTS:BOOL=ON
-               -DUA_NAMESPACE_ZERO:STRING=FULL -DUA_ENABLE_ENCRYPTION:STRING=LIBRESSL
-               -DLIBRESSL_ROOT_DIR:PATH=${CMAKE_INSTALL_PREFIX} -DCMAKE_INSTALL_PREFIX:PATH=${CMAKE_INSTALL_PREFIX}
+               -DUA_NAMESPACE_ZERO:STRING=FULL -DUA_ENABLE_ENCRYPTION:STRING=MBEDTSL
+               -DCMAKE_INSTALL_PREFIX:PATH=${CMAKE_INSTALL_PREFIX}
     INSTALL_DIR "${CMAKE_INSTALL_PREFIX}"
-    DEPENDS libreSSLExternal
+    DEPENDS mbedTLSExternal
 )
 
 externalproject_add(

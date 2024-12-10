@@ -7,6 +7,9 @@ set(CMAKE_CXX_STANDARD 20)
 add_library(test_util_client OBJECT util/UAClient.cpp)
 target_link_libraries(test_util_client PUBLIC open62541::open62541 Open62541Cpp::Open62541Cpp)
 
+add_executable(ReadCertClient readCertClient/ReadCertClient.cpp)
+target_link_libraries(ReadCertClient PUBLIC open62541::open62541 Open62541Cpp::Open62541Cpp)
+
 # NO_CMAKE_SYSTEM_PATH prevents the usage of 'FindGTest.cmake' from the cmake installation. As this does not include
 # GMock.
 find_package(GTest REQUIRED NO_CMAKE_SYSTEM_PACKAGE_REGISTRY)

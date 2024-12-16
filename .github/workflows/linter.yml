@@ -90,6 +90,6 @@ jobs:
       - uses: actions/checkout@v4.2.2
       - name: Format CMake files
         id: cmake-format
-        uses: PuneetMatharu/cmake-format-lint-action@v1.0.4
+        uses: PuneetMatharu/cmake-format-lint-action@v1.0.5
         with:
           args: --config-files ./github/linters/cmake-format.yaml

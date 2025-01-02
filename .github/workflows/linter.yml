@@ -21,6 +21,9 @@ on:
 
 permissions:
   contents: read
+  packages: read
+  # To report GitHub Actions status checks
+  statuses: write
 
 ###############
 # Set the Job #
@@ -50,7 +53,6 @@ jobs:
           # Full git history is needed to get a proper list
           # of changed files within `super-linter`
           fetch-depth: 0
-          token: ${{ secrets.SUPER_LINTER_TOKEN }}
 
       ################################
       # Run Linter against code base #

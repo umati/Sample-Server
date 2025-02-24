@@ -31,6 +31,8 @@ RUN apk --no-cache add \
       git=2.47.2-r0 \
       make=4.4.1-r2  \
       python3=3.12.9-r0 \
+      py3-pip=24.3.1-r0 \
+      perl=5.40.1-r0 \
       patch=2.7.6-r10 \
       linux-headers=6.6-r1 && \
     mkdir /install
@@ -38,6 +40,10 @@ RUN apk --no-cache add \
 ARG BUILD_TYPE=Debug
 
 COPY . /src/Sample-Server
+
+RUN python3 -m venv /venv
+RUN /venv/bin/pip install -r /src/Sample-Server/deps/mbedtls/scripts/basic.requirements.txt
+ENV PATH="/venv/bin:$PATH"
 
 WORKDIR /build
 RUN cmake /src/Sample-Server/.github/ \

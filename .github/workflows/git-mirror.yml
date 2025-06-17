@@ -1,0 +1,28 @@
+---
+name: Git Mirror
+# Mirror git repo to other sites
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+      - develop
+
+permissions:
+  contents: read
+
+jobs:
+  mirror:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: "Sync repo"
+        uses: yesolutions/mirror-action@master
+        with:
+          REMOTE: ${{ secrets.CODEBERG_URL }}
+          GIT_USERNAME: goetz
+          GIT_PASSWORD: ${{ secrets.CODEBERG_TOKEN }}

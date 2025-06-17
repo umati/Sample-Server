@@ -134,7 +134,7 @@ void WenzelLH::InstantiateIdentification() {
   mt.Identification->YearOfConstruction = 2022;
   mt.Identification->SoftwareRevision = "V1.0.0";
   mt.Identification->DeviceClass = "GMS";
-  mt.Identification->Location = "CIMT B2 341/VIRTUAL 1 1/N 48.694241 E 9.183833";
+  mt.Identification->Location = "LASER B5 224/AMTC B5 224/VIRTUAL 1 1/N 48.694241 E 9.183833";
   mt.Identification->Model = {"", MachineName};
 
   {

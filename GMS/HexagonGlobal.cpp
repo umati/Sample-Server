@@ -94,7 +94,7 @@ void HexagonGlobal::InstantiateIdentification() {
   mt.Identification->YearOfConstruction = 2023;
   mt.Identification->SoftwareRevision = "PC-DMIS 2023.1";
   mt.Identification->DeviceClass = "Coordinate Measuring Machine";
-  mt.Identification->Location = "LASER B5 224/AMTC B5 224/VIRTUAL 1 1/N 48.6939789 E 9.1839305";
+  mt.Identification->Location = "EMO 5 D50/VIRTUAL 1 1/N 48.6939789 E 9.1839305";
   mt.Identification->Model = {"", "GLOBAL S"};
   mt.Identification->SerialNumber = "GLOD001413IA";
 }

@@ -35,7 +35,7 @@ void ShowcaseMachineTool::InstantiateIdentification() {
   mt.Identification->SoftwareRevision = "v1.02.1";
   mt.Identification->DeviceClass = "Machining centre (other)";
   mt.Identification->ProductInstanceUri = "https://showcase.umati.org/Specs/Machinetools.html";
-  mt.Identification->Location = "LASER B5 224/AMTC B5 224/VIRTUAL 1 1/N 49.871215 E 8.654204";
+  mt.Identification->Location = "EMO 6 A18/VIRTUAL 1 1/N 49.871215 E 8.654204";
   mt.Identification->Model = {"", MachineName};
 }
 

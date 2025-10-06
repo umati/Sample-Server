@@ -62,6 +62,8 @@ jobs:
         env:
           VALIDATE_CPP: false # Use clang-formt instead
           VALIDATE_ANSIBLE: false
+          VALIDATE_BIOME_FORMAT: false
+          VALIDATE_BIOME_LINT: false
           VALIDATE_ALL_CODEBASE: false
           FIX_MARKDOWN_PRETTIER: true
           FIX_YAML_PRETTIER: true

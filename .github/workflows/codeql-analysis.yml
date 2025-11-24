@@ -52,7 +52,7 @@ jobs:
 
     steps:
       - name: Checkout Sample-Server
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
         with:
           submodules: recursive
 

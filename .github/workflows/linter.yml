@@ -21,9 +21,6 @@ on:
 
 permissions:
   contents: read
-  packages: read
-  # To report GitHub Actions status checks
-  statuses: write
 
 ###############
 # Set the Job #
@@ -53,21 +50,25 @@ jobs:
           # Full git history is needed to get a proper list
           # of changed files within `super-linter`
           fetch-depth: 0
+          persist-credentials: true
 
       ################################
       # Run Linter against code base #
       ################################
       - name: Lint Code Base
-        uses: super-linter/super-linter@v8.0.0
+        uses: super-linter/super-linter@v8.3.1
         env:
           VALIDATE_CPP: false # Use clang-formt instead
           VALIDATE_ANSIBLE: false
+          VALIDATE_BIOME_FORMAT: false
+          VALIDATE_BIOME_LINT: false
           VALIDATE_ALL_CODEBASE: false
+          VALIDATE_GITHUB_ACTIONS_ZIZMOR: false
           FIX_MARKDOWN_PRETTIER: true
           FIX_YAML_PRETTIER: true
           FIX_JSON_PRETTIER: true
           FIX_SHELL_SHFMT: true
-          DEFAULT_BRANCH: develop
+          DEFAULT_BRANCH: origin/develop
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Commit and push linting fixes
@@ -90,6 +91,9 @@ jobs:
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v6.0.1
+        with:
+          persist-credentials: false
+
       - name: Format CMake files
         id: cmake-format
         uses: PuneetMatharu/cmake-format-lint-action@v1.0.6

@@ -11,7 +11,6 @@ on:
 
 permissions:
   contents: read
-  packages: write
 
 jobs:
   build:
@@ -20,6 +19,8 @@ jobs:
         os: [ubuntu-22.04, ubuntu-24.04, windows-2022, windows-2025]
       fail-fast: false
     runs-on: ${{matrix.os}}
+    permissions:
+      packages: write
     env:
       CMAKE_INSTALL_PREFIX: "${{ github.workspace }}/install"
     steps:
@@ -28,6 +29,8 @@ jobs:
         with:
           path: Sample-Server
           submodules: recursive
+          persist-credentials: false
+
       - name: Set Windows CMAKE_GENERATOR 2019
         if: matrix.os == 'windows-2022'
         run: |
@@ -60,6 +63,8 @@ jobs:
 
   docker:
     runs-on: ubuntu-24.04
+    permissions:
+      packages: write
     env:
       # Check if this is not a pull request andGITHUB_TOKEN is set
       # As all env variables are strings, you need to compare
@@ -71,6 +76,8 @@ jobs:
         with:
           path: Sample-Server
           submodules: recursive
+          persist-credentials: false
+
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
       - name: Set up Docker Buildx

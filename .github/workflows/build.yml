@@ -29,6 +29,8 @@ jobs:
         with:
           path: Sample-Server
           submodules: recursive
+          persist-credentials: false
+
       - name: Set Windows CMAKE_GENERATOR 2019
         if: matrix.os == 'windows-2022'
         run: |
@@ -74,6 +76,8 @@ jobs:
         with:
           path: Sample-Server
           submodules: recursive
+          persist-credentials: false
+
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
       - name: Set up Docker Buildx

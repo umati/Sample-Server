@@ -21,9 +21,6 @@ on:
 
 permissions:
   contents: read
-  packages: read
-  # To report GitHub Actions status checks
-  statuses: write
 
 ###############
 # Set the Job #
@@ -53,6 +50,7 @@ jobs:
           # Full git history is needed to get a proper list
           # of changed files within `super-linter`
           fetch-depth: 0
+          persist-credentials: false
 
       ################################
       # Run Linter against code base #
@@ -92,6 +90,9 @@ jobs:
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v6.0.1
+        with:
+          persist-credentials: false
+          
       - name: Format CMake files
         id: cmake-format
         uses: PuneetMatharu/cmake-format-lint-action@v1.0.6

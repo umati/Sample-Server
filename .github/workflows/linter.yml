@@ -50,7 +50,7 @@ jobs:
           # Full git history is needed to get a proper list
           # of changed files within `super-linter`
           fetch-depth: 0
-          persist-credentials: false
+          persist-credentials: true
 
       ################################
       # Run Linter against code base #
@@ -68,7 +68,7 @@ jobs:
           FIX_YAML_PRETTIER: true
           FIX_JSON_PRETTIER: true
           FIX_SHELL_SHFMT: true
-          DEFAULT_BRANCH: develop
+          DEFAULT_BRANCH: origin/develop
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Commit and push linting fixes
@@ -93,7 +93,7 @@ jobs:
       - uses: actions/checkout@v6.0.1
         with:
           persist-credentials: false
-          
+
       - name: Format CMake files
         id: cmake-format
         uses: PuneetMatharu/cmake-format-lint-action@v1.0.6

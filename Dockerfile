@@ -21,18 +21,18 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 #
-FROM alpine:3.22.2 AS build-env
+FROM alpine:3.23.2 AS build-env
 
 RUN apk --no-cache add \
-      bash=5.2.37-r0 \
-      cmake=3.31.7-r1 \
-      gcc=14.2.0-r6 \
-      g++=14.2.0-r6 \
-      git=2.49.1-r0 \
+      bash=5.3.3-r1 \
+      cmake=4.1.3-r0 \
+      gcc=15.2.0-r2 \
+      g++=15.2.0-r2 \
+      git=2.52.0-r0 \
       make=4.4.1-r3  \
       python3=3.12.12-r0 \
       patch=2.8-r0 \
-      linux-headers=6.14.2-r0 && \
+      linux-headers=6.16.12-r0 && \
     mkdir /install
 
 ARG BUILD_TYPE=Debug
@@ -45,9 +45,9 @@ RUN cmake /src/Sample-Server/.github/ \
       -DCMAKE_INSTALL_PREFIX:PATH=/install /build && \
     cmake --build .
 
-FROM alpine:3.22.2 AS runtime
+FROM alpine:3.23.2 AS runtime
 RUN apk --no-cache add \
-      libstdc++=14.2.0-r6
+      libstdc++=15.2.0-r2
 COPY --from=build-env /install/bin /app
 COPY ./configuration.docker.json /configuration.json
 

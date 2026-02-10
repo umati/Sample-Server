@@ -40,10 +40,10 @@ The container image build by this repository is run public at `opc.tcp://opcua.u
 
 This repository automatically builds a sample server container image to use image for your local development purposes. Pull this public image at: `docker pull ghcr.io/umati/sample-server:main`
 
-To run this image you need a docker installation and than typically:
+To run this image you need a Docker installation and than typically:
 `docker run -d -p 4840:4840 ghcr.io/umati/sample-server:main`
 
-Refer to the [docker documentation](https://docs.docker.com/) for details.
+Refer to the [Docker documentation](https://docs.docker.com/) for details.
 
 ## Local Usage
 
@@ -52,7 +52,7 @@ To read how to compile the Sample-Server yourself, refer to the [compilation doc
 
 ## Configuration
 
-The configuration uses a json format. By default, the server looks for a file `configuration.json`. The supported parameters are:
+The configuration uses a JSON format. By default, the server looks for a file `configuration.json`. The supported parameters are:
 
 ```json
 {

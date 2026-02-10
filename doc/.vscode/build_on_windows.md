@@ -18,10 +18,10 @@ cp -R doc/.vscode .
 
 There are two cmake-based build steps using two different `CMakeLists.txt`:
 
-1. `.github/CMakeLists.txt` Builds the dependencies (git submodules) and the Sample-Server. Only required once after pulling the repository or after an update of the dependencies.
+1. `.github/CMakeLists.txt` Builds the dependencies (Git submodules) and the Sample-Server. Only required once after pulling the repository or after an update of the dependencies.
 2. `./CMakeLists.txt` builds only the Sample-Server not the dependencies. This file is used for building and testing.
 
-For Step 1 run the following commands in powershell:
+For Step 1 run the following commands in PowerShell:
 
 ```ps
 # Build folder for dependencies (submodules)
@@ -75,7 +75,7 @@ Run by hitting the green arrow.
 
 Server should be available on `localhost:34840`
 
-Alternatively run by using powershell:
+Alternatively run by using PowerShell:
 
 ```ps
 # In root directory of repository

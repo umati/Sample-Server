@@ -31,7 +31,7 @@ jobs:
           persist-credentials: true
 
       - name: Lint Code Base
-        uses: super-linter/super-linter@v8.4.0
+        uses: super-linter/super-linter@v8.5.0
         env:
           VALIDATE_CPP: false # Use clang-format instead
           VALIDATE_ANSIBLE: false

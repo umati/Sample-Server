@@ -17,8 +17,8 @@ struct EUInformation_t {
   LocalizedText_t DisplayName;
   LocalizedText_t Description;
 
-  static EUInformation_t fromUa(const ::UA_EUInformation &other);
-  bool operator==(const EUInformation_t &other) const;
+  static EUInformation_t fromUa(const ::UA_EUInformation& other);
+  bool operator==(const EUInformation_t& other) const;
 };
 
 }  // namespace UmatiServerLib

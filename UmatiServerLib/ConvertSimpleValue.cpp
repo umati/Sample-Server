@@ -23,21 +23,21 @@ copyToVariantFunc ConvertSimpleValue::asVariantFunc(primitiveTypes_t variable) {
   auto pDataType = std::visit(primitivTypeVisitor_getTypePointer(), variable);
   auto pVariable = std::visit(primitivTypeVisitor_getPointer(), variable);
 
-  return [pVariable, pDataType](UA_Variant *dst) { UA_Variant_setScalarCopy(dst, pVariable, pDataType); };
+  return [pVariable, pDataType](UA_Variant* dst) { UA_Variant_setScalarCopy(dst, pVariable, pDataType); };
 }
 
-copyToVariantFunc ConvertSimpleValue::asVariantFunc(std::string *variable) {
+copyToVariantFunc ConvertSimpleValue::asVariantFunc(std::string* variable) {
   auto pVariable = variable;
-  return [pVariable](UA_Variant *dst) {
+  return [pVariable](UA_Variant* dst) {
     open62541Cpp::UA_String str(*pVariable);
     UA_Variant_setScalarCopy(dst, str.String, &UA_TYPES[UA_TYPES_STRING]);
   };
 }
 
-copyToVariantFunc ConvertSimpleValue::asVariantFuncArray(std::vector<std::string> *variable) {
+copyToVariantFunc ConvertSimpleValue::asVariantFuncArray(std::vector<std::string>* variable) {
   auto pVariable = variable;
-  return [pVariable](UA_Variant *dst) {
-    UA_String *tmp = new UA_String[pVariable->size()];
+  return [pVariable](UA_Variant* dst) {
+    UA_String* tmp = new UA_String[pVariable->size()];
     for (size_t i = 0; i < pVariable->size(); ++i) {
       tmp[i] = UA_String_fromChars(pVariable->at(i).c_str());
     }
@@ -45,10 +45,10 @@ copyToVariantFunc ConvertSimpleValue::asVariantFuncArray(std::vector<std::string
   };
 }
 
-copyToVariantFunc ConvertSimpleValue::asVariantFuncArray(std::vector<UmatiServerLib::LocalizedText_t> *variable) {
+copyToVariantFunc ConvertSimpleValue::asVariantFuncArray(std::vector<UmatiServerLib::LocalizedText_t>* variable) {
   auto pVariable = variable;
-  return [pVariable](UA_Variant *dst) {
-    UA_LocalizedText *tmp = new UA_LocalizedText[pVariable->size()];
+  return [pVariable](UA_Variant* dst) {
+    UA_LocalizedText* tmp = new UA_LocalizedText[pVariable->size()];
     for (size_t i = 0; i < pVariable->size(); ++i) {
       tmp[i] = UA_LOCALIZEDTEXT_ALLOC(pVariable->at(i).locale.c_str(), pVariable->at(i).text.c_str());
     }
@@ -56,31 +56,31 @@ copyToVariantFunc ConvertSimpleValue::asVariantFuncArray(std::vector<UmatiServer
   };
 }
 
-copyToVariantFunc ConvertSimpleValue::asVariantFuncArray(std::vector<std::int32_t> *variable) {
+copyToVariantFunc ConvertSimpleValue::asVariantFuncArray(std::vector<std::int32_t>* variable) {
   auto pVariable = variable;
-  return [pVariable](UA_Variant *dst) { UA_Variant_setArrayCopy(dst, pVariable->data(), pVariable->size(), &UA_TYPES[UA_TYPES_INT32]); };
+  return [pVariable](UA_Variant* dst) { UA_Variant_setArrayCopy(dst, pVariable->data(), pVariable->size(), &UA_TYPES[UA_TYPES_INT32]); };
 }
 
-copyToVariantFunc ConvertSimpleValue::asVariantFuncArray(std::vector<std::uint32_t> *variable) {
+copyToVariantFunc ConvertSimpleValue::asVariantFuncArray(std::vector<std::uint32_t>* variable) {
   auto pVariable = variable;
-  return [pVariable](UA_Variant *dst) { UA_Variant_setArrayCopy(dst, pVariable->data(), pVariable->size(), &UA_TYPES[UA_TYPES_UINT32]); };
+  return [pVariable](UA_Variant* dst) { UA_Variant_setArrayCopy(dst, pVariable->data(), pVariable->size(), &UA_TYPES[UA_TYPES_UINT32]); };
 }
 
 typedef std::ratio<1, 10000000> nano_100;
 typedef std::chrono::duration<std::int64_t, nano_100> nanoseconds_100;
 
-copyToVariantFunc ConvertSimpleValue::asVariantFunc(UmatiServerLib::DateTime_t *variable) {
+copyToVariantFunc ConvertSimpleValue::asVariantFunc(UmatiServerLib::DateTime_t* variable) {
   auto pVariable = variable;
-  return [pVariable](UA_Variant *dst) {
+  return [pVariable](UA_Variant* dst) {
     auto var_nano100 = std::chrono::duration_cast<nanoseconds_100>(pVariable->time_since_epoch());
     UA_DateTime var = var_nano100.count() + UA_DATETIME_UNIX_EPOCH;
     UA_Variant_setScalarCopy(dst, &var, &UA_TYPES[UA_TYPES_DATETIME]);
   };
 }
 
-copyToVariantFunc ConvertSimpleValue::asVariantFunc(bool *variable) {
+copyToVariantFunc ConvertSimpleValue::asVariantFunc(bool* variable) {
   auto pVariable = variable;
-  return [pVariable](UA_Variant *dst) {
+  return [pVariable](UA_Variant* dst) {
     UA_Boolean b;
     // Ensure OPC UA encoding
     b = *pVariable ? UA_TRUE : UA_FALSE;
@@ -88,9 +88,9 @@ copyToVariantFunc ConvertSimpleValue::asVariantFunc(bool *variable) {
   };
 }
 
-copyToVariantFunc ConvertSimpleValue::asVariantFunc(UmatiServerLib::StatusCode_t *variable) {
+copyToVariantFunc ConvertSimpleValue::asVariantFunc(UmatiServerLib::StatusCode_t* variable) {
   auto pVariable = variable;
-  return [pVariable](UA_Variant *dst) {
+  return [pVariable](UA_Variant* dst) {
     UA_StatusCode s = pVariable->code;
     UA_Variant_setScalarCopy(dst, &s, &UA_TYPES[UA_TYPES_STATUSCODE]);
   };

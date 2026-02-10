@@ -16,7 +16,7 @@
 #include "../UmatiServerLib/OpcUaCondition.hpp"
 #include "../UmatiServerLib/ServerHelper.hpp"
 
-MRMachineTool::MRMachineTool(UA_Server *pServer) : InstantiatedMachineTool(pServer) {
+MRMachineTool::MRMachineTool(UA_Server* pServer) : InstantiatedMachineTool(pServer) {
   MachineName = "MRMachineTool";
   CreateObject();
   isOnFor = m_simStep;
@@ -85,7 +85,7 @@ void MRMachineTool::InstantiateProduction() {
     std::make_shared<UmatiServerLib::StateMachineInstance<machineTool::ProductionStateMachine_t>>(mt.Production->ActiveProgram->State.value, m_pServer);
   ActiveProgramStateMachine->SetState(0);
 
-  auto &job = mt.Production->ProductionPlan->OrderedObjects.Add(m_pServer, n, {m_nsIndex, "VDJob"});
+  auto& job = mt.Production->ProductionPlan->OrderedObjects.Add(m_pServer, n, {m_nsIndex, "VDJob"});
   job.Identifier = std::string("VDJob");
   job.RunsCompleted = 0;
   job.RunsPlanned->Value = 7;
@@ -93,7 +93,7 @@ void MRMachineTool::InstantiateProduction() {
   VdJobStateMachine = std::make_shared<UmatiServerLib::StateMachineInstance<machineTool::ProductionStateMachine_t>>(job.State.value, m_pServer);
   VdJobStateMachine->SetState(0);
   job.NumberInList = 0;
-  auto &program = mt.Production->ProductionPlan->OrderedObjects.value.front()->ProductionPrograms->OrderedObjects.Add<machineTool::ProductionProgram_t>(
+  auto& program = mt.Production->ProductionPlan->OrderedObjects.value.front()->ProductionPrograms->OrderedObjects.Add<machineTool::ProductionProgram_t>(
     m_pServer, n, {m_nsIndex, "heart.nc"});
 
   InstantiateOptional(program.State, m_pServer, n);
@@ -113,7 +113,7 @@ void MRMachineTool::InstantiateTools() {
   InstantiateOptional(mt.Equipment->Tools, m_pServer, n);
   InstantiateOptional(mt.Equipment->Tools->NodeVersion, m_pServer, n);
   n.Remove(mt.Equipment->Tools->NodeVersion.NodeId);
-  auto &tool = mt.Equipment->Tools->Tool.Add<machineTool::Tool_t>(m_pServer, n, {m_nsIndex, "Tool1"});
+  auto& tool = mt.Equipment->Tools->Tool.Add<machineTool::Tool_t>(m_pServer, n, {m_nsIndex, "Tool1"});
   tool.ControlIdentifier1 = 2;
   tool.ControlIdentifierInterpretation = UA_ToolManagement::UA_TOOLMANAGEMENT_NUMBERBASED;
   tool.Locked->Value = false;
@@ -122,7 +122,7 @@ void MRMachineTool::InstantiateTools() {
   tool.Name = "Tool 0815";
   InstantiateOptional(tool.Name, m_pServer, n);
   InstantiateOptional(tool.ToolLife, m_pServer, n);
-  auto &toolLifeRotations = tool.ToolLife->ToolLifeEntry.Add<machineTool::ToolLife_t<std::int32_t>>(m_pServer, n, {m_nsIndex, "Rotations"});
+  auto& toolLifeRotations = tool.ToolLife->ToolLifeEntry.Add<machineTool::ToolLife_t<std::int32_t>>(m_pServer, n, {m_nsIndex, "Rotations"});
   toolLifeRotations.Indication = UA_ToolLifeIndication::UA_TOOLLIFEINDICATION_OTHER;
   toolLifeRotations.Value = 512;
   toolLifeRotations.IsCountingUp = true;
@@ -136,9 +136,9 @@ void MRMachineTool::Simulate() {
 
   mt.Monitoring->MachineTool->PowerOnDuration = isOnFor / 3600;
 
-  auto &vdjob = mt.Production->ProductionPlan->OrderedObjects.value.front();
-  auto &vdprog = vdjob->ProductionPrograms->OrderedObjects.value.front();
-  auto &aprog = mt.Production->ActiveProgram;
+  auto& vdjob = mt.Production->ProductionPlan->OrderedObjects.value.front();
+  auto& vdprog = vdjob->ProductionPrograms->OrderedObjects.value.front();
+  auto& aprog = mt.Production->ActiveProgram;
 
   // Job in initializing
   if (m_simStep == 30 && vdjob->State->CurrentState->Number.value == 0) {
@@ -247,7 +247,7 @@ void MRMachineTool::Simulate() {
 }
 
 void MRMachineTool::SwitchOnStacklightColor(UA_SignalColor color) {
-  for (auto &light : mt.Monitoring->Stacklight->OrderedObjects.value) {
+  for (auto& light : mt.Monitoring->Stacklight->OrderedObjects.value) {
     if (light->SignalColor.value == color) {
       light->SignalOn = 1;
     } else {

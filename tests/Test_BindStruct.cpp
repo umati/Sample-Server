@@ -23,7 +23,7 @@ TEST(SampleServerLib, BindStructure_Basic) {
 
   UA_Variant variant;
   Test_Exposure::convertToVariantRefl(&oriLocalText, &UA_TYPES[UA_TYPES_LOCALIZEDTEXT], &variant);
-  UA_LocalizedText *pLocalizedText = reinterpret_cast<UA_LocalizedText *>(variant.data);
+  UA_LocalizedText* pLocalizedText = reinterpret_cast<UA_LocalizedText*>(variant.data);
   ASSERT_TRUE(pLocalizedText);
   auto lTxt = UA_LOCALIZEDTEXT_ALLOC("test", "content");
   UA_LocalizedText_clear(&lTxt);
@@ -47,7 +47,7 @@ TEST(SampleServerLib, BindStructure_Recursive) {
 
   UA_Variant variant;
   Test_Exposure::convertToVariantRefl(&oriEuInformation, &UA_TYPES[UA_TYPES_EUINFORMATION], &variant);
-  UA_EUInformation *pEuInformation = reinterpret_cast<UA_EUInformation *>(variant.data);
+  UA_EUInformation* pEuInformation = reinterpret_cast<UA_EUInformation*>(variant.data);
 
   auto newEuInformation = UmatiServerLib::EUInformation_t::fromUa(*pEuInformation);
   EXPECT_EQ(oriEuInformation, newEuInformation);

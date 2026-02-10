@@ -48,7 +48,7 @@ For Step 2, i.e., building only the Sample-Server:
 * Hit `ctrl+shift+p` and enter `> CMake: Configure` to configure
 * Hit `ctrl+shift+p` and enter `> CMake: Build Target` the select `SampleServer EXECUTABLE` to build.
 
-Alternativly you can use the buttons at the bottom of the IDE:
+Alternatively you can use the buttons at the bottom of the IDE:
 ![alt text](image-3.png)
 
 Alternative for Step 2 (using commandline):

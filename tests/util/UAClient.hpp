@@ -20,5 +20,5 @@ class UAClient {
   UA_StatusCode ReadValue(open62541Cpp::UA_NodeId nodeId);
 
  protected:
-  UA_Client *m_pClient = nullptr;
+  UA_Client* m_pClient = nullptr;
 };

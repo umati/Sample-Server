@@ -11,5 +11,5 @@
 #include "../../src_generated/types_additivemanufacturing_generated.h"
 
 namespace constants {
-constexpr const char *NsAMUri = "http://opcfoundation.org/UA/AdditiveManufacturing/NodeSet2/";
+constexpr const char* NsAMUri = "http://opcfoundation.org/UA/AdditiveManufacturing/NodeSet2/";
 }

@@ -6,14 +6,13 @@
 
 version: 2
 updates:
-
   - package-ecosystem: "gitsubmodule"
     directory: "/"
     target-branch: "develop"
     schedule:
       interval: "daily"
     open-pull-requests-limit: 0
-      
+
   - package-ecosystem: "github-actions"
     directory: "/"
     target-branch: "develop"
@@ -27,7 +26,7 @@ updates:
     schedule:
       interval: "weekly"
     open-pull-requests-limit: 0
-      
+
   - package-ecosystem: "pip"
     directory: "/tools/certGen/"
     target-branch: "develop"

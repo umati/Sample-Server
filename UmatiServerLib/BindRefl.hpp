@@ -28,7 +28,7 @@ class Bind {
   /**
    * @brief Bind a member/instance using reflection
    *
-   * When the member is a Object or Variable all childs are iterated. Otherwise the value is bind to the correspoding OPC UA Value
+   * When the member is a Object or Variable all childs are iterated. Otherwise the value is bind to the corresponding OPC UA Value
    *
    * @tparam T
    * @param member
@@ -38,10 +38,10 @@ class Bind {
   * @param nodesMaster
   */
   template <typename T>
-  static void MemberRefl(T &member, UA_Server *pServer, open62541Cpp::UA_NodeId nodeId, NodesMaster &nodesMaster);
+  static void MemberRefl(T& member, UA_Server* pServer, open62541Cpp::UA_NodeId nodeId, NodesMaster& nodesMaster);
 
   template <typename... T>
-  static void MemberRefl(std::variant<T...> &member, UA_Server *pServer, open62541Cpp::UA_NodeId nodeId, NodesMaster &nodesMaster);
+  static void MemberRefl(std::variant<T...>& member, UA_Server* pServer, open62541Cpp::UA_NodeId nodeId, NodesMaster& nodesMaster);
 
   /**
    * @brief Binding the members by it's reflection description
@@ -50,24 +50,24 @@ class Bind {
    * @param instance Instance to be bind
    * @param pServer Pointer to OPC UA Server
    * @param nodeId Start reference for binding
-   * @param nodesMaster NodesMaster instace for resolving the bindings.
+   * @param nodesMaster NodesMaster instance for resolving the bindings.
    */
   template <typename T>
-  static void MembersRefl(T &instance, UA_Server *pServer, open62541Cpp::UA_NodeId nodeId, NodesMaster &nodesMaster);
+  static void MembersRefl(T& instance, UA_Server* pServer, open62541Cpp::UA_NodeId nodeId, NodesMaster& nodesMaster);
 
   template <typename T>
   static void Placeholder(
-    std::list<T> &member, UA_Server *pServer, open62541Cpp::UA_NodeId nodeId, NodesMaster &nodesMaster, open62541Cpp::UA_NodeId refTypeNodeId);
+    std::list<T>& member, UA_Server* pServer, open62541Cpp::UA_NodeId nodeId, NodesMaster& nodesMaster, open62541Cpp::UA_NodeId refTypeNodeId);
 };
 
 template <typename T>
-void Bind::MembersRefl(T &instance, UA_Server *pServer, open62541Cpp::UA_NodeId nodeId, NodesMaster &nodesMaster) {
+void Bind::MembersRefl(T& instance, UA_Server* pServer, open62541Cpp::UA_NodeId nodeId, NodesMaster& nodesMaster) {
   open62541Cpp::UA_RelativPathBase basePath;
   // Handle base classes first
   if constexpr (refl::descriptor::has_attribute<Bases>(refl::reflect<T>())) {
     constexpr auto bases = refl::descriptor::get_attribute<Bases>(refl::reflect<T>());
     if constexpr (bases.descriptors.size > 0) {
-      refl::util::for_each(bases.descriptors, [&](auto t) { MembersRefl(static_cast<typename decltype(t)::type &>(instance), pServer, nodeId, nodesMaster); });
+      refl::util::for_each(bases.descriptors, [&](auto t) { MembersRefl(static_cast<typename decltype(t)::type&>(instance), pServer, nodeId, nodesMaster); });
     }
   }
 
@@ -81,7 +81,7 @@ void Bind::MembersRefl(T &instance, UA_Server *pServer, open62541Cpp::UA_NodeId 
         std::cout << "Placeholder " << member.name << " has no UaReference." << std::endl;
         throw std::runtime_error("Required attribute UaReference not found.");
       }
-      const auto &reference = refl::descriptor::get_attribute<UmatiServerLib::attribute::UaReference>(member);
+      const auto& reference = refl::descriptor::get_attribute<UmatiServerLib::attribute::UaReference>(member);
       auto refTypeNodeId = reference.NodeId.UANodeId(pServer);
 
       bindPlaceholder(member(instance), pServer, nodeId, nodesMaster, refTypeNodeId);
@@ -90,7 +90,7 @@ void Bind::MembersRefl(T &instance, UA_Server *pServer, open62541Cpp::UA_NodeId 
     }
 
     if constexpr (refl::descriptor::has_attribute<UmatiServerLib::attribute::MemberInTypeNodeId>(member)) {
-      auto &attr = refl::descriptor::get_attribute<UmatiServerLib::attribute::MemberInTypeNodeId>(member);
+      auto& attr = refl::descriptor::get_attribute<UmatiServerLib::attribute::MemberInTypeNodeId>(member);
       setMemberInTypeNodeId(member(instance), attr.NodeId, pServer);
     }
 
@@ -113,7 +113,7 @@ void Bind::MembersRefl(T &instance, UA_Server *pServer, open62541Cpp::UA_NodeId 
       auto nodeIdChild = resolveBrowsePath(pServer, open62541Cpp::UA_BrowsePath(*nodeId.NodeId, childRelativPathElements));
       MemberRefl(member(instance), pServer, nodeIdChild, nodesMaster);
       setBindOrMandatory(member(instance), true, !isOptional);
-    } catch (const UmatiServerLib::Exceptions::NodeNotFound &ex) {
+    } catch (const UmatiServerLib::Exceptions::NodeNotFound& ex) {
       if constexpr (!isOptional) {
         std::stringstream ss;
         ss << "Mandatory node not found for binding. " << ex.what();
@@ -124,7 +124,7 @@ void Bind::MembersRefl(T &instance, UA_Server *pServer, open62541Cpp::UA_NodeId 
 }
 
 template <typename T>
-void Bind::MemberRefl(T &member, UA_Server *pServer, open62541Cpp::UA_NodeId nodeId, NodesMaster &nodesMaster) {
+void Bind::MemberRefl(T& member, UA_Server* pServer, open62541Cpp::UA_NodeId nodeId, NodesMaster& nodesMaster) {
   if constexpr (is_base_of_template<BindableMember, T>::value) {
     member.NodeId = nodeId;
   }
@@ -146,14 +146,14 @@ void Bind::MemberRefl(T &member, UA_Server *pServer, open62541Cpp::UA_NodeId nod
 }
 
 template <typename... T>
-void Bind::MemberRefl(std::variant<T...> &member, UA_Server *pServer, open62541Cpp::UA_NodeId nodeId, NodesMaster &nodesMaster) {
+void Bind::MemberRefl(std::variant<T...>& member, UA_Server* pServer, open62541Cpp::UA_NodeId nodeId, NodesMaster& nodesMaster) {
   /// todo catch variant in BindableMember
-  std::visit([&](auto &&arg) { MemberRefl(arg, pServer, nodeId, nodesMaster); }, member);
+  std::visit([&](auto&& arg) { MemberRefl(arg, pServer, nodeId, nodesMaster); }, member);
 }
 
 template <typename T>
 void Bind::Placeholder(
-  std::list<T> &member, UA_Server *pServer, open62541Cpp::UA_NodeId nodeId, NodesMaster &nodesMaster, open62541Cpp::UA_NodeId refTypeNodeId) {
+  std::list<T>& member, UA_Server* pServer, open62541Cpp::UA_NodeId nodeId, NodesMaster& nodesMaster, open62541Cpp::UA_NodeId refTypeNodeId) {
   UA_BrowseDescription brDesc;
   UA_BrowseDescription_init(&brDesc);
   UA_NodeId_copy(nodeId.NodeId, &brDesc.nodeId);
@@ -191,7 +191,7 @@ void Bind::Placeholder(
     if (UA_NodeId_equal(&browseResult.references[i].typeDefinition.nodeId, typeNodeId.NodeId)) {
       std::cout << "Placeholder type match" << std::endl;
       member.push_back(T());
-      T &instance = *(member.rbegin());
+      T& instance = *(member.rbegin());
       MembersRefl(instance, pServer, open62541Cpp::UA_NodeId(browseResult.references[i].nodeId.nodeId), nodesMaster);
     }
   }

@@ -29,33 +29,33 @@ namespace UmatiServerLib {
 class ConvertStructValue {
  public:
   template <typename T>
-  static copyToVariantFunc GetToVariantFunc(T &variable, const UA_DataType *typeDefinition);
+  static copyToVariantFunc GetToVariantFunc(T& variable, const UA_DataType* typeDefinition);
 
   template <typename T>
-  static copyToVariantFunc GetToVariantFunc(std::vector<T> *pValue, const UA_DataType *typeDefinition);
+  static copyToVariantFunc GetToVariantFunc(std::vector<T>* pValue, const UA_DataType* typeDefinition);
 
-  static copyToVariantFunc GetToVariantFunc(void *pVariable, const UA_DataType *typeDefinition);
+  static copyToVariantFunc GetToVariantFunc(void* pVariable, const UA_DataType* typeDefinition);
 
  protected:
   template <typename T>
-  static void setByRefl(const T &src, void *trg, const UA_DataType *typeDefinition);
+  static void setByRefl(const T& src, void* trg, const UA_DataType* typeDefinition);
 
   template <typename T>
-  static void copyValue(const T &src, void *memberPtr, const UA_DataType *typeDefinition);
+  static void copyValue(const T& src, void* memberPtr, const UA_DataType* typeDefinition);
 
-  static void copyValue(const std::string &src, void *memberPtr, const UA_DataType *typeDefinition);
+  static void copyValue(const std::string& src, void* memberPtr, const UA_DataType* typeDefinition);
 
   template <typename T>
-  static void convertToVariantRefl(T *pVariable, const UA_DataType *typeDefinition, UA_Variant *dst);
+  static void convertToVariantRefl(T* pVariable, const UA_DataType* typeDefinition, UA_Variant* dst);
 };
 
 template <typename T>
-copyToVariantFunc ConvertStructValue::GetToVariantFunc(std::vector<T> *pValue, const UA_DataType *typeDefinition) {
-  return [pValue, typeDefinition](UA_Variant *dst) { UA_Variant_setArrayCopy(dst, &(*pValue)[0], pValue->size(), typeDefinition); };
+copyToVariantFunc ConvertStructValue::GetToVariantFunc(std::vector<T>* pValue, const UA_DataType* typeDefinition) {
+  return [pValue, typeDefinition](UA_Variant* dst) { UA_Variant_setArrayCopy(dst, &(*pValue)[0], pValue->size(), typeDefinition); };
 }
 
 template <typename T>
-void ConvertStructValue::copyValue(const T &src, void *memberPtr, const UA_DataType *typeDefinition) {
+void ConvertStructValue::copyValue(const T& src, void* memberPtr, const UA_DataType* typeDefinition) {
   if constexpr (!std::is_fundamental<T>::value && refl::trait::is_reflectable<decltype(src)>::value) {
     setByRefl(src, memberPtr, typeDefinition);
   } else {
@@ -64,8 +64,8 @@ void ConvertStructValue::copyValue(const T &src, void *memberPtr, const UA_DataT
 }
 
 template <typename T>
-void ConvertStructValue::setByRefl(const T &src, void *trg, const UA_DataType *typeDefinition) {
-  const UA_DataType *pTypeDefinition = typeDefinition;
+void ConvertStructValue::setByRefl(const T& src, void* trg, const UA_DataType* typeDefinition) {
+  const UA_DataType* pTypeDefinition = typeDefinition;
 
   if constexpr (refl::descriptor::has_attribute<UmatiServerLib::attribute::UaDataType>(refl::reflect<T>())) {
     pTypeDefinition = refl::descriptor::get_attribute<UmatiServerLib::attribute::UaDataType>(refl::reflect<T>()).pDataType;
@@ -76,7 +76,7 @@ void ConvertStructValue::setByRefl(const T &src, void *trg, const UA_DataType *t
     std::size_t uaMemberIndex = -1;
     std::size_t ptrIncrement = 0;
     for (std::size_t i = 0; i < pTypeDefinition->membersSize; ++i) {
-      auto &uaMember = pTypeDefinition->members[i];
+      auto& uaMember = pTypeDefinition->members[i];
       ptrIncrement += uaMember.padding;
       if (uaMember.memberName == std::string(reflMember.name)) {
         uaMemberIndex = i;
@@ -91,15 +91,15 @@ void ConvertStructValue::setByRefl(const T &src, void *trg, const UA_DataType *t
       return;
     }
 
-    void *memberPtr = reinterpret_cast<std::uint8_t *>(trg) + ptrIncrement;
-    auto &uaMember = pTypeDefinition->members[uaMemberIndex];
+    void* memberPtr = reinterpret_cast<std::uint8_t*>(trg) + ptrIncrement;
+    auto& uaMember = pTypeDefinition->members[uaMemberIndex];
     copyValue(reflMember(src), memberPtr, uaMember.memberType);
   });
 }
 
 template <typename T>
-void ConvertStructValue::convertToVariantRefl(T *pVariable, const UA_DataType *typeDefinition, UA_Variant *dst) {
-  void *structData = UA_new(typeDefinition);
+void ConvertStructValue::convertToVariantRefl(T* pVariable, const UA_DataType* typeDefinition, UA_Variant* dst) {
+  void* structData = UA_new(typeDefinition);
   UA_init(structData, typeDefinition);
   setByRefl(*pVariable, structData, typeDefinition);
 
@@ -107,9 +107,9 @@ void ConvertStructValue::convertToVariantRefl(T *pVariable, const UA_DataType *t
 }
 
 template <typename T>
-copyToVariantFunc ConvertStructValue::GetToVariantFunc(T &variable, const UA_DataType *typeDefinition) {
+copyToVariantFunc ConvertStructValue::GetToVariantFunc(T& variable, const UA_DataType* typeDefinition) {
   auto pVariable = &variable;
-  return [pVariable, typeDefinition](UA_Variant *dst) { convertToVariantRefl(pVariable, typeDefinition, dst); };
+  return [pVariable, typeDefinition](UA_Variant* dst) { convertToVariantRefl(pVariable, typeDefinition, dst); };
 }
 
 }  // namespace UmatiServerLib

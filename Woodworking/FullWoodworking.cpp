@@ -15,7 +15,7 @@
 #include "../UmatiServerLib/OpcUaCondition.hpp"
 #include "../UmatiServerLib/ServerHelper.hpp"
 
-FullWoodworking::FullWoodworking(UA_Server *pServer) : InstantiatedWoodworking(pServer) {
+FullWoodworking::FullWoodworking(UA_Server* pServer) : InstantiatedWoodworking(pServer) {
   MachineName = "FullWoodworking";
   CreateObject();
 }

@@ -8,7 +8,7 @@
 
 #include "BasicMachineTool.hpp"
 
-BasicMachineTool::BasicMachineTool(UA_Server *pServer) : InstantiatedMachineTool(pServer) {
+BasicMachineTool::BasicMachineTool(UA_Server* pServer) : InstantiatedMachineTool(pServer) {
   MachineName = "BasicMachineTool";
   CreateObject();
 }

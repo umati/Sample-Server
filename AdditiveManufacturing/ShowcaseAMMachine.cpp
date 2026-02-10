@@ -8,7 +8,7 @@
 
 #include "ShowcaseAMMachine.hpp"
 
-ShowcaseAMMachine::ShowcaseAMMachine(UA_Server *pServer) : InstantiatedAMMachine(pServer) {
+ShowcaseAMMachine::ShowcaseAMMachine(UA_Server* pServer) : InstantiatedAMMachine(pServer) {
   MachineName = "ShowcaseAMMachine";
   CreateObject();
 }
@@ -21,7 +21,7 @@ void ShowcaseAMMachine::CreateObject() {
 }
 
 template <class T>
-static void InitiateRemainingQuantity(T &RemainingQuantity, double value) {
+static void InitiateRemainingQuantity(T& RemainingQuantity, double value) {
   RemainingQuantity->Value = value;
   RemainingQuantity->EngineeringUnits.value.DisplayName.text = "kg";
   RemainingQuantity->EngineeringUnits.value.Description.text = "Kilogram";
@@ -41,7 +41,7 @@ void ShowcaseAMMachine::InstantiateEquipment() {
     std::stringstream manufacturer_ss;
     manufacturer_ss << "Manufacturer" << i;
 
-    auto &material = mt.Equipment->Materials->Material.Add(m_pServer, n, {m_nsIndex, material_ss.str()});
+    auto& material = mt.Equipment->Materials->Material.Add(m_pServer, n, {m_nsIndex, material_ss.str()});
 
     InstantiateOptional(material.ExternalIdentifier, m_pServer, n);
     InstantiateOptional(material.Manufacturer, m_pServer, n);
@@ -56,7 +56,7 @@ void ShowcaseAMMachine::InstantiateEquipment() {
     material.Name = material_ss.str();
     InitiateRemainingQuantity(material.RemainingQuantity, 10.0 * i);
 
-    auto &consumable = mt.Equipment->Consumables->Consumable.Add<AdditiveManufacturing::Consumable_t>(m_pServer, n, {m_nsIndex, consumable_ss.str()});
+    auto& consumable = mt.Equipment->Consumables->Consumable.Add<AdditiveManufacturing::Consumable_t>(m_pServer, n, {m_nsIndex, consumable_ss.str()});
 
     InstantiateOptional(consumable.ExternalIdentifier, m_pServer, n);
     InstantiateOptional(consumable.Manufacturer, m_pServer, n);

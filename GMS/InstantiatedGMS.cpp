@@ -23,7 +23,7 @@ const std::unordered_map<std::uint32_t, UmatiServerLib::LocalizedText_t> Instant
   {10, {"en", "PtMeas"}},
   {11, {"en", "Other"}}};
 
-InstantiatedGMS::InstantiatedGMS(UA_Server *pServer) : m_pServer(pServer), NsIndex(m_nsIndex), n(pServer) {}
+InstantiatedGMS::InstantiatedGMS(UA_Server* pServer) : m_pServer(pServer), NsIndex(m_nsIndex), n(pServer) {}
 
 void InstantiatedGMS::CreateObject() {
   std::stringstream ss;
@@ -78,13 +78,13 @@ void InstantiatedGMS::InstantiateResultManagement() {}
 
 void InstantiatedGMS::InstantiateMonitoring() {}
 
-GMS::GMSSensor_t &InstantiatedGMS::InstantiateSensor(std::string const &sensorName) {
+GMS::GMSSensor_t& InstantiatedGMS::InstantiateSensor(std::string const& sensorName) {
   // It seems very wasteful for every instance of a sensor to have its own copy of the "Class" EnumStrings[].
   // I assume this array is the same for all the sensors of the instance.
   // It would be better if we only had one instance of "Class"[] and have all
   // sensor instances point to the same object in memory. Is that doable?
-  auto &sensor = gms.Equipment->Tools->Tool.Add<GMS::GMSSensor_t>(m_pServer, n, {m_nsIndex, sensorName});
-  for (const auto &localizedClassName : CLASS_MAP) sensor.Class->EnumStrings->push_back(localizedClassName.second);
+  auto& sensor = gms.Equipment->Tools->Tool.Add<GMS::GMSSensor_t>(m_pServer, n, {m_nsIndex, sensorName});
+  for (const auto& localizedClassName : CLASS_MAP) sensor.Class->EnumStrings->push_back(localizedClassName.second);
 
   return sensor;
 }

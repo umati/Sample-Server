@@ -16,7 +16,7 @@
 namespace UmatiServerLib::attribute {
 struct UaDataType : refl::attr::usage::type {
   // public:
-  const UA_DataType *pDataType;
-  constexpr UaDataType(const UA_DataType *pdataType) : pDataType(pdataType) {}
+  const UA_DataType* pDataType;
+  constexpr UaDataType(const UA_DataType* pdataType) : pDataType(pdataType) {}
 };
 }  // namespace UmatiServerLib::attribute

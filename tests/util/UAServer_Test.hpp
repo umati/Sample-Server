@@ -12,18 +12,18 @@
 
 class UAServer_Test : public ::testing::Test {
  public:
-  UA_Server *pServer = nullptr;
-  static constexpr const char *NsTestNs = "TestNs";
+  UA_Server* pServer = nullptr;
+  static constexpr const char* NsTestNs = "TestNs";
 
  protected:
   static UA_StatusCode generateChildNodeIdInParentNs(
-    UA_Server *server,
-    const UA_NodeId *sessionId,
-    void *sessionContext,
-    const UA_NodeId *sourceNodeId,
-    const UA_NodeId *targetParentNodeId,
-    const UA_NodeId *referenceTypeId,
-    UA_NodeId *targetNodeId) {
+    UA_Server* server,
+    const UA_NodeId* sessionId,
+    void* sessionContext,
+    const UA_NodeId* sourceNodeId,
+    const UA_NodeId* targetParentNodeId,
+    const UA_NodeId* referenceTypeId,
+    UA_NodeId* targetNodeId) {
     if (UA_NodeId_equal(targetNodeId, &UA_NODEID_NULL) && !UA_NodeId_equal(targetParentNodeId, &UA_NODEID_NULL)) {
       targetNodeId->namespaceIndex = targetParentNodeId->namespaceIndex;
     }

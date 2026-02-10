@@ -11,7 +11,7 @@
 
 class BasicAMMachine : public InstantiatedAMMachine {
  public:
-  BasicAMMachine(UA_Server *pServer);
+  BasicAMMachine(UA_Server* pServer);
 
   void Simulate() override;
   virtual ~BasicAMMachine() = default;

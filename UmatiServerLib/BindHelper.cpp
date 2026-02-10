@@ -8,7 +8,7 @@
 
 #include "BindHelper.hpp"
 
-open62541Cpp::UA_NodeId resolveBrowsePath(UA_Server *pServer, const open62541Cpp::UA_BrowsePath &brPath) {
+open62541Cpp::UA_NodeId resolveBrowsePath(UA_Server* pServer, const open62541Cpp::UA_BrowsePath& brPath) {
   // No Elements in browse path.
   if (brPath.BrowsePath->relativePath.elementsSize == 0) {
     return open62541Cpp::UA_NodeId(brPath.BrowsePath->startingNode);

@@ -13,7 +13,7 @@
 #include "../TypeDefinition/Robotics/MotionDevice.hpp"
 #include "../UmatiServerLib/BindRefl.hpp"
 
-InstantiatedRobot::InstantiatedRobot(UA_Server *pServer) : NsIndex(m_nsIndex), n(pServer), m_pServer(pServer) {}
+InstantiatedRobot::InstantiatedRobot(UA_Server* pServer) : NsIndex(m_nsIndex), n(pServer), m_pServer(pServer) {}
 
 InstantiatedRobot::~InstantiatedRobot() {}
 
@@ -43,7 +43,7 @@ void InstantiatedRobot::CreateObject() {
   UA_ObjectAttributes_clear(&objAttr);
   UmatiServerLib::Bind::MembersRefl(rb, m_pServer, m_nodeId, n);
 }
-static UA_ExpandedNodeId ExNodeId(const UA_NodeId &nodeId) {
+static UA_ExpandedNodeId ExNodeId(const UA_NodeId& nodeId) {
   UA_ExpandedNodeId exN;
   exN.namespaceUri = UA_STRING_NULL;
   exN.serverIndex = 0;

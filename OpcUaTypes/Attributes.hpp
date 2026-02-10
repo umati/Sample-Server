@@ -14,9 +14,9 @@
 namespace UmatiServerLib::attribute {
 struct UaBrowseName : refl::attr::usage::field {
   UaBrowseName() = default;
-  constexpr UaBrowseName(const char *nsURI, const char *name = nullptr) : NsURI(nsURI), Name(name) {}
-  const char *NsURI = nullptr;
-  const char *Name = nullptr;
+  constexpr UaBrowseName(const char* nsURI, const char* name = nullptr) : NsURI(nsURI), Name(name) {}
+  const char* NsURI = nullptr;
+  const char* Name = nullptr;
 };
 
 struct UaVariableType : refl::attr::usage::type {
@@ -31,7 +31,7 @@ struct UaObjectType : refl::attr::usage::type {
   UmatiServerLib::constexp::NodeId NodeId;
 };
 
-/// \TOOD use constructor as NodeId is required
+/// \TODO use constructor as NodeId is required
 /// \TODO Replace by MemberInTypeNodeId, ReferenceType can be get from
 ///    browse for reverse hierarchical reference
 struct UaReference : refl::attr::usage::field {
@@ -39,8 +39,8 @@ struct UaReference : refl::attr::usage::field {
   UmatiServerLib::constexp::NodeId NodeId;
 };
 
-/// Contains the nodeId of the member in the type hierachy. Can be used to
-///  read parent type nodes, reference types, attriutes like dataType,
+/// Contains the nodeId of the member in the type hierarchy. Can be used to
+///  read parent type nodes, reference types, attributes like dataType,
 ///  TypeDefinition ...
 struct MemberInTypeNodeId : refl::attr::usage::field {
   MemberInTypeNodeId() = default;
@@ -48,7 +48,7 @@ struct MemberInTypeNodeId : refl::attr::usage::field {
   UmatiServerLib::constexp::NodeId NodeId;
 };
 
-// This identifier the Value memer in a variable type.
+// This identifier the Value member in a variable type.
 struct UaVariableTypeValue : refl::attr::usage::field {};
 
 struct PlaceholderOptional : refl::attr::usage::field {};

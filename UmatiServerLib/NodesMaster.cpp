@@ -9,13 +9,13 @@
 
 #include <iostream>
 
-NodesMaster::NodesMaster(UA_Server *pServer) : m_pServer(pServer) {}
+NodesMaster::NodesMaster(UA_Server* pServer) : m_pServer(pServer) {}
 
-NodeValue &NodesMaster::operator()(int nsIndex, int nsIntId) { return this->operator()(open62541Cpp::UA_NodeId(nsIndex, nsIntId)); }
+NodeValue& NodesMaster::operator()(int nsIndex, int nsIntId) { return this->operator()(open62541Cpp::UA_NodeId(nsIndex, nsIntId)); }
 
-NodeValue &NodesMaster::operator()(const UA_NodeId &nodeId) { return this->operator()(open62541Cpp::UA_NodeId(nodeId)); }
+NodeValue& NodesMaster::operator()(const UA_NodeId& nodeId) { return this->operator()(open62541Cpp::UA_NodeId(nodeId)); }
 
-NodeValue &NodesMaster::operator()(const open62541Cpp::UA_NodeId &nodeId) {
+NodeValue& NodesMaster::operator()(const open62541Cpp::UA_NodeId& nodeId) {
   auto it = m_Nodes.find(nodeId);
   if (it == m_Nodes.end()) {
     auto itNew = m_Nodes.insert(std::make_pair(nodeId, NodeValue(nodeId)));
@@ -27,14 +27,14 @@ NodeValue &NodesMaster::operator()(const open62541Cpp::UA_NodeId &nodeId) {
 }
 
 void NodesMaster::callback(
-  UA_Server *pServer,
-  const UA_NodeId *sessionId,
-  void *sessionContext,
-  const UA_NodeId *nodeid,
-  void *nodeContext,
-  const UA_NumericRange *range,
-  const UA_DataValue *oldValue) {
-  NodesMaster *pThis = reinterpret_cast<NodesMaster *>(nodeContext);
+  UA_Server* pServer,
+  const UA_NodeId* sessionId,
+  void* sessionContext,
+  const UA_NodeId* nodeid,
+  void* nodeContext,
+  const UA_NumericRange* range,
+  const UA_DataValue* oldValue) {
+  NodesMaster* pThis = reinterpret_cast<NodesMaster*>(nodeContext);
   auto it = pThis->m_Nodes.find(open62541Cpp::UA_NodeId(nodeid));
   if (it != pThis->m_Nodes.end()) {
     auto val = it->second.Value();
@@ -45,7 +45,7 @@ void NodesMaster::callback(
   }
 }
 
-void NodesMaster::Remove(const open62541Cpp::UA_NodeId &nodeId) {
+void NodesMaster::Remove(const open62541Cpp::UA_NodeId& nodeId) {
   auto it = m_Nodes.find(nodeId);
   if (it != m_Nodes.end()) {
     UA_Server_setNodeContext(m_pServer, *it->first.NodeId, NULL);
@@ -57,7 +57,7 @@ void NodesMaster::Remove(const open62541Cpp::UA_NodeId &nodeId) {
   }
 }
 
-void NodesMaster::setCallback(const open62541Cpp::UA_NodeId &nodeId) {
+void NodesMaster::setCallback(const open62541Cpp::UA_NodeId& nodeId) {
   ///\todo Use DataSource instead?
   // UA_DataSource dsCallback;
   // dsCallback.read = NodesMaster::callback;

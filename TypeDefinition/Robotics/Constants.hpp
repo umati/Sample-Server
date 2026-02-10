@@ -9,5 +9,5 @@
 #include "../../src_generated/robotics_nodeids.h"
 
 namespace constants {
-constexpr const char *NsRoboticsUri = "http://opcfoundation.org/UA/Robotics/";
+constexpr const char* NsRoboticsUri = "http://opcfoundation.org/UA/Robotics/";
 }

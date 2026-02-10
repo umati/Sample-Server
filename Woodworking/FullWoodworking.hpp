@@ -9,7 +9,7 @@
 #include "InstantiatedWoodworking.hpp"
 class FullWoodworking : public InstantiatedWoodworking {
  public:
-  FullWoodworking(UA_Server *pServer);
+  FullWoodworking(UA_Server* pServer);
 
   void Simulate() override;
   virtual ~FullWoodworking() = default;

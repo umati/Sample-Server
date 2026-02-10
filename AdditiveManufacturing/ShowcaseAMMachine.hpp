@@ -11,7 +11,7 @@
 
 class ShowcaseAMMachine : public InstantiatedAMMachine {
  public:
-  ShowcaseAMMachine(UA_Server *pServer);
+  ShowcaseAMMachine(UA_Server* pServer);
 
   void Simulate() override;
   virtual ~ShowcaseAMMachine() = default;

@@ -8,7 +8,7 @@
 
 #include "BasicAMMachine.hpp"
 
-BasicAMMachine::BasicAMMachine(UA_Server *pServer) : InstantiatedAMMachine(pServer) {
+BasicAMMachine::BasicAMMachine(UA_Server* pServer) : InstantiatedAMMachine(pServer) {
   MachineName = "BasicAMMachine";
   CreateObject();
 }

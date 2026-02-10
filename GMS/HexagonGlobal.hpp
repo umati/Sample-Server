@@ -11,7 +11,7 @@
 
 class HexagonGlobal : public InstantiatedMachineTool {
  public:
-  HexagonGlobal(UA_Server *pServer);
+  HexagonGlobal(UA_Server* pServer);
 
   void Simulate() override;
   virtual ~HexagonGlobal() = default;
@@ -27,7 +27,7 @@ class HexagonGlobal : public InstantiatedMachineTool {
   void InstantiateTools();
   int m_simStep = 0;
 
-  void initCorrection(GMS::CorrectionType_t &corr, std::string Identifier, std::string CharacteristicIdentifier, double value);
+  void initCorrection(GMS::CorrectionType_t& corr, std::string Identifier, std::string CharacteristicIdentifier, double value);
 
   void InstantiateResultManagement();
 };

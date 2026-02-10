@@ -17,9 +17,9 @@
 
 class InstantiatedMachineTool : public SimulatedInstance {
  public:
-  InstantiatedMachineTool(UA_Server *pServer);
+  InstantiatedMachineTool(UA_Server* pServer);
 
-  const std::uint16_t &NsIndex;
+  const std::uint16_t& NsIndex;
 
  protected:
   virtual void CreateObject();
@@ -33,7 +33,7 @@ class InstantiatedMachineTool : public SimulatedInstance {
   std::string MachineName;
   std::uint16_t m_nsIndex;
   machineTool::MachineTool_t mt;
-  UA_Server *m_pServer;
+  UA_Server* m_pServer;
   open62541Cpp::UA_NodeId m_nodeId = open62541Cpp::UA_NodeId((std::uint16_t)0, 0);
   NodesMaster n;
 };

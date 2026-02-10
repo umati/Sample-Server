@@ -12,7 +12,7 @@
 
 class FullGMS : public InstantiatedGMS {
  public:
-  FullGMS(UA_Server *pServer);
+  FullGMS(UA_Server* pServer);
 
   virtual ~FullGMS() = default;
 

@@ -40,9 +40,9 @@ class ReturnCodeWatcher {
  public:
   T Good;
   ReturnCodeWatcher(T good) : Good(good) {}
-  ReturnCodeWatcher(const ReturnCodeWatcher &other) : Good(other.Good) {}
+  ReturnCodeWatcher(const ReturnCodeWatcher& other) : Good(other.Good) {}
 
-  ReturnCodeWatcher &operator=(const ReturnCodeWatcher &other) {
+  ReturnCodeWatcher& operator=(const ReturnCodeWatcher& other) {
     Good = other.Good;
     return *this;
   }
@@ -63,27 +63,27 @@ void OpcUaKeys::Load() {
   std::list<std::string> errors;
   try {
     PrivateKey = readFile(PrivKeyFile);
-  } catch (std::runtime_error &e) {
+  } catch (std::runtime_error& e) {
     errors.push_back(e.what());
   }
   try {
     PublicCert = readFile(PubCertFile);
-  } catch (std::runtime_error &e) {
+  } catch (std::runtime_error& e) {
     errors.push_back(e.what());
   }
   try {
     Trusted = readFiles(TrustedClients);
-  } catch (std::runtime_error &e) {
+  } catch (std::runtime_error& e) {
     errors.push_back(e.what());
   }
   try {
     Issuer = readFiles(IssuerCerts);
-  } catch (std::runtime_error &e) {
+  } catch (std::runtime_error& e) {
     errors.push_back(e.what());
   }
   try {
     Revoked = readFiles(Revocation);
-  } catch (std::runtime_error &e) {
+  } catch (std::runtime_error& e) {
     errors.push_back(e.what());
   }
   if (!errors.empty()) {
@@ -98,7 +98,7 @@ OpcUaKeys::~OpcUaKeys() {
   UA_ByteString_clear(&PrivateKey);
   UA_ByteString_clear(&PublicCert);
 
-  auto clear = [](UA_ByteString &el) { UA_ByteString_clear(&el); };
+  auto clear = [](UA_ByteString& el) { UA_ByteString_clear(&el); };
   std::for_each(Trusted.begin(), Trusted.end(), clear);
   std::for_each(Issuer.begin(), Issuer.end(), clear);
   std::for_each(Revoked.begin(), Revoked.end(), clear);
@@ -117,14 +117,14 @@ UA_ByteString OpcUaKeys::readFile(std::string filename) {
   std::streampos fileSize = ifs.tellg();
   UA_ByteString_allocBuffer(&ret, fileSize);
   ifs.seekg(0, std::ios_base::beg);
-  ifs.read((char *)ret.data, fileSize);
+  ifs.read((char*)ret.data, fileSize);
   return ret;
 }
 
 std::vector<UA_ByteString> OpcUaKeys::readFiles(std::vector<std::string> filenames) {
   std::vector<UA_ByteString> ret;
   ret.reserve(filenames.size());
-  for (auto &filename : filenames) {
+  for (auto& filename : filenames) {
     ret.push_back(readFile(filename));
   }
   return ret;
@@ -154,11 +154,11 @@ void OpcUaKeys::GenerateKeys() {
   UA_UInt32 lenSubject = 4;
   UA_String subjectAltName[2] = {UA_STRING_STATIC("DNS:localhost"), UA_STRING_STATIC("URI:urn:umatiSampleServer")};
   UA_UInt32 lenSubjectAltName = 2;
-  UA_KeyValueMap *kvm = UA_KeyValueMap_new();
+  UA_KeyValueMap* kvm = UA_KeyValueMap_new();
   UA_UInt16 expiresIn = 366;
-  UA_KeyValueMap_setScalar(kvm, *open62541Cpp::UA_QualifiedName(0, "expires-in-days").QualifiedName, (void *)&expiresIn, &UA_TYPES[UA_TYPES_UINT16]);
+  UA_KeyValueMap_setScalar(kvm, *open62541Cpp::UA_QualifiedName(0, "expires-in-days").QualifiedName, (void*)&expiresIn, &UA_TYPES[UA_TYPES_UINT16]);
   UA_UInt16 keySize = 2048;
-  UA_KeyValueMap_setScalar(kvm, *open62541Cpp::UA_QualifiedName(0, "key-size-bits").QualifiedName, (void *)&keySize, &UA_TYPES[UA_TYPES_UINT16]);
+  UA_KeyValueMap_setScalar(kvm, *open62541Cpp::UA_QualifiedName(0, "key-size-bits").QualifiedName, (void*)&keySize, &UA_TYPES[UA_TYPES_UINT16]);
 
   auto status = UA_CreateCertificate(
     UA_Log_Stdout, subject, lenSubject, subjectAltName, lenSubjectAltName, UA_CertificateFormat::UA_CERTIFICATEFORMAT_PEM, kvm, &PrivateKey, &PublicCert);
@@ -175,10 +175,10 @@ void OpcUaKeys::StoreKeys() {
   writeFile(PubCertFile, PublicCert);
 }
 
-void OpcUaKeys::writeFile(std::string filename, const UA_ByteString &content) {
+void OpcUaKeys::writeFile(std::string filename, const UA_ByteString& content) {
   std::ofstream os;
   os.open(filename, std::ios::binary | std::ios::trunc);
-  os.write((const char *)content.data, content.length);
+  os.write((const char*)content.data, content.length);
   os.close();
 }
 

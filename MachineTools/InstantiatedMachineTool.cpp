@@ -12,7 +12,7 @@
 #include <sstream>
 #include <unordered_map>
 
-InstantiatedMachineTool::InstantiatedMachineTool(UA_Server *pServer) : m_pServer(pServer), NsIndex(m_nsIndex), n(pServer) {}
+InstantiatedMachineTool::InstantiatedMachineTool(UA_Server* pServer) : m_pServer(pServer), NsIndex(m_nsIndex), n(pServer) {}
 
 void InstantiatedMachineTool::CreateObject() {
   std::stringstream ss;
@@ -65,7 +65,7 @@ void InstantiatedMachineTool::InstantiateMonitoringStacklight(std::list<UA_Signa
   for (std::size_t i = 0; i < s; ++i) {
     std::stringstream ss;
     ss << "Light " << i;
-    auto &light = mt.Monitoring->Stacklight->OrderedObjects.Add(m_pServer, n, {m_nsIndex, ss.str()});
+    auto& light = mt.Monitoring->Stacklight->OrderedObjects.Add(m_pServer, n, {m_nsIndex, ss.str()});
     InstantiateOptional(light.IsPartOfBase, m_pServer, n);
     InstantiateOptional(light.SignalOn, m_pServer, n);
     InstantiateOptional(light.SignalMode, m_pServer, n);
@@ -86,7 +86,7 @@ void InstantiatedMachineTool::InstantiateMonitoringChannel(int numChannels) {
   for (std::size_t i = 1; i <= numChannels; ++i) {
     std::stringstream ss;
     ss << "Channel " << i;
-    auto &channel = mt.Monitoring->Channels.Add(m_pServer, n, {m_nsIndex, ss.str()});
+    auto& channel = mt.Monitoring->Channels.Add(m_pServer, n, {m_nsIndex, ss.str()});
     channel.ChannelState = UA_CHANNELSTATE_INTERRUPTED;
     channel.FeedOverride->EngineeringUnits->DisplayName = {"", "%"};
     channel.FeedOverride->EURange->low = 0;
@@ -98,7 +98,7 @@ void InstantiatedMachineTool::InstantiateMonitoringChannel(int numChannels) {
 }
 
 void InstantiatedMachineTool::SimulateStacklight() {
-  for (auto &light : mt.Monitoring->Stacklight->OrderedObjects.value) {
+  for (auto& light : mt.Monitoring->Stacklight->OrderedObjects.value) {
     light->SignalOn = (rnd() % 2) == 0;
   }
 }

@@ -22,38 +22,38 @@
 #include "BindableMemberValue.hpp"
 #include "Util.hpp"
 
-open62541Cpp::UA_NodeId resolveBrowsePath(UA_Server *pServer, const open62541Cpp::UA_BrowsePath &brPath);
+open62541Cpp::UA_NodeId resolveBrowsePath(UA_Server* pServer, const open62541Cpp::UA_BrowsePath& brPath);
 
 template <typename B, typename... T>
-open62541Cpp::UA_RelativPathElement getBrowseName(const B &instance, const refl::descriptor::field_descriptor<T...> &member, UA_Server *pServer);
+open62541Cpp::UA_RelativPathElement getBrowseName(const B& instance, const refl::descriptor::field_descriptor<T...>& member, UA_Server* pServer);
 
 template <typename T>
-void setBindOrMandatory(BindableMember<T> &instance, bool bind = true, bool mandatory = true);
+void setBindOrMandatory(BindableMember<T>& instance, bool bind = true, bool mandatory = true);
 
 template <typename T, typename = std::enable_if_t<!is_base_of_template<BindableMember, T>::value>>
-void setBindOrMandatory(T &instance, bool bind = true, bool mandatory = true){};
+void setBindOrMandatory(T& instance, bool bind = true, bool mandatory = true) {};
 
 template <typename T>
-void setMemberInTypeNodeId(BindableMember<T> &instance, const UmatiServerLib::constexp::NodeId &nodeId, UA_Server *pServer);
+void setMemberInTypeNodeId(BindableMember<T>& instance, const UmatiServerLib::constexp::NodeId& nodeId, UA_Server* pServer);
 
 template <typename T, typename = std::enable_if_t<!is_base_of_template<BindableMember, T>::value>>
-void setMemberInTypeNodeId(T &instance, const UmatiServerLib::constexp::NodeId &nodeId, UA_Server *pServer) {
+void setMemberInTypeNodeId(T& instance, const UmatiServerLib::constexp::NodeId& nodeId, UA_Server* pServer) {
   static_assert(always_false<T>::value, "Try to set MemberInType for non Bindable Member");
 };
 
 template <typename T>
-void setAddrSpaceLocation(BindableMember<T> &instance, const open62541Cpp::UA_NodeId &parentNodeId, const open62541Cpp::UA_RelativPathElement pathEl);
+void setAddrSpaceLocation(BindableMember<T>& instance, const open62541Cpp::UA_NodeId& parentNodeId, const open62541Cpp::UA_RelativPathElement pathEl);
 
 template <typename T, typename = std::enable_if_t<!is_base_of_template<BindableMember, T>::value>>
-void setAddrSpaceLocation(T &instance, const open62541Cpp::UA_NodeId &parentNodeId, const open62541Cpp::UA_RelativPathElement pathEl){};
+void setAddrSpaceLocation(T& instance, const open62541Cpp::UA_NodeId& parentNodeId, const open62541Cpp::UA_RelativPathElement pathEl) {};
 
 template <typename T>
-open62541Cpp::UA_RelativPathElement getRelativPathElement(BindableMember<T> &instance) {
+open62541Cpp::UA_RelativPathElement getRelativPathElement(BindableMember<T>& instance) {
   return instance.RelativPathElement;
 }
 
 template <typename T, typename = std::enable_if_t<!is_base_of_template<BindableMember, T>::value>>
-open62541Cpp::UA_RelativPathElement getRelativPathElement(T &instance) {
+open62541Cpp::UA_RelativPathElement getRelativPathElement(T& instance) {
   return open62541Cpp::UA_RelativPathElement();
 };
 
@@ -67,12 +67,12 @@ constexpr bool hasAttributeIfReflectable() noexcept {
 }
 
 template <typename AttributeType, typename T>
-constexpr bool hasAttributeIfReflectable(const T &member) noexcept {
+constexpr bool hasAttributeIfReflectable(const T& member) noexcept {
   return hasAttributeIfReflectable<AttributeType, T>();
 }
 
 template <typename T>
-auto &getValueFromBindableMember(T &instance, bool bind = true, bool mandatory = true) {
+auto& getValueFromBindableMember(T& instance, bool bind = true, bool mandatory = true) {
   if constexpr (is_base_of_template<BindableMember, T>::value) {
     return instance.value;
   } else {
@@ -89,12 +89,12 @@ auto &getValueFromBindableMember(T &instance, bool bind = true, bool mandatory =
  * @return open62541Cpp::UA_RelativPathElement
  */
 template <typename B, typename T, size_t N>
-open62541Cpp::UA_RelativPathElement getBrowseName(const B &instance, const refl::descriptor::field_descriptor<T, N> &member, UA_Server *pServer) {
+open62541Cpp::UA_RelativPathElement getBrowseName(const B& instance, const refl::descriptor::field_descriptor<T, N>& member, UA_Server* pServer) {
   std::uint16_t nsIndex = ~static_cast<std::uint16_t>(0);
   std::string name(member.name);
-  const char *nsUri = nullptr;
+  const char* nsUri = nullptr;
   if constexpr (refl::descriptor::has_attribute<UmatiServerLib::attribute::UaBrowseName>(refl::descriptor::field_descriptor<T, N>())) {
-    const auto &attrBrowseName = refl::descriptor::get_attribute<UmatiServerLib::attribute::UaBrowseName>(member);
+    const auto& attrBrowseName = refl::descriptor::get_attribute<UmatiServerLib::attribute::UaBrowseName>(member);
     nsUri = attrBrowseName.NsURI;
 
     if (attrBrowseName.Name != nullptr) {
@@ -123,7 +123,7 @@ open62541Cpp::UA_RelativPathElement getBrowseName(const B &instance, const refl:
 }
 
 template <typename T>
-void setBindOrMandatory(BindableMember<T> &instance, bool bind, bool mandatory) {
+void setBindOrMandatory(BindableMember<T>& instance, bool bind, bool mandatory) {
   if (bind) {
     instance.SetBind();
   }
@@ -134,12 +134,12 @@ void setBindOrMandatory(BindableMember<T> &instance, bool bind, bool mandatory) 
 }
 
 template <typename T>
-void setAddrSpaceLocation(BindableMember<T> &instance, const open62541Cpp::UA_NodeId &parentNodeId, const open62541Cpp::UA_RelativPathElement pathEl) {
+void setAddrSpaceLocation(BindableMember<T>& instance, const open62541Cpp::UA_NodeId& parentNodeId, const open62541Cpp::UA_RelativPathElement pathEl) {
   instance.ParentNodeId = parentNodeId;
   instance.RelativPathElement = pathEl;
 }
 
 template <typename T>
-void setMemberInTypeNodeId(BindableMember<T> &instance, const UmatiServerLib::constexp::NodeId &memberInTypeNodeId, UA_Server *pServer) {
+void setMemberInTypeNodeId(BindableMember<T>& instance, const UmatiServerLib::constexp::NodeId& memberInTypeNodeId, UA_Server* pServer) {
   instance.MemberInTypeNodeId = memberInTypeNodeId.UANodeId(pServer);
 }

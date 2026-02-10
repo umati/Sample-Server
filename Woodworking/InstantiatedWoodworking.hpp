@@ -17,8 +17,8 @@
 
 class InstantiatedWoodworking : public SimulatedInstance {
  public:
-  InstantiatedWoodworking(UA_Server *pServer);
-  const std::uint16_t &NsIndex;
+  InstantiatedWoodworking(UA_Server* pServer);
+  const std::uint16_t& NsIndex;
 
  protected:
   virtual void CreateObject();
@@ -29,7 +29,7 @@ class InstantiatedWoodworking : public SimulatedInstance {
   std::string MachineName;
   std::uint16_t m_nsIndex;
   woodworking::WwMachine_t ww;
-  UA_Server *m_pServer;
+  UA_Server* m_pServer;
   open62541Cpp::UA_NodeId m_nodeId = open62541Cpp::UA_NodeId((std::uint16_t)0, 0);
   NodesMaster n;
 };

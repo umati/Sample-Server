@@ -10,4 +10,4 @@
 
 #include <Open62541Cpp/UA_NodeId.hpp>
 
-void writeEventNotifier(UA_Server *pServer, open62541Cpp::UA_NodeId nodeId, UA_Byte eventNotifier = UA_EVENTNOTIFIERTYPE_SUBSCRIBETOEVENTS);
+void writeEventNotifier(UA_Server* pServer, open62541Cpp::UA_NodeId nodeId, UA_Byte eventNotifier = UA_EVENTNOTIFIERTYPE_SUBSCRIBETOEVENTS);

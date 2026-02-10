@@ -11,5 +11,5 @@
 #include "../../src_generated/types_machinery_result_generated.h"
 
 namespace constants {
-constexpr const char *NsMachineryResultUri = "http://opcfoundation.org/UA/Machinery/Result/";
+constexpr const char* NsMachineryResultUri = "http://opcfoundation.org/UA/Machinery/Result/";
 }

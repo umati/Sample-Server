@@ -16,7 +16,7 @@
 
 namespace UmatiServerLib {
 
-StateMachine::StateMachine(open62541Cpp::UA_NodeId stateMachineType, UA_Server *pServer) : m_pServer(pServer), m_stateMachineType(stateMachineType) {
+StateMachine::StateMachine(open62541Cpp::UA_NodeId stateMachineType, UA_Server* pServer) : m_pServer(pServer), m_stateMachineType(stateMachineType) {
   readStatesAndTransitions();
 }
 
@@ -51,7 +51,7 @@ void StateMachine::readStates(open62541Cpp::UA_NodeId stateMachineType) {
 
   auto browseResult = UA_Server_browse(m_pServer, UA_UINT32_MAX, &brDesc);
   if (browseResult.statusCode != UA_STATUSCODE_GOOD) {
-    std::cout << "Resutl not good: " << UA_StatusCode_name(browseResult.statusCode) << std::endl;
+    std::cout << "Result not good: " << UA_StatusCode_name(browseResult.statusCode) << std::endl;
     std::cout << "Could not read States from statemachine." << std::endl;
   }
 
@@ -77,7 +77,7 @@ StateMachine::State_t StateMachine::readStateValues(open62541Cpp::UA_NodeId stat
   if (UA_Variant_isEmpty(&stateNumber) || !UA_Variant_isScalar(&stateNumber) || stateNumber.type != &UA_TYPES[UA_TYPES_UINT32]) {
     std::cout << "Invalid stateNumber" << std::endl;
   } else {
-    ret.Number = *((std::uint32_t *)stateNumber.data);
+    ret.Number = *((std::uint32_t*)stateNumber.data);
   }
   UA_Variant_clear(&stateNumber);
   UA_LocalizedText dispName = UA_LOCALIZEDTEXT(NULL, NULL);
@@ -108,7 +108,7 @@ void StateMachine::readTransitions(open62541Cpp::UA_NodeId transitionObj) {
 
   auto browseResult = UA_Server_browse(m_pServer, UA_UINT32_MAX, &brDesc);
   if (browseResult.statusCode != UA_STATUSCODE_GOOD) {
-    std::cout << "Resutl not good: " << UA_StatusCode_name(browseResult.statusCode) << std::endl;
+    std::cout << "Result not good: " << UA_StatusCode_name(browseResult.statusCode) << std::endl;
     std::cout << "Could not read Transitions from statemachine." << std::endl;
   }
 
@@ -134,7 +134,7 @@ StateMachine::Transition_t StateMachine::readTransitionValues(open62541Cpp::UA_N
   if (UA_Variant_isEmpty(&transitionNumber) || !UA_Variant_isScalar(&transitionNumber) || transitionNumber.type != &UA_TYPES[UA_TYPES_UINT32]) {
     std::cout << "Invalid transitionNumber" << std::endl;
   } else {
-    ret.Number = *((std::uint32_t *)transitionNumber.data);
+    ret.Number = *((std::uint32_t*)transitionNumber.data);
   }
   UA_Variant_clear(&transitionNumber);
   UA_LocalizedText dispName = UA_LOCALIZEDTEXT(NULL, NULL);
@@ -172,12 +172,12 @@ StateMachine::Transition_t StateMachine::readTransitionValues(open62541Cpp::UA_N
 void StateMachine::mergeTransitions() {
   std::map<std::uint32_t, Transition_t> transitions;
   m_transitions.reverse();  // So later types will override base types
-  for (auto &transition : m_transitions) {
+  for (auto& transition : m_transitions) {
     if (transition.Number == UA_UINT32_MAX) {
       // No real transition
       continue;
     }
-    auto &trans = transitions[transition.Number];
+    auto& trans = transitions[transition.Number];
     if (!UA_NodeId_isNull(transition.From.NodeId)) {
       trans.From = transition.From;
     }
@@ -193,7 +193,7 @@ void StateMachine::mergeTransitions() {
 
   m_transitions.clear();
 
-  for (auto &transition : transitions) {
+  for (auto& transition : transitions) {
     m_transitions.push_back(transition.second);
   }
 }

@@ -24,7 +24,7 @@ class OpcUaCondition {
   T Data;
   open62541Cpp::UA_NodeId ConditionNodeId;
   open62541Cpp::UA_NodeId Source;
-  OpcUaCondition(UA_Server *pServer, open62541Cpp::UA_NodeId source) : pServer(pServer), nodesMaster(pServer), Source(source) { addConditionToAddressSpace(); }
+  OpcUaCondition(UA_Server* pServer, open62541Cpp::UA_NodeId source) : pServer(pServer), nodesMaster(pServer), Source(source) { addConditionToAddressSpace(); }
 
   void Trigger() { UA_Server_triggerConditionEvent(pServer, *ConditionNodeId.NodeId, *Source.NodeId, nullptr); }
 
@@ -36,7 +36,7 @@ class OpcUaCondition {
   }
 
  protected:
-  UA_Server *pServer;
+  UA_Server* pServer;
   NodesMaster nodesMaster;
 
   void addConditionToAddressSpace() {

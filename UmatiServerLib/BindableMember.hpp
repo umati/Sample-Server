@@ -32,7 +32,7 @@ class BindableMember : public ValueDecorator<T> {
   /// \TODO replace by utilizing MemberInTypeNodeId
   open62541Cpp::UA_RelativPathElement RelativPathElement;
 
-  /// NodeId of this member in the type definition (taken from MemberInTypeNodeId atribute)
+  /// NodeId of this member in the type definition (taken from MemberInTypeNodeId attribute)
   /// \TODO Replace by pointer to attribute
   open62541Cpp::UA_NodeId MemberInTypeNodeId;
 
@@ -40,9 +40,9 @@ class BindableMember : public ValueDecorator<T> {
   open62541Cpp::UA_NodeId NodeId;
 
   BindableMember() = default;
-  BindableMember(const T &val);
+  BindableMember(const T& val);
   virtual ~BindableMember() {}
 };
 
 template <typename T>
-BindableMember<T>::BindableMember(const T &val) : ValueDecorator<T>(val) {}
+BindableMember<T>::BindableMember(const T& val) : ValueDecorator<T>(val) {}

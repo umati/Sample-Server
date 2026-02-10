@@ -10,7 +10,7 @@
 
 class ShowcaseMachineTool : public InstantiatedMachineTool {
  public:
-  ShowcaseMachineTool(UA_Server *pServer);
+  ShowcaseMachineTool(UA_Server* pServer);
 
   void Simulate() override;
   virtual ~ShowcaseMachineTool() = default;

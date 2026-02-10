@@ -49,7 +49,7 @@ TEST_F(BindNodeId, BindNodeId_Basic) {
   ASSERT_FALSE(UA_Variant_isEmpty(&variant));
   ASSERT_TRUE(UA_Variant_isScalar(&variant));
   ASSERT_TRUE(UA_NodeId_equal(&variant.type->typeId, &UA_TYPES[UA_TYPES_NODEID].typeId));
-  ASSERT_TRUE(UA_NodeId_equal((UA_NodeId *)variant.data, &cmp));
+  ASSERT_TRUE(UA_NodeId_equal((UA_NodeId*)variant.data, &cmp));
 
   UA_Variant_clear(&variant);
 }

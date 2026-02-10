@@ -12,7 +12,7 @@
 #include "../TypeDefinition/GMS/Constants.hpp"
 #include "../TypeDefinition/GMS/GMSType.hpp"
 
-WenzelLH::WenzelLH(UA_Server *pServer) : InstantiatedMachineTool(pServer) {
+WenzelLH::WenzelLH(UA_Server* pServer) : InstantiatedMachineTool(pServer) {
   MachineName = "Wenzel LH 87";
   CreateObject();
 }
@@ -65,7 +65,7 @@ void WenzelLH::CreateObject() {
 
 void WenzelLH::InstantiateResultManagement() {
   InstantiateOptional(mt.ResultManagement->Results, m_pServer, n);
-  auto &result = mt.ResultManagement->Results->ResultVariable.Add<machinery_result::ResultType_t>(m_pServer, n, {m_nsIndex, "Result"});
+  auto& result = mt.ResultManagement->Results->ResultVariable.Add<machinery_result::ResultType_t>(m_pServer, n, {m_nsIndex, "Result"});
   UA_init(&result.Value.value, &UA_TYPES_MACHINERY_RESULT[UA_TYPES_MACHINERY_RESULT_RESULTDATATYPE]);
   result.Value->resultMetaData.resultId = UA_String_fromChars("-");
   result.Value->resultMetaData.resultUri = UA_String_new();
@@ -82,17 +82,17 @@ void WenzelLH::InstantiateResultManagement() {
   *result.Value->resultMetaData.resultState = 1;
 
   InstantiateOptional(mt.ResultManagement->CorrectionsFolder, m_pServer, n);
-  auto &corr1 = mt.ResultManagement->CorrectionsFolder->Corrections.Add<GMS::CorrectionType_t>(m_pServer, n, {m_nsIndex, "Corr1"});
+  auto& corr1 = mt.ResultManagement->CorrectionsFolder->Corrections.Add<GMS::CorrectionType_t>(m_pServer, n, {m_nsIndex, "Corr1"});
   initCorrection(corr1, "corr1", "c_123", 1.0);
 
-  auto &corr2 = mt.ResultManagement->CorrectionsFolder->Corrections.Add<GMS::CorrectionType_t>(m_pServer, n, {m_nsIndex, "Corr2"});
+  auto& corr2 = mt.ResultManagement->CorrectionsFolder->Corrections.Add<GMS::CorrectionType_t>(m_pServer, n, {m_nsIndex, "Corr2"});
   initCorrection(corr2, "corr2", "c_123", 0.5);
 
-  auto &corr3 = mt.ResultManagement->CorrectionsFolder->Corrections.Add<GMS::CorrectionType_t>(m_pServer, n, {m_nsIndex, "Corr3"});
+  auto& corr3 = mt.ResultManagement->CorrectionsFolder->Corrections.Add<GMS::CorrectionType_t>(m_pServer, n, {m_nsIndex, "Corr3"});
   initCorrection(corr3, "corr3", "c_456", 0.75);
 }
 
-void WenzelLH::initCorrection(GMS::CorrectionType_t &corr, std::string Identifier, std::string CharacteristicIdentifier, double value) {
+void WenzelLH::initCorrection(GMS::CorrectionType_t& corr, std::string Identifier, std::string CharacteristicIdentifier, double value) {
   corr.Identifier = Identifier;
   corr.CharacteristicIdentifier = CharacteristicIdentifier;
   InstantiateOptional(corr.CorrectionValueAbsolute, m_pServer, n);
@@ -134,7 +134,7 @@ void WenzelLH::InstantiateIdentification() {
   mt.Identification->YearOfConstruction = 2022;
   mt.Identification->SoftwareRevision = "V1.0.0";
   mt.Identification->DeviceClass = "GMS";
-  mt.Identification->Location = "EMO 5 D36/VIRTUAL 1 1/N 48.694241 E 9.183833";
+  mt.Identification->Location = "TMTS 4 G0912/VIRTUAL 1 1/N 48.694241 E 9.183833";
   mt.Identification->Model = {"", MachineName};
 
   {
@@ -154,7 +154,7 @@ void WenzelLH::InstantiateMonitoring() {
 void WenzelLH::InstantiateProduction() {
   InstantiateOptional(mt.Production->ActiveProgram->State, m_pServer, n);
   mt.Production->ActiveProgram->NumberInList = 0;
-  mt.Production->ActiveProgram->Name = "Measurment Gear";
+  mt.Production->ActiveProgram->Name = "Measurement Gear";
   mt.Production->ActiveProgram->State->CurrentState->Value = {"en", "Running"};
   mt.Production->ActiveProgram->State->CurrentState->Number = 1;
   mt.Production->ActiveProgram->State->CurrentState->Id =
@@ -169,7 +169,7 @@ void WenzelLH::InstantiateTools() {
   for (size_t i = 1; i <= 1; ++i) {
     std::stringstream ss;
     ss << "Camera" << i;
-    auto &tool = mt.Equipment->Tools->Tool.Add<machineTool::Tool_t>(m_pServer, n, {m_nsIndex, ss.str()});
+    auto& tool = mt.Equipment->Tools->Tool.Add<machineTool::Tool_t>(m_pServer, n, {m_nsIndex, ss.str()});
     tool.ControlIdentifier1 = i * 10 + 2;
     tool.ControlIdentifierInterpretation = UA_ToolManagement::UA_TOOLMANAGEMENT_NUMBERBASED;
     tool.Locked->Value = true;
@@ -200,11 +200,11 @@ void WenzelLH::Simulate() {
 
   if ((m_simStep % 10) == 8) {
     int i = m_simStep;
-    for (auto &corr : mt.ResultManagement->CorrectionsFolder->Corrections.value) {
+    for (auto& corr : mt.ResultManagement->CorrectionsFolder->Corrections.value) {
       corr->CorrectionValueAbsolute->Value = round(1.3 * (sin(i)) * 10000) / 100;
       i = (i + (m_simStep + (int)corr->CorrectionValueAbsolute->Value.value * 452) % 18 * 100);
     }
-    auto &result = mt.ResultManagement->Results->ResultVariable->front();
+    auto& result = mt.ResultManagement->Results->ResultVariable->front();
     UA_String_clear(&result->Value->resultMetaData.resultId);
     result->Value->resultMetaData.resultId = UA_String_fromChars(std::to_string(i * 123 % 100).c_str());
   }

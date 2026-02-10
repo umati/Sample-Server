@@ -23,7 +23,7 @@ namespace UmatiServerLib {
  */
 class StateMachine {
  public:
-  StateMachine(open62541Cpp::UA_NodeId stateMachineType, UA_Server *pServer);
+  StateMachine(open62541Cpp::UA_NodeId stateMachineType, UA_Server* pServer);
 
  protected:
   struct State_t {
@@ -49,7 +49,7 @@ class StateMachine {
 
   std::list<State_t> m_states;
   std::list<Transition_t> m_transitions;
-  UA_Server *m_pServer;
+  UA_Server* m_pServer;
   open62541Cpp::UA_NodeId m_stateMachineType;
 };
 }  // namespace UmatiServerLib

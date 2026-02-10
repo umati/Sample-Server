@@ -11,7 +11,7 @@
 
 class OGPSmartScopeCNC500 : public InstantiatedMachineTool {
  public:
-  OGPSmartScopeCNC500(UA_Server *pServer);
+  OGPSmartScopeCNC500(UA_Server* pServer);
 
   void Simulate() override;
   virtual ~OGPSmartScopeCNC500() = default;
@@ -27,7 +27,7 @@ class OGPSmartScopeCNC500 : public InstantiatedMachineTool {
   void InstantiateTools();
   int m_simStep = 0;
 
-  void initCorrection(GMS::CorrectionType_t &corr, std::string Identifier, std::string CharacteristicIdentifier, double value);
+  void initCorrection(GMS::CorrectionType_t& corr, std::string Identifier, std::string CharacteristicIdentifier, double value);
 
   void InstantiateResultManagement();
 };

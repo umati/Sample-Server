@@ -13,7 +13,7 @@
  */
 namespace UmatiServerLib::TypeToUaDatatype {
 template <typename T>
-inline const UA_DataType *GetType() {
+inline const UA_DataType* GetType() {
   if constexpr (!refl::trait::is_reflectable<T>::value) {
     return nullptr;
   } else {
@@ -26,7 +26,7 @@ inline const UA_DataType *GetType() {
 }
 
 template <>
-inline const UA_DataType *GetType<UA_NodeId>() {
+inline const UA_DataType* GetType<UA_NodeId>() {
   return &UA_TYPES[UA_TYPES_NODEID];
 }
 }  // namespace UmatiServerLib::TypeToUaDatatype

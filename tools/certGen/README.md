@@ -4,11 +4,11 @@ This is a basic self sign certificate generator for an OPC UA Server.
 
 ## Usage
 
-- Create a Python virtual enviroment using `python3 -m venv .venv` and activate it with `source .venv/bin/activate`.
+- Create a Python virtual environment using `python3 -m venv .venv` and activate it with `source .venv/bin/activate`.
 
 - Install the required packages `pip3 install -r requirements.txt`.
 
-- Make a copy of `settings.template.json` and name it `<env>.json` (`<env>` is the name of your enviroment). Adapt your hostname(s) and IP adresses.
+- Make a copy of `settings.template.json` and name it `<env>.json` (`<env>` is the name of your environment). Adapt your hostname(s) and IP addresses.
 
 - Call `python3 createCertificate.py <env>`.
 

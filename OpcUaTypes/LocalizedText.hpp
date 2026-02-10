@@ -18,8 +18,8 @@ namespace UmatiServerLib {
 struct LocalizedText_t {
   std::string locale;
   std::string text;
-  static LocalizedText_t fromUa(const ::UA_LocalizedText &other);
-  bool operator==(const LocalizedText_t &other) const;
+  static LocalizedText_t fromUa(const ::UA_LocalizedText& other);
+  bool operator==(const LocalizedText_t& other) const;
 };
 
 namespace internalTypes {

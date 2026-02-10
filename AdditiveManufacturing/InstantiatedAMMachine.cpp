@@ -8,7 +8,7 @@
 
 #include "InstantiatedAMMachine.hpp"
 
-InstantiatedAMMachine::InstantiatedAMMachine(UA_Server *pServer) : m_pServer(pServer), NsIndex(m_nsIndex), n(pServer) {}
+InstantiatedAMMachine::InstantiatedAMMachine(UA_Server* pServer) : m_pServer(pServer), NsIndex(m_nsIndex), n(pServer) {}
 
 void InstantiatedAMMachine::CreateObject() {
   std::stringstream ss;
@@ -86,7 +86,7 @@ void InstantiatedAMMachine::InstantiateMonitoringStacklight(std::list<UA_SignalC
   for (std::size_t i = 0; i < s; ++i) {
     std::stringstream ss;
     ss << "Light " << i;
-    auto &light = mt.Monitoring->Stacklight->OrderedObjects.Add(m_pServer, n, {m_nsIndex, ss.str()});
+    auto& light = mt.Monitoring->Stacklight->OrderedObjects.Add(m_pServer, n, {m_nsIndex, ss.str()});
     InstantiateOptional(light.IsPartOfBase, m_pServer, n);
     InstantiateOptional(light.SignalOn, m_pServer, n);
     InstantiateOptional(light.SignalMode, m_pServer, n);
@@ -114,7 +114,7 @@ void InstantiatedAMMachine::InstantiateProduction() {
 }
 
 void InstantiatedAMMachine::SimulateStacklight() {
-  for (auto &light : mt.Monitoring->Stacklight->OrderedObjects.value) {
+  for (auto& light : mt.Monitoring->Stacklight->OrderedObjects.value) {
     light->SignalOn = (rnd() % 2) == 0;
   }
 }

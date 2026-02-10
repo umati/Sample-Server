@@ -20,9 +20,9 @@
 #include "../UmatiServerLib/ServerHelper.hpp"
 #include "../arch/gmtime.hpp"
 
-FullMachineTool::FullMachineTool(UA_Server *pServer) : FullMachineTool(pServer, true) {}
+FullMachineTool::FullMachineTool(UA_Server* pServer) : FullMachineTool(pServer, true) {}
 
-FullMachineTool::FullMachineTool(UA_Server *pServer, bool initialize)
+FullMachineTool::FullMachineTool(UA_Server* pServer, bool initialize)
   : InstantiatedMachineTool(pServer), JobStateMachine(mt.Production->ActiveProgram->State.value, pServer) {
   if (initialize) {
     MachineName = "FullMachineTool";
@@ -57,7 +57,7 @@ void FullMachineTool::InstantiateProduction() {
   // Hack: Remove from bindings (Will be written by BindMemberPlaceholder)
   // Can keep binding when writing is supported.
   n.Remove(mt.Production->ProductionPlan->NodeVersion.NodeId);
-  auto &job = mt.Production->ProductionPlan->OrderedObjects.Add(m_pServer, n, {m_nsIndex, "MyJob 1"});
+  auto& job = mt.Production->ProductionPlan->OrderedObjects.Add(m_pServer, n, {m_nsIndex, "MyJob 1"});
   job.Identifier = std::string("MyJob 1");
   job.RunsCompleted = 0;
   job.RunsPlanned->Value = 1;
@@ -83,7 +83,7 @@ void FullMachineTool::InstantiateProduction() {
   mt.Production->ActiveProgram->JobNodeId = *mt.Production->ProductionPlan->OrderedObjects.value.front().NodeId.NodeId;
 
   InstantiateOptional(job.PartSets, m_pServer, n);
-  auto &set1 = job.PartSets->PartSet.Add(m_pServer, n, {m_nsIndex, "Set1"});
+  auto& set1 = job.PartSets->PartSet.Add(m_pServer, n, {m_nsIndex, "Set1"});
   set1.ContainsMixedParts = false;
   set1.Name = "Set1";
   set1.PartsCompletedPerRun = 3;
@@ -95,7 +95,7 @@ void FullMachineTool::InstantiateProduction() {
   for (std::size_t i = 1; i <= 5; ++i) {
     std::stringstream ss;
     ss << "Part " << i;
-    auto &part = set1.PartsPerRun->Part.Add(m_pServer, n, {m_nsIndex, ss.str()});
+    auto& part = set1.PartsPerRun->Part.Add(m_pServer, n, {m_nsIndex, ss.str()});
     part.Name = ss.str();
     part.PartQuality = static_cast<UA_PartQuality>(i % (UA_PartQuality::UA_PARTQUALITY_WILLNOTBEMEASURED + 1));
     part.ProcessIrregularity = static_cast<UA_ProcessIrregularity>(i % (UA_ProcessIrregularity::UA_PROCESSIRREGULARITY_NOTYETDETERMINED + 1));
@@ -121,10 +121,10 @@ void FullMachineTool::InstantiateIdentification() {
   mt.Identification->ComponentName = {"", MachineName};
   mt.Identification->ProductCode = "2021-47110815";
   mt.Identification->SoftwareRevision = "1.00.1";
-  mt.Identification->Location = "EMO 6 A18/VIRTUAL 1 1/N 48.781340 E 9.165731";
+  mt.Identification->Location = "TMTS 4 G0912/VIRTUAL 1 1/N 48.781340 E 9.165731";
   mt.Identification->Model = {"", MachineName};
 
-  auto &swOS = mt.Identification->SoftwareIdentification->SoftwareItem.Add(m_pServer, n, {m_nsIndex, "OS"});
+  auto& swOS = mt.Identification->SoftwareIdentification->SoftwareItem.Add(m_pServer, n, {m_nsIndex, "OS"});
   swOS.Identifier = "Alpine Container";
   swOS.SoftwareRevision = "3.15.4";  // Match with DOCKERFILE version
 }
@@ -132,7 +132,7 @@ void FullMachineTool::InstantiateTools() {
   InstantiateOptional(mt.Equipment->Tools, m_pServer, n);
   InstantiateOptional(mt.Equipment->Tools->NodeVersion, m_pServer, n);
   n.Remove(mt.Equipment->Tools->NodeVersion.NodeId);
-  auto &tool = mt.Equipment->Tools->Tool.Add<machineTool::Tool_t>(m_pServer, n, {m_nsIndex, "Tool1"});
+  auto& tool = mt.Equipment->Tools->Tool.Add<machineTool::Tool_t>(m_pServer, n, {m_nsIndex, "Tool1"});
   tool.ControlIdentifier1 = 2;
   tool.ControlIdentifierInterpretation = UA_ToolManagement::UA_TOOLMANAGEMENT_NUMBERBASED;
   tool.Locked->Value = false;
@@ -141,20 +141,20 @@ void FullMachineTool::InstantiateTools() {
   tool.Name = "Tool1";
   InstantiateOptional(tool.Name, m_pServer, n);
   InstantiateOptional(tool.ToolLife, m_pServer, n);
-  auto &toolLifeRotations = tool.ToolLife->ToolLifeEntry.Add<machineTool::ToolLife_t<std::int32_t>>(m_pServer, n, {m_nsIndex, "Rotations"});
+  auto& toolLifeRotations = tool.ToolLife->ToolLifeEntry.Add<machineTool::ToolLife_t<std::int32_t>>(m_pServer, n, {m_nsIndex, "Rotations"});
   toolLifeRotations.Indication = UA_ToolLifeIndication::UA_TOOLLIFEINDICATION_OTHER;
   toolLifeRotations.Value = 512;
   toolLifeRotations.IsCountingUp = true;
   toolLifeRotations.LimitValue = 1 << 20;
   InstantiateOptional(toolLifeRotations.LimitValue, m_pServer, n);
 
-  auto &multiTool = mt.Equipment->Tools->Tool.Add<machineTool::MultiTool_t>(m_pServer, n, {m_nsIndex, "Multi 1"});
+  auto& multiTool = mt.Equipment->Tools->Tool.Add<machineTool::MultiTool_t>(m_pServer, n, {m_nsIndex, "Multi 1"});
   multiTool.Name = {"", "Multi 1"};
   multiTool.Identifier = "Multi01-ID";
   for (std::size_t i = 0; i < 3; ++i) {
     std::stringstream ss;
     ss << "SubTool " << i;
-    auto &subTool = multiTool.Tool.Add(m_pServer, n, {m_nsIndex, ss.str()});
+    auto& subTool = multiTool.Tool.Add(m_pServer, n, {m_nsIndex, ss.str()});
     subTool.ControlIdentifier1 = i * 1021 % 881;
     subTool.ControlIdentifierInterpretation = UA_ToolManagement::UA_TOOLMANAGEMENT_NUMBERBASED;
     subTool.Locked->Value = false;
@@ -163,7 +163,7 @@ void FullMachineTool::InstantiateTools() {
     subTool.Identifier = ss.str();
     InstantiateOptional(subTool.Identifier, m_pServer, n);
     InstantiateOptional(subTool.ToolLife, m_pServer, n);
-    auto &toolLifeRotations = subTool.ToolLife->ToolLifeEntry.Add<machineTool::ToolLife_t<std::int32_t>>(m_pServer, n, {m_nsIndex, "Rotations"});
+    auto& toolLifeRotations = subTool.ToolLife->ToolLifeEntry.Add<machineTool::ToolLife_t<std::int32_t>>(m_pServer, n, {m_nsIndex, "Rotations"});
     toolLifeRotations.Indication = UA_ToolLifeIndication::UA_TOOLLIFEINDICATION_OTHER;
     toolLifeRotations.Value = 512;
     toolLifeRotations.IsCountingUp = true;
@@ -183,7 +183,7 @@ void FullMachineTool::InstantiateMonitoring() {
 
   InstantiateMonitoringChannel(4);
 
-  auto &spindle1 = mt.Monitoring->MonitoredElement.Add<machineTool::SpindleMonitoring_t>(m_pServer, n, {m_nsIndex, "Spindle 1"});
+  auto& spindle1 = mt.Monitoring->MonitoredElement.Add<machineTool::SpindleMonitoring_t>(m_pServer, n, {m_nsIndex, "Spindle 1"});
   InstantiateOptional(spindle1.Override, m_pServer, n);
   InstantiateOptional(spindle1.IsUsedAsAxis, m_pServer, n);
   spindle1.Override->Value = 78;
@@ -193,12 +193,12 @@ void FullMachineTool::InstantiateMonitoring() {
   spindle1.Name = "Spindle 1";
   spindle1.IsUsedAsAxis = false;
 
-  auto &edm = mt.Monitoring->MonitoredElement.Add<machineTool::EDMGeneratorMonitoring_t>(m_pServer, n, {m_nsIndex, "EDM"});
+  auto& edm = mt.Monitoring->MonitoredElement.Add<machineTool::EDMGeneratorMonitoring_t>(m_pServer, n, {m_nsIndex, "EDM"});
   edm.IsOn = true;
   edm.Name = "EDM";
   edm.EDMGeneratorState = UA_EDMGeneratorState::UA_EDMGENERATORSTATE_ACTIVE_HIGH_VOLTAGE;
 
-  auto &lsr = mt.Monitoring->MonitoredElement.Add<machineTool::LaserMonitoring_t>(m_pServer, n, {m_nsIndex, "Laser"});
+  auto& lsr = mt.Monitoring->MonitoredElement.Add<machineTool::LaserMonitoring_t>(m_pServer, n, {m_nsIndex, "Laser"});
   lsr.ControllerIsOn = false;
   lsr.Name = "Laser";
   lsr.LaserState = UA_LaserState::UA_LASERSTATE_READY;
@@ -211,30 +211,30 @@ void FullMachineTool::InstantiatePrognosis() {
   // Can keep binding when writing is supported.
   n.Remove(mt.Notification->Prognoses->NodeVersion.NodeId);
   writeEventNotifier(m_pServer, mt.Notification->Prognoses.NodeId);
-  auto &maintenancePrognosis = mt.Notification->Prognoses->Prognosis.Add<machineTool::MaintenancePrognosis_t>(m_pServer, n, {m_nsIndex, "Maintenance"});
+  auto& maintenancePrognosis = mt.Notification->Prognoses->Prognosis.Add<machineTool::MaintenancePrognosis_t>(m_pServer, n, {m_nsIndex, "Maintenance"});
   maintenancePrognosis.Activity = {"en", "Replace actuator."};
-  auto &manualPrognosis = mt.Notification->Prognoses->Prognosis.Add<machineTool::ManualActivityPrognosis_t>(m_pServer, n, {m_nsIndex, "Manual"});
+  auto& manualPrognosis = mt.Notification->Prognoses->Prognosis.Add<machineTool::ManualActivityPrognosis_t>(m_pServer, n, {m_nsIndex, "Manual"});
   manualPrognosis.Activity = {"en", "Open Window"};
-  auto &partLoadPrognosis = mt.Notification->Prognoses->Prognosis.Add<machineTool::PartLoadPrognosis_t>(m_pServer, n, {m_nsIndex, "PartLoad"});
+  auto& partLoadPrognosis = mt.Notification->Prognoses->Prognosis.Add<machineTool::PartLoadPrognosis_t>(m_pServer, n, {m_nsIndex, "PartLoad"});
   partLoadPrognosis.Location = {"en", "Workspace Left"};
   partLoadPrognosis.PartName = "Circle";
-  auto &partUnLoadPrognosis = mt.Notification->Prognoses->Prognosis.Add<machineTool::PartUnLoadPrognosis_t>(m_pServer, n, {m_nsIndex, "PartUnLoad"});
+  auto& partUnLoadPrognosis = mt.Notification->Prognoses->Prognosis.Add<machineTool::PartUnLoadPrognosis_t>(m_pServer, n, {m_nsIndex, "PartUnLoad"});
   partUnLoadPrognosis.Location = {"en", "Workspace Right"};
   partUnLoadPrognosis.PartName = "Smiley";
-  auto &processChangeoverPrognosis =
+  auto& processChangeoverPrognosis =
     mt.Notification->Prognoses->Prognosis.Add<machineTool::ProcessChangeoverPrognosis_t>(m_pServer, n, {m_nsIndex, "ProcessChangeover"});
   processChangeoverPrognosis.Location = {"en", "Shaft Mid"};
   processChangeoverPrognosis.Activity = {"en", "Flip Part"};
-  auto &productionJobEndPrognosis =
+  auto& productionJobEndPrognosis =
     mt.Notification->Prognoses->Prognosis.Add<machineTool::ProductionJobEndPrognosis_t>(m_pServer, n, {m_nsIndex, "ProductionJobEnd"});
   productionJobEndPrognosis.SourceIdentifier = "100x Smiley Job";
-  auto &toolChangePrognosis = mt.Notification->Prognoses->Prognosis.Add<machineTool::ToolChangePrognosis_t>(m_pServer, n, {m_nsIndex, "ToolChange"});
+  auto& toolChangePrognosis = mt.Notification->Prognoses->Prognosis.Add<machineTool::ToolChangePrognosis_t>(m_pServer, n, {m_nsIndex, "ToolChange"});
   toolChangePrognosis.Location = {"en", "Magazine 1"};
-  auto &toolLoadPrognosis = mt.Notification->Prognoses->Prognosis.Add<machineTool::ToolLoadPrognosis_t>(m_pServer, n, {m_nsIndex, "ToolLoad"});
+  auto& toolLoadPrognosis = mt.Notification->Prognoses->Prognosis.Add<machineTool::ToolLoadPrognosis_t>(m_pServer, n, {m_nsIndex, "ToolLoad"});
   toolLoadPrognosis.Location = {"en", "Magazine 2"};
-  auto &toolUnloadPrognosis = mt.Notification->Prognoses->Prognosis.Add<machineTool::ToolUnloadPrognosis_t>(m_pServer, n, {m_nsIndex, "ToolUnLoad"});
+  auto& toolUnloadPrognosis = mt.Notification->Prognoses->Prognosis.Add<machineTool::ToolUnloadPrognosis_t>(m_pServer, n, {m_nsIndex, "ToolUnLoad"});
   toolUnloadPrognosis.Location = {"en", "Magazine 3"};
-  auto &utilityPrognosis = mt.Notification->Prognoses->Prognosis.Add<machineTool::UtilityChangePrognosis_t>(m_pServer, n, {m_nsIndex, "UtilityChange"});
+  auto& utilityPrognosis = mt.Notification->Prognoses->Prognosis.Add<machineTool::UtilityChangePrognosis_t>(m_pServer, n, {m_nsIndex, "UtilityChange"});
   utilityPrognosis.UtilityName = "H²";
 }
 

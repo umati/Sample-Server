@@ -51,7 +51,7 @@ REFL_END
 
 REFL_TYPE(
   machineTool::Tool_ToolLife_t,
-  UmatiServerLib::attribute::UaObjectType(  // TOOD handle correctly when this is pointing to an object instead of an object type
+  UmatiServerLib::attribute::UaObjectType(  // TODO handle correctly when this is pointing to an object instead of an object type
     UmatiServerLib::constexp::NodeId(constants::Ns0Uri, UA_NS0ID_BASEOBJECTTYPE)))
 REFL_FIELD(
   ToolLifeEntry,

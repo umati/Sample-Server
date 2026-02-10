@@ -15,7 +15,7 @@
 #include "../TypeDefinition/GMS/GMSType.hpp"
 #include "../TypeDefinition/TypeDefinition.hpp"
 
-FullGMS::FullGMS(UA_Server *pServer) : InstantiatedGMS(pServer) {
+FullGMS::FullGMS(UA_Server* pServer) : InstantiatedGMS(pServer) {
   MachineName = "FullGMS";
   CreateObject();
 }
@@ -68,7 +68,7 @@ void FullGMS::InstantiateIdentification() {
   gms.Identification->YearOfConstruction = 2022;
   gms.Identification->SoftwareRevision = "v1.05";
   gms.Identification->DeviceClass = "CoordinateMeasuringMachine";
-  gms.Identification->Location = "EMO 6 A18/VIRTUAL 1 1/N 48.7685303 E 9.2653923";
+  gms.Identification->Location = "TMTS 4 G0912/VIRTUAL 1 1/N 48.7685303 E 9.2653923";
   gms.Identification->Model = {"", MachineName};
   gms.Identification->SubDeviceClass = "CoordinateMeasuringMachine";
 }
@@ -82,7 +82,7 @@ void FullGMS::InstantiateMonitoring() {
 void FullGMS::InstantiateProduction() {
   InstantiateOptional(gms.Production->ActiveProgram->State, m_pServer, n);
   gms.Production->ActiveProgram->NumberInList = 0;
-  gms.Production->ActiveProgram->Name = "Basic Measurment Program";
+  gms.Production->ActiveProgram->Name = "Basic Measurement Program";
   gms.Production->ActiveProgram->State->CurrentState->Value = {"en", "Running"};
   gms.Production->ActiveProgram->State->CurrentState->Number = 1;
   gms.Production->ActiveProgram->State->CurrentState->Id =
@@ -92,7 +92,7 @@ void FullGMS::InstantiateProduction() {
 void FullGMS::InstantiateEquipment() {
   InstantiateOptional(gms.Equipment->Tools, m_pServer, n);
 
-  auto &sensor1 = InstantiateSensor("Sensor1");
+  auto& sensor1 = InstantiateSensor("Sensor1");
   sensor1.Class->Value = 2; /* TactileTouchTrigger */
   sensor1.ControlIdentifier1 = 11;
   sensor1.ControlIdentifier2 = 3;

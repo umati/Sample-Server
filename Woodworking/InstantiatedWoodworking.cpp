@@ -10,7 +10,7 @@
 #include <sstream>
 #include <unordered_map>
 
-InstantiatedWoodworking::InstantiatedWoodworking(UA_Server *pServer) : m_pServer(pServer), NsIndex(m_nsIndex), n(pServer) {}
+InstantiatedWoodworking::InstantiatedWoodworking(UA_Server* pServer) : m_pServer(pServer), NsIndex(m_nsIndex), n(pServer) {}
 
 void InstantiatedWoodworking::CreateObject() {
   std::stringstream ss;

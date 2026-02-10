@@ -13,7 +13,7 @@
 
 namespace ns0 {
 
-///\todo correc inheritance
+///\todo correct inheritance
 struct FiniteStateMachine_t {
   BindableMember<FiniteStateVariable_t> CurrentState;
   BindableMember<FiniteTransitionVariable_t> LastTransition;

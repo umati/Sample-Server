@@ -34,38 +34,38 @@ namespace UmatiServerLib {
 class BindVariable {
  public:
   template <class T>
-  static void ToNode(UA_Server *pServer, const open62541Cpp::UA_NodeId &nodeId, NodesMaster &nodesMaster, T &value);
+  static void ToNode(UA_Server* pServer, const open62541Cpp::UA_NodeId& nodeId, NodesMaster& nodesMaster, T& value);
 
   template <class T>
-  static void ToNode(UA_Server *pServer, const open62541Cpp::UA_NodeId &nodeId, NodesMaster &nodesMaster, BindableMemberValue<T> &variable);
+  static void ToNode(UA_Server* pServer, const open62541Cpp::UA_NodeId& nodeId, NodesMaster& nodesMaster, BindableMemberValue<T>& variable);
 
  protected:
   // Primitive types including string
   template <typename T>
-  static copyToVariantFunc GetToVariantFunc(T &value) {
+  static copyToVariantFunc GetToVariantFunc(T& value) {
     return ConvertSimpleValue::asVariantFunc(&value);
   }
 
   template <typename T>
-  static copyToVariantFunc getToVariantFuncArray(std::vector<T> &value) {
+  static copyToVariantFunc getToVariantFuncArray(std::vector<T>& value) {
     return ConvertSimpleValue::asVariantFuncArray(&value);
     return nullptr;
   }
 
   template <typename T>
-  static copyToVariantFunc getToVariantFuncForEnum(T &value) {
-    return GetToVariantFunc(*reinterpret_cast<std::int32_t *>(&value));
+  static copyToVariantFunc getToVariantFuncForEnum(T& value) {
+    return GetToVariantFunc(*reinterpret_cast<std::int32_t*>(&value));
   }
 
   template <typename T>
-  static copyToVariantFunc getToVariantFuncForEnumArray(std::vector<T> &value) {
-    return getToVariantFuncArray(*reinterpret_cast<std::vector<std::int32_t> *>(&value));
+  static copyToVariantFunc getToVariantFuncForEnumArray(std::vector<T>& value) {
+    return getToVariantFuncArray(*reinterpret_cast<std::vector<std::int32_t>*>(&value));
   }
 
   // Handle structs
   template <typename T>
-  static copyToVariantFunc bindStructuredValueByPath(UA_Server *pServer, const open62541Cpp::UA_NodeId &nodeId, T &value) {
-    const UA_DataType *pDataType = UmatiServerLib::TypeToUaDatatype::GetType<std::remove_reference_t<T>>();
+  static copyToVariantFunc bindStructuredValueByPath(UA_Server* pServer, const open62541Cpp::UA_NodeId& nodeId, T& value) {
+    const UA_DataType* pDataType = UmatiServerLib::TypeToUaDatatype::GetType<std::remove_reference_t<T>>();
 
     if (pDataType == nullptr) {
       UA_NodeId typeNodeId;
@@ -84,13 +84,13 @@ class BindVariable {
     if constexpr (refl::trait::is_reflectable<T>::value) {
       return ConvertStructValue::GetToVariantFunc(value, pDataType);
     } else {
-      return ConvertStructValue::GetToVariantFunc(reinterpret_cast<void *>(&value), pDataType);
+      return ConvertStructValue::GetToVariantFunc(reinterpret_cast<void*>(&value), pDataType);
     }
   }
 
   // Handle struct arrays
   template <typename T>
-  static copyToVariantFunc bindStructuredValueByPathArray(UA_Server *pServer, const open62541Cpp::UA_NodeId &nodeId, std::vector<T> &value) {
+  static copyToVariantFunc bindStructuredValueByPathArray(UA_Server* pServer, const open62541Cpp::UA_NodeId& nodeId, std::vector<T>& value) {
     UA_NodeId typeNodeId;
     UA_NodeId_init(&typeNodeId);
     auto statusCode = UA_Server_readDataType(pServer, *nodeId.NodeId, &typeNodeId);
@@ -99,7 +99,7 @@ class BindVariable {
       throw std::runtime_error("Type could not be be fetched, no variable node?");
     }
 
-    const UA_DataType *pDataType = UA_findDataType(&typeNodeId);
+    const UA_DataType* pDataType = UA_findDataType(&typeNodeId);
     if (pDataType == nullptr) {
       std::cout << "NodeId to Datatype failed." << std::endl;
       throw std::runtime_error("NodeId to Datatype failed.");
@@ -112,7 +112,7 @@ class BindVariable {
   }
 
   template <class T>
-  static copyToVariantFunc getToVariantFunc2(UA_Server *pServer, const open62541Cpp::UA_NodeId &nodeId, std::vector<T> &value) {
+  static copyToVariantFunc getToVariantFunc2(UA_Server* pServer, const open62541Cpp::UA_NodeId& nodeId, std::vector<T>& value) {
     if constexpr (std::is_enum<T>::value) {
       return getToVariantFuncForEnumArray(value);
     } else if constexpr (
@@ -125,7 +125,7 @@ class BindVariable {
   }
 
   template <class T>
-  static copyToVariantFunc getToVariantFunc2(UA_Server *pServer, const open62541Cpp::UA_NodeId &nodeId, T &value) {
+  static copyToVariantFunc getToVariantFunc2(UA_Server* pServer, const open62541Cpp::UA_NodeId& nodeId, T& value) {
     if constexpr (std::is_enum<T>::value) {
       return getToVariantFuncForEnum(value);
     } else if constexpr (
@@ -139,7 +139,7 @@ class BindVariable {
 };
 
 template <class T>
-void BindVariable::ToNode(UA_Server *pServer, const open62541Cpp::UA_NodeId &nodeId, NodesMaster &nodesMaster, T &value) {
+void BindVariable::ToNode(UA_Server* pServer, const open62541Cpp::UA_NodeId& nodeId, NodesMaster& nodesMaster, T& value) {
   copyToVariantFunc toVariantFunc = getToVariantFunc2(pServer, nodeId, value);
 
   nodesMaster(nodeId) = [toVariantFunc] {
@@ -154,7 +154,7 @@ void BindVariable::ToNode(UA_Server *pServer, const open62541Cpp::UA_NodeId &nod
 }
 
 template <class T>
-void BindVariable::ToNode(UA_Server *pServer, const open62541Cpp::UA_NodeId &nodeId, NodesMaster &nodesMaster, BindableMemberValue<T> &variable) {
+void BindVariable::ToNode(UA_Server* pServer, const open62541Cpp::UA_NodeId& nodeId, NodesMaster& nodesMaster, BindableMemberValue<T>& variable) {
   copyToVariantFunc toVariantFunc = getToVariantFunc2(pServer, nodeId, variable.value);
   auto pVariable = &variable;
   nodesMaster(nodeId) = [toVariantFunc, pVariable] {

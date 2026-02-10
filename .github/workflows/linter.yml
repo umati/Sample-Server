@@ -1,19 +1,6 @@
 ---
-###########################
-###########################
-## Linter GitHub Actions ##
-###########################
-###########################
 name: Lint Code Base
 
-#
-# Documentation:
-# https://help.github.com/en/articles/workflow-syntax-for-github-actions
-#
-
-#############################
-# Start the job on all push #
-#############################
 on:
   push:
   pull_request:
@@ -22,9 +9,6 @@ on:
 permissions:
   contents: read
 
-###############
-# Set the Job #
-###############
 jobs:
   super-linter:
     # Name the Job
@@ -37,13 +21,7 @@ jobs:
     # Set the agent to run on
     runs-on: ubuntu-24.04
 
-    ##################
-    # Load all steps #
-    ##################
     steps:
-      ##########################
-      # Checkout the code base #
-      ##########################
       - name: Checkout Code
         uses: actions/checkout@v6.0.2
         with:
@@ -52,13 +30,10 @@ jobs:
           fetch-depth: 0
           persist-credentials: true
 
-      ################################
-      # Run Linter against code base #
-      ################################
       - name: Lint Code Base
         uses: super-linter/super-linter@v8.4.0
         env:
-          VALIDATE_CPP: false # Use clang-formt instead
+          VALIDATE_CPP: false # Use clang-format instead
           VALIDATE_ANSIBLE: false
           VALIDATE_BIOME_FORMAT: false
           VALIDATE_BIOME_LINT: false
@@ -68,6 +43,9 @@ jobs:
           FIX_YAML_PRETTIER: true
           FIX_JSON_PRETTIER: true
           FIX_SHELL_SHFMT: true
+          FIX_CLANG_FORMAT: true
+          FIX_PYTHON_RUFF_FORMAT: true
+          ENABLE_GITHUB_PULL_REQUEST_SUMMARY_COMMENT: false
           DEFAULT_BRANCH: origin/develop
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 

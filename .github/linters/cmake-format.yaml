@@ -4,16 +4,16 @@ additional_commands:
     flags:
       - INTERNAL
     kwargs:
-      NAME: '1'
-      FILE_NS: '1'
-      FILE_CSV: '1'
-      FILE_BSD: '1'
-      OUTPUT_DIR: '1'
-      TARGET_PREFIX: '1'
-      BLACKLIST: '1'
-      NAMESPACE_MAP: '+'
-      IMPORT_BSD: '+'
-      DEPENDS: '+'
+      NAME: "1"
+      FILE_NS: "1"
+      FILE_CSV: "1"
+      FILE_BSD: "1"
+      OUTPUT_DIR: "1"
+      TARGET_PREFIX: "1"
+      BLACKLIST: "1"
+      NAMESPACE_MAP: "+"
+      IMPORT_BSD: "+"
+      DEPENDS: "+"
 always_wrap: [target_sources]
 command_case: lower
 dangle_parens: true

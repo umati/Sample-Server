@@ -12,7 +12,7 @@
 #include "../TypeDefinition/GMS/Constants.hpp"
 #include "../TypeDefinition/GMS/GMSType.hpp"
 
-HexagonGlobal::HexagonGlobal(UA_Server *pServer) : InstantiatedMachineTool(pServer) {
+HexagonGlobal::HexagonGlobal(UA_Server* pServer) : InstantiatedMachineTool(pServer) {
   MachineName = "Hexagon GLOBAL S";
   CreateObject();
 }
@@ -58,7 +58,7 @@ void HexagonGlobal::CreateObject() {
 
 void HexagonGlobal::InstantiateResultManagement() {
   InstantiateOptional(mt.ResultManagement->Results, m_pServer, n);
-  auto &result = mt.ResultManagement->Results->ResultVariable.Add<machinery_result::ResultType_t>(m_pServer, n, {m_nsIndex, "Result"});
+  auto& result = mt.ResultManagement->Results->ResultVariable.Add<machinery_result::ResultType_t>(m_pServer, n, {m_nsIndex, "Result"});
   UA_init(&result.Value.value, &UA_TYPES_MACHINERY_RESULT[UA_TYPES_MACHINERY_RESULT_RESULTDATATYPE]);
   result.Value->resultMetaData.resultId = UA_String_fromChars("-");
   result.Value->resultMetaData.resultUri = UA_String_new();
@@ -94,7 +94,7 @@ void HexagonGlobal::InstantiateIdentification() {
   mt.Identification->YearOfConstruction = 2023;
   mt.Identification->SoftwareRevision = "PC-DMIS 2023.1";
   mt.Identification->DeviceClass = "Coordinate Measuring Machine";
-  mt.Identification->Location = "EMO 5 D50/VIRTUAL 1 1/N 48.6939789 E 9.1839305";
+  mt.Identification->Location = "TMTS 4 G0912/VIRTUAL 1 1/N 48.6939789 E 9.1839305";
   mt.Identification->Model = {"", "GLOBAL S"};
   mt.Identification->SerialNumber = "GLOD001413IA";
 }
@@ -108,7 +108,7 @@ void HexagonGlobal::InstantiateMonitoring() {
 void HexagonGlobal::InstantiateProduction() {
   InstantiateOptional(mt.Production->ActiveProgram->State, m_pServer, n);
   mt.Production->ActiveProgram->NumberInList = 0;
-  mt.Production->ActiveProgram->Name = "Basic Measurment Program";
+  mt.Production->ActiveProgram->Name = "Basic Measurement Program";
   mt.Production->ActiveProgram->State->CurrentState->Value = {"en", "Running"};
   mt.Production->ActiveProgram->State->CurrentState->Number = 1;
   mt.Production->ActiveProgram->State->CurrentState->Id =
@@ -123,7 +123,7 @@ void HexagonGlobal::InstantiateTools() {
   for (size_t i = 1; i <= 1; ++i) {
     std::stringstream ss;
     ss << "Sensor" << i;
-    auto &tool = mt.Equipment->Tools->Tool.Add<machineTool::Tool_t>(m_pServer, n, {m_nsIndex, ss.str()});
+    auto& tool = mt.Equipment->Tools->Tool.Add<machineTool::Tool_t>(m_pServer, n, {m_nsIndex, ss.str()});
     tool.ControlIdentifier1 = i * 10 + 2;
     tool.ControlIdentifierInterpretation = UA_ToolManagement::UA_TOOLMANAGEMENT_NUMBERBASED;
     tool.Locked->Value = false;
@@ -149,11 +149,11 @@ void HexagonGlobal::Simulate() {
 
   if ((m_simStep % 10) == 8) {
     int i = m_simStep;
-    for (auto &corr : mt.ResultManagement->CorrectionsFolder->Corrections.value) {
+    for (auto& corr : mt.ResultManagement->CorrectionsFolder->Corrections.value) {
       corr->CorrectionValueAbsolute->Value = round(1.3 * (sin(i)) * 10000) / 100;
       i = (i + (m_simStep + (int)corr->CorrectionValueAbsolute->Value.value * 452) % 18 * 100);
     }
-    auto &result = mt.ResultManagement->Results->ResultVariable->front();
+    auto& result = mt.ResultManagement->Results->ResultVariable->front();
     UA_String_clear(&result->Value->resultMetaData.resultId);
     result->Value->resultMetaData.resultId = UA_String_fromChars(std::to_string(i * 123 % 100).c_str());
   }

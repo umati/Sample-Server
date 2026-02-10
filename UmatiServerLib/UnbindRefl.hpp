@@ -23,20 +23,20 @@ namespace UmatiServerLib {
 class Unbind {
  public:
   template <typename T>
-  static void MemberRefl(T &member, UA_Server *pServer, open62541Cpp::UA_NodeId nodeId, NodesMaster &nodesMaster);
+  static void MemberRefl(T& member, UA_Server* pServer, open62541Cpp::UA_NodeId nodeId, NodesMaster& nodesMaster);
 
   template <typename T>
-  static void MembersRefl(T &instance, UA_Server *pServer, open62541Cpp::UA_NodeId nodeId, NodesMaster &nodesMaster);
+  static void MembersRefl(T& instance, UA_Server* pServer, open62541Cpp::UA_NodeId nodeId, NodesMaster& nodesMaster);
 };
 
 template <typename T>
-void Unbind::MembersRefl(T &instance, UA_Server *pServer, open62541Cpp::UA_NodeId nodeId, NodesMaster &nodesMaster) {
+void Unbind::MembersRefl(T& instance, UA_Server* pServer, open62541Cpp::UA_NodeId nodeId, NodesMaster& nodesMaster) {
   open62541Cpp::UA_RelativPathBase basePath;
   // Handle base classes first
   if constexpr (refl::descriptor::has_attribute<Bases>(refl::reflect<T>())) {
     constexpr auto bases = refl::descriptor::get_attribute<Bases>(refl::reflect<T>());
     if constexpr (bases.descriptors.size) {
-      refl::util::for_each(bases.descriptors, [&](auto t) { MembersRefl(static_cast<typename decltype(t)::type &>(instance), pServer, nodeId, nodesMaster); });
+      refl::util::for_each(bases.descriptors, [&](auto t) { MembersRefl(static_cast<typename decltype(t)::type&>(instance), pServer, nodeId, nodesMaster); });
     }
   }
 
@@ -66,7 +66,7 @@ void Unbind::MembersRefl(T &instance, UA_Server *pServer, open62541Cpp::UA_NodeI
     try {
       auto nodeIdChild = resolveBrowsePath(pServer, open62541Cpp::UA_BrowsePath(*nodeId.NodeId, childRelativPathElements));
       MemberRefl(member(instance), pServer, nodeIdChild, nodesMaster);
-    } catch (const UmatiServerLib::Exceptions::NodeNotFound &ex) {
+    } catch (const UmatiServerLib::Exceptions::NodeNotFound& ex) {
       if constexpr (!isOptional) {
         std::stringstream ss;
         ss << "Mandatory node not found for binding. " << ex.what();
@@ -86,7 +86,7 @@ void Unbind::MembersRefl(T &instance, UA_Server *pServer, open62541Cpp::UA_NodeI
  * @param nodesMaster
  */
 template <typename T>
-void Unbind::MemberRefl(T &member, UA_Server *pServer, open62541Cpp::UA_NodeId nodeId, NodesMaster &nodesMaster) {
+void Unbind::MemberRefl(T& member, UA_Server* pServer, open62541Cpp::UA_NodeId nodeId, NodesMaster& nodesMaster) {
   if constexpr (
     hasAttributeIfReflectable<UmatiServerLib::attribute::UaObjectType, T>() || hasAttributeIfReflectable<UmatiServerLib::attribute::UaVariableType, T>()) {
     MembersRefl(member, pServer, nodeId, nodesMaster);

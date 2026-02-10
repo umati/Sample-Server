@@ -13,7 +13,7 @@
 
 namespace UmatiServerLib::constexp {
 
-open62541Cpp::UA_NodeId NodeId::UANodeId(UA_Server *pServer) const {
+open62541Cpp::UA_NodeId NodeId::UANodeId(UA_Server* pServer) const {
   if (NsUri == nullptr) {
     return open62541Cpp::UA_NodeId();
   }

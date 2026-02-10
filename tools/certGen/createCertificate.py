@@ -48,13 +48,13 @@ data: Dict[str, Any] = {}
 #     print(data)
 
 parser = argparse.ArgumentParser(description="Create configuration files")
-parser.add_argument("enviroment", help="The enviroment to be create.")
+parser.add_argument("environment", help="The environment to be create.")
 parser.add_argument(
-    "outDir", nargs="?", help="Output directory. Default: enviroment name."
+    "outDir", nargs="?", help="Output directory. Default: environment name."
 )
 args = parser.parse_args()
 
-envSettings = Path(f"{args.enviroment}.json")
+envSettings = Path(f"{args.environment}.json")
 if envSettings.exists():
     with open(envSettings) as f:
         data = {**data, **json.load(f)}
@@ -63,29 +63,27 @@ settings = Settings(data)
 print(settings.settings())
 
 templateOpensslCnf = basePath / "openssl.cnf.jinja2"
-targetDir = Path(args.outDir if args.outDir is not None else args.enviroment)
+targetDir = Path(args.outDir if args.outDir is not None else args.environment)
 if not targetDir.exists():
     os.mkdir(targetDir)
 
 targetOpensslCnf = targetDir / "openssl.cnf"
 writeConfiguration(templateOpensslCnf, targetOpensslCnf, settings)
 
-outCrt = targetDir / f"{args.enviroment}.crt"
-outKey = targetDir / f"{args.enviroment}.key"
+outCrt = targetDir / f"{args.environment}.crt"
+outKey = targetDir / f"{args.environment}.key"
 outCert = targetDir / "server_cert.der"
 outKeyDer = targetDir / "server_key.der"
 
-os.system(
-    f"openssl req \
-     -config \"{targetOpensslCnf}\" \
+os.system(f'openssl req \
+     -config "{targetOpensslCnf}" \
      -new \
      -nodes \
      -x509 -sha256  \
-     -newkey rsa:{settings.settings()['Keysize']} \
-     -keyout \"{outKey}\" -days {settings.settings()['Days']} \
-     -subj \"{settings.settings()['Subject']}\"\
-     -out \"{outCrt}\""
-)
+     -newkey rsa:{settings.settings()["Keysize"]} \
+     -keyout "{outKey}" -days {settings.settings()["Days"]} \
+     -subj "{settings.settings()["Subject"]}"\
+     -out "{outCrt}"')
 os.system(f'openssl x509 -in "{outCrt}" -outform der -out "{outCert}"')
 os.system(f'openssl rsa -inform PEM -in "{outKey}" -outform DER -out "{outKeyDer}"')
 

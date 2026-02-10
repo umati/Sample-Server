@@ -11,27 +11,27 @@
 namespace machinery_result {
 struct ResultMetaDataType_t {
   UA_String resultId;
-  UA_Boolean *hasTransferableDataOnFile;
-  UA_Boolean *isPartial;
-  UA_Boolean *isSimulated;
-  UA_Int32 *resultState;
-  UA_String *taskId;
-  UA_String *partId;
-  UA_String *externalRecipeId;
-  UA_String *internalRecipeId;
-  UA_String *productId;
-  UA_String *externalConfigurationId;
-  UA_String *internalConfigurationId;
-  UA_String *jobId;
-  UA_DateTime *creationTime;
-  UA_ProcessingTimesDataType *processingTimes;
+  UA_Boolean* hasTransferableDataOnFile;
+  UA_Boolean* isPartial;
+  UA_Boolean* isSimulated;
+  UA_Int32* resultState;
+  UA_String* taskId;
+  UA_String* partId;
+  UA_String* externalRecipeId;
+  UA_String* internalRecipeId;
+  UA_String* productId;
+  UA_String* externalConfigurationId;
+  UA_String* internalConfigurationId;
+  UA_String* jobId;
+  UA_DateTime* creationTime;
+  UA_ProcessingTimesDataType* processingTimes;
   size_t resultUriSize;
-  UA_Variant *resultUri;
-  UA_ResultEvaluationEnum *resultEvaluation;
-  UA_Int32 *resultEvaluationCode;
-  UA_LocalizedText *resultEvaluationDetails;
+  UA_Variant* resultUri;
+  UA_ResultEvaluationEnum* resultEvaluation;
+  UA_Int32* resultEvaluationCode;
+  UA_LocalizedText* resultEvaluationDetails;
   size_t fileFormatSize;
-  UA_String *fileFormat;
+  UA_String* fileFormat;
 };
 }  // namespace machinery_result
 

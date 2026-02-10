@@ -9,7 +9,7 @@
 
 #include "CNShowcaseMachineTool.hpp"
 
-CNShowcaseMachineTool::CNShowcaseMachineTool(UA_Server *pServer) : InstantiatedMachineTool(pServer) {
+CNShowcaseMachineTool::CNShowcaseMachineTool(UA_Server* pServer) : InstantiatedMachineTool(pServer) {
   MachineName = "CNShowcaseMachineTool";
   CreateObject();
 }
@@ -47,7 +47,7 @@ void CNShowcaseMachineTool::InstantiateMonitoring() {
 
   InstantiateMonitoringChannel(1);
 
-  auto &spindle = mt.Monitoring->MonitoredElement.Add<machineTool::SpindleMonitoring_t>(m_pServer, n, {m_nsIndex, "Spindle"});
+  auto& spindle = mt.Monitoring->MonitoredElement.Add<machineTool::SpindleMonitoring_t>(m_pServer, n, {m_nsIndex, "Spindle"});
   InstantiateOptional(spindle.Override, m_pServer, n);
   InstantiateOptional(spindle.IsUsedAsAxis, m_pServer, n);
   spindle.Override->Value = 98.0;
@@ -66,7 +66,7 @@ void CNShowcaseMachineTool::InstantiateTools() {
   for (size_t i = 1; i <= 1; ++i) {
     std::stringstream ss;
     ss << "Tool" << i;
-    auto &tool = mt.Equipment->Tools->Tool.Add<machineTool::Tool_t>(m_pServer, n, {m_nsIndex, ss.str()});
+    auto& tool = mt.Equipment->Tools->Tool.Add<machineTool::Tool_t>(m_pServer, n, {m_nsIndex, ss.str()});
     tool.ControlIdentifier1 = i * 10 + 2;
     tool.ControlIdentifierInterpretation = UA_ToolManagement::UA_TOOLMANAGEMENT_NUMBERBASED;
     tool.Locked->Value = false;

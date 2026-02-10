@@ -10,7 +10,7 @@
 
 class BasicWoodworking : public InstantiatedWoodworking {
  public:
-  BasicWoodworking(UA_Server *pServer);
+  BasicWoodworking(UA_Server* pServer);
 
   void Simulate() override;
   virtual ~BasicWoodworking() = default;

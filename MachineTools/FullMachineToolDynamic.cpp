@@ -8,9 +8,9 @@
 
 #include "FullMachineToolDynamic.hpp"
 
-FullMachineToolDynamic::FullMachineToolDynamic(UA_Server *pServer) : FullMachineToolDynamic(pServer, true) {}
+FullMachineToolDynamic::FullMachineToolDynamic(UA_Server* pServer) : FullMachineToolDynamic(pServer, true) {}
 
-FullMachineToolDynamic::FullMachineToolDynamic(UA_Server *pServer, bool initialize) : FullMachineTool(pServer, false) {
+FullMachineToolDynamic::FullMachineToolDynamic(UA_Server* pServer, bool initialize) : FullMachineTool(pServer, false) {
   if (initialize) {
     MachineName = "FullMachineToolDynamic";
     CreateObject();
@@ -22,7 +22,7 @@ void FullMachineToolDynamic::Simulate() {
   if ((m_simStep % 10) == 1) {
     std::stringstream ss;
     ss << "Job " << m_simStep;
-    auto &job = mt.Production->ProductionPlan->OrderedObjects.Add(m_pServer, n, {m_nsIndex, ss.str()});
+    auto& job = mt.Production->ProductionPlan->OrderedObjects.Add(m_pServer, n, {m_nsIndex, ss.str()});
     job.Identifier = ss.str();
     job.RunsCompleted = 0;
     job.RunsPlanned->Value = 2;

@@ -12,7 +12,7 @@
 
 class CNShowcaseMachineTool : public InstantiatedMachineTool {
  public:
-  CNShowcaseMachineTool(UA_Server *pServer);
+  CNShowcaseMachineTool(UA_Server* pServer);
 
   void Simulate() override;
   virtual ~CNShowcaseMachineTool() = default;

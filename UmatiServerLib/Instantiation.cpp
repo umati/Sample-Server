@@ -12,17 +12,17 @@
 
 namespace {
 
-void failReadNodeAttribute(open62541Cpp::UA_NodeId nodeId, UA_StatusCode status, std::string const &attributeName) {
+void failReadNodeAttribute(open62541Cpp::UA_NodeId nodeId, UA_StatusCode status, std::string const& attributeName) {
   std::stringstream ss;
   ss << "Could not read " << attributeName << " from NodeId (" << static_cast<std::string>(nodeId) << "), Error: " << UA_StatusCode_name(status);
   throw std::runtime_error(ss.str());
 }
 
 UA_BrowseDescription createBrowseFilter(
-  open62541Cpp::UA_NodeId const &nodeId,
-  UA_NodeId const &referenceTypeId,
+  open62541Cpp::UA_NodeId const& nodeId,
+  UA_NodeId const& referenceTypeId,
   UA_UInt32 classMask,
-  UA_BrowseDirection const &browseDirection,
+  UA_BrowseDirection const& browseDirection,
   UA_UInt32 resultMask) {
   UA_BrowseDescription browseDescription;
   UA_BrowseDescription_init(&browseDescription);
@@ -37,7 +37,7 @@ UA_BrowseDescription createBrowseFilter(
   return browseDescription;
 }
 
-UA_ReferenceDescription readReference(UA_Server *pServer, UA_BrowseDescription browseDescription) {
+UA_ReferenceDescription readReference(UA_Server* pServer, UA_BrowseDescription browseDescription) {
   UA_ReferenceDescription result;
   UA_ReferenceDescription_init(&result);
 
@@ -55,7 +55,7 @@ UA_ReferenceDescription readReference(UA_Server *pServer, UA_BrowseDescription b
 
 }  // namespace
 
-open62541Cpp::UA_QualifiedName readBrowseName(UA_Server *pServer, open62541Cpp::UA_NodeId nodeId) {
+open62541Cpp::UA_QualifiedName readBrowseName(UA_Server* pServer, open62541Cpp::UA_NodeId nodeId) {
   open62541Cpp::UA_QualifiedName ret(0, "");
   UA_StatusCode status = UA_Server_readBrowseName(pServer, *nodeId.NodeId, ret.QualifiedName);
   if (status != UA_STATUSCODE_GOOD) failReadNodeAttribute(nodeId, status, "BrowseName");
@@ -63,7 +63,7 @@ open62541Cpp::UA_QualifiedName readBrowseName(UA_Server *pServer, open62541Cpp::
   return ret;
 }
 
-UA_NodeClass readNodeClass(UA_Server *pServer, open62541Cpp::UA_NodeId nodeId) {
+UA_NodeClass readNodeClass(UA_Server* pServer, open62541Cpp::UA_NodeId nodeId) {
   UA_NodeClass ret = UA_NODECLASS_UNSPECIFIED;
   UA_StatusCode status = UA_Server_readNodeClass(pServer, *nodeId.NodeId, &ret);
   if (status != UA_STATUSCODE_GOOD) failReadNodeAttribute(nodeId, status, "NodeClass");
@@ -71,7 +71,7 @@ UA_NodeClass readNodeClass(UA_Server *pServer, open62541Cpp::UA_NodeId nodeId) {
   return ret;
 }
 
-open62541Cpp::UA_NodeId readDataType(UA_Server *pServer, open62541Cpp::UA_NodeId nodeId) {
+open62541Cpp::UA_NodeId readDataType(UA_Server* pServer, open62541Cpp::UA_NodeId nodeId) {
   open62541Cpp::UA_NodeId ret((std::uint16_t)0, 0);
   UA_StatusCode status = UA_Server_readDataType(pServer, *nodeId.NodeId, ret.NodeId);
   if (status != UA_STATUSCODE_GOOD) failReadNodeAttribute(nodeId, status, "DataType");
@@ -79,7 +79,7 @@ open62541Cpp::UA_NodeId readDataType(UA_Server *pServer, open62541Cpp::UA_NodeId
   return ret;
 }
 
-UA_Int32 readValueRank(UA_Server *pServer, open62541Cpp::UA_NodeId nodeId) {
+UA_Int32 readValueRank(UA_Server* pServer, open62541Cpp::UA_NodeId nodeId) {
   UA_Int32 ret;
   UA_StatusCode status = UA_Server_readValueRank(pServer, *nodeId.NodeId, &ret);
   if (status != UA_STATUSCODE_GOOD) failReadNodeAttribute(nodeId, status, "ValueRank");
@@ -87,15 +87,15 @@ UA_Int32 readValueRank(UA_Server *pServer, open62541Cpp::UA_NodeId nodeId) {
   return ret;
 }
 
-UA_Variant *readArrayDimensions(UA_Server *pServer, open62541Cpp::UA_NodeId nodeId) {
-  UA_Variant *varArrayDims = UA_Variant_new();
+UA_Variant* readArrayDimensions(UA_Server* pServer, open62541Cpp::UA_NodeId nodeId) {
+  UA_Variant* varArrayDims = UA_Variant_new();
   auto status = UA_Server_readArrayDimensions(pServer, *nodeId.NodeId, varArrayDims);
   if (status != UA_STATUSCODE_GOOD) failReadNodeAttribute(nodeId, status, "ArrayDimensions");
 
   return varArrayDims;
 }
 
-open62541Cpp::UA_NodeId readTypeDefinition(UA_Server *pServer, open62541Cpp::UA_NodeId nodeId) {
+open62541Cpp::UA_NodeId readTypeDefinition(UA_Server* pServer, open62541Cpp::UA_NodeId nodeId) {
   open62541Cpp::UA_NodeId ret;
 
   auto brDesc = createBrowseFilter(
@@ -132,7 +132,7 @@ open62541Cpp::UA_NodeId readTypeDefinition(UA_Server *pServer, open62541Cpp::UA_
   return ret;
 }
 
-open62541Cpp::UA_NodeId getReferenceTypeFromMemberNode(UA_Server *pServer, open62541Cpp::UA_NodeId nodeId, open62541Cpp::UA_NodeId parentNodeId) {
+open62541Cpp::UA_NodeId getReferenceTypeFromMemberNode(UA_Server* pServer, open62541Cpp::UA_NodeId nodeId, open62541Cpp::UA_NodeId parentNodeId) {
   open62541Cpp::UA_NodeId ret;
 
   auto brDesc = createBrowseFilter(
@@ -161,7 +161,7 @@ open62541Cpp::UA_NodeId getReferenceTypeFromMemberNode(UA_Server *pServer, open6
   return ret;
 }
 
-void instantiateInterfaces(UA_Server *pServer, open62541Cpp::UA_NodeId member, open62541Cpp::UA_NodeId memberInType) {
+void instantiateInterfaces(UA_Server* pServer, open62541Cpp::UA_NodeId member, open62541Cpp::UA_NodeId memberInType) {
   auto brDesc = createBrowseFilter(
     memberInType,
     UA_NODEID_NUMERIC(0, UA_NS0ID_HASINTERFACE),

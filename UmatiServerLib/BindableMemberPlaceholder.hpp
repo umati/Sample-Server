@@ -24,18 +24,17 @@
 
 ///\TODO enable if BINDABLEMEMBER_T is BindableMember(Value)
 template <
-  template <typename...>
-  class BINDABLEMEMBER_T,
+  template <typename...> class BINDABLEMEMBER_T,
   typename T /*, typename = std::enable_if_t<is_base_of_template<BindableMember, BINDABLEMEMBER_T<T>>::value>*/>
 class BindableMemberPlaceholder : public BindableMember<std::list<BINDABLEMEMBER_T<T>>> {
  public:
   template <typename ADDED_T = T>
-  ADDED_T &Add(UA_Server *pServer, NodesMaster &nodesMaster, open62541Cpp::UA_QualifiedName browseName) {
+  ADDED_T& Add(UA_Server* pServer, NodesMaster& nodesMaster, open62541Cpp::UA_QualifiedName browseName) {
     if (this->ParentNodeId.NodeId == nullptr || this->MemberInTypeNodeId.NodeId == nullptr) {
       throw std::runtime_error("Parent not bind.");
     }
 
-    auto &newEl = this->value.emplace_back(BINDABLEMEMBER_T<T>());
+    auto& newEl = this->value.emplace_back(BINDABLEMEMBER_T<T>());
     if constexpr (is_base_of_template<std::variant, T>::value) {
       // Set variant to correct type
       newEl.value = ADDED_T();
@@ -97,8 +96,8 @@ class BindableMemberPlaceholder : public BindableMember<std::list<BINDABLEMEMBER
     }
   }
 
-  typename std::list<BINDABLEMEMBER_T<T>>::iterator Delete(typename std::list<BINDABLEMEMBER_T<T>>::iterator it, UA_Server *pServer, NodesMaster &nodesMaster) {
-    BindableMember<T> &el = *it;
+  typename std::list<BINDABLEMEMBER_T<T>>::iterator Delete(typename std::list<BINDABLEMEMBER_T<T>>::iterator it, UA_Server* pServer, NodesMaster& nodesMaster) {
+    BindableMember<T>& el = *it;
     if (!el.IsBind()) {
       std::cout << "Element not bind" << std::endl;
     } else {
@@ -110,7 +109,7 @@ class BindableMemberPlaceholder : public BindableMember<std::list<BINDABLEMEMBER
     return this->value.erase(it);
   }
 
-  void sendGeneralModelChangeEvent(UA_Server *pServer, UA_Byte verb) {
+  void sendGeneralModelChangeEvent(UA_Server* pServer, UA_Byte verb) {
     auto typeDefinition = readTypeDefinition(pServer, this->ParentNodeId);
     UA_Byte evNotifier = 0;
     auto status = UA_Server_readEventNotifier(pServer, *this->ParentNodeId.NodeId, &evNotifier);
@@ -118,7 +117,7 @@ class BindableMemberPlaceholder : public BindableMember<std::list<BINDABLEMEMBER
     if (status == UA_STATUSCODE_GOOD && (evNotifier & UA_EVENTNOTIFIERTYPE_SUBSCRIBETOEVENTS)) {
       ///\todo else create event on Server?
       ns0::GeneralModelChangeEvent_t evModChange;
-      UA_ModelChangeStructureDataType &change = evModChange.Changes->emplace_back();
+      UA_ModelChangeStructureDataType& change = evModChange.Changes->emplace_back();
       change.affected = *this->ParentNodeId.NodeId;
       change.affectedType = *typeDefinition.NodeId;
       change.verb = verb;
@@ -128,7 +127,7 @@ class BindableMemberPlaceholder : public BindableMember<std::list<BINDABLEMEMBER
     updateNodeVersion(pServer);
   }
 
-  void updateNodeVersion(UA_Server *pServer) {
+  void updateNodeVersion(UA_Server* pServer) {
     UA_Variant outVar;
     UA_Variant_init(&outVar);
     auto status = UA_Server_readObjectProperty(pServer, *this->ParentNodeId.NodeId, *open62541Cpp::UA_QualifiedName(0, "NodeVersion").QualifiedName, &outVar);
@@ -147,7 +146,7 @@ class BindableMemberPlaceholder : public BindableMember<std::list<BINDABLEMEMBER
       UA_Server_writeObjectProperty_scalar(
         pServer, *this->ParentNodeId.NodeId, *open62541Cpp::UA_QualifiedName(0, "NodeVersion").QualifiedName, &UA_STRING_NULL, &UA_TYPES[UA_TYPES_STRING]);
     } else {
-      open62541Cpp::UA_String uaStr(reinterpret_cast<UA_String *>(outVar.data), false);
+      open62541Cpp::UA_String uaStr(reinterpret_cast<UA_String*>(outVar.data), false);
       auto str = static_cast<std::string>(uaStr);
       bool changed = false;
       /**

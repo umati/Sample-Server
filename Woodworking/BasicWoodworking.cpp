@@ -7,7 +7,7 @@
 
 #include "BasicWoodworking.hpp"
 
-BasicWoodworking::BasicWoodworking(UA_Server *pServer) : InstantiatedWoodworking(pServer) {
+BasicWoodworking::BasicWoodworking(UA_Server* pServer) : InstantiatedWoodworking(pServer) {
   MachineName = "BasicWoodworking";
   CreateObject();
 }

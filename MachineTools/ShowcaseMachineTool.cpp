@@ -7,7 +7,7 @@
  */
 #include "ShowcaseMachineTool.hpp"
 
-ShowcaseMachineTool::ShowcaseMachineTool(UA_Server *pServer) : InstantiatedMachineTool(pServer) {
+ShowcaseMachineTool::ShowcaseMachineTool(UA_Server* pServer) : InstantiatedMachineTool(pServer) {
   MachineName = "ShowcaseMachineTool";
   CreateObject();
 }
@@ -35,7 +35,7 @@ void ShowcaseMachineTool::InstantiateIdentification() {
   mt.Identification->SoftwareRevision = "v1.02.1";
   mt.Identification->DeviceClass = "Machining centre (other)";
   mt.Identification->ProductInstanceUri = "https://showcase.umati.org/Specs/Machinetools.html";
-  mt.Identification->Location = "EMO 6 A18/VIRTUAL 1 1/N 49.871215 E 8.654204";
+  mt.Identification->Location = "TMTS 4 G0912/VIRTUAL 1 1/N 49.871215 E 8.654204";
   mt.Identification->Model = {"", MachineName};
 }
 
@@ -45,7 +45,7 @@ void ShowcaseMachineTool::InstantiateMonitoring() {
 
   InstantiateMonitoringChannel(1);
 
-  auto &spindle = mt.Monitoring->MonitoredElement.Add<machineTool::SpindleMonitoring_t>(m_pServer, n, {m_nsIndex, "Spindle"});
+  auto& spindle = mt.Monitoring->MonitoredElement.Add<machineTool::SpindleMonitoring_t>(m_pServer, n, {m_nsIndex, "Spindle"});
   InstantiateOptional(spindle.Override, m_pServer, n);
   InstantiateOptional(spindle.IsUsedAsAxis, m_pServer, n);
   spindle.Override->Value = 103.0;
@@ -64,7 +64,7 @@ void ShowcaseMachineTool::InstantiateTools() {
   for (size_t i = 1; i <= 1; ++i) {
     std::stringstream ss;
     ss << "Tool" << i;
-    auto &tool = mt.Equipment->Tools->Tool.Add<machineTool::Tool_t>(m_pServer, n, {m_nsIndex, ss.str()});
+    auto& tool = mt.Equipment->Tools->Tool.Add<machineTool::Tool_t>(m_pServer, n, {m_nsIndex, ss.str()});
     tool.ControlIdentifier1 = i * 10 + 2;
     tool.ControlIdentifierInterpretation = UA_ToolManagement::UA_TOOLMANAGEMENT_NUMBERBASED;
     tool.Locked->Value = false;

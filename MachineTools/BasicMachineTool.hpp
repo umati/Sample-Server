@@ -11,7 +11,7 @@
 
 class BasicMachineTool : public InstantiatedMachineTool {
  public:
-  BasicMachineTool(UA_Server *pServer);
+  BasicMachineTool(UA_Server* pServer);
 
   void Simulate() override;
   virtual ~BasicMachineTool() = default;

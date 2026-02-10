@@ -31,7 +31,7 @@ class OpcUaEvent {
    * @param pServer Pointer to UA_Server
    * @param origin Node, where the event should be triggered
    */
-  OpcUaEvent(const T &data, UA_Server *pServer, open62541Cpp::UA_NodeId origin) : Data(data), pServer(pServer), nodesMaster(pServer), Origin(origin) {
+  OpcUaEvent(const T& data, UA_Server* pServer, open62541Cpp::UA_NodeId origin) : Data(data), pServer(pServer), nodesMaster(pServer), Origin(origin) {
     addEventToAddressSpace();
     Trigger();
   }
@@ -56,7 +56,7 @@ class OpcUaEvent {
   }
 
  protected:
-  UA_Server *pServer;
+  UA_Server* pServer;
   NodesMaster nodesMaster;
   void addEventToAddressSpace() {
     // Get Event Type from reflection Information

@@ -80,13 +80,13 @@ void sigHandler(int sig) {
   std::cout << "Stop application..." << std::endl;
   running = false;
 }
-void simulate(std::mutex &accessDataMutex, UA_Server *pServer, std::list<std::shared_ptr<SimulatedInstance>> &machineTools) {
+void simulate(std::mutex& accessDataMutex, UA_Server* pServer, std::list<std::shared_ptr<SimulatedInstance>>& machineTools) {
   std::unique_lock<std::remove_reference<decltype(accessDataMutex)>::type> ul(accessDataMutex);
   ul.unlock();
   int i = 0;
   while (running) {
     ul.lock();
-    for (auto &mt : machineTools) {
+    for (auto& mt : machineTools) {
       mt->Simulate();
     }
 
@@ -98,20 +98,20 @@ void simulate(std::mutex &accessDataMutex, UA_Server *pServer, std::list<std::sh
 }
 
 UA_StatusCode generateChildNodeIdInParentNs(
-  UA_Server *server,
-  const UA_NodeId *sessionId,
-  void *sessionContext,
-  const UA_NodeId *sourceNodeId,
-  const UA_NodeId *targetParentNodeId,
-  const UA_NodeId *referenceTypeId,
-  UA_NodeId *targetNodeId) {
+  UA_Server* server,
+  const UA_NodeId* sessionId,
+  void* sessionContext,
+  const UA_NodeId* sourceNodeId,
+  const UA_NodeId* targetParentNodeId,
+  const UA_NodeId* referenceTypeId,
+  UA_NodeId* targetNodeId) {
   if (UA_NodeId_equal(targetNodeId, &UA_NODEID_NULL) && !UA_NodeId_equal(targetParentNodeId, &UA_NODEID_NULL)) {
     targetNodeId->namespaceIndex = targetParentNodeId->namespaceIndex;
   }
   return UA_STATUSCODE_GOOD;
 }
 
-UA_StatusCode setServerConfig(UA_ServerConfig *pConfig, const Configuration::Configuration &configFile, const OpcUaKeys &keys) {
+UA_StatusCode setServerConfig(UA_ServerConfig* pConfig, const Configuration::Configuration& configFile, const OpcUaKeys& keys) {
   auto status = UA_ServerConfig_setBasics(pConfig);
   if (status != UA_STATUSCODE_GOOD) {
     return status;
@@ -141,10 +141,10 @@ UA_StatusCode setServerConfig(UA_ServerConfig *pConfig, const Configuration::Con
     ss << "opc.tcp://" << *configFile.Hostname << ":" << *configFile.Port;
     serverUrls.push_back(ss.str());
   }
-  pConfig->serverUrls = (UA_String *)UA_Array_new(serverUrls.size(), &UA_TYPES[UA_TYPES_STRING]);
+  pConfig->serverUrls = (UA_String*)UA_Array_new(serverUrls.size(), &UA_TYPES[UA_TYPES_STRING]);
   pConfig->serverUrlsSize = serverUrls.size();
   std::transform(
-    std::begin(serverUrls), std::end(serverUrls), pConfig->serverUrls, [](const std::string &serverUrl) { return UA_String_fromChars(serverUrl.c_str()); });
+    std::begin(serverUrls), std::end(serverUrls), pConfig->serverUrls, [](const std::string& serverUrl) { return UA_String_fromChars(serverUrl.c_str()); });
   status = UA_ServerConfig_addAllSecurityPolicies(pConfig, &keys.PublicCert, &keys.PrivateKey);
   if (status != UA_STATUSCODE_GOOD) {
     return status;
@@ -157,7 +157,7 @@ UA_StatusCode setServerConfig(UA_ServerConfig *pConfig, const Configuration::Con
   if (configFile.UserPassAuthentication.has_value()) {
     users.reserve(configFile.UserPassAuthentication->size());
     for (auto up : configFile.UserPassAuthentication.value()) {
-      users.push_back(UA_UsernamePasswordLogin{.username = UA_STRING((char *)up.Username.c_str()), .password = UA_STRING((char *)up.Password.c_str())});
+      users.push_back(UA_UsernamePasswordLogin{.username = UA_STRING((char*)up.Username.c_str()), .password = UA_STRING((char*)up.Password.c_str())});
     }
   }
   status = UA_AccessControl_default(
@@ -172,7 +172,7 @@ UA_StatusCode setServerConfig(UA_ServerConfig *pConfig, const Configuration::Con
   return status;
 }
 
-int main(int argc, char *argv[]) {
+int main(int argc, char* argv[]) {
   signal(SIGINT, sigHandler);
   signal(SIGABRT, sigHandler);
   signal(SIGTERM, sigHandler);
@@ -183,13 +183,13 @@ int main(int argc, char *argv[]) {
   }
   try {
     serverConfig = Configuration::FromJsonFile(configurationFilename);
-  } catch (std::exception &e) {
+  } catch (std::exception& e) {
     std::cout << "Could not load configuration, using a possible insecure default one." << std::endl;
     std::cout << e.what() << std::endl;
   }
   std::cout << "SampleServer, exit with Ctrl+C" << std::endl;
 
-  UA_ServerConfig *pConfig = new UA_ServerConfig();
+  UA_ServerConfig* pConfig = new UA_ServerConfig();
   UA_ServerConfig_setDefault(pConfig);
 
   try {
@@ -204,7 +204,7 @@ int main(int argc, char *argv[]) {
       serverConfig.Encryption->Revocation);
     try {
       keys.Load();
-    } catch (std::exception &ex) {
+    } catch (std::exception& ex) {
       std::cout << "Could not load keys for encryption." << std::endl;
       std::cout << ex.what();
       if (keys.PrivateKey.length == 0 && keys.PublicCert.length == 0) {
@@ -214,7 +214,7 @@ int main(int argc, char *argv[]) {
       }
     }
     setServerConfig(pConfig, serverConfig, keys);
-  } catch (std::exception &ex) {
+  } catch (std::exception& ex) {
     std::cout << "Could not load keys for encryption." << std::endl;
     std::cout << ex.what();
     std::cout << "Generate keys with tool/certGen/createCertification.py" << std::endl;
@@ -222,7 +222,7 @@ int main(int argc, char *argv[]) {
     std::cout << "No encryption will be available." << std::endl;
   }
 
-  UA_Server *pServer = UA_Server_newWithConfig(pConfig);
+  UA_Server* pServer = UA_Server_newWithConfig(pConfig);
 
   // Create namespaces, order must match the CMakeLists.txt
   namespace_di_generated(pServer);

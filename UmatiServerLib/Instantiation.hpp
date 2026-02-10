@@ -22,12 +22,12 @@
 #include "NodesMaster.hpp"
 #include "Util.hpp"
 
-open62541Cpp::UA_QualifiedName readBrowseName(UA_Server *pServer, open62541Cpp::UA_NodeId nodeId);
-UA_NodeClass readNodeClass(UA_Server *pServer, open62541Cpp::UA_NodeId nodeId);
-open62541Cpp::UA_NodeId readDataType(UA_Server *pServer, open62541Cpp::UA_NodeId nodeId);
-open62541Cpp::UA_NodeId readTypeDefinition(UA_Server *pServer, open62541Cpp::UA_NodeId nodeId);
-UA_Int32 readValueRank(UA_Server *pServer, open62541Cpp::UA_NodeId nodeId);
-open62541Cpp::UA_NodeId getReferenceTypeFromMemberNode(UA_Server *pServer, open62541Cpp::UA_NodeId nodeId, open62541Cpp::UA_NodeId parentNodeId);
+open62541Cpp::UA_QualifiedName readBrowseName(UA_Server* pServer, open62541Cpp::UA_NodeId nodeId);
+UA_NodeClass readNodeClass(UA_Server* pServer, open62541Cpp::UA_NodeId nodeId);
+open62541Cpp::UA_NodeId readDataType(UA_Server* pServer, open62541Cpp::UA_NodeId nodeId);
+open62541Cpp::UA_NodeId readTypeDefinition(UA_Server* pServer, open62541Cpp::UA_NodeId nodeId);
+UA_Int32 readValueRank(UA_Server* pServer, open62541Cpp::UA_NodeId nodeId);
+open62541Cpp::UA_NodeId getReferenceTypeFromMemberNode(UA_Server* pServer, open62541Cpp::UA_NodeId nodeId, open62541Cpp::UA_NodeId parentNodeId);
 
 /**
  * @brief
@@ -40,33 +40,33 @@ open62541Cpp::UA_NodeId getReferenceTypeFromMemberNode(UA_Server *pServer, open6
  * @param nodeId  ID of the node to query
  * @return UA_Variant* a pointer to the variant holding the result
  */
-UA_Variant *readArrayDimensions(UA_Server *pServer, open62541Cpp::UA_NodeId nodeId);
+UA_Variant* readArrayDimensions(UA_Server* pServer, open62541Cpp::UA_NodeId nodeId);
 
 /// Look for interfaces and instantiate them
-void instantiateInterfaces(UA_Server *pServer, open62541Cpp::UA_NodeId member, open62541Cpp::UA_NodeId memberInType);
+void instantiateInterfaces(UA_Server* pServer, open62541Cpp::UA_NodeId member, open62541Cpp::UA_NodeId memberInType);
 
 template <typename T>
 UA_StatusCode InstantiateVariable(
   UA_Server pServer,
-  const open62541Cpp::UA_NodeId &memberInTypeNodeId,
-  const open62541Cpp::UA_QualifiedName &browseName,
-  const open62541Cpp::UA_QualifiedName &referenceType,
-  const open62541Cpp::UA_NodeId &parentNodeId,
-  open62541Cpp::UA_NodeId &outNodeId);
+  const open62541Cpp::UA_NodeId& memberInTypeNodeId,
+  const open62541Cpp::UA_QualifiedName& browseName,
+  const open62541Cpp::UA_QualifiedName& referenceType,
+  const open62541Cpp::UA_NodeId& parentNodeId,
+  open62541Cpp::UA_NodeId& outNodeId);
 
 /**
  * @brief Instantiate an optional member, which parent is already bind.
  *
- * Checks the node in the type definition and create a variabe/object
+ * Checks the node in the type definition and create a variable/object
  *
  * @param memberPar The member that should be instantiated
  * @param pServer Pointer to UA_Server
  * @param nodesMaster A nodesmaster to manage the binding
  */
 template <template <typename> class BINDABLEMEMBER_T, typename T, typename = std::enable_if_t<is_base_of_template<BindableMember, BINDABLEMEMBER_T<T>>::value>>
-void InstantiateOptional(BINDABLEMEMBER_T<T> &memberPar, UA_Server *pServer, NodesMaster &nodesMaster) {
+void InstantiateOptional(BINDABLEMEMBER_T<T>& memberPar, UA_Server* pServer, NodesMaster& nodesMaster) {
   // Help the IDE for auto completion
-  BindableMember<T> &member = memberPar;
+  BindableMember<T>& member = memberPar;
   UA_StatusCode status = -1;
 
   if (member.IsBind()) {
@@ -150,12 +150,12 @@ void InstantiateOptional(BINDABLEMEMBER_T<T> &memberPar, UA_Server *pServer, Nod
 
 template <typename T>
 UA_StatusCode InstantiateVariable(
-  UA_Server *pServer,
-  const open62541Cpp::UA_NodeId &memberInTypeNodeId,
-  const open62541Cpp::UA_QualifiedName &browseName,
-  const open62541Cpp::UA_NodeId &referenceType,
-  const open62541Cpp::UA_NodeId &parentNodeId,
-  open62541Cpp::UA_NodeId &outNodeId) {
+  UA_Server* pServer,
+  const open62541Cpp::UA_NodeId& memberInTypeNodeId,
+  const open62541Cpp::UA_QualifiedName& browseName,
+  const open62541Cpp::UA_NodeId& referenceType,
+  const open62541Cpp::UA_NodeId& parentNodeId,
+  open62541Cpp::UA_NodeId& outNodeId) {
   UA_StatusCode status;
   auto typeDef = readTypeDefinition(pServer, memberInTypeNodeId);
   if constexpr (hasAttributeIfReflectable<UmatiServerLib::attribute::UaVariableType, T>()) {
@@ -167,10 +167,10 @@ UA_StatusCode InstantiateVariable(
   varAttr.valueRank = readValueRank(pServer, memberInTypeNodeId);
 
   // Add array dimensions
-  auto *arrayDims = readArrayDimensions(pServer, memberInTypeNodeId);
+  auto* arrayDims = readArrayDimensions(pServer, memberInTypeNodeId);
   if (arrayDims->data) {
     varAttr.arrayDimensionsSize = arrayDims->arrayLength;
-    varAttr.arrayDimensions = reinterpret_cast<UA_UInt32 *>(arrayDims->data);
+    varAttr.arrayDimensions = reinterpret_cast<UA_UInt32*>(arrayDims->data);
   }
 
   auto dataType = readDataType(pServer, memberInTypeNodeId);

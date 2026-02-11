@@ -110,7 +110,7 @@ std::list<open62541Cpp::UA_NodeId> browseForChilds(
 
   auto browseResult = UA_Server_browse(pServer, UA_UINT32_MAX, &brDesc);
   if (browseResult.statusCode != UA_STATUSCODE_GOOD) {
-    std::cout << "Result not good for browsing childs. " << UA_StatusCode_name(browseResult.statusCode) << std::endl;
+    std::cout << "Result not good for browsing children. " << UA_StatusCode_name(browseResult.statusCode) << std::endl;
   } else {
     for (std::size_t i = 0; i < browseResult.referencesSize; ++i) {
       if (UA_NodeId_equal(&browseResult.references[i].typeDefinition.nodeId, typeDef.NodeId)) {

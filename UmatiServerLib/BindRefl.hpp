@@ -28,7 +28,7 @@ class Bind {
   /**
    * @brief Bind a member/instance using reflection
    *
-   * When the member is a Object or Variable all childs are iterated. Otherwise the value is bind to the corresponding OPC UA Value
+   * When the member is a Object or Variable all children are iterated. Otherwise the value is bind to the corresponding OPC UA Value
    *
    * @tparam T
    * @param member

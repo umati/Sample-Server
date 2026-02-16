@@ -49,10 +49,12 @@ externalproject_add(
     SOURCE_DIR ${CMAKE_CURRENT_BINARY_DIR}/mbedTLSSource
     URL "https://github.com/Mbed-TLS/mbedtls/releases/download/mbedtls-3.6.5/mbedtls-3.6.5.tar.bz2"
     URL_HASH SHA256=4a11f1777bb95bf4ad96721cac945a26e04bf19f57d905f241fe77ebeddf46d8
-    DOWNLOAD_EXTRACT_TIMESTAMP true
     CMAKE_ARGS -DENABLE_PROGRAMS:BOOL=0 -DENABLE_TESTING:BOOL=0 -DCMAKE_INSTALL_PREFIX:PATH=${CMAKE_INSTALL_PREFIX}
     INSTALL_DIR "${CMAKE_INSTALL_PREFIX}"
 )
+
+# cmake 3.24 feature: DOWNLOAD_EXTRACT_TIMESTAMP true
+
 
 externalproject_add(
     open62541External

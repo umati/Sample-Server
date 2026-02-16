@@ -26,7 +26,7 @@ jobs:
         uses: yesolutions/mirror-action@662fce0eced8996f64d7fa264d76cddd84827f33
         with:
           REMOTE: ${{ secrets.CODEBERG_URL }}
-          GIT_USERNAME: goetz
+          GIT_USERNAME: ${{ secrets.CODEBERG_USER }}
           GIT_PASSWORD: ${{ secrets.CODEBERG_TOKEN }}
 
       - name: "Sync repo gitlab"

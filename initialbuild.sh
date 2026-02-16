@@ -26,6 +26,6 @@ BASEDIR=$(pwd)
 mkdir build-auto
 cd build-auto || exit
 cmake -DCMAKE_BUILD_TYPE=Debug -DCMAKE_INSTALL_PREFIX:PATH="$BASEDIR/install" ../.github/
-cmake --build .
+cmake --build . --parallel "$(nproc)" 
 cd SampleServer-build || exit
 ctest

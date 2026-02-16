@@ -43,7 +43,7 @@ WORKDIR /build
 RUN cmake /src/Sample-Server/.github/ \
       -DCMAKE_BUILD_TYPE=${BUILD_TYPE} \
       -DCMAKE_INSTALL_PREFIX:PATH=/install /build && \
-    cmake --build .
+    cmake --build . --parallel "$(nproc)"
 
 FROM alpine:3.23.3 AS runtime
 RUN apk --no-cache add \

@@ -44,8 +44,8 @@
 #include "AdditiveManufacturing/BasicAMMachine.hpp"
 #include "AdditiveManufacturing/ShowcaseAMMachine.hpp"
 #include "Configuration/Configuration_json.hpp"
-#include "GMS/BasicGMS.hpp"
-/* #include "GMS/FullGMS.hpp" */
+// #include "GMS/BasicGMS.hpp"
+#include "GMS/FullGMS.hpp"
 #include "GMS/HexagonGlobal.hpp"
 #include "GMS/HexagonSim.hpp"
 #include "GMS/OGPSmartScopeCNC500.hpp"
@@ -250,12 +250,12 @@ int main(int argc, char* argv[]) {
   /*machineTools.push_back(std::make_shared<BasicRobot>(pServer));*/
   machineTools.push_back(std::make_shared<BasicWoodworking>(pServer));
   machineTools.push_back(std::make_shared<FullWoodworking>(pServer));
-  machineTools.push_back(std::make_shared<BasicGMS>(pServer));
+  // machineTools.push_back(std::make_shared<BasicGMS>(pServer));
   machineTools.push_back(std::make_shared<HexagonSim>(pServer));
   machineTools.push_back(std::make_shared<HexagonGlobal>(pServer));
   machineTools.push_back(std::make_shared<OGPSmartScopeCNC500>(pServer));
   machineTools.push_back(std::make_shared<WenzelLH>(pServer));
-  /*machineTools.push_back(std::make_shared<FullGMS>(pServer));*/
+  machineTools.push_back(std::make_shared<FullGMS>(pServer));
   machineTools.push_back(std::make_shared<BasicAMMachine>(pServer));
   machineTools.push_back(std::make_shared<ShowcaseAMMachine>(pServer));
 

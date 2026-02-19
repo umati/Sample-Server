@@ -12,6 +12,7 @@
 #include <cstdint>
 #include <unordered_map>
 
+#include "../MachineTools/InstantiatedMachineTool.hpp"
 #include "../MachineTools/SimulatedInstance.hpp"
 #include "../TypeDefinition/GMS/GMSType.hpp"
 #include "../UmatiServerLib/NodesMaster.hpp"
@@ -33,6 +34,7 @@ class InstantiatedGMS : public SimulatedInstance {
   virtual void InstantiateProduction();
   virtual void InstantiateResultManagement();
   virtual void InstantiateMonitoring();
+  virtual void SimulateStacklight();
 
   // TODO: Take care of subcomponents later
   // virtual void InstantiateNotificationCalibration();

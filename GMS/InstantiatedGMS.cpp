@@ -78,6 +78,12 @@ void InstantiatedGMS::InstantiateResultManagement() {}
 
 void InstantiatedGMS::InstantiateMonitoring() {}
 
+void InstantiatedGMS::SimulateStacklight() {
+  for (auto& light : gms.Monitoring->Stacklight->OrderedObjects.value) {
+    light->SignalOn = (rnd() % 2) == 0;
+  }
+}
+
 GMS::GMSSensor_t& InstantiatedGMS::InstantiateSensor(std::string const& sensorName) {
   // It seems very wasteful for every instance of a sensor to have its own copy of the "Class" EnumStrings[].
   // I assume this array is the same for all the sensors of the instance.

@@ -35,7 +35,7 @@ void ShowcaseMachineTool::InstantiateIdentification() {
   mt.Identification->SoftwareRevision = "v1.02.1";
   mt.Identification->DeviceClass = "Machining centre (other)";
   mt.Identification->ProductInstanceUri = "https://showcase.umati.org/Specs/Machinetools.html";
-  mt.Identification->Location = "TMTS 4 G0912/VIRTUAL 1 1/N 49.871215 E 8.654204";
+  mt.Identification->Location = "TECHNISHOW 10 E018/TMTS 4 G0912/VIRTUAL 1 1/N 49.871215 E 8.654204";
   mt.Identification->Model = {"", MachineName};
 }
 

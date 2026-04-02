@@ -21,6 +21,6 @@ jobs:
 
       - name: Format CMake files
         id: cmake-format
-        uses: PuneetMatharu/cmake-format-lint-action@960ee17edd4678e2793d49b96ae7608a91a78a5a
+        uses: PuneetMatharu/cmake-format-lint-action@4ed77e1b4e9ae7b072e4e34c54461316771566c9
         with:
           args: --config-files ./github/linters/cmake-format.yaml

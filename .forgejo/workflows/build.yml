@@ -94,7 +94,7 @@ jobs:
           password: ${{ env.REGISTRY_TOKEN }}
       
       - name: Build and Push Container
-        uses: "docker/build-push-action@v7.0.0"
+        uses: "docker/build-push-action@v7.1.0"
         with:
           provenance: false
           file: "./Sample-Server/Dockerfile"

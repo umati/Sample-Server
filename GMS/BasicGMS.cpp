@@ -140,7 +140,7 @@ void BasicGMS::InstantiateIdentification() {
   mt.Identification->YearOfConstruction = 2022;
   mt.Identification->SoftwareRevision = "v1.05";
   mt.Identification->DeviceClass = "CoordinateMeasuringMachine";
-  mt.Identification->Location = "TECHNISHOW 10 E018/INNOTEQ 3.2 B12/VIRTUAL 1 1/N 48.7685303 E 9.1653923";
+  mt.Identification->Location = "CCMT 5 A219/INNOTEQ 3.2 B12/VIRTUAL 1 1/N 48.7685303 E 9.1653923";
   mt.Identification->Model = {"", MachineName};
 
   {

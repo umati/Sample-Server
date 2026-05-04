@@ -94,7 +94,7 @@ void HexagonSim::InstantiateIdentification() {
   mt.Identification->YearOfConstruction = 2021;
   mt.Identification->SoftwareRevision = "Quindos7 - V 7.22.22096";
   mt.Identification->DeviceClass = "Coordinate Measuring Machine";
-  mt.Identification->Location = "CCMT 5 A219/HMI 17 F20/VIRTUAL 1 1/N 50.5514144 E 8.4764728";
+  mt.Identification->Location = "CCMT 5 A219/GRIND 9 B20/VIRTUAL 1 1/N 50.5514144 E 8.4764728";
   mt.Identification->Model = {"", MachineName};
   mt.Identification->SerialNumber = "0104";
 }

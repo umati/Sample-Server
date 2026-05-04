@@ -134,7 +134,7 @@ void OGPSmartScopeCNC500::InstantiateIdentification() {
   mt.Identification->YearOfConstruction = 2022;
   mt.Identification->SoftwareRevision = "V1.0.0";
   mt.Identification->DeviceClass = "GMS";
-  mt.Identification->Location = "TECHNISHOW 10 E018/TMTS 4 G0912/VIRTUAL 1 1/N 48.694241 E 9.183833";
+  mt.Identification->Location = "TECHNISHOW 10 E018/GRIND 9 B20/VIRTUAL 1 1/N 48.694241 E 9.183833";
   mt.Identification->Model = {"", MachineName};
 
   {

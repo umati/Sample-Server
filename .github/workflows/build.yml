@@ -79,7 +79,7 @@ jobs:
         uses: docker/setup-qemu-action@v4
 
       - name: Set up Buildx
-        uses: docker/setup-buildx-action@v4.0.0
+        uses: docker/setup-buildx-action@v4.1.0
 
       - name: Set Registry and prepare Image Names
         # yamllint disable rule:line-length

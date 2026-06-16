@@ -21,7 +21,7 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 #
-FROM alpine:3.24.0 AS build-env
+FROM alpine:3.24.1 AS build-env
 
 RUN apk --no-cache add \
       bash=5.3.9-r1 \
@@ -45,7 +45,7 @@ RUN cmake /src/Sample-Server/.github/ \
       -DCMAKE_INSTALL_PREFIX:PATH=/install /build && \
     cmake --build . --parallel "$(nproc)"
 
-FROM alpine:3.24.0 AS runtime
+FROM alpine:3.24.1 AS runtime
 RUN apk --no-cache add \
       libstdc++=15.2.0-r5
 COPY --from=build-env /install/bin /app

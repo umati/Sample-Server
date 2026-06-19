@@ -25,7 +25,7 @@ jobs:
       CMAKE_INSTALL_PREFIX: "${{ github.workspace }}/install"
     steps:
       - name: Checkout Sample-Server
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
         with:
           path: Sample-Server
           submodules: recursive
@@ -58,7 +58,7 @@ jobs:
       packages: write
     steps:
       - name: Checkout Sample-Server
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
         with:
           path: Sample-Server
           submodules: recursive

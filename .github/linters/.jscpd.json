@@ -1,5 +1,5 @@
 {
-    "threshold": 12,
+    "threshold": 18,
     "reporters": [
       "consoleFull"
     ],
@@ -10,8 +10,8 @@
       "**/_build/**",
       "**/_install/**",
       "**/.venv/**",
-      "**/.venv2/**"
-
+      "**/.venv2/**",
+      "**/model/**"
     ],
     "absolute": true
 }

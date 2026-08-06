@@ -1,0 +1,35 @@
+name: DCO Check
+on: [push, pull_request]
+
+jobs:
+  dco-check:
+    runs-on: docker
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0 # Required to fetch the full history for comparison
+
+      - name: Check DCO for PR or push
+        run: |
+          # Determine the commit range to check
+          if [ -n "${{ github.event.pull_request }}" ]; then
+            # For pull requests, check commits between the base and head
+            git fetch origin ${{ github.event.pull_request.base.sha }} ${{ github.event.pull_request.head.sha }}
+            COMMIT_RANGE="${{ github.event.pull_request.base.sha }}..${{ github.event.pull_request.head.sha }}"
+          else
+            # For pushes, check only the latest commit(s)
+            COMMIT_RANGE="HEAD~1..HEAD"
+          fi
+
+          # Check all commits in the range
+          if git log --pretty=format:"%an <%ae>" $COMMIT_RANGE | sort -u | while read -r committer; do
+            if ! git log --pretty=format:"%an <%ae> %B" $COMMIT_RANGE | grep -q "Signed-off-by: $committer"; then
+              echo "Error: Missing or mismatched DCO sign-off for $committer"
+              exit 1
+            fi
+          done; then
+            echo "All commits are properly signed off."
+          else
+            echo "Some commits are missing or have mismatched DCO sign-offs."
+            exit 1
+          fi

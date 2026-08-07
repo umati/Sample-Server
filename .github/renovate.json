@@ -3,6 +3,7 @@
   "rebaseWhen": "behind-base-branch",
   "dependencyDashboard": true,
   "git-submodules": { "enabled": true },
+  "commitTrailers": ["Signed-off-by: {{{gitAuthor}}}"],
   "customManagers": [
     {
       "customType": "regex",

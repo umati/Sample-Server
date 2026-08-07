@@ -7,15 +7,9 @@ on:
   pull_request:
     branches: [main, develop]
 
-permissions:
-  contents: read
-
 jobs:
   super-linter:
     name: Lint Code Base (super-linter)
-    permissions:
-      contents: write
-      statuses: write
     runs-on: ubuntu-latest
 
     steps:

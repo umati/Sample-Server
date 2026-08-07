@@ -31,17 +31,17 @@ jobs:
           submodules: recursive
           persist-credentials: false
 
-      - name: Set Windows CMAKE_GENERATOR 2019
+      - name: Set Windows CMAKE_GENERATOR 2022
         if: matrix.os == 'windows-2022'
         run: |
           #shellcheck  disable=SC2154
           echo "CMAKE_GENERATOR=Visual Studio 17 2022">> "$env:GITHUB_ENV"
           echo "ARG_CTEST=-C Debug">> "$env:GITHUB_ENV"
-      - name: Set Windows CMAKE_GENERATOR 2022
+      - name: Set Windows CMAKE_GENERATOR 2025
         if: matrix.os == 'windows-2025'
         run: |
           #shellcheck  disable=SC2154
-          echo "CMAKE_GENERATOR=Visual Studio 17 2022">> "$env:GITHUB_ENV"
+          echo "CMAKE_GENERATOR=Visual Studio 18 2026">> "$env:GITHUB_ENV"
           echo "ARG_CTEST=-C Debug">> "$env:GITHUB_ENV"
       - name: Build server with dependencies
         # yamllint disable rule:line-length

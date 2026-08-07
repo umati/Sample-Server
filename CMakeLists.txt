@@ -1,7 +1,7 @@
 # MIT License
 #
 # Copyright 2020-2021 (c) Christian von Arnim, ISW University of Stuttgart (for umati and VDW e.V.)
-# Copyright 2021 (c) Götz Görisch, VDW - Verein Deutscher Werkzeugmaschinenfabriken e.V.
+# Copyright 2021,2026 (c) Götz Görisch, VDW - Verein Deutscher Werkzeugmaschinenfabriken e.V.
 # Copyright 2021 (c) Dennis Hezel, 3Yourmind GmbH
 # Copyright 2021 (c) Hermann Leinweber, basysKom GmbH
 # Copyright 2022 (c) Sebastian Friedl, ISW University of Stuttgart (for umati and VDMA e.V.)
@@ -25,7 +25,7 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-cmake_minimum_required(VERSION 3.5)
+cmake_minimum_required(VERSION 3.10)
 project(SampleServer VERSION 1.2.0)
 
 set(CMAKE_CXX_STANDARD 20)
@@ -135,7 +135,8 @@ target_sources(
 )
 target_link_libraries(ua_gen_machinetool PUBLIC ua_gen_ia ua_gen_machinery)
 
-#ua_generate_nodeset_and_datatypes(
+# cmake-format: off
+# ua_generate_nodeset_and_datatypes(
 #    NAME "robotics"
 #    FILE_NS "${UA_NODESET_DIR}/Robotics/Opc.Ua.Robotics.NodeSet2.xml"
 #    FILE_CSV "${UA_NODESET_DIR}/Robotics/NodeIds.csv"
@@ -156,6 +157,7 @@ target_link_libraries(ua_gen_machinetool PUBLIC ua_gen_ia ua_gen_machinery)
 #            ${UA_TYPES_ROBOTICS_SOURCES}
 #)
 #target_link_libraries(ua_gen_robotics PUBLIC ua_gen_di)
+# cmake-format: on
 
 ua_generate_nodeset_and_datatypes(
     NAME "woodworking"
@@ -355,26 +357,23 @@ add_executable(
     MachineTools/MRMachineTool.cpp
     MachineTools/ShowcaseMachineTool.cpp
     MachineTools/SimulatedInstance.cpp
-#    Robotics/BasicRobot.cpp
-#    Robotics/InstantiatedRobot.cpp
+    # Robotics/BasicRobot.cpp
+    # Robotics/InstantiatedRobot.cpp
     SampleServer.cpp
     Woodworking/BasicWoodworking.cpp
     Woodworking/FullWoodworking.cpp
     Woodworking/InstantiatedWoodworking.cpp
 )
 
-#set_target_properties(${PROJECT_NAME} PROPERTIES LINKER_LANGUAGE CXX)
-#target_link_libraries(
-#    ${PROJECT_NAME} PUBLIC SampleServerLib Configuration ua_gen_machinetool ua_gen_robotics ua_gen_woodworking
-#                           ua_gen_gms
-#)
 set_target_properties(${PROJECT_NAME} PROPERTIES LINKER_LANGUAGE CXX)
 target_link_libraries(
     ${PROJECT_NAME}
     PUBLIC SampleServerLib
            Configuration
            ua_gen_machinetool
-#           ua_gen_robotics
+           # cmake-format: off
+           # ua_gen_robotics
+           # cmake-format: on
            ua_gen_woodworking
            ua_gen_gms
            ua_gen_additivemanufacturing

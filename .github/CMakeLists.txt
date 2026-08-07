@@ -1,7 +1,7 @@
 # MIT License
 #
 # Copyright 2020-2021 (c) Christian von Arnim, ISW University of Stuttgart (for umati and VDW e.V.)
-# Copyright 2021 (c) Götz Görisch, VDW - Verein Deutscher Werkzeugmaschinenfabriken e.V.
+# Copyright 2021,2026 (c) Götz Görisch, VDW - Verein Deutscher Werkzeugmaschinenfabriken e.V.
 # Copyright 2021 (c) Dennis Hezel, 3Yourmind GmbH
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -23,9 +23,9 @@
 # SOFTWARE.
 #
 
-cmake_minimum_required(VERSION 3.5)
+cmake_minimum_required(VERSION 3.10)
 
-project(BuildWithDependencies VERSION 0.1)
+project(BuildWithDependencies VERSION 1.2.1)
 
 include(${CMAKE_ROOT}/Modules/ExternalProject.cmake)
 
@@ -54,7 +54,6 @@ externalproject_add(
 )
 
 # cmake 3.24 feature: DOWNLOAD_EXTRACT_TIMESTAMP true
-
 
 externalproject_add(
     open62541External

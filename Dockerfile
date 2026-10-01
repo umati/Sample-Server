@@ -30,7 +30,7 @@ RUN apk --no-cache add \
       g++=15.2.0-r5 \
       git=2.54.0-r0 \
       make=4.4.1-r4  \
-      python3=3.14.7-r1 \
+      python3=3.14.8-r0 \
       patch=2.8-r0 \
       linux-headers=7.0.0-r1 && \
     mkdir /install

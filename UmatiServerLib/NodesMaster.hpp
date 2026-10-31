@@ -11,6 +11,8 @@
 
 #include <Open62541Cpp/UA_NodeId.hpp>
 #include <map>
+#include <mutex>
+#include <set>
 
 #include "NodeValue.hpp"
 
@@ -21,6 +23,8 @@
 class NodesMaster {
  protected:
   std::map<open62541Cpp::UA_NodeId, NodeValue> m_Nodes;
+  std::set<open62541Cpp::UA_NodeId> m_CallbackInProgress;
+  std::mutex m_CallbackInProgressMutex;
   UA_Server* m_pServer;
   NodesMaster(const NodesMaster& other);
   void setCallback(const open62541Cpp::UA_NodeId& nodeId);

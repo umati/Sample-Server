@@ -35,13 +35,32 @@ void NodesMaster::callback(
   const UA_NumericRange* range,
   const UA_DataValue* oldValue) {
   NodesMaster* pThis = reinterpret_cast<NodesMaster*>(nodeContext);
-  auto it = pThis->m_Nodes.find(open62541Cpp::UA_NodeId(nodeid));
+  if (pThis == nullptr || nodeid == nullptr) {
+    return;
+  }
+
+  const auto nodeKey = open62541Cpp::UA_NodeId(nodeid);
+
+  {
+    std::lock_guard<std::mutex> lock(pThis->m_CallbackInProgressMutex);
+    if (pThis->m_CallbackInProgress.find(nodeKey) != pThis->m_CallbackInProgress.end()) {
+      return;
+    }
+    pThis->m_CallbackInProgress.insert(nodeKey);
+  }
+
+  auto it = pThis->m_Nodes.find(nodeKey);
   if (it != pThis->m_Nodes.end()) {
     auto val = it->second.Value();
     if (auto ret = UA_Server_writeDataValue(pServer, *nodeid, val); ret != UA_STATUSCODE_GOOD) {
       std::cerr << "Writing value failed: " << UA_StatusCode_name(ret) << std::endl;
     }
     UA_DataValue_clear(&val);
+  }
+
+  {
+    std::lock_guard<std::mutex> lock(pThis->m_CallbackInProgressMutex);
+    pThis->m_CallbackInProgress.erase(nodeKey);
   }
 }
 
